@@ -32,12 +32,12 @@ export async function generateStaticParams() {
   try {
     const params = source.generateParams();
     if (!params || !params.length) {
-      console.warn('generateParamsOG returned nothing, using fallback');
+      console.warn('generateParams returned nothing, using fallback');
       return [{ slug: ['placeholder'] }];
     }
     return params;
   } catch (e) {
-    console.error('Error generating OG params:', e);
+    console.error('Error generating  params:', e);
     return [{ slug: ['placeholder'] }];
   }
 }
