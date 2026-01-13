@@ -29,8 +29,17 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
 }
 
 export async function generateStaticParams() {
-  const params = source.generateParams();
-  return params;
+  try {
+    const params = source.generateParams();
+    if (!params || !params.length) {
+      console.warn('generateParamsOG returned nothing, using fallback');
+      return [{ slug: ['placeholder'] }];
+    }
+    return params;
+  } catch (e) {
+    console.error('Error generating OG params:', e);
+    return [{ slug: ['placeholder'] }];
+  }
 }
 
 
