@@ -2,6 +2,8 @@ import { applyMdxPreset, defineCollections, defineConfig, defineDocs, frontmatte
 import { remarkObsidian, RemarkObsidianOptions } from 'fumadocs-obsidian/mdx';
 import { readVaultFiles } from 'fumadocs-obsidian';
 import { z } from 'zod';
+import type { ShikiTransformer } from 'shiki';
+import type { ElementContent } from 'hast';
 
 
 // You can customise Zod schemas for frontmatter and `meta.json` here
@@ -58,7 +60,7 @@ export const blog = defineCollections({
           light: 'catppuccin-latte',
           dark: 'catppuccin-mocha',
         },
-        transformers: [...(rehypeCodeDefaultOptions.transformers ?? [])],
+        transformers: [...(rehypeCodeDefaultOptions.transformers ?? []), transformerEscape()],
       },
       remarkCodeTabOptions: {
         parseMdx: true,
@@ -72,3 +74,23 @@ export const blog = defineCollections({
     })(environment);
   },
 });
+
+function transformerEscape(): ShikiTransformer {
+  return {
+    name: '@shikijs/transformers:remove-notation-escape',
+    code(hast) {
+      function replace(node: ElementContent) {
+        if (node.type === 'text') {
+          node.value = node.value.replace('[\\!code', '[!code');
+        } else if ('children' in node) {
+          for (const child of node.children) {
+            replace(child);
+          }
+        }
+      }
+
+      replace(hast);
+      return hast;
+    },
+  };
+}

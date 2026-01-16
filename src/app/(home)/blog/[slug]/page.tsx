@@ -5,14 +5,15 @@ import { InlineTOC } from 'fumadocs-ui/components/inline-toc';
 import { blog } from '@/lib/source';
 import { createMetadata } from '@/lib/metadata';
 import { buttonVariants } from '@/components/ui/button';
-import { ShareButton } from '@/app/(home)/blog/[[...slug]]/page.client';
+import { ShareButton } from '@/app/(home)/blog/[slug]/page.client';
 import { getMDXComponents } from '@/mdx-components';
 import path from 'node:path';
 import { cn } from '@/lib/cn';
 
-export default async function Page(props: PageProps<"/blog/[[...slug]]">) {
+export default async function Page(props: PageProps<"/blog/[slug]">) {
   const params = await props.params;
-  const page = blog.getPage(params.slug);
+  const slug = Array.isArray(params.slug) ? params.slug : [params.slug];
+  const page = blog.getPage(slug);
   if (!page) notFound();
 
   const { body: Mdx, toc } = await page.data.load();
@@ -60,9 +61,10 @@ export default async function Page(props: PageProps<"/blog/[[...slug]]">) {
   );
 }
 
-export async function generateMetadata(props: PageProps<'/blog/[[...slug]]'>): Promise<Metadata> {
+export async function generateMetadata(props: PageProps<'/blog/[slug]'>): Promise<Metadata> {
   const params = await props.params;
-  const page = blog.getPage(params.slug);
+  const slug = Array.isArray(params.slug) ? params.slug : [params.slug];
+  const page = blog.getPage(slug);
   if (!page) notFound();
 
   return createMetadata({
@@ -71,16 +73,10 @@ export async function generateMetadata(props: PageProps<'/blog/[[...slug]]'>): P
   });
 }
 
-export async function generateStaticParams() {
-  try {
-    const params = blog.generateParams();
-    if (!params || !params.length) {
-      console.warn('generateParams returned nothing, using fallback');
-      return [{ slug: ['placeholder'] }];
-    }
-    return params;
-  } catch (e) {
-    console.error('Error generating  params:', e);
-    return [{ slug: ['placeholder'] }];
-  }
+export function generateStaticParams(): { slug: string }[] {
+  return blog.getPages().map((page) => ({
+    slug: page.slugs[0],
+  }));
 }
+
+
