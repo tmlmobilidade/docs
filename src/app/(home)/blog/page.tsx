@@ -17,13 +17,9 @@ export default function Page() {
 
   return (
     <main className="mx-auto w-full max-w-[1400px] px-4 pb-12 md:py-12">
-    <div className="relative dark mb-4 aspect-[3.2] p-8 z-2 md:p-12">
-      <Image
-        src={BannerImage}
-        priority
-        alt="banner"
-        className="absolute inset-0 size-full -z-1 object-cover"
-      />
+    <div className="relative dark aspect-[5] p-8 ">
+      
+      
       <h1 className="mb-4 text-3xl text-landing-foreground font-mono font-medium">
         ISO Blog
       </h1>
@@ -32,6 +28,7 @@ export default function Page() {
       </p>
     </div>
     <div className="grid grid-cols-1 gap-2 md:grid-cols-3 xl:grid-cols-4">
+      
       {posts.map((post) => (
         <Link
           key={post.url}
