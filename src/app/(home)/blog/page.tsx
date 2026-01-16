@@ -17,7 +17,7 @@ export default function Page() {
 
   return (
     <main className="mx-auto w-full max-w-[1400px] px-4 pb-12 md:py-12">
-    <div className="relative dark aspect-[5] p-8 ">
+    <div className="relative dark aspect-[4] p-8 ">
       
       
       <h1 className="mb-4 text-3xl text-landing-foreground font-mono font-medium">
