@@ -1,8 +1,7 @@
 import Link from 'next/link';
 import { blog } from '@/lib/source';
 import { PathUtils } from 'fumadocs-core/source';
-import Image from 'next/image';
-import BannerImage from './banner.png'
+import { getSiteMetadata } from '@/lib/metadata';
 
 function getName(path: string) {
   return PathUtils.basename(path, PathUtils.extname(path));
@@ -15,16 +14,18 @@ export default function Page() {
       new Date(a.data.date ?? getName(a.path)).getTime(),
   );
 
+  const { siteName } = getSiteMetadata();
+
   return (
     <main className="mx-auto w-full max-w-[1400px] px-4 pb-12 md:py-12">
     <div className="relative dark aspect-[4] p-8 ">
       
       
       <h1 className="mb-4 text-3xl text-landing-foreground font-mono font-medium">
-        ISO Blog
+         {siteName} Blog
       </h1>
       <p className="text-sm font-mono text-landing-foreground-200">
-        Latest announcements of ISO.
+        Latest announcements of {siteName}.
       </p>
     </div>
     <div className="grid grid-cols-1 gap-2 md:grid-cols-3 xl:grid-cols-4">

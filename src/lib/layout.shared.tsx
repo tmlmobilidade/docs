@@ -1,11 +1,13 @@
 import type { BaseLayoutProps, LinkItemType } from 'fumadocs-ui/layouts/shared';
 import { AlbumIcon, LayoutTemplate, Heart } from 'lucide-react';
+import { getSiteMetadata } from './metadata';
 
 export function baseOptions(): BaseLayoutProps {
+  const {siteName} = getSiteMetadata();
 
   return {
     nav: {
-      title: 'ISO ',
+      title: `${siteName}`,
     },
   };
 }
