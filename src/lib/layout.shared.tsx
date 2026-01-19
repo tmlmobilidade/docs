@@ -1,5 +1,5 @@
 import type { BaseLayoutProps, LinkItemType } from 'fumadocs-ui/layouts/shared';
-import { AlbumIcon, LayoutTemplate, Heart } from 'lucide-react';
+import { AlbumIcon } from 'lucide-react';
 import { getSiteMetadata } from './metadata';
 
 export function baseOptions(): BaseLayoutProps {
@@ -28,7 +28,7 @@ export const linkItems: LinkItemType[] = [
   
   {
     type: 'icon',
-    url: 'https://github.com/fuma-nama/fumadocs',
+    url: 'https://github.com/tmlmobilidade',
     label: 'github',
     text: 'Github',
     icon: (
