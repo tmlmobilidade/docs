@@ -12,9 +12,9 @@ const __dirname = path.dirname(__filename)
 const config = {
   output: 'standalone',
   reactStrictMode: true,
-  experimental: {
-    outputFileTracingRoot: __dirname,
-  },
+  // experimental: {
+  //   outputFileTracingRoot: __dirname,
+  // },
 }
 
 export default withMDX(config)
