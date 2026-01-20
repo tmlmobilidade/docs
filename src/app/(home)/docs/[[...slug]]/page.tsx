@@ -5,9 +5,16 @@ import { getMDXComponents } from '@/mdx-components';
 import type { Metadata } from 'next';
 import { createRelativeLink } from 'fumadocs-ui/mdx';
 
-export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
-  const params = await props.params;
-  const page = source.getPage(params.slug);
+// Correct PageProps typing
+type PageProps = {
+  params: { slug: string | string[] } | Promise<{ slug: string | string[] }>;
+};
+
+export default async function Page({ params }: PageProps) {
+  const resolvedParams = await params; // Unwrap the promise
+  const slug = Array.isArray(resolvedParams.slug) ? resolvedParams.slug : [resolvedParams.slug];
+
+  const page = source.getPage(slug);
   if (!page) notFound();
 
   const MDX = page.data.body;
@@ -19,7 +26,6 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
       <DocsBody>
         <MDX
           components={getMDXComponents({
-            // this allows you to link to other pages with relative file paths
             a: createRelativeLink(source, page),
           })}
         />
@@ -28,6 +34,7 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
   );
 }
 
+// Generate static params
 export async function generateStaticParams() {
   try {
     const params = source.generateParams();
@@ -37,15 +44,17 @@ export async function generateStaticParams() {
     }
     return params;
   } catch (e) {
-    console.error('Error generating  params:', e);
+    console.error('Error generating params:', e);
     return [{ slug: ['placeholder'] }];
   }
 }
 
+// Generate metadata for SEO
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const resolvedParams = await params; // Important: unwrap the promise
+  const slug = Array.isArray(resolvedParams.slug) ? resolvedParams.slug : [resolvedParams.slug];
 
-export async function generateMetadata(props: PageProps<'/docs/[[...slug]]'>): Promise<Metadata> {
-  const params = await props.params;
-  const page = source.getPage(params.slug);
+  const page = source.getPage(slug);
   if (!page) notFound();
 
   return {

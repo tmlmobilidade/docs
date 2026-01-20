@@ -1,9 +1,13 @@
 import { HomeLayout } from 'fumadocs-ui/layouts/home';
 import { baseOptions, linkItems } from '@/lib/layout.shared';
 import { NavbarMenu, NavbarMenuContent, NavbarMenuLink, NavbarMenuTrigger } from 'fumadocs-ui/layouts/home/navbar';
-import { Book, ComponentIcon, Link } from 'lucide-react';
 
-export default function Layout({ children }: LayoutProps<'/'>) {
+type LayoutProps = {
+  children: React.ReactNode;
+  params?: Promise<{ slug?: string[] }> | { slug?: string[] };
+};
+
+export default function Layout({ children }: LayoutProps) {
   return (
     <HomeLayout
       {...baseOptions()}
