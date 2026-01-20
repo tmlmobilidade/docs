@@ -1,28 +1,8 @@
 import { cn } from '@/lib/cn';
 import Link from 'next/link';
-import { cva } from 'class-variance-authority';
-import { PathUtils } from 'fumadocs-core/source';
 import { blog } from '@/lib/source';
-
-
-const buttonVariants = cva(
-  'inline-flex justify-center px-5 py-3 rounded-full font-medium tracking-tight transition-colors',
-  {
-    variants: {
-      variant: {
-        primary: 'bg-brand text-brand-foreground hover:bg-brand-200',
-        secondary: 'border bg-fd-secondary text-fd-secondary-foreground hover:bg-fd-accent',
-      },
-    },
-    defaultVariants: {
-      variant: 'primary',
-    },
-  },
-);
-
-function getName(path: string) {
-  return PathUtils.basename(path, PathUtils.extname(path));
-}
+import { buttonVariants } from '@/components/ui/button';
+import { getName } from '@/lib/getName';
 
 
 export default function Page() {

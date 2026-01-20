@@ -1,11 +1,7 @@
 import { HomeLayout } from 'fumadocs-ui/layouts/home';
 import { baseOptions, linkItems } from '@/lib/layout.shared';
-import { NavbarMenu, NavbarMenuContent, NavbarMenuLink, NavbarMenuTrigger } from 'fumadocs-ui/layouts/home/navbar';
-
-type LayoutProps = {
-  children: React.ReactNode;
-  params?: Promise<{ slug?: string[] }> | { slug?: string[] };
-};
+import { NavbarMenu } from 'fumadocs-ui/layouts/home/navbar';
+import { LayoutProps } from '@/types/LayoutProps';
 
 export default function Layout({ children }: LayoutProps) {
   return (

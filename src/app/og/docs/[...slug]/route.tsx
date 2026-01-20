@@ -2,13 +2,9 @@ import { getPageImage, source } from '@/lib/source';
 import { notFound } from 'next/navigation';
 import { ImageResponse } from 'next/og';
 import { generate as DefaultImage } from 'fumadocs-ui/og';
+import { RouteContext } from '@/types/RouteContext'
 
 export const revalidate = false;
-
-type RouteContext = {
-  params: Promise<{ slug: string[] }>; // matches [[...slug]] catch-all
-  request?: Request;
-};
 
 export async function GET(_req: Request, { params }: RouteContext) {
   const { slug } = await params;

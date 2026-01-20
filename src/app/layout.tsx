@@ -1,15 +1,11 @@
 import { Inter } from 'next/font/google';
 import { Provider } from '@/components/provider';
 import './global.css';
+import { LayoutProps } from '@/types/LayoutProps';
 
 const inter = Inter({
   subsets: ['latin'],
 });
-
-type LayoutProps = {
-  children: React.ReactNode;
-  params?: Promise<{ slug?: string[] }> | { slug?: string[] };
-};
 
 export default function Layout({ children }: LayoutProps) {
   return (

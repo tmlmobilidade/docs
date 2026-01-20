@@ -9,16 +9,8 @@ import { InlineTOC } from 'fumadocs-ui/components/inline-toc';
 import { getMDXComponents } from '@/mdx-components';
 import { cn } from '@/lib/cn';
 import { PathUtils } from 'fumadocs-core/source';
-
-// Helper to get fallback name for date
-function getName(filePath: string) {
-  return PathUtils.basename(filePath, PathUtils.extname(filePath));
-}
-
-// PageProps: slug can be string[] or empty
-type PageProps = {
-  params: Promise<{ slug?: string[] }> | { slug?: string[] };
-};
+import { PageProps } from '@/types/PageProps'
+import { getName } from '@/lib/getName';
 
 export default async function BlogPage({ params }: PageProps) {
   const resolvedParams = await params;
