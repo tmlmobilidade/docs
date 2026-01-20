@@ -8,7 +8,6 @@ import { buttonVariants } from '@/components/ui/button';
 import { InlineTOC } from 'fumadocs-ui/components/inline-toc';
 import { getMDXComponents } from '@/mdx-components';
 import { cn } from '@/lib/cn';
-import { PathUtils } from 'fumadocs-core/source';
 import { PageProps } from '@/types/PageProps'
 import { getName } from '@/lib/getName';
 
