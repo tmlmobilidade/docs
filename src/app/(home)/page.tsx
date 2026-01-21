@@ -79,7 +79,7 @@ export default function Page() {
     <br />
     <br />
       <h2  className="text-xl text-center text-brand font-mono font-bold uppercase mb-2">
-        <Link href="/docs" className={cn(buttonVariants({ variant: 'secondary' }), 'max-sm:text-sm')}>
+        <Link href="/blog" className={cn(buttonVariants({ variant: 'secondary' }), 'max-sm:text-sm')}>
           ver mais blogs sobre tudo da TML
         </Link>   
       </h2>

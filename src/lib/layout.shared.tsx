@@ -1,13 +1,11 @@
 import type { BaseLayoutProps, LinkItemType } from 'fumadocs-ui/layouts/shared';
 import { AlbumIcon } from 'lucide-react';
-import { getSiteMetadata } from './metadata';
 
 export function baseOptions(): BaseLayoutProps {
-  const {siteName} = getSiteMetadata();
 
   return {
     nav: {
-      title: `${siteName}`,
+      title: 'TML MOBILIDADE',
     },
   };
 }
