@@ -1,10 +1,11 @@
-import { blogTags } from '@/components/blog/BlogTags';
+import { BlogTags } from '@/components/blog/BlogTags';
 import { getMDXComponents } from '@/mdx-components';
 import { BlogPage } from '@/types/BlogPage';
 import { InlineTOC } from 'fumadocs-ui/components/inline-toc';
 import path from 'node:path';
 
 export async function BlogPage({ page }: { page: BlogPage }) {
+	const tags = page.data.tags;
 	const { body: Mdx, toc } = await page.data.load();
 
 	return (
@@ -26,7 +27,7 @@ export async function BlogPage({ page }: { page: BlogPage }) {
 			</div>
 
 			<div className="flex flex-row gap-4 text-sm mb-8">
-				{blogTags(page.data.tags)}
+				{BlogTags(tags)}
 			</div>
 
 			<h1 className="text-3xl font-semibold mb-4">

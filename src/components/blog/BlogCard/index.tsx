@@ -1,4 +1,4 @@
-import { blogTags } from '@/components/blog/BlogTags/index';
+import { BlogTags } from '@/components/blog/BlogTags';
 import { getName } from '@/lib/getName';
 import { BlogPost } from '@/types/BlogPost';
 import Link from 'next/link';
@@ -15,7 +15,7 @@ export async function blogCard(post: BlogPost) {
 			<p className="text-sm text-fd-muted-foreground">
 				{post.data.description}
 			</p>
-			{blogTags(post.data.tags)}
+			{BlogTags(post.data.tags)}
 			<p className="mt-auto pt-4 text-xs text-brand">
 				{post.data.author}&nbsp; - &nbsp;
 				{new Date(
