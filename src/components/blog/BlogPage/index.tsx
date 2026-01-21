@@ -1,10 +1,7 @@
 import { blogTags } from '@/components/blog/BlogTags';
-import { buttonVariants } from '@/components/ui/button';
-import { cn } from '@/lib/cn';
 import { getMDXComponents } from '@/mdx-components';
 import { BlogPage } from '@/types/BlogPage';
 import { InlineTOC } from 'fumadocs-ui/components/inline-toc';
-import Link from 'next/link';
 import path from 'node:path';
 
 export async function BlogPage({ page }: { page: BlogPage }) {
