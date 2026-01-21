@@ -6,7 +6,7 @@ import { createRelativeLink } from 'fumadocs-ui/mdx';
 import { PagePropsPromise } from '@/types/PagePropsPromise';
 
 export async function docsListPage({ params }: PagePropsPromise) {
-  const resolvedParams = await params; // Unwrap the promise
+  const resolvedParams = await params;
   const slug = Array.isArray(resolvedParams.slug) ? resolvedParams.slug : [resolvedParams.slug];
 
   const page = source.getPage(slug);

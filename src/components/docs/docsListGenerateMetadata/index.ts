@@ -4,7 +4,7 @@ import type { Metadata } from 'next';
 import { PagePropsPromise } from '@/types/PagePropsPromise';
 
 export async function docsListGenerateMetadata({ params }: PagePropsPromise): Promise<Metadata> {
-  const resolvedParams = await params; // Important: unwrap the promise
+  const resolvedParams = await params;
   const slug = Array.isArray(resolvedParams.slug) ? resolvedParams.slug : [resolvedParams.slug];
 
   const page = source.getPage(slug);

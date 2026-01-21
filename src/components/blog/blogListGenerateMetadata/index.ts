@@ -8,7 +8,6 @@ export async function blogListGenerateMetadata({ params }: PageProps): Promise<M
     const resolvedParams = await params;
     const slug = resolvedParams?.slug ?? [];
   
-    // Case: all blogs
     if (slug.length === 0) {
       return { title: `TML Mobilidade Blog` };
     }
