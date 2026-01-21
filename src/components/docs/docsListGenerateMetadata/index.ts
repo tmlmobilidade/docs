@@ -1,13 +1,9 @@
 import { getPageImage, source } from '@/lib/source';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
+import { PagePropsPromise } from '@/types/PagePropsPromise';
 
-// Correct PageProps typing
-type PageProps = {
-  params: { slug: string | string[] } | Promise<{ slug: string | string[] }>;
-};
-
-export async function docsListGenerateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function docsListGenerateMetadata({ params }: PagePropsPromise): Promise<Metadata> {
   const resolvedParams = await params; // Important: unwrap the promise
   const slug = Array.isArray(resolvedParams.slug) ? resolvedParams.slug : [resolvedParams.slug];
 

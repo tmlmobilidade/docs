@@ -3,13 +3,9 @@ import { docsListGenerateMetadata } from '@/components/docs/docsListGenerateMeta
 import { docsListGenerateStaticParams } from '@/components/docs/docsListGenerateStaticParams/index';
 import { docsListPage } from '@/components/docs/docsListPage/index';
 import { Metadata } from 'next';
+import { PagePropsPromise} from '@/types/PagePropsPromise'
 
-// Correct PageProps typing
-type PageProps = {
-  params: { slug: string | string[] } | Promise<{ slug: string | string[] }>;
-};
-
-export default function Page(props: PageProps) {
+export default function Page(props: PagePropsPromise) {
   return docsListPage(props);
 }
 
@@ -17,6 +13,6 @@ export async function generateStaticParams() {
   return docsListGenerateStaticParams();
 }
 
-export async function generateMetadata(props: PageProps): Promise<Metadata> {
+export async function generateMetadata(props: PagePropsPromise): Promise<Metadata> {
   return docsListGenerateMetadata(props);
 }

@@ -9,12 +9,12 @@ import path from "node:path";
 import { blog } from "@/lib/source";
 import { PageProps } from "@/types/PageProps";
 
-export default async function BlogPage({ params }: PageProps) {
+//s
+
+export default async function blogListPage({ params }: PageProps) {
   const resolvedParams = await params;
   const slug = resolvedParams?.slug ?? [];
 
-  // --------------------------
-  // Case 1: No slug -> list all blogs
   if (slug.length === 0) {
     const posts = [...blog.getPages()].sort(
       (a, b) =>
@@ -56,8 +56,6 @@ export default async function BlogPage({ params }: PageProps) {
     );
   }
 
-  // --------------------------
-  // Case 2: Slug exists -> show single blog
   const page = blog.getPage(slug);
   if (!page) notFound();
 

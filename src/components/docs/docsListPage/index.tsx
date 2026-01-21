@@ -3,13 +3,9 @@ import { DocsBody, DocsDescription, DocsPage, DocsTitle } from 'fumadocs-ui/layo
 import { notFound } from 'next/navigation';
 import { getMDXComponents } from '@/mdx-components';
 import { createRelativeLink } from 'fumadocs-ui/mdx';
+import { PagePropsPromise } from '@/types/PagePropsPromise';
 
-// Correct PageProps typing
-type PageProps = {
-  params: { slug: string | string[] } | Promise<{ slug: string | string[] }>;
-};
-
-export async function docsListPage({ params }: PageProps) {
+export async function docsListPage({ params }: PagePropsPromise) {
   const resolvedParams = await params; // Unwrap the promise
   const slug = Array.isArray(resolvedParams.slug) ? resolvedParams.slug : [resolvedParams.slug];
 
