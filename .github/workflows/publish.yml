@@ -23,6 +23,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: carrismetropolitana/ISO
+          ref: production
           path: content
 
       - name: Checkout docs repository
@@ -36,35 +37,29 @@ jobs:
           node-version: "24"
           cache: npm
 
-      - name: Copy content into docs
+      - name: Copy "Carris Metropolitana" into docs/content
         run: |
-          # Clean old content inside docs
+          # Remove conteúdo antigo
           rm -rf ./docs/content
-
-          # Create new folders
-          mkdir -p ./docs/content/docs
-          mkdir -p ./docs/content/blog
-
-          # Copy docs if they exist
-          if [ -d content/docs ]; then
-              cp -R content/docs/* docs/content/docs/
+      
+          # Criar pasta de destino
+          mkdir -p ./docs/content
+      
+          # Copiar tudo que está dentro de "Carris Metropolitana"
+          if [ -d content/"Carris Metropolitana" ]; then
+              cp -R content/"Carris Metropolitana"/* docs/content/
+          else
+              echo "Pasta 'Carris Metropolitana' não existe no repo content"
           fi
-
-          # Copy blog if they exist
-          if [ -d content/blog ]; then
-              cp -R content/blog/* docs/content/blog/
-          fi
-
-          # Normalize filenames (docs + blog)
-          for folder in docs/content/docs docs/content/blog; do
-            find "$folder" -depth | while read path; do
-              base="$(basename "$path")"
-              dir="$(dirname "$path")"
-              normalized="$(echo "$base" | tr '[:upper:]' '[:lower:]' | sed 's/ /-/g')"
-              if [ "$base" != "$normalized" ]; then
-                mv "$path" "$dir/$normalized"
-              fi
-            done
+      
+          # Normalizar nomes de ficheiros (opcional)
+          for file in docs/content/*; do
+            base="$(basename "$file")"
+            dir="$(dirname "$file")"
+            normalized="$(echo "$base" | tr '[:upper:]' '[:lower:]' | sed 's/ /-/g')"
+            if [ "$base" != "$normalized" ]; then
+              mv "$file" "$dir/$normalized"
+            fi
           done
         shell: bash
 
