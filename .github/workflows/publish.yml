@@ -45,14 +45,15 @@ jobs:
           # Criar pasta de destino
           mkdir -p ./docs/content
       
-          # Copiar tudo que está dentro de "Carris Metropolitana"
-          if [ -d content/"Carris Metropolitana" ]; then
-              cp -R content/"Carris Metropolitana"/* docs/content/
+          # Copiar tudo dentro de "Carris Metropolitana"
+          if [ -d "content/Carris Metropolitana" ]; then
+              cp -R "content/Carris Metropolitana/"* docs/content/
           else
               echo "Pasta 'Carris Metropolitana' não existe no repo content"
+              exit 1
           fi
       
-          # Normalizar nomes de ficheiros (opcional)
+          # Normalizar nomes de ficheiros
           for file in docs/content/*; do
             base="$(basename "$file")"
             dir="$(dirname "$file")"
