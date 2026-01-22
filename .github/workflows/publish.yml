@@ -45,10 +45,14 @@ jobs:
           mkdir -p template/content/docs
           mkdir -p template/content/blog
 
-          # Copy docs and blog
-          cp -R content/docs/* template/content/docs
-          cp -R content/blog/* template/content/blog
+          if [ -d content/docs ]; then
+              cp -R content/docs/* template/content/docs/
+          fi
 
+          # Copy blog if they exist
+          if [ -d content/blog ]; then
+              cp -R content/blog/* template/content/blog/
+          fi
 
           # Normalize filenames (docs + blog)
           for folder in template/content/docs template/content/blog; do
