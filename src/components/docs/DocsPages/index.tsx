@@ -5,7 +5,7 @@ import { DocsBody, DocsDescription, DocsPage, DocsTitle } from 'fumadocs-ui/layo
 import { createRelativeLink } from 'fumadocs-ui/mdx';
 import { notFound } from 'next/navigation';
 
-export async function docsListPage({ params }: PagePropsPromise) {
+export async function DocsPages({ params }: PagePropsPromise) {
 	const resolvedParams = await params;
 	const slug = Array.isArray(resolvedParams.slug) ? resolvedParams.slug : [resolvedParams.slug];
 

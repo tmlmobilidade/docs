@@ -1,6 +1,6 @@
 import { source } from '@/lib/source';
 
-export async function docsListGenerateStaticParams() {
+export async function DocsGenerateStaticParams() {
 	try {
 		const params = source.generateParams();
 		if (!params || !params.length) {

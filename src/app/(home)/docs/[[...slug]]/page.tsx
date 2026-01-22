@@ -1,17 +1,17 @@
-import { docsListGenerateMetadata } from '@/components/docs/docsListGenerateMetadata/index';
-import { docsListGenerateStaticParams } from '@/components/docs/docsListGenerateStaticParams/index';
-import { docsListPage } from '@/components/docs/docsListPage/index';
+import { DocsGenerateMetadata } from '@/components/docs/DocsGenerateMetadata/index';
+import { DocsGenerateStaticParams } from '@/components/docs/DocsGenerateStaticParams/index';
+import { DocsPages } from '@/components/docs/DocsPages/index';
 import { PagePropsPromise } from '@/types/PagePropsPromise';
 import { Metadata } from 'next';
 
 export default function Page(props: PagePropsPromise) {
-	return docsListPage(props);
+	return DocsPages(props);
 }
 
 export async function generateStaticParams() {
-	return docsListGenerateStaticParams();
+	return DocsGenerateStaticParams();
 }
 
 export async function generateMetadata(props: PagePropsPromise): Promise<Metadata> {
-	return docsListGenerateMetadata(props);
+	return DocsGenerateMetadata(props);
 }

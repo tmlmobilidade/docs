@@ -31,3 +31,5 @@ export const blog = loader(toFumadocsSource(blogPosts, []), {
 });
 
 export type Page = InferPageType<typeof source>;
+
+export { docs };

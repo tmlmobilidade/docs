@@ -1,0 +1,94 @@
+name: Publish Fumadocs to GitHub Pages
+
+on:
+  push:
+    branches: ["production"]
+  workflow_dispatch: 
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+env:
+  ENVIRONMENT: "production"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout content repository
+        uses: actions/checkout@v4
+        with:
+          repository: carrismetropolitana/ISO
+          path: content
+
+      - name: Checkout template repository
+        uses: actions/checkout@v4
+        with:
+          path: template
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: template/package-lock.json
+
+      - name: Copy content into template
+        run: |
+          rm -rf template/content
+          cp -R content/* template/content
+
+          # Normalize filenames (lowercase, replace spaces with dashes)
+          find template/content -depth | while read path; do
+            base="$(basename "$path")"
+            dir="$(dirname "$path")"
+            normalized="$(echo "$base" | tr '[:upper:]' '[:lower:]' | sed 's/ /-/g')"
+            if [ "$base" != "$normalized" ]; then
+              mv "$path" "$dir/$normalized"
+            fi
+          done
+        shell: bash
+
+      - name: Clean template
+        run: npx -y @tmlmobilidade/repo-rinse
+        working-directory: template
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: template
+
+      - name: Build site
+        env:
+          ENVIRONMENT: ${{ env.ENVIRONMENT }}
+          NEXT_PUBLIC_ENVIRONMENT: ${{ env.ENVIRONMENT }}
+          GITHUB_PAGES: "true"
+        run: npm run build
+        working-directory: template
+
+      - name: Copy .next static files
+        run: |
+          mkdir -p template/out/_next
+          cp -R template/.next/static template/out/_next/static
+        shell: bash
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: template/out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

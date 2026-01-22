@@ -4,7 +4,7 @@ import { getPageImage, source } from '@/lib/source';
 import { PagePropsPromise } from '@/types/PagePropsPromise';
 import { notFound } from 'next/navigation';
 
-export async function docsListGenerateMetadata({ params }: PagePropsPromise): Promise<Metadata> {
+export async function DocsGenerateMetadata({ params }: PagePropsPromise): Promise<Metadata> {
 	const resolvedParams = await params;
 	const slug = Array.isArray(resolvedParams.slug) ? resolvedParams.slug : [resolvedParams.slug];
 
