@@ -11,8 +11,8 @@ const isGitHubPages = process.env.GITHUB_PAGES === 'true'
 
 /** @type {import('next').NextConfig} */
 const config = {
-  assetPrefix: isGitHubPages ? '/carrismetropolitana/' : '',
-  basePath: isGitHubPages ? '/carrismetropolitana' : '',
+  assetPrefix: isGitHubPages ? '/ISO/' : '',
+  basePath: isGitHubPages ? '/ISO' : '',
   // experimental: {
   //   outputFileTracingRoot: __dirname,
   // },
