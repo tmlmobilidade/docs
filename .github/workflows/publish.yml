@@ -26,6 +26,11 @@ jobs:
           ref: production
           path: content
 
+      - name: List content repo
+        run: |
+          echo "Conteúdo do repo content:"
+          ls -R content
+
       - name: Checkout docs repository
         uses: actions/checkout@v4
         with:
@@ -45,7 +50,7 @@ jobs:
           # Criar pasta de destino
           mkdir -p ./docs/content
       
-          # Copiar tudo dentro de "Carris Metropolitana"
+            # Copiar tudo dentro de "Carris Metropolitana"
           if [ -d "content/Carris Metropolitana" ]; then
               cp -R "content/Carris Metropolitana/"* docs/content/
           else
