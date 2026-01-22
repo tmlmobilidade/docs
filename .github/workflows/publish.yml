@@ -38,6 +38,7 @@ jobs:
 
       - name: Copy content into template
         run: |
+          mkdir -p template/content
           rm -rf template/content
           cp -R content/* template/content
 
