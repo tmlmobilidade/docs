@@ -11,6 +11,7 @@ permissions:
   id-token: write
 
 env:
+  GITHUB_PAGES: "true"
   ENVIRONMENT: "production"
 
 jobs:
