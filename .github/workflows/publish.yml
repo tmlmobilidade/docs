@@ -87,7 +87,7 @@ jobs:
       - name: Copy .next static files
         run: |
           mkdir -p docs/out/_next
-          cp -R /.next/static /out/_next/static
+          cp -R docs/.next/static docs/out/_next/static
         shell: bash
 
       - name: Upload GitHub Pages artifact
