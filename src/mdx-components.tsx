@@ -1,11 +1,12 @@
-import defaultMdxComponents from 'fumadocs-ui/mdx';
-import * as ObsidianComponents from 'fumadocs-obsidian/ui';
 import type { MDXComponents } from 'mdx/types';
 
+import * as ObsidianComponents from 'fumadocs-obsidian/ui';
+import defaultMdxComponents from 'fumadocs-ui/mdx';
+
 export function getMDXComponents(components?: MDXComponents): MDXComponents {
-  return {
-    ...defaultMdxComponents,
-    ...ObsidianComponents,
-    ...components,
-  };
+	return {
+		...defaultMdxComponents,
+		...ObsidianComponents,
+		...components,
+	};
 }

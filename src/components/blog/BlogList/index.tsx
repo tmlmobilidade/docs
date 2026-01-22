@@ -1,9 +1,9 @@
 import { blogCard } from '@/components/blog/BlogCard';
 import { blogListHeader } from '@/components/blog/BlogListHeader/index';
 import { getName } from '@/lib/getName';
-import { BlogPost } from '@/types/BlogPost';
+import { BlogPost as BlogPostType } from '@/types/BlogPost';
 
-export function BlogList({ posts }: { posts: BlogPost[] }) {
+export function BlogList({ posts }: { posts: BlogPostType[] }) {
 	posts.sort(
 		(a, b) =>
 			new Date(b.data.date ?? getName(b.path)).getTime() - new Date(a.data.date ?? getName(a.path)).getTime(),

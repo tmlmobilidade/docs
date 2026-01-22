@@ -1,10 +1,10 @@
 import { BlogTags } from '@/components/blog/BlogTags';
 import { getMDXComponents } from '@/mdx-components';
-import { BlogPage } from '@/types/BlogPage';
+import { BlogPage as BlogPageType } from '@/types/BlogPage';
 import { InlineTOC } from 'fumadocs-ui/components/inline-toc';
 import path from 'node:path';
 
-export async function BlogPage({ page }: { page: BlogPage }) {
+export async function BlogPage({ page }: { page: BlogPageType }) {
 	const tags = page.data.tags;
 	const { body: Mdx, toc } = await page.data.load();
 

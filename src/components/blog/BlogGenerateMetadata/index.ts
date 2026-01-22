@@ -2,7 +2,6 @@ import { createMetadata } from '@/lib/metadata';
 import { blog } from '@/lib/source';
 import { PageProps } from '@/types/PageProps';
 import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
 
 export async function BlogGenerateMetadata({ params }: PageProps): Promise<Metadata> {
 	const resolvedParams = await params;
@@ -13,7 +12,9 @@ export async function BlogGenerateMetadata({ params }: PageProps): Promise<Metad
 	}
 
 	const page = blog.getPage(slug);
-	if (!page) notFound();
+	if (!page) return createMetadata({
+		title: 'Blog',
+	});
 
 	return createMetadata({
 		description: page.data.description,

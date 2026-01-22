@@ -1,4 +1,4 @@
-export function BlogTags(tags?: unknown) {
+export function BlogTags(tags?: string | string[]) {
 	if (!Array.isArray(tags) || tags.length === 0) return null;
 
 	return (

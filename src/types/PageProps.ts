@@ -1,4 +1,3 @@
-export type PageProps = {
-    params: Promise<{ slug?: string[] }> | { slug?: string[] };
-  };
-  
+export interface PageProps {
+	params: Promise<{ slug?: string[] }> | { slug?: string[] }
+}
