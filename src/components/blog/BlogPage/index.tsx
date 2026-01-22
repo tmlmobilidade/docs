@@ -17,7 +17,7 @@ export async function BlogPage({ page }: { page: BlogPageType }) {
 	// B. Render components
 
 	return (
-		<article className="flex flex-col mx-auto w-full max-w-[800px] px-4 py-8">
+		<article className="flex flex-col mx-auto w-full max-w-[1400px] px-4 py-8">
 			<div className="flex flex-row gap-4 text-sm mb-8">
 				<div>
 					<p className="mb-1 text-fd-muted-foreground">Written by</p>

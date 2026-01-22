@@ -12,7 +12,6 @@ export default async function Page({ params }: PageProps) {
 	const slug = resolvedParams?.slug ?? [];
 
 	if (slug.length === 0) {
-		// Root blog list page
 		return <BlogList posts={blog.getPages()} />;
 	}
 
