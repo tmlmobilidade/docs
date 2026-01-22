@@ -20,7 +20,7 @@ export default function Page() {
 						Descobre a melhor
 						<br className="md:hidden" /> documentação sobre veículos,
 						<br />
-						tudo sobre a rede de autocarros de Portugal.
+						tudo sobre a rede de autocarros da AML.
 					</h1>
 					<div className="flex flex-row items-center justify-center gap-4 flex-wrap w-fit">
 						<Link className={cn(buttonVariants(), 'max-sm:text-sm')} href="/docs">
@@ -40,8 +40,7 @@ export default function Page() {
 			<div className="grid grid-cols-1 gap-10 mt-12 px-6 mx-auto w-full max-w-[1400px] md:px-12 lg:grid-cols-2">
 				<p className="text-2xl tracking-tight leading-snug font-light col-span-full md:text-3xl xl:text-4xl">
 					<span className="text-brand font-medium" />
-					Aqui podes descobrir como funciona a rede de autocarros da tua cidade, gerida pela <span className="text-brand font-medium">TML Mobilidade</span>.
-					Fica a conhecer a organização do serviço, o planeamento das linhas e os horários, e compreende melhor o funcionamento do teu autocarro favorito no dia a dia.
+					ola
 				</p>
 				<br />
 				<div className="p-8 bg-radial-[circle_at_top_center] from-25% to-brand-secondary/50 rounded-xl col-span-full">
