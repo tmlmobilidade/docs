@@ -6,10 +6,10 @@ const isGitHubPages = process.env.GITHUB_PAGES === 'true'
 
 /** @type {import('next').NextConfig} */
 const config = {
-  output: 'export',      // gera site estático
+  assetPrefix: isGitHubPages ? '/docs/' : '',
+  basePath: isGitHubPages ? '/docs' : '',
+  output: 'export',
   reactStrictMode: true,
-  basePath: isGithubPages ? '/docs' : '',
-  assetPrefix: isGithubPages ? '/docs/' : '',
 }
 
 export default withMDX(config)
