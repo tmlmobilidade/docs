@@ -23,21 +23,12 @@ export default async function Page({ params }: PageProps) {
 	return <BlogPage page={page} />;
 }
 
-/**
- * This ensures that static export generates pages for:
- * - Root /blog (slug = [])
- * - All individual blog posts
- */
 export async function generateStaticParams() {
 	const postParams = await BlogGenerateStaticParams();
 
-	// Add root /blog page
 	return [...postParams, { slug: [] }];
 }
 
-/**
- * Optional metadata generator for SEO
- */
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
 	return BlogGenerateMetadata(props);
 }
