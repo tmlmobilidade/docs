@@ -38,17 +38,10 @@ jobs:
 
       - name: Copy content into template
         run: |
-          # Clean old content
           rm -rf /content
-      
-          # Copy docs
-          mkdir -p /content/docs
-          cp -R content/docs/* template/content/docs
-      
-          # Copy blog
-          mkdir -p /content/blog
-          cp -R content/blog/* /content/blog
-      
+          mkdir -p /content/
+          cp -R content/docs/* /content/
+
           # Normalize filenames (docs + blog)
           for folder in template/content/docs template/content/blog; do
             find "$folder" -depth | while read path; do
