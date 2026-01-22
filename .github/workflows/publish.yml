@@ -50,8 +50,14 @@ jobs:
           # Criar pasta de destino
           mkdir -p ./docs/content
       
-          # Copiar tudo dentro de "Carris Metropolitana"
-          cp -R "content/Carris Metropolitana/"* docs/content/
+          # Copiar a pasta inteira temporariamente
+          cp -R "content/Carris Metropolitana" ./temp-cm
+      
+          # Mover apenas o conteúdo para docs/content
+          mv ./temp-cm/* ./docs/content/
+      
+          # Remover a pasta temporária
+          rm -rf ./temp-cm
       
           # Normalizar nomes de ficheiros e pastas
           find docs/content -depth | while read path; do
@@ -63,6 +69,7 @@ jobs:
             fi
           done
         shell: bash
+        
       
 
       - name: Clean docs
