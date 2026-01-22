@@ -5,8 +5,16 @@ import { InlineTOC } from 'fumadocs-ui/components/inline-toc';
 import path from 'node:path';
 
 export async function BlogPage({ page }: { page: BlogPageType }) {
+	//
+
+	//
+	// A. Setup variables
+
 	const tags = page.data.tags;
 	const { body: Mdx, toc } = await page.data.load();
+
+	//
+	// B. Render components
 
 	return (
 		<article className="flex flex-col mx-auto w-full max-w-[800px] px-4 py-8">

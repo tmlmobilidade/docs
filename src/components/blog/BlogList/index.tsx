@@ -4,10 +4,19 @@ import { getName } from '@/lib/getName';
 import { BlogPost as BlogPostType } from '@/types/BlogPost';
 
 export function BlogList({ posts }: { posts: BlogPostType[] }) {
+	//
+
+	//
+	// A. Transform data
+
 	posts.sort(
 		(a, b) =>
 			new Date(b.data.date ?? getName(b.path)).getTime() - new Date(a.data.date ?? getName(a.path)).getTime(),
 	);
+
+	//
+	// B. Render components
+
 	return (
 		<main className="mx-auto w-full max-w-[1400px] px-4 pb-12 md:py-12">
 			{blogListHeader()}
