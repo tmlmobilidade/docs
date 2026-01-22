@@ -27,7 +27,7 @@ jobs:
       - name: Checkout docs repository
         uses: actions/checkout@v4
         with:
-          path: docs
+          path: .
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -39,11 +39,11 @@ jobs:
       - name: Copy content into docs
         run: |
           # Clean old content inside docs
-          rm -rf docs/content
+          rm -rf ./content
 
           # Create new folders
-          mkdir -p docs/content/docs
-          mkdir -p docs/content/blog
+          mkdir -p ./content/docs
+          mkdir -p ./content/blog
 
           if [ -d content/docs ]; then
               cp -R content/docs/* docs/content/docs/
@@ -86,8 +86,8 @@ jobs:
 
       - name: Copy .next static files
         run: |
-          mkdir -p docs/out/_next
-          cp -R docs/.next/static docs/out/_next/static
+          mkdir -p ./out/_next
+          cp -R ./.next/static ./out/_next/static
         shell: bash
 
       - name: Upload GitHub Pages artifact

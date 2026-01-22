@@ -6,10 +6,9 @@ const withMDX = createMDX()
 
 /** @type {import('next').NextConfig} */
 const config = {
-  // assetPrefix: isGitHubPages ? '/TML/' : '',
-  // basePath: isGitHubPages ? '/TML' : '',
-  output: 'export',
+  output: 'export',      // gera site estático
   reactStrictMode: true,
+  trailingSlash: true,
 }
 
 export default withMDX(config)
