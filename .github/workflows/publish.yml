@@ -38,8 +38,8 @@ jobs:
 
       - name: Copy content into template
         run: |
-          mkdir -p template/content
           rm -rf template/content
+          mkdir -p template/content
           cp -R content/* template/content
 
           # Normalize filenames (lowercase, replace spaces with dashes)
