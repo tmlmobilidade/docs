@@ -24,38 +24,38 @@ jobs:
           repository: carrismetropolitana/ISO
           path: content
 
-      - name: Checkout template repository
+      - name: Checkout docs repository
         uses: actions/checkout@v4
         with:
-          path: template
+          path: docs
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "24"
           cache: npm
-          cache-dependency-path: template/package-lock.json
+          cache-dependency-path: docs/package-lock.json
 
-      - name: Copy content into template
+      - name: Copy content into docs
         run: |
-          # Clean old content inside template
-          rm -rf template/content
+          # Clean old content inside docs
+          rm -rf docs/content
 
           # Create new folders
-          mkdir -p template/content/docs
-          mkdir -p template/content/blog
+          mkdir -p docs/content/docs
+          mkdir -p docs/content/blog
 
           if [ -d content/docs ]; then
-              cp -R content/docs/* template/content/docs/
+              cp -R content/docs/* docs/content/docs/
           fi
 
           # Copy blog if they exist
           if [ -d content/blog ]; then
-              cp -R content/blog/* template/content/blog/
+              cp -R content/blog/* docs/content/blog/
           fi
 
           # Normalize filenames (docs + blog)
-          for folder in template/content/docs template/content/blog; do
+          for folder in docs/content/docs docs/content/blog; do
             find "$folder" -depth | while read path; do
               base="$(basename "$path")"
               dir="$(dirname "$path")"
@@ -68,13 +68,13 @@ jobs:
         shell: bash
       
 
-      - name: Clean template
+      - name: Clean docs
         run: npx -y @tmlmobilidade/repo-rinse
-        working-directory: template
+        working-directory: docs
 
       - name: Install dependencies
         run: npm install
-        working-directory: template
+        working-directory: docs
 
       - name: Build site
         env:
@@ -82,18 +82,18 @@ jobs:
           NEXT_PUBLIC_ENVIRONMENT: ${{ env.ENVIRONMENT }}
           GITHUB_PAGES: "true"
         run: npm run build
-        working-directory: template
+        working-directory: docs
 
       - name: Copy .next static files
         run: |
-          mkdir -p template/out/_next
+          mkdir -p docs/out/_next
           cp -R /.next/static /out/_next/static
         shell: bash
 
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: template/out
+          path: docs/out
 
   deploy:
     needs: build
