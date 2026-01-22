@@ -15,7 +15,14 @@ export async function docsListPage({ params }: PagePropsPromise) {
 	const MDX = page.data.body;
 
 	return (
-		<DocsPage full={page.data.full} toc={page.data.toc}>
+		<DocsPage
+			toc={page.data.toc}
+			tableOfContent={{
+				enabled: true,
+				style: 'clerk',
+			}}
+			full
+		>
 			<DocsTitle>{page.data.title}</DocsTitle>
 			<DocsDescription>{page.data.description}</DocsDescription>
 			<DocsBody>
