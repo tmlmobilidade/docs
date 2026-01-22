@@ -8,14 +8,21 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 export default async function Page({ params }: PageProps) {
+	//
+
+	//
+	// A. Setup variables
+
 	const resolvedParams = await params;
 	const slug = resolvedParams?.slug ?? [];
+
+	//
+	// B. Render components
 
 	if (slug.length === 0) {
 		return <BlogList posts={blog.getPages()} />;
 	}
 
-	// Individual blog post
 	const page = blog.getPage(slug);
 	if (!page) return notFound();
 
