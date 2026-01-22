@@ -39,8 +39,7 @@ jobs:
       - name: Copy content into template
         run: |
           # Clean old content
-          rm -rf template/content/docs
-          rm -rf template/content/blog
+          rm -rf template/content
       
           # Copy docs
           mkdir -p template/content/docs
