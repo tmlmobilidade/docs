@@ -1,6 +1,7 @@
 import { docs } from '@/lib/source';
 import { RouteContext } from '@/types/RouteContext';
 import { generate as DefaultImage } from 'fumadocs-ui/og';
+import { Key } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import { ImageResponse } from 'next/og';
 
@@ -33,7 +34,7 @@ export async function GET(_req: Request, { params }: RouteContext) {
 
 // Generate static params for all docs
 export function generateStaticParams() {
-	return Object.values(docs).map(page => ({
-		slug: page.slug.split('-'), // convert key back to slug array
+	return Object.keys(docs).map(key => ({
+		slug: key.split('-'), // safe because key is the filename
 	}));
 }
