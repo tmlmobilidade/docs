@@ -38,20 +38,31 @@ jobs:
 
       - name: Copy content into template
         run: |
-          rm -rf template/content
-          mkdir -p template/content
-          cp -R content/* template/content
-
-          # Normalize filenames (lowercase, replace spaces with dashes)
-          find template/content -depth | while read path; do
-            base="$(basename "$path")"
-            dir="$(dirname "$path")"
-            normalized="$(echo "$base" | tr '[:upper:]' '[:lower:]' | sed 's/ /-/g')"
-            if [ "$base" != "$normalized" ]; then
-              mv "$path" "$dir/$normalized"
-            fi
+          # Clean old content
+          rm -rf template/content/docs
+          rm -rf template/content/blog
+      
+          # Copy docs
+          mkdir -p template/content/docs
+          cp -R content/docs/* template/content/docs
+      
+          # Copy blog
+          mkdir -p template/content/blog
+          cp -R content/blog/* template/content/blog
+      
+          # Normalize filenames (docs + blog)
+          for folder in template/content/docs template/content/blog; do
+            find "$folder" -depth | while read path; do
+              base="$(basename "$path")"
+              dir="$(dirname "$path")"
+              normalized="$(echo "$base" | tr '[:upper:]' '[:lower:]' | sed 's/ /-/g')"
+              if [ "$base" != "$normalized" ]; then
+                mv "$path" "$dir/$normalized"
+              fi
+            done
           done
         shell: bash
+      
 
       - name: Clean template
         run: npx -y @tmlmobilidade/repo-rinse
