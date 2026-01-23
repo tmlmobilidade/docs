@@ -39,7 +39,6 @@ const basePath = getBasePath()
 
 /** @type {import('next').NextConfig} */
 const config = {
-  assetPrefix: basePath ? `${basePath}/` : '',
   basePath: basePath,
   output: 'export',
   reactStrictMode: true,
