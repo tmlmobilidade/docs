@@ -1,19 +1,20 @@
 import type { ElementContent } from 'hast';
 import type { ShikiTransformer } from 'shiki';
 
+import { getContentFolderName } from '@/lib/getBasePath';
 import { applyMdxPreset, defineCollections, defineConfig, defineDocs, frontmatterSchema, metaSchema } from 'fumadocs-mdx/config';
 import { readVaultFiles } from 'fumadocs-obsidian';
 import { remarkObsidian, RemarkObsidianOptions } from 'fumadocs-obsidian/mdx';
 import { z } from 'zod';
 
 // Get the actual folder name from content directory
-// const contentFolderName = getContentFolderName();
+const contentFolderName = getContentFolderName();
 
 // You can customise Zod schemas for frontmatter and `meta.json` here
 // see https://fumadocs.dev/docs/mdx/collections
 
 export const docs = defineDocs({
-	dir: `content/docs`,
+	dir: `content/${contentFolderName}/docs`,
 	docs: {
 		postprocess: {
 			includeProcessedMarkdown: true,
@@ -46,7 +47,7 @@ export default defineConfig({
 
 export const blog = defineCollections({
 	async: true,
-	dir: `content/blog`,
+	dir: `content/${contentFolderName}/blog`,
 	async mdxOptions(environment) {
 		const { rehypeCodeDefaultOptions } = await import('fumadocs-core/mdx-plugins/rehype-code');
 		const { remarkSteps } = await import('fumadocs-core/mdx-plugins/remark-steps');
