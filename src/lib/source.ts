@@ -2,9 +2,12 @@ import { type InferPageType, loader } from 'fumadocs-core/source';
 import { toFumadocsSource } from 'fumadocs-mdx/runtime/server';
 import { blog as blogPosts, docs } from 'fumadocs-mdx:collections/server';
 
+const isGitHubPages = process.env.GITHUB_PAGES === 'true';
+const basePath = isGitHubPages ? '/docs' : '';
+
 // See https://fumadocs.dev/docs/headless/source-api for more info
 export const source = loader({
-	baseUrl: '/docs',
+	baseUrl: `${basePath}/docs`,
 	plugins: [],
 	source: docs.toFumadocsSource(),
 });
@@ -27,7 +30,7 @@ ${processed}`;
 }
 
 export const blog = loader(toFumadocsSource(blogPosts, []), {
-	baseUrl: '/blog',
+	baseUrl: `${basePath}/blog`,
 });
 
 export type Page = InferPageType<typeof source>;
