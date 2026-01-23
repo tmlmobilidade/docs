@@ -32,7 +32,7 @@ jobs:
 
       - name: fix names files 
         run: |
-          find docs/content -depth | while read path; do
+          find ./content -depth | while read path; do
             base="$(basename "$path")"
             dir="$(dirname "$path")"
             normalized="$(echo "$base" | tr '[:upper:]' '[:lower:]' | sed 's/ /-/g')"
