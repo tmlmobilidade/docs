@@ -42,18 +42,28 @@ jobs:
           node-version: "24"
           cache: npm
 
-      - name: Copy "Carris Metropolitana" into docs/content
+      - name: Copy Carris Metropolitana into docs/content
+        shell: bash
         run: |
-          # Remove conteúdo antigo
-          rm -rf ./docs/content
-
-          # Criar pasta de destino
-          mkdir -p ./docs/content
-
-          # Copiar a pasta inteira "Carris Metropolitana"
-          cp -R "content/Carris Metropolitana/*" ./docs/content/
-            
-          # Normalizar nomes de ficheiros e pastas
+          set -e
+      
+          echo "Procurar pasta Carris Metropolitana..."
+          CM_DIR=$(find content -maxdepth 1 -type d -iname "*metropolitana*")
+      
+          echo "Encontrado: $CM_DIR"
+      
+          if [ -z "$CM_DIR" ]; then
+            echo "Pasta Carris Metropolitana não encontrada"
+            exit 1
+          fi
+      
+          # Limpar destino
+          rm -rf docs/content
+          mkdir -p docs/content
+      
+          # Copiar a pasta inteira
+          cp -R "$CM_DIR" docs/content/
+          
           find docs/content -depth | while read path; do
             base="$(basename "$path")"
             dir="$(dirname "$path")"
@@ -62,9 +72,8 @@ jobs:
               mv "$path" "$dir/$normalized"
             fi
           done
-        shell: bash
-        
       
+    
       - name: Clean docs
         run: npx -y @tmlmobilidade/repo-rinse
         working-directory: docs
