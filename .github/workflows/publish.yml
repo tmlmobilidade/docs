@@ -45,11 +45,11 @@ jobs:
       
       - name: Clean docs
         run: npx -y @tmlmobilidade/repo-rinse
-        working-directory: docs
+        working-directory: .
 
       - name: Install dependencies
         run: npm install
-        working-directory: docs
+        working-directory: .
 
       - name: Build site
         env:
