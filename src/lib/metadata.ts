@@ -1,76 +1,42 @@
 import type { Metadata } from 'next/types';
 
-import fs from 'fs';
-import path from 'path';
-
 import { Page } from './source';
 
-/**
- * Type definition for your Obsidian metadata file
- */
-export interface SiteMetadataFile {
-	description?: string
-	siteName: string
-	theme?: string
-}
-
-/**
- * Reads site.metadata.json from Docker / build folder
- */
-export function getSiteMetadata(): SiteMetadataFile {
-	const metadataPath = path.join(process.cwd(), 'content', '.metadata.json');
-
-	if (!fs.existsSync(metadataPath)) {
-		throw new Error(`Missing .metadata.json file at ${metadataPath}`);
-	}
-
-	const raw = fs.readFileSync(metadataPath, 'utf-8');
-	return JSON.parse(raw) as SiteMetadataFile;
-}
-
-/**
- * Creates Next.js Metadata object, using Obsidian metadata as default
- */
 export function createMetadata(override: Metadata): Metadata {
-	const site = getSiteMetadata();
-
 	return {
 		...override,
 		alternates: {
 			types: {
 				'application/rss+xml': [
 					{
-						title: `${site.siteName} Blog`,
+						title: 'TML MOBILIDADE Blog',
 						url: '',
 					},
 				],
 			},
 			...override.alternates,
 		},
-		description: override.description ?? site.description,
+		description: override.description ?? 'Documentação sobre veículos e rede de autocarros da AML',
 		openGraph: {
-			description: override.description ?? site.description,
+			description: override.description ?? 'Documentação sobre veículos e rede de autocarros da AML',
 			images: '/banner.png',
-			siteName: site.siteName,
-			title: override.title ?? site.siteName,
+			siteName: 'TML MOBILIDADE',
+			title: override.title ?? 'TML MOBILIDADE',
 			url: '',
 			...override.openGraph,
 		},
-		title: override.title ?? site.siteName,
+		title: override.title ?? 'TML MOBILIDADE',
 		twitter: {
 			card: 'summary_large_image',
 			creator: '@fuma_nama',
-			description: override.description ?? site.description,
+			description: override.description ?? 'Documentação sobre veículos e rede de autocarros da AML',
 			images: '/banner.png',
-			title: override.title ?? site.siteName,
+			title: override.title ?? 'TML MOBILIDADE',
 			...override.twitter,
 		},
 	};
 }
 
-/**
- * Helper to get OG image URL for a page
- */
 export function getPageImage(page: Page) {
 	const segments = [...page.slugs, 'image.webp'];
 	return {
@@ -79,8 +45,5 @@ export function getPageImage(page: Page) {
 	};
 }
 
-/**
- * Base URL detection
- */
 export const baseUrl
   = process.env.NODE_ENV === 'development' || !process.env.VERCEL_PROJECT_PRODUCTION_URL ? new URL('http://localhost:3000') : new URL(`https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`);

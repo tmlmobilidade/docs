@@ -6,14 +6,16 @@ import { readVaultFiles } from 'fumadocs-obsidian';
 import { remarkObsidian, RemarkObsidianOptions } from 'fumadocs-obsidian/mdx';
 import { z } from 'zod';
 
-const isGitHubPages = process.env.GITHUB_PAGES === 'true';
-const basePath = isGitHubPages ? '/docs' : '';
+import { getContentFolderName } from './src/lib/getBasePath';
+
+// Get the actual folder name from content directory
+const contentFolderName = getContentFolderName();
 
 // You can customise Zod schemas for frontmatter and `meta.json` here
 // see https://fumadocs.dev/docs/mdx/collections
 
 export const docs = defineDocs({
-	dir: `content/${basePath}/docs`,
+	dir: `content/${contentFolderName}/docs`,
 	docs: {
 		postprocess: {
 			includeProcessedMarkdown: true,
@@ -46,7 +48,7 @@ export default defineConfig({
 
 export const blog = defineCollections({
 	async: true,
-	dir: `content/${basePath}/blog`,
+	dir: `content/${contentFolderName}/blog`,
 	async mdxOptions(environment) {
 		const { rehypeCodeDefaultOptions } = await import('fumadocs-core/mdx-plugins/rehype-code');
 		const { remarkSteps } = await import('fumadocs-core/mdx-plugins/remark-steps');

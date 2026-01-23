@@ -16,7 +16,7 @@ export async function BlogGenerateMetadata({ params }: PageProps): Promise<Metad
 	// B. Render components
 
 	if (slug.length === 0) {
-		return { title: `TML Mobilidade Blog` };
+		return { title: 'TML MOBILIDADE Blog' };
 	}
 
 	const page = blog.getPage(slug);
