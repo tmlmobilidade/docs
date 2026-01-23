@@ -19,18 +19,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout content repository
-        uses: actions/checkout@v4
-        with:
-          repository: carrismetropolitana/ISO
-          ref: production
-          path: content
-
-      - name: List content repo
-        run: |
-          echo "Conteúdo do repo content:"
-          ls -R content
-
       - name: Checkout docs repository
         uses: actions/checkout@v4
         with:
@@ -44,17 +32,7 @@ jobs:
 
       - name: Copy "Carris Metropolitana" into docs/content
         run: |
-          # Remove conteúdo antigo
-          rm -rf ./docs/content
-
-          # Criar pasta de destino
-          mkdir -p ./docs/content
-
-          # Copiar a pasta inteira "Carris Metropolitana"
-          ls
-          ls content
-          ls "content/Carris Metropolitana" || echo "Pasta não encontrada"
-          cp -R "content/Carris Metropolitana" ./docs/content/
+          cp -R "./content/Carris Metropolitana" ./docs/content/
             
           # Normalizar nomes de ficheiros e pastas
           find docs/content -depth | while read path; do
