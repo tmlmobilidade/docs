@@ -6,16 +6,14 @@ import { readVaultFiles } from 'fumadocs-obsidian';
 import { remarkObsidian, RemarkObsidianOptions } from 'fumadocs-obsidian/mdx';
 import { z } from 'zod';
 
-import { getContentFolderName } from './src/lib/getBasePath';
-
 // Get the actual folder name from content directory
-const contentFolderName = getContentFolderName();
+// const contentFolderName = getContentFolderName();
 
 // You can customise Zod schemas for frontmatter and `meta.json` here
 // see https://fumadocs.dev/docs/mdx/collections
 
 export const docs = defineDocs({
-	dir: `content/${contentFolderName}/docs`,
+	dir: `content/docs`,
 	docs: {
 		postprocess: {
 			includeProcessedMarkdown: true,
@@ -48,7 +46,7 @@ export default defineConfig({
 
 export const blog = defineCollections({
 	async: true,
-	dir: `content/${contentFolderName}/blog`,
+	dir: `content/blog`,
 	async mdxOptions(environment) {
 		const { rehypeCodeDefaultOptions } = await import('fumadocs-core/mdx-plugins/rehype-code');
 		const { remarkSteps } = await import('fumadocs-core/mdx-plugins/remark-steps');

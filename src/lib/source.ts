@@ -2,13 +2,9 @@ import { type InferPageType, loader } from 'fumadocs-core/source';
 import { toFumadocsSource } from 'fumadocs-mdx/runtime/server';
 import { blog as blogPosts, docs } from 'fumadocs-mdx:collections/server';
 
-import { getBasePath } from './getBasePath';
-
-const basePath = getBasePath();
-
 // See https://fumadocs.dev/docs/headless/source-api for more info
 export const source = loader({
-	baseUrl: `${basePath}/docs`,
+	baseUrl: `/docs`,
 	plugins: [],
 	source: docs.toFumadocsSource(),
 });
@@ -31,7 +27,7 @@ ${processed}`;
 }
 
 export const blog = loader(toFumadocsSource(blogPosts, []), {
-	baseUrl: `${basePath}/blog`,
+	baseUrl: `/blog`,
 });
 
 export type Page = InferPageType<typeof source>;
