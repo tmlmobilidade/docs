@@ -51,7 +51,10 @@ jobs:
           mkdir -p ./docs/content
 
           # Copiar a pasta inteira "Carris Metropolitana"
-          cp -R "Carris Metropolitana" ./docs/content/
+          ls
+          ls content
+          ls "content/Carris Metropolitana" || echo "Pasta não encontrada"
+          cp -R "content/Carris Metropolitana" ./docs/content/
             
           # Normalizar nomes de ficheiros e pastas
           find docs/content -depth | while read path; do
