@@ -26,14 +26,14 @@ export default function Page() {
 						<Link className={cn(buttonVariants(), 'max-sm:text-sm')} href="/docs">
 							Começar a ler documentação
 						</Link>
-						<a
+						<Link
 							className={cn(buttonVariants({ variant: 'secondary' }), 'max-sm:text-sm')}
 							href="/blog"
 							rel="noreferrer noopener"
 							target="_blank"
 						>
 							Ver Blogs sobre tudo da TML
-						</a>
+						</Link>
 					</div>
 				</div>
 			</div>
