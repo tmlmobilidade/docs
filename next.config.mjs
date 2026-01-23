@@ -39,9 +39,11 @@ const basePath = getBasePath()
 
 /** @type {import('next').NextConfig} */
 const config = {
+  assetPrefix: basePath || undefined,
   basePath: basePath,
   output: 'export',
   reactStrictMode: true,
+  trailingSlash: true,
 }
 
 export default withMDX(config)

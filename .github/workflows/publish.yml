@@ -59,11 +59,11 @@ jobs:
         run: npm run build
         working-directory: .
 
-      - name: Copy .next static files
-        run: |
-          mkdir -p ./out/_next
-          cp -R ./.next/static ./out/_next/static
-        shell: bash
+      # - name: Copy .next static files
+      #   run: |
+      #     mkdir -p ./out/_next
+      #     cp -R ./.next/static ./out/_next/static
+      #   shell: bash
 
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v3
