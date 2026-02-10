@@ -11,12 +11,14 @@
             "id": "aaecef174fa0b438",
             "type": "leaf",
             "state": {
-              "type": "excalidraw",
+              "type": "markdown",
               "state": {
-                "file": "Ingest Vehicle Events/ingest-vehicle-events.excalidraw.md"
+                "file": "blog/hello.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "excalidraw-icon",
-              "title": "ingest-vehicle-events.excalidraw"
+              "icon": "lucide-file",
+              "title": "hello"
             }
           }
         ]
@@ -172,8 +174,10 @@
       "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "9c319ac4d14a2f38",
+  "active": "aaecef174fa0b438",
   "lastOpenFiles": [
+    "docs/index.md",
+    "index.md",
     "Ingest Vehicle Events/ingest-vehicle-events.excalidraw.md",
     "Projetos/CUT/Drawing 2026-02-10 15.09.11.excalidraw.md",
     "Files/Screenshot 2026-02-10 at 15.47.21.png",
