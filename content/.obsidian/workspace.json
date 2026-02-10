@@ -175,13 +175,13 @@
       "edit-mdx:New .mdx file": false
     }
   },
-  "active": "33076def42fbc613",
+  "active": "aaecef174fa0b438",
   "lastOpenFiles": [
+    "docs/(intro)/bugs.md",
     "docs/(intro)/bugs.mdx",
     "docs/(intro)/open-data.mdx",
     "docs/(intro)/covered-area.mdx",
     "docs/(intro)/contact-us.mdx",
-    "docs/(intro)/bugs.md",
     "docs/index.md",
     "blog/hello.md",
     "docs/index.mdx",
@@ -190,7 +190,6 @@
     "docs/news/20250101.mdx",
     "docs/news",
     "docs/gtfs/realtime/index.mdx",
-    "docs/gtfs/realtime/meta.json",
     "docs/Carris Metropolitana/docs/index.md",
     "docs/Carris Metropolitana/docs/API Quick Start.md",
     "docs/Carris Metropolitana/docs/Component Showcase.md",
