@@ -1,6 +1,6 @@
 {
-	"name": ".",
-	"version": "0.0.0",
+	"name": "@tmlmobilidade/docs",
+	"version": "1.0.0",
 	"private": true,
 	"scripts": {
 		"build": "next build",
@@ -8,30 +8,32 @@
 		"generate": "tsx scripts/generate",
 		"lint": "eslint",
 		"postinstall": "fumadocs-mdx",
+		"rinse": "npx --yes @tmlmobilidade/repo-rinse",
 		"start": "next start",
 		"types:check": "fumadocs-mdx && next typegen && tsc --noEmit"
 	},
 	"dependencies": {
-		"@orama/orama": "^3.1.18",
-		"fumadocs-core": "16.4.7",
-		"fumadocs-mdx": "14.2.5",
-		"fumadocs-obsidian": "^0.0.9",
-		"fumadocs-ui": "16.4.7",
-		"lucide-react": "^0.562.0",
-		"next": "16.1.1",
-		"react": "^19.2.3",
-		"react-dom": "^19.2.3"
+		"@orama/orama": "3.1.18",
+		"fumadocs-core": "16.5.4",
+		"fumadocs-mdx": "14.2.7",
+		"fumadocs-obsidian": "0.0.11",
+		"fumadocs-ui": "16.5.4",
+		"lucide-react": "0.563.0",
+		"next": "16.1.6",
+		"react": "19.2.4",
+		"react-dom": "19.2.4"
 	},
 	"devDependencies": {
-		"@carrismetropolitana/eslint": "20250622.1204.50",
-		"@tailwindcss/postcss": "^4.1.18",
-		"@types/mdx": "^2.0.13",
-		"@types/node": "^25.0.5",
-		"@types/react": "^19.2.8",
-		"@types/react-dom": "^19.2.3",
-		"postcss": "^8.5.6",
-		"serve": "^14.2.5",
-		"tailwindcss": "^4.1.18",
-		"typescript": "^5.9.3"
+		"@carrismetropolitana/eslint": "20251107.1231.48",
+		"@tailwindcss/postcss": "4.1.18",
+		"@tmlmobilidade/tsconfig": "20260209.2202.10",
+		"@types/mdx": "2.0.13",
+		"@types/node": "25.2.3",
+		"@types/react": "19.2.13",
+		"@types/react-dom": "19.2.3",
+		"postcss": "8.5.6",
+		"serve": "14.2.5",
+		"tailwindcss": "4.1.18",
+		"typescript": "5.9.3"
 	}
 }
