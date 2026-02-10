@@ -1,18 +1,26 @@
-import { Provider } from '@/components/provider';
-import { LayoutProps } from '@/types/LayoutProps';
+/* * */
 
 import './global.css';
+
+/* * */
+
+import { RootProvider } from 'fumadocs-ui/provider/next';
 import { Inter } from 'next/font/google';
+import { type PropsWithChildren } from 'react';
+
+/* * */
 
 const inter = Inter({
 	subsets: ['latin'],
 });
 
-export default function Layout({ children }: LayoutProps) {
+/* * */
+
+export default function Layout({ children }: PropsWithChildren) {
 	return (
 		<html className={inter.className} lang="en" suppressHydrationWarning>
-			<body className="flex min-h-screen flex-col bg-fd-background text-fd-foreground antialiased">
-				<Provider>{children}</Provider>
+			<body className="flex flex-col min-h-screen">
+				<RootProvider>{children}</RootProvider>
 			</body>
 		</html>
 	);
