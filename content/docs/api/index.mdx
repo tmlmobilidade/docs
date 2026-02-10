@@ -1,0 +1,81 @@
+---
+title: Introduction to API
+description: Discover how you can use the API to build realtime apps with Carris Metropolitana.
+---
+
+## No special treatment
+
+All routes documented here are the same ones we use in our website, mobile apps, and internal tools.
+We don’t apply any “special treatment” to our APIs—everyone has access to the same information at the same time,
+ensuring fairness and transparency in how the data is shared and utilized.
+
+
+## Versions
+
+The API is versioned to ensure stability and backward compatibility. If we need to make breaking changes to how endpoints
+behave in order to support new features, we will always increment the API version to avoid disrupting existing usage.
+
+Since this is a JSON API, adding new properties to endpoints is not considered a breaking change, as these properties
+can be safely ignored by API consumers. Therefore, in such cases, the API version may not be bumped.
+This approach allows us to introduce enhancements while minimizing the impact on existing integrations.
+
+
+## Uniform Response Structure
+
+All API responses are designed to follow the JSend specification. This standardized structure ensures consistency across endpoints
+and provides a framework for including additional debugging information when needed.
+
+In the case of errors, the JSend format offers a clear and structured way to describe what went wrong and, where possible,
+how the issue might be resolved. This approach simplifies error handling for API consumers and improves the overall developer experience.
+
+```json title="Success Response"
+{
+	status: "success",
+	timestamp: 1721023200,
+	data: [ ... ] or { ... } // The requested data
+}
+```
+
+```json title="Error Response"
+{
+	status: "error",
+	timestamp: 1721023200,
+	message: "Unable to communicate with database"
+}
+```
+
+
+## Typescript
+
+To make working with our API responses easier, we provide an [NPM package](https://www.npmjs.com/package/@carrismetropolitana/api-types)
+that includes TypeScript definitions for all API responses. This package helps ensure type safety and improves development efficiency
+when integrating with our API in JavaScript or TypeScript projects.
+
+We plan to expand this package with additional functionality in the future, and we welcome contributions! If you’d like to help,
+feel free to submit a pull request to the repository.
+
+
+## Collections
+
+The API is organized into collections, such as `network` and `metrics`, each grouping related endpoints.
+All JSON endpoints across collections adhere to the same standardized structure, ensuring consistency and simplicity.
+Below are the available collections:
+
+<Cards>
+    <Card title="network" href="/api/current/network">
+        Endpoints related to the transit network, including stops, lines, routes, patterns, shapes, vehicles, GTFS data, and more.
+    </Card>
+    <Card title="facilities" href="/api/current/facilities">
+        Covers facilities within the Lisbon Metropolitan Area served by Carris Metropolitana, such as schools, hospitals, and other key locations.
+		Each facility type has a dedicated endpoint.
+    </Card>
+    <Card title="locations" href="/api/current/locations">
+        Provides data on administrative divisions within amL, including districts, municipalities, parishes, and localities.
+		These are used to identify the locations of network points and facilities.
+    </Card>
+    <Card title="metrics" href="/api/current/metrics">
+        Offers real-time metrics from Carris Metropolitana’s operations, providing insights into system performance and activity.
+    </Card>
+</Cards>
+
+##

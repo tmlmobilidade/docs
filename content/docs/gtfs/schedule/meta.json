@@ -1,0 +1,14 @@
+{
+	"pages": [
+		"feed_info",
+		"agency",
+		"stops",
+		"trips",
+		"routes",
+		"calendar_dates",
+		"stop_times",
+		"shapes",
+		"fare_attributes",
+		"fare_rules"
+	]
+}

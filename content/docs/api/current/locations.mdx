@@ -1,0 +1,60 @@
+---
+title: locations
+description: Administrative divisions of amL.
+---
+
+## Data source
+
+Locations in the API are sourced from the GeoJSON datasets available in our [datasets GitHub repository](https://github.com/carrismetropolitana/datasets/tree/latest/locations).
+The API provides only the properties of the GeoJSON features, excluding the geometries. This approach ensures practical response sizes, as including geometries would significantly increase the data payload.
+For now, if you need access to the geometries, you can download the full GeoJSON files from the repository. We are actively exploring ways to include geometries in the API in a scalable and efficient manner.
+
+
+## Available locations
+
+The API provides the following locations in JSON format:
+
+
+### Districts
+
+Districts are the top level division in the API and are identified by their ***DI***COFRE code, a standardized identifier for geographic areas.
+
+<APIPage
+  document="https://api.cmet.pt/openapi"
+  operations={[{ path: '/locations/districts', method: 'get' }]}
+  hasHead={false}
+/>
+
+
+### Municipalities
+
+Municipalities are subdivisions within a district and are identified by their ***DICO***FRE code. Every geographical data point in the API is associated with at least one municipality, making it the “primary key” for location types.
+
+<APIPage
+  document="https://api.cmet.pt/openapi"
+  operations={[{ path: '/locations/municipalities', method: 'get' }]}
+  hasHead={false}
+/>
+
+
+### Parishes
+
+Parishes, known as “freguesias,” are optional administrative divisions within municipalities. They are identified by their ***DICOFRE*** code. Currently, only a limited number of objects in the API are associated with this location type.
+Expanding the use of parishes to enhance geographic precision is planned for future updates.
+
+<APIPage
+  document="https://api.cmet.pt/openapi"
+  operations={[{ path: '/locations/parishes', method: 'get' }]}
+  hasHead={false}
+/>
+
+
+### Localities
+
+Localities are informal places known to local populations. We use this to diferentiate the location of similarly named objects. Objects may not have localities.
+
+<APIPage
+  document="https://api.cmet.pt/openapi"
+  operations={[{ path: '/locations/localities', method: 'get' }]}
+  hasHead={false}
+/>

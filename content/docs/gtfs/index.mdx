@@ -1,0 +1,63 @@
+---
+title: Introduction to GTFS
+description: TL;DR for what is a GTFS archive. Explore the official website to become an expert.
+---
+
+## What is a GTFS?
+
+GTFS (General Transit Feed Specification) is the global standard for transit agencies to publish schedules for use in digital applications, such as Google Maps.
+Essentially, it is a .zip archive containing several files, each representing a table (similar to an Excel file) where each column is separated by a comma “,”.
+
+Each file has a specific name and a required set of columns that correspond to data in other files, forming a relational structure.
+While it’s not a traditional database, it functions as a tabular dataset in text form, allowing easy integration with digital platforms.
+
+The specification was initially launched by Google, but it is now maintained and guided by the [Mobility Data team](https://mobilitydata.org).
+
+
+## How can I open/read a GTFS?
+
+You can unzip the archive and open each file in tools like Microsoft Excel or Google Sheets. However, some of these files can be very large, which may exceed the limits of these programs.
+In such cases, it’s best to use automated tools designed to handle GTFS data. While GTFS files are human-readable, they are ultimately intended for processing by automated systems
+to efficiently manage and manipulate the data stored in them.
+
+
+## Example GTFS archive
+
+Here is a simple GTFS archive for the Lisbon Metro’s Yellow line. To keep things clear and avoid unnecessary complexity, we’ve only included the required columns and 4 schedules.
+You can use this archive to explore the relationships between files and understand the underlying logic of GTFS archives.
+
+This will help you get familiar with how the various files interact, such as the stops, trips, and schedules, and how they work together to form a complete transit feed.
+By examining this archive, you’ll gain a clearer understanding of the data structure and its practical use in real-world applications.
+
+[**Download Example GTFS**](#) // TODO
+
+
+## GTFS Realtime
+
+The GTFS standard actually consists of two parts. The **Schedule GTFS** is the .zip archive containing all the **scheduled** data for a given transit network.
+This includes information such as routes, stops, and schedules. When you have access to this scheduled data, you can layer real-time information from vehicles on top of it.
+
+This combination of scheduled and real-time data is what enables applications like Citymapper and others to display vehicles on a map and calculate accurate arrival estimates for your stop.
+The scheduled data provides the foundation, while real-time updates ensure users have the most current information available.
+
+The **Realtime** part of GTFS requires a deeper understanding of how data is related, as well as system knowledge to maintain a pipeline of constantly updating information.
+GTFS Realtime uses the [protobuf](https://protobuf.dev) format to exchange data, which is not human-readable. As a result, working with GTFS Realtime typically requires
+some coding expertise to process, decode, and handle the data effectively.
+
+The complexity of working with GTFS Realtime comes from the need to manage live updates, such as vehicle positions and trip statuses, which require ongoing updates and integration with the scheduled data.
+Understanding how these updates relate to the static GTFS schedule data is crucial for building systems that can provide real-time transit information.
+
+
+## Useful tools
+
+Below is a small collection of tool we use daily to validate and inspect GTFS data.
+
+### Validate
+
+- [**Official GTFS Validator**](https://gtfs-validator.mobilitydata.org) — This tool checks whether the Schedule GTFS archive follows all required and recommended practices. For larger archives the [installed app](https://github.com/MobilityData/gtfs-validator?tab=readme-ov-file#using-the-desktop-app) is required.
+- [**NAP France**](https://transport.data.gouv.fr/validation) — This excellent tool validates a GTFS feed similar to the official validator, but presents errors visually on a map, making it easy to identify and understand what’s wrong. It’s particularly useful for interpreting the validation errors and warnings you might encounter, helping you quickly pinpoint and resolve issues in your data.
+
+
+### Inspect
+
+- [**Vyčius GTFS Inspector**](https://realtime.vycius.lt/) — Use this tool to inspect GTFS Realtime feeds for Service Alerts and Vehicle Positions. Try it with our endpoints!
