@@ -1,16 +1,13 @@
+import { Tag } from '@/components/mdx/Tag';
+
 export function BlogTags(tags?: string | string[]) {
 	if (!Array.isArray(tags) || tags.length === 0) return null;
 
 	return (
-		<p className="mt-auto pt-4 text-xs flex flex-wrap gap-1">
+		<div className="mt-3 flex flex-wrap gap-1.5">
 			{tags.map((tag, idx) => (
-				<span
-					key={idx}
-					className="inline-block bg-fd-muted-foreground font-medium px-2.5 py-0.5 rounded-full"
-				>
-					{String(tag)}
-				</span>
+				<Tag key={idx} label={String(tag)} />
 			))}
-		</p>
+		</div>
 	);
 }

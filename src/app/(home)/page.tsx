@@ -2,83 +2,115 @@ import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/cn';
 import { getName } from '@/lib/getName';
 import { blog } from '@/lib/source';
+import { ArrowRight, BookOpen, Rss } from 'lucide-react';
 import Link from 'next/link';
 
 export default function Page() {
 	const posts = [...blog.getPages()]
 		.sort(
 			(a, b) =>
-				new Date(a.data.date ?? getName(a.path)).getTime() - new Date(b.data.date ?? getName(b.path)).getTime(),
+				new Date(b.data.date ?? getName(b.path)).getTime() - new Date(a.data.date ?? getName(a.path)).getTime(),
 		)
 		.slice(0, 4);
 
 	return (
-		<main className="text-landing-foreground pt-4 pb-6 dark:text-landing-foreground-dark md:pb-12">
-			<div className="relative flex min-h-[200px] h-[70vh] max-h-[400px] border rounded-2xl overflow-hidden mx-auto w-full max-w-[1400px] bg-origin-border">
-				<div className="flex flex-col z-2 px-4 size-full md:p-12 max-md:items-center max-md:text-center">
-					<h1 className="text-4xl my-8 leading-tighter font-medium xl:text-5xl xl:mb-12">
+		<main className="text-landing-foreground pt-6 pb-8 md:pb-16">
+			{/* ── Hero Section ─────────────────────────────────── */}
+			<section className="relative mx-auto w-full max-w-[1400px] px-4">
+				<div className="relative flex min-h-[280px] flex-col justify-center overflow-hidden rounded-2xl border border-fd-border bg-gradient-to-br from-brand/5 via-fd-background to-brand-secondary/10 px-6 py-12 md:px-16 md:py-16">
+					{/* Decorative dot grid */}
+					<div
+						aria-hidden="true"
+						className="pointer-events-none absolute inset-0 opacity-[0.03]"
+						style={{
+							backgroundImage: 'radial-gradient(circle, currentColor 1px, transparent 1px)',
+							backgroundSize: '24px 24px',
+						}}
+					/>
+
+					<h1 className="relative z-10 max-w-3xl text-3xl font-semibold leading-tight tracking-tight md:text-4xl xl:text-5xl">
 						Descobre a melhor
-						<br className="md:hidden" /> documentação sobre veículos,
-						<br />
-						tudo sobre a rede de autocarros da AML.
+						<br className="md:hidden" />{' '}
+						<span className="text-brand">documentação</span> sobre veículos,
+						<br className="hidden md:block" />
+						{' '}tudo sobre a rede de autocarros da AML.
 					</h1>
-					<div className="flex flex-row items-center justify-center gap-4 flex-wrap w-fit">
-						<Link className={cn(buttonVariants(), 'max-sm:text-sm')} href="/docs">
-							Começar a ler documentação
+
+					<p className="relative z-10 mt-4 max-w-2xl text-fd-muted-foreground md:text-lg">
+						Documentação técnica, guias e recursos para a rede de transportes da Área Metropolitana de Lisboa.
+					</p>
+
+					<div className="relative z-10 mt-8 flex flex-row flex-wrap items-center gap-3">
+						<Link className={cn(buttonVariants(), 'gap-2 max-sm:text-sm')} href="/docs">
+							<BookOpen className="size-4" />
+							Começar a ler
 						</Link>
 						<Link
-							className={cn(buttonVariants({ variant: 'secondary' }), 'max-sm:text-sm')}
+							className={cn(buttonVariants({ variant: 'secondary' }), 'gap-2 max-sm:text-sm')}
 							href="/blog"
-							rel="noreferrer noopener"
-							target="_blank"
 						>
-							Ver Blogs sobre tudo da TML
+							<Rss className="size-4" />
+							Ver Blog
 						</Link>
 					</div>
 				</div>
-			</div>
-			<div className="grid grid-cols-1 gap-10 mt-12 px-6 mx-auto w-full max-w-[1400px] md:px-12 lg:grid-cols-2">
-				<p className="text-2xl tracking-tight leading-snug font-light col-span-full md:text-3xl xl:text-4xl">
-					<span className="text-brand font-medium" />
-					ola
-				</p>
-				<br />
-				<div className="p-8 bg-radial-[circle_at_top_center] from-25% to-brand-secondary/50 rounded-xl col-span-full">
-					<h2 className="text-xl text-center text-brand font-mono font-bold uppercase mb-2">
-						se preferires podes explorar os blogs sobre a tml.
-						<br />
-						<br />
-						<br />
-						Alguns Blogs
-						<br />
-						↓
-					</h2>
-				</div>
-				{posts.map(post => (
+			</section>
+
+			{/* ── Blog Posts Section ───────────────────────────── */}
+			<section className="mx-auto mt-16 w-full max-w-[1400px] px-4 md:px-6">
+				<div className="mb-8 flex items-end justify-between">
+					<div>
+						<h2 className="text-2xl font-semibold tracking-tight md:text-3xl">
+							Últimos artigos
+						</h2>
+						<p className="mt-1 text-fd-muted-foreground">
+							Novidades e atualizações sobre a TML Mobilidade.
+						</p>
+					</div>
 					<Link
-						key={post.url}
-						className="flex flex-col bg-fd-card rounded-2xl border shadow-sm p-4 transition-colors hover:bg-fd-accent hover:text-fd-accent-foreground"
-						href={post.url}
+						className="hidden items-center gap-1 text-sm font-medium text-brand hover:text-brand-secondary md:flex"
+						href="/blog"
 					>
-						<p className="font-medium">{post.data.title}</p>
-						<p className="text-sm text-fd-muted-foreground">
-							{post.data.description}
-						</p>
-						<p className="mt-auto pt-4 text-xs text-brand">
-							{new Date(post.data.date ?? getName(post.path)).toDateString()}
-						</p>
+						Ver todos
+						<ArrowRight className="size-3.5" />
 					</Link>
-				))}
-			</div>
-			<div className="p-8 bg-radial-[circle_at_top_center] from-25% to-brand-secondary/50 rounded-xl col-span-full">
-				<br />
-				<br />
-				<h2 className="text-xl text-center text-brand font-mono font-bold uppercase mb-2">
-					<Link className={cn(buttonVariants({ variant: 'secondary' }), 'max-sm:text-sm')} href="/blog">
-						ver mais blogs sobre tudo da TML
+				</div>
+
+				<div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+					{posts.map(post => (
+						<Link
+							key={post.url}
+							className="group flex flex-col rounded-xl border border-fd-border bg-fd-card p-5 shadow-sm transition-all duration-200 hover:border-brand/40 hover:shadow-md hover:-translate-y-0.5"
+							href={post.url}
+						>
+							<p className="font-semibold text-fd-foreground group-hover:text-brand transition-colors">
+								{post.data.title}
+							</p>
+							<p className="mt-1.5 text-sm leading-relaxed text-fd-muted-foreground line-clamp-2">
+								{post.data.description}
+							</p>
+							<p className="mt-auto pt-4 text-xs font-medium text-brand/70">
+								{new Date(post.data.date ?? getName(post.path)).toLocaleDateString('pt-PT', {
+									day: 'numeric',
+									month: 'short',
+									year: 'numeric',
+								})}
+							</p>
+						</Link>
+					))}
+				</div>
+
+				{/* Mobile "ver todos" link */}
+				<div className="mt-6 flex justify-center md:hidden">
+					<Link
+						className={cn(buttonVariants({ variant: 'outline' }), 'gap-2 text-sm')}
+						href="/blog"
+					>
+						Ver todos os artigos
+						<ArrowRight className="size-3.5" />
 					</Link>
-				</h2>
-			</div>
+				</div>
+			</section>
 		</main>
 	);
 }
