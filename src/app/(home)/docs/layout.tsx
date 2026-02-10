@@ -1,15 +1,15 @@
 /* * */
 
-import { baseOptions } from '@/lib/layout.shared';
 import { sourceDocs } from '@/lib/source';
 import { type LayoutProps } from '@/types/LayoutProps';
-import { DocsLayout } from 'fumadocs-ui/layouts/docs';
+import { NAVBAR_LINKS } from '#/src/lib/navbar';
+import { DocsLayout } from 'fumadocs-ui/layouts/notebook';
 
 /* * */
 
 export default function Layout({ children }: LayoutProps) {
 	return (
-		<DocsLayout tree={sourceDocs.getPageTree()} {...baseOptions()}>
+		<DocsLayout links={NAVBAR_LINKS} nav={{ title: 'TML' }} tree={sourceDocs.getPageTree()}>
 			{children}
 		</DocsLayout>
 	);

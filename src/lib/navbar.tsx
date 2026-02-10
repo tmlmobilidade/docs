@@ -1,29 +1,20 @@
-import type { BaseLayoutProps, LinkItemType } from 'fumadocs-ui/layouts/shared';
+/* * */
 
-import { AlbumIcon } from 'lucide-react';
+import { type LinkItemType } from 'fumadocs-ui/utils/link-item';
 
-export function baseOptions(): BaseLayoutProps {
-	return {
-		nav: {
-			title: 'TML MOBILIDADE',
-		},
-	};
-}
+/* * */
 
-export const linkItems: LinkItemType[] = [
+export const NAVBAR_LINKS: LinkItemType[] = [
 	{
 		active: 'nested-url',
-		icon: <AlbumIcon />,
-		text: 'Documentacion',
+		text: 'Documentação',
 		url: '/docs',
 	},
 	{
 		active: 'nested-url',
-		icon: <AlbumIcon />,
-		text: 'Blog',
+		text: 'Novidades',
 		url: '/blog',
 	},
-
 	{
 		external: true,
 		icon: (

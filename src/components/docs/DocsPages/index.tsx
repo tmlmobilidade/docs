@@ -1,21 +1,68 @@
+/* * */
+
 import { sourceDocs } from '@/lib/source';
-import { getMDXComponents } from '@/mdx-components';
-import { PagePropsPromise } from '@/types/PagePropsPromise';
-import { DocsBody, DocsDescription, DocsPage, DocsTitle } from 'fumadocs-ui/layouts/docs/page';
-import { createRelativeLink } from 'fumadocs-ui/mdx';
+import { getGithubLastEdit } from 'fumadocs-core/content/github';
+import defaultMdxComponents from 'fumadocs-ui/mdx';
+import { DocsBody, DocsDescription, DocsPage, DocsTitle } from 'fumadocs-ui/page';
 import { notFound } from 'next/navigation';
 
-export async function DocsPages({ params }: PagePropsPromise) {
-	const resolvedParams = await params;
-	const slug = Array.isArray(resolvedParams.slug) ? resolvedParams.slug : [resolvedParams.slug];
+/* * */
 
-	const page = sourceDocs.getPage(slug);
+export async function generateMetadata(props: { params: Promise<{ slug?: string[] }> }) {
+	const params = await props.params;
+	const page = sourceDocs.getPage(params.slug);
 	if (!page) notFound();
+
+	return {
+		description: page.data.description,
+		title: page.data.title,
+	};
+}
+
+/* * */
+
+export async function generateStaticParams() {
+	return sourceDocs.generateParams();
+}
+
+/* * */
+
+export default async function Page(props: { params: Promise<{ slug?: string[] }> }) {
+	//
+
+	//
+	// A. Setup variables
+
+	const params = await props.params;
+
+	const page = sourceDocs.getPage(params.slug);
+	if (!page) notFound();
+
+	//
+	// B. Setup options
+
+	const editOnGithubOptions = {
+		owner: 'carrismetropolitana',
+		path: `content/${page.path}`,
+		repo: 'docs',
+		sha: 'production',
+	};
+
+	const lastUpdateOptions = await getGithubLastEdit({
+		owner: 'carrismetropolitana',
+		path: `content/${page.path}`,
+		repo: 'docs',
+	});
 
 	const MDX = page.data.body;
 
+	//
+	// C. Render components
+
 	return (
 		<DocsPage
+			editOnGithub={editOnGithubOptions}
+			lastUpdate={new Date(lastUpdateOptions ?? 0)}
 			toc={page.data.toc}
 			tableOfContent={{
 				enabled: true,
@@ -26,11 +73,7 @@ export async function DocsPages({ params }: PagePropsPromise) {
 			<DocsTitle>{page.data.title}</DocsTitle>
 			<DocsDescription>{page.data.description}</DocsDescription>
 			<DocsBody>
-				<MDX
-					components={getMDXComponents({
-						a: createRelativeLink(sourceDocs, page),
-					})}
-				/>
+				<MDX components={{ ...defaultMdxComponents }} />
 			</DocsBody>
 		</DocsPage>
 	);
