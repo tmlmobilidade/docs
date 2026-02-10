@@ -53,7 +53,7 @@ export function NewsList() {
 		});
 
 	if (pages.length === 0) {
-			return <p className="text-sm text-neutral-600 dark:text-neutral-400">Sem novidades por agora.</p>;
+		return <p className="text-sm text-neutral-600 dark:text-neutral-400">Sem novidades por agora.</p>;
 	}
 
 	return (
@@ -66,7 +66,7 @@ export function NewsList() {
 					<Link
 						key={page.url}
 						className="group relative flex flex-col gap-4 overflow-hidden rounded-2xl border border-neutral-200/70 bg-white/70 p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md dark:border-neutral-800 dark:bg-neutral-900/70"
-						href={page.url}
+						href={'/news' + page.url}
 					>
 						{cover ? (
 							<div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl bg-neutral-100 dark:bg-neutral-800">
