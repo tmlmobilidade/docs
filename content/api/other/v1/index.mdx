@@ -1,0 +1,21 @@
+---
+title: Version 1
+description: Administrative divisions of amL.
+---
+
+## Data source
+
+Locations are fetched from the GTFS and are not georeferenced. We plan to improve this in the future.
+
+
+## Available locations
+
+The API provides in JSON format the following locations:
+
+| Type           | Description                                                                                                                                                                                                                                     |
+|----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Regions        | Regions are the top-level division in the API. At the moment there are 3 regions: `amL`, `Àlentejo Central` and `Oeste`. Regions are identified by their NUTS-III code.                                                                         |
+| Districts      | Districts belong to a region and are identified by their DICOFRE code.                                                                                                                                                                          |
+| Municipalities | Municipalities belong to a district and are identified by their DICOFRE code. All geographical data points in the API are identified by at least one Municipality. It is the "primary key" for the location types.                              |
+| Parishes       | Parishes are optional and represent the administrative division known as "freguesia". They are identified by their DICOFRE code. At the moment, not many objects are identified with this location type. We plan to improve this in the future. |
+| Localities     | Localities are informal places known to local populations. We use this to diferentiate the location of similarly named objects. Objects may not have localities.                                                                                |

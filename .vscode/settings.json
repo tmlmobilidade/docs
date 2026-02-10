@@ -4,11 +4,7 @@
 		"editor.codeActionsOnSave": {
 			"source.fixAll.stylelint": "explicit"
 		},
-		"editor.defaultFormatter": "vscode.css-language-features"
-	},
-
-	"[typescriptreact]": {
-		"editor.defaultFormatter": "vscode.typescript-language-features"
+		"editor.defaultFormatter": "stylelint.vscode-stylelint"
 	},
 	// Disable the default CSS formatter, use stylelint instead
 	"css.validate": false,
@@ -22,6 +18,7 @@
 	"editor.tabSize": 4,
 
 	"eslint.format.enable": true,
+
 	// Enable eslint for all supported languages
 	"eslint.validate": [
 		"javascript",
@@ -37,7 +34,7 @@
 		"toml",
 		"astro"
 	],
-	"eslint.workingDirectories": [{ "mode": "auto" }],
+	"eslint.workingDirectories": ["auto"],
 	"files.eol": "\n",
 
 	"less.validate": false,
@@ -46,12 +43,14 @@
 	"scss.validate": false,
 
 	"svg.preview.background": "custom",
+	"typescript.tsdk": "./frontend/node_modules/typescript/lib",
 	"workbench.editor.customLabels.enabled": true,
 
 	"workbench.editor.customLabels.patterns": {
-		"**/*.tsx": "${dirname} (${extname})",
 		"**/components/**/*.css": "${dirname} (${extname})",
-		"**/components/**/*.js": "${dirname} (${extname})"
+		"**/components/**/*.js": "${dirname} (${extname})",
+		"**/components/**/*.ts": "${dirname} (${extname})",
+		"**/components/**/*.tsx": "${dirname} (${extname})"
 	}
 
 }

@@ -1,0 +1,50 @@
+---
+title: Current Version (v2)
+description: Explore the latest features and updates in our API.
+---
+
+## What's new
+
+This API version brings several enhancements to improve stability, data quality, and overall performance. Key updates include:
+
+- **Improved Data Fetchers and Parsers**
+  Enhancements ensure faster data processing with zero delay between vehicle updates and API responses. The system is now more resilient to restarts and failures, ensuring reliable operation.
+
+- **Future Schedule and Path Changes**
+  A major new feature in this version is support for future schedule and path changes. Patterns can now have multiple versions to accommodate changes in path, shape, or metadata.
+  This introduces a breaking change from previous endpoints. [Learn more about patterns ›](/api/current/network/patterns)
+
+- **Enhanced Vehicles Endpoint**
+  The vehicles endpoint has been revamped to include static vehicle metadata, such as model, make, owner, seat count, etc. and new real-time data, including occupancy levels (when available).
+
+These updates ensure a more robust and feature-rich API for all users.
+
+
+## Base URL
+
+Use the following base URL for all API requests:
+```
+https://api.carrismetropolitana.pt/v2
+```
+
+
+## Explore collections
+
+<Cards>
+    <Card title="network" href="/api/current/network">
+        Endpoints related to the transit network, including stops, lines, routes, patterns, shapes, vehicles, GTFS data, and more.
+    </Card>
+    <Card title="facilities" href="/api/current/facilities">
+        Covers facilities within the Lisbon Metropolitan Area served by Carris Metropolitana, such as schools, hospitals, and other key locations.
+		Each facility type has a dedicated endpoint.
+    </Card>
+    <Card title="locations" href="/api/current/locations">
+        Provides data on administrative divisions within amL, including districts, municipalities, parishes, and localities.
+		These are used to identify the locations of network points and facilities.
+    </Card>
+    <Card title="metrics" href="/api/current/metrics">
+        Offers real-time metrics from Carris Metropolitana’s operations, providing insights into system performance and activity.
+    </Card>
+</Cards>
+
+##
