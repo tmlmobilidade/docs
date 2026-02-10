@@ -9,8 +9,8 @@
 
 @theme {
   /* -- Brand ------------------------------------------------ */
-  --color-brand: #7c3aed;
-  --color-brand-secondary: #a78bfa;
+  --color-brand: #ffdd01;
+  --color-brand-secondary: #F09600;
 
   /* -- Landing page foreground ------------------------------ */
   --color-landing-foreground: #1e1b2e;
@@ -37,9 +37,9 @@
   --color-blockquote-bg-dark: #1e1b2e;
 
   /* -- Tag -------------------------------------------------- */
-  --color-tag: #7c3aed;
-  --color-tag-bg: #ede9fe;
-  --color-tag-bg-dark: #2e1065;
+  --color-tag: #000;
+  --color-tag-bg: #F09600;
+  --color-tag-bg-dark: #F09600;
 }
 
 /* ============================================================

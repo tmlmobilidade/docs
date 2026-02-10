@@ -1,5 +1,6 @@
-import { cn } from '@/lib/cn';
 import type { ComponentPropsWithoutRef } from 'react';
+
+import { cn } from '@/lib/cn';
 
 /* ------------------------------------------------------------------ */
 /*  Tag — Obsidian-style #tag pill                                     */
@@ -7,10 +8,10 @@ import type { ComponentPropsWithoutRef } from 'react';
 
 interface TagProps extends ComponentPropsWithoutRef<'span'> {
 	/** The tag text (with or without leading #) */
-	label: string;
+	label: string
 }
 
-export function Tag({ label, className, ...props }: TagProps) {
+export function Tag({ className, label, ...props }: TagProps) {
 	const display = label.startsWith('#') ? label : `#${label}`;
 
 	return (
