@@ -13,12 +13,12 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
 	return {
 		...defaultMdxComponents,
 		...obsidianComponents,
-		// // Custom Obsidian-styled overrides
-		// blockquote: Blockquote,
-		// ObsidianCallout: Callout,
-		// ObsidianCalloutBody: CalloutBody,
-		// ObsidianCalloutTitle: CalloutTitle,
-		// table: Table,
-		// ...components,
+		// Custom Obsidian-styled overrides
+		blockquote: Blockquote,
+		ObsidianCallout: Callout,
+		ObsidianCalloutBody: CalloutBody,
+		ObsidianCalloutTitle: CalloutTitle,
+		table: Table,
+		...components,
 	};
 }

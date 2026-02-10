@@ -1,5 +1,5 @@
 import { createMetadata } from '@/lib/metadata';
-import { blog } from '@/lib/source';
+import { sourceBlog } from '@/lib/source';
 import { PageProps } from '@/types/PageProps';
 import { Metadata } from 'next';
 
@@ -19,7 +19,7 @@ export async function BlogGenerateMetadata({ params }: PageProps): Promise<Metad
 		return { title: 'TML MOBILIDADE Blog' };
 	}
 
-	const page = blog.getPage(slug);
+	const page = sourceBlog.getPage(slug);
 	if (!page) return createMetadata({
 		title: 'Blog',
 	});

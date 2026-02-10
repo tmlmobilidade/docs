@@ -12,15 +12,15 @@ import { z } from 'zod';
 
 export const docs = defineDocs({
 	dir: 'content/docs',
-	// docs: {
-	// 	postprocess: {
-	// 		includeProcessedMarkdown: true,
-	// 	},
-	// 	schema: frontmatterSchema,
-	// },
-	// meta: {
-	// 	schema: metaSchema,
-	// },
+	docs: {
+		postprocess: {
+			includeProcessedMarkdown: true,
+		},
+		schema: frontmatterSchema,
+	},
+	meta: {
+		schema: metaSchema,
+	},
 });
 
 export default defineConfig({

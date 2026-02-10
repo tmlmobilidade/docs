@@ -1,3 +1,3 @@
-import { blog } from '@/lib/source';
+import { sourceBlog } from '@/lib/source';
 
-export type BlogPage = NonNullable<ReturnType<typeof blog.getPage>>;
+export type BlogPage = NonNullable<ReturnType<typeof sourceBlog.getPage>>;

@@ -1,3 +1,3 @@
-import { blog } from '@/lib/source';
+import { sourceBlog } from '@/lib/source';
 
-export type BlogPost = ReturnType<typeof blog.getPages>[number];
+export type BlogPost = ReturnType<typeof sourceBlog.getPages>[number];
