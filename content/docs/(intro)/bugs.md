@@ -2,7 +2,6 @@
 title: 🐛 Reporting Bugs
 description: We're not perfect but we work everyday to get there. Keep your issues coming!
 ---
-
 ## Network errors
 
 If you encounter errors in our network — such as misplaced stops, incorrect line names, or other inaccuracies—we greatly appreciate your feedback. Here’s the best way to report these issues:
