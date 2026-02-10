@@ -1,12 +1,12 @@
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/cn';
 import { getName } from '@/lib/getName';
-import { blog } from '@/lib/source';
+import { sourceBlog } from '@/lib/source';
 import { ArrowRight, BookOpen, Rss } from 'lucide-react';
 import Link from 'next/link';
 
 export default function Page() {
-	const posts = [...blog.getPages()]
+	const posts = [...sourceBlog.getPages()]
 		.sort(
 			(a, b) =>
 				new Date(b.data.date ?? getName(b.path)).getTime() - new Date(a.data.date ?? getName(a.path)).getTime(),

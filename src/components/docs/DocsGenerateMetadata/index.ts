@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-import { getPageImage, source } from '@/lib/source';
+import { getPageImage, sourceDocs } from '@/lib/source';
 import { PagePropsPromise } from '@/types/PagePropsPromise';
 import { notFound } from 'next/navigation';
 
@@ -8,7 +8,7 @@ export async function DocsGenerateMetadata({ params }: PagePropsPromise): Promis
 	const resolvedParams = await params;
 	const slug = Array.isArray(resolvedParams.slug) ? resolvedParams.slug : [resolvedParams.slug];
 
-	const page = source.getPage(slug);
+	const page = sourceDocs.getPage(slug);
 	if (!page) notFound();
 
 	return {

@@ -1,8 +1,8 @@
-import { source } from '@/lib/source';
+import { sourceDocs } from '@/lib/source';
 
 export async function DocsGenerateStaticParams() {
 	try {
-		const params = source.generateParams();
+		const params = sourceDocs.generateParams();
 		if (!params || !params.length) {
 			console.warn('generateParams returned nothing, using fallback');
 			return [{ slug: ['placeholder'] }];
