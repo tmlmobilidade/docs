@@ -1,6 +1,6 @@
 /* * */
 
-import { BASE_OPTIONS, NAVBAR_LINKS } from '@/lib/navbar';
+import { BASE_OPTIONS, NAVBAR_LINKS } from '@/lib/settings';
 import { sourceReference } from '@/lib/source';
 import { DocsLayout } from 'fumadocs-ui/layouts/notebook';
 import { type PropsWithChildren } from 'react';

@@ -4,7 +4,7 @@ import { HomeHero } from '@/components/home/HomeHero';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/cn';
 import { getName } from '@/lib/getName';
-import { BASE_OPTIONS, NAVBAR_LINKS } from '@/lib/navbar';
+import { BASE_OPTIONS, NAVBAR_LINKS } from '@/lib/settings';
 import { sourceBlog } from '@/lib/source';
 import { HomeLayout } from 'fumadocs-ui/layouts/home';
 import { ArrowRight } from 'lucide-react';
