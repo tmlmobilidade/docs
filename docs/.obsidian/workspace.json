@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "reference/index.mdx",
+                "file": "blog/hello.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "index"
+              "title": "hello"
             }
           }
         ]
@@ -177,8 +177,11 @@
   },
   "active": "d74bc3cb0789656f",
   "lastOpenFiles": [
-    "reference/index.md",
+    "blog/hello-2.md",
+    "2026-01-22.md",
     "blog/hello.md",
+    "reference/index.mdx",
+    "reference/index.md",
     "index.md",
     "docs/(intro)/open-data.mdx",
     "docs/(intro)/bugs.md",
@@ -191,7 +194,6 @@
     "docs/news/index.mdx",
     "docs/news/20250101.mdx",
     "docs/news",
-    "docs/gtfs/realtime/index.mdx",
     "docs/Carris Metropolitana/docs/index.md",
     "docs/Carris Metropolitana/docs/API Quick Start.md",
     "docs/Carris Metropolitana/docs/Component Showcase.md",
