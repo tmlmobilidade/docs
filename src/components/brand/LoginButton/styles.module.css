@@ -12,7 +12,7 @@
 	font-weight: 600;
 	text-transform: uppercase;
 	border: 2px solid transparent;
-	border-color: var(--color-system-border-100);
+	border-color: var(--color-system-background-100);
 }
 
 .container:hover {
