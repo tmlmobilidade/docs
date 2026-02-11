@@ -2,7 +2,6 @@
 
 import { GoLogo } from '@/components/brand/GoLogo';
 import { LoginButton } from '@/components/brand/LoginButton';
-import { IconExternalLink } from '@tabler/icons-react';
 import { type LinkItemType } from 'fumadocs-ui/utils/link-item';
 
 /* * */
