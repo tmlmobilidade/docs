@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "becf70cf0f739720",
+        "id": "376f4e529489b82f",
         "type": "tabs",
         "children": [
           {
-            "id": "aaecef174fa0b438",
+            "id": "5f46aec534ef3f9d",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "docs/(intro)/open-data.mdx",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "open-data"
+              "title": "New tab"
             }
           }
         ]
@@ -175,11 +171,11 @@
       "edit-mdx:New .mdx file": false
     }
   },
-  "active": "aaecef174fa0b438",
+  "active": "5f46aec534ef3f9d",
   "lastOpenFiles": [
+    "docs/(intro)/open-data.mdx",
     "docs/(intro)/bugs.md",
     "docs/(intro)/bugs.mdx",
-    "docs/(intro)/open-data.mdx",
     "docs/(intro)/covered-area.mdx",
     "docs/(intro)/contact-us.mdx",
     "docs/index.md",
