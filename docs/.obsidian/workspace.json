@@ -11,10 +11,14 @@
             "id": "d74bc3cb0789656f",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "reference/index.mdx",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "index"
             }
           }
         ]
@@ -173,13 +177,15 @@
   },
   "active": "d74bc3cb0789656f",
   "lastOpenFiles": [
+    "reference/index.md",
+    "blog/hello.md",
+    "index.md",
     "docs/(intro)/open-data.mdx",
     "docs/(intro)/bugs.md",
     "docs/(intro)/bugs.mdx",
     "docs/(intro)/covered-area.mdx",
     "docs/(intro)/contact-us.mdx",
     "docs/index.md",
-    "blog/hello.md",
     "docs/index.mdx",
     "docs/news/meta.json",
     "docs/news/index.mdx",
@@ -191,7 +197,6 @@
     "docs/Carris Metropolitana/docs/Component Showcase.md",
     "docs/Carris Metropolitana/docs/Callouts Guide.md",
     "docs/Carris Metropolitana/blog/obsidian-components.md",
-    "index.md",
     "Ingest Vehicle Events/ingest-vehicle-events.excalidraw.md",
     "Projetos/CUT/Drawing 2026-02-10 15.09.11.excalidraw.md",
     "Files/Screenshot 2026-02-10 at 15.47.21.png",
