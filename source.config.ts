@@ -1,6 +1,6 @@
 /* * */
 
-import { applyMdxPreset, defineCollections, defineConfig, defineDocs, frontmatterSchema, metaSchema } from 'fumadocs-mdx/config';
+import { defineConfig, defineDocs, frontmatterSchema, metaSchema } from 'fumadocs-mdx/config';
 import { readVaultFiles } from 'fumadocs-obsidian';
 import { remarkObsidian, RemarkObsidianOptions } from 'fumadocs-obsidian/mdx';
 import { type ElementContent } from 'hast';
@@ -10,8 +10,8 @@ import { z } from 'zod';
 // You can customise Zod schemas for frontmatter and `meta.json` here
 // see https://fumadocs.dev/docs/mdx/collections
 
-export const docs = defineDocs({
-	dir: 'content/docs',
+export const reference = defineDocs({
+	dir: 'docs/reference',
 	docs: {
 		postprocess: {
 			includeProcessedMarkdown: true,
@@ -39,8 +39,14 @@ export default defineConfig({
 });
 
 export const blog = defineDocs({
-	// async: true,
-	dir: 'content/blog',
+	dir: 'docs/blog',
+	meta: {
+		schema: frontmatterSchema.extend({
+			author: z.string(),
+			date: z.iso.date().or(z.date()),
+			tags: z.array(z.string()),
+		}),
+	},
 	// async mdxOptions(environment) {
 	// 	const { rehypeCodeDefaultOptions } = await import('fumadocs-core/mdx-plugins/rehype-code');
 	// 	const { remarkSteps } = await import('fumadocs-core/mdx-plugins/remark-steps');
@@ -64,12 +70,8 @@ export const blog = defineDocs({
 	// 		},
 	// 		remarkPlugins: [remarkSteps],
 	// 	})(environment);
+
 	// },
-	// schema: frontmatterSchema.extend({
-	// 	author: z.string(),
-	// 	date: z.iso.date().or(z.date()),
-	// 	tags: z.array(z.string()),
-	// }),
 	// type: 'doc',
 });
 
@@ -79,8 +81,7 @@ function transformerEscape(): ShikiTransformer {
 			function replace(node: ElementContent) {
 				if (node.type === 'text') {
 					node.value = node.value.replace('[\\!code', '[!code');
-				}
-				else if ('children' in node) {
+				} else if ('children' in node) {
 					for (const child of node.children) {
 						replace(child);
 					}

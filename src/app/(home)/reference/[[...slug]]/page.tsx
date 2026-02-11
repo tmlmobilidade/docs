@@ -1,6 +1,6 @@
 /* * */
 
-import { sourceDocs } from '@/lib/source';
+import { sourceReference } from '@/lib/source';
 import { getGithubLastEdit } from 'fumadocs-core/content/github';
 import defaultMdxComponents from 'fumadocs-ui/mdx';
 import { DocsBody, DocsDescription, DocsPage, DocsTitle } from 'fumadocs-ui/page';
@@ -10,7 +10,7 @@ import { notFound } from 'next/navigation';
 
 export async function generateMetadata(props: { params: Promise<{ slug?: string[] }> }) {
 	const params = await props.params;
-	const page = sourceDocs.getPage(params.slug);
+	const page = sourceReference.getPage(params.slug);
 	if (!page) notFound();
 
 	return {
@@ -22,7 +22,7 @@ export async function generateMetadata(props: { params: Promise<{ slug?: string[
 /* * */
 
 export async function generateStaticParams() {
-	return sourceDocs.generateParams();
+	return sourceReference.generateParams();
 }
 
 /* * */
@@ -35,7 +35,7 @@ export default async function Page(props: { params: Promise<{ slug?: string[] }>
 
 	const params = await props.params;
 
-	const page = sourceDocs.getPage(params.slug);
+	const page = sourceReference.getPage(params.slug);
 	if (!page) notFound();
 
 	//
@@ -43,14 +43,14 @@ export default async function Page(props: { params: Promise<{ slug?: string[] }>
 
 	const editOnGithubOptions = {
 		owner: 'tmlmobilidade',
-		path: `content/docs/${page.path}`,
+		path: `docs/reference/${page.path}`,
 		repo: 'docs',
 		sha: 'production',
 	};
 
 	const lastUpdateOptions = await getGithubLastEdit({
 		owner: 'tmlmobilidade',
-		path: `content/docs/${page.path}`,
+		path: `docs/reference/${page.path}`,
 		repo: 'docs',
 	});
 

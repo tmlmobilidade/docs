@@ -27,7 +27,7 @@ export function HomeHero() {
 				</p>
 
 				<div className={styles.buttonsContainer}>
-					<Link className={cn(buttonVariants(), styles.buttonLink)} href="/docs">
+					<Link className={cn(buttonVariants(), styles.buttonLink)} href="/reference">
 						<IconBook size={20} />
 						Documentação
 					</Link>

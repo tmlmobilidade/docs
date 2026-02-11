@@ -24,6 +24,6 @@ export const NAVBAR_LINKS: LinkItemType[] = [
 	{
 		active: 'nested-url',
 		text: 'Documentação',
-		url: '/docs',
+		url: '/reference',
 	},
 ];

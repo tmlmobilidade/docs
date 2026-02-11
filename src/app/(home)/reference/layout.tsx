@@ -1,7 +1,7 @@
 /* * */
 
 import { BASE_OPTIONS, NAVBAR_LINKS } from '@/lib/navbar';
-import { sourceDocs } from '@/lib/source';
+import { sourceReference } from '@/lib/source';
 import { DocsLayout } from 'fumadocs-ui/layouts/notebook';
 import { type PropsWithChildren } from 'react';
 
@@ -14,7 +14,7 @@ export default function Layout({ children }: PropsWithChildren) {
 			links={NAVBAR_LINKS}
 			nav={{ title: BASE_OPTIONS.title }}
 			themeSwitch={{ mode: 'light-dark-system' }}
-			tree={sourceDocs.getPageTree()}
+			tree={sourceReference.getPageTree()}
 		>
 			{children}
 		</DocsLayout>
