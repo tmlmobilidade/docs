@@ -1,31 +1,34 @@
+import type { ComponentPropsWithoutRef, ReactNode } from 'react';
+
 import { cn } from '@/lib/cn';
 import Link from 'next/link';
-import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 
 /* ------------------------------------------------------------------ */
 /*  Card — Obsidian-inspired card with optional icon and link          */
 /* ------------------------------------------------------------------ */
 
 interface CardProps extends Omit<ComponentPropsWithoutRef<'div'>, 'title'> {
-	/** Card title */
-	title: ReactNode;
-	/** Optional description text */
-	description?: ReactNode;
-	/** Optional icon (emoji, Lucide icon, etc.) */
-	icon?: ReactNode;
-	/** If provided, the card becomes a link */
-	href?: string;
 	/** Children rendered as card body */
-	children?: ReactNode;
+	children?: ReactNode
+	/** Optional description text */
+	description?: ReactNode
+	/** If provided, the card becomes a link */
+	href?: string
+	/** Optional icon (emoji, Lucide icon, etc.) */
+	icon?: ReactNode
+	/** Card title */
+	title: ReactNode
 }
 
+type LinkProps = Omit<ComponentPropsWithoutRef<'a'>, 'href'>;
+
 export function Card({
-	title,
-	description,
-	icon,
-	href,
-	className,
 	children,
+	className,
+	description,
+	href,
+	icon,
+	title,
 	...props
 }: CardProps) {
 	const content = (
@@ -53,8 +56,9 @@ export function Card({
 	);
 
 	if (href) {
+		const { onClick, onMouseDown, onTouchStart, ...linkProps } = props as any;
 		return (
-			<Link className={cardClasses} href={href} {...(props as ComponentPropsWithoutRef<'a'>)}>
+			<Link className={cardClasses} href={href} {...(linkProps as LinkProps)}>
 				{content}
 			</Link>
 		);
@@ -72,8 +76,8 @@ export function Card({
 /* ------------------------------------------------------------------ */
 
 export function Cards({
-	className,
 	children,
+	className,
 	...props
 }: ComponentPropsWithoutRef<'div'>) {
 	return (

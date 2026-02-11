@@ -11,7 +11,7 @@ export function BlogList({ posts }: { posts: BlogPostType[] }) {
 
 	posts.sort(
 		(a, b) =>
-			new Date(b.data.date ?? getName(b.path)).getTime() - new Date(a.data.date ?? getName(a.path)).getTime(),
+			new Date(b.data['date'] ?? getName(b.path)).getTime() - new Date(a.data['date'] ?? getName(a.path)).getTime(),
 	);
 
 	//

@@ -10,8 +10,8 @@ export async function BlogPage({ page }: { page: BlogPageType }) {
 	//
 	// A. Setup variables
 
-	const tags = page.data.tags;
-	const { body: Mdx, toc } = await page.data.load();
+	const tags = page.data['tags'] ?? [];
+	const { body: Mdx, toc } = page.data;
 
 	//
 	// B. Render components
@@ -21,14 +21,13 @@ export async function BlogPage({ page }: { page: BlogPageType }) {
 			<div className="flex flex-row gap-4 text-sm mb-8">
 				<div>
 					<p className="mb-1 text-fd-muted-foreground">Written by</p>
-					<p className="font-medium">{page.data.author}</p>
+					<p className="font-medium">{page.data['author']}</p>
 				</div>
 				<div>
 					<p className="mb-1 text-sm text-fd-muted-foreground">At</p>
 					<p className="font-medium">
 						{new Date(
-							page.data.date
-							?? path.basename(page.path, path.extname(page.path)),
+							page.data['date'] ?? path.basename(page.path, path.extname(page.path)),
 						).toDateString()}
 					</p>
 				</div>

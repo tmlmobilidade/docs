@@ -14,7 +14,7 @@ import Link from 'next/link';
 
 export default function Page() {
 	const posts = [...sourceBlog.getPages()]
-		.sort((a, b) => new Date(b.data.date ?? getName(b.path)).getTime() - new Date(a.data.date ?? getName(a.path)).getTime())
+		.sort((a, b) => new Date(b.data['date'] ?? getName(b.path)).getTime() - new Date(a.data['date'] ?? getName(a.path)).getTime())
 		.slice(0, 4);
 
 	return (
@@ -63,7 +63,7 @@ export default function Page() {
 									{post.data.description}
 								</p>
 								<p className="mt-auto pt-4 text-xs font-medium text-brand/70">
-									{new Date(post.data.date ?? getName(post.path)).toLocaleDateString('pt-PT', {
+									{new Date(post.data['date'] ?? getName(post.path)).toLocaleDateString('pt-PT', {
 										day: 'numeric',
 										month: 'short',
 										year: 'numeric',

@@ -16,12 +16,12 @@ export async function blogCard(post: BlogPost) {
 			<p className="mt-1.5 text-sm leading-relaxed text-fd-muted-foreground line-clamp-3">
 				{post.data.description}
 			</p>
-			{BlogTags(post.data.tags)}
+			{BlogTags(post.data['tags'] ?? [])}
 			<p className="mt-auto pt-4 text-xs font-medium text-brand/70">
-				{post.data.author}
+				{post.data['author']}
 				<span className="mx-1.5 text-fd-muted-foreground">&middot;</span>
 				{new Date(
-					post.data.date ?? getName(post.path),
+					post.data['date'] ?? getName(post.path),
 				).toLocaleDateString('pt-PT', {
 					day: 'numeric',
 					month: 'short',
