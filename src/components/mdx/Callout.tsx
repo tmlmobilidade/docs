@@ -21,7 +21,7 @@ import {
 
 const calloutConfig: Record<
 	string,
-	{ icon: ReactNode; colorClass: string; borderClass: string; bgClass: string }
+	{ bgClass: string, borderClass: string, colorClass: string, icon: ReactNode }
 > = {
 	danger: {
 		bgClass: 'bg-callout-danger/8',
@@ -85,17 +85,17 @@ const fallbackConfig = {
 /* ------------------------------------------------------------------ */
 
 interface CalloutProps extends ComponentPropsWithoutRef<'div'> {
-	type?: string;
-	collapsible?: boolean;
-	defaultOpen?: boolean;
+	collapsible?: boolean
+	defaultOpen?: boolean
+	type?: string
 }
 
 export function Callout({
-	type = 'note',
+	children,
+	className,
 	collapsible = false,
 	defaultOpen = true,
-	className,
-	children,
+	type = 'note',
 	...props
 }: CalloutProps) {
 	const config = calloutConfig[type.toLowerCase()] ?? fallbackConfig;
@@ -103,13 +103,13 @@ export function Callout({
 
 	return (
 		<div
+			role="note"
 			className={cn(
 				'my-4 rounded-lg border-l-4 px-4 py-3',
 				config.borderClass,
 				config.bgClass,
 				className,
 			)}
-			role="note"
 			{...props}
 		>
 			{collapsible ? (
@@ -122,14 +122,14 @@ export function Callout({
 						<span className={config.colorClass}>{config.icon}</span>
 						<span className="flex-1 font-semibold text-sm">{getTitle(children)}</span>
 						<svg
-							className={cn(
-								'size-4 transition-transform duration-200',
-								open && 'rotate-180',
-							)}
 							fill="none"
 							stroke="currentColor"
 							strokeWidth={2}
 							viewBox="0 0 24 24"
+							className={cn(
+								'size-4 transition-transform duration-200',
+								open && 'rotate-180',
+							)}
 						>
 							<path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
 						</svg>
@@ -148,10 +148,10 @@ export function Callout({
 /* ------------------------------------------------------------------ */
 
 interface CalloutTitleProps extends ComponentPropsWithoutRef<'div'> {
-	type?: string;
+	type?: string
 }
 
-export function CalloutTitle({ type = 'note', className, children, ...props }: CalloutTitleProps) {
+export function CalloutTitle({ children, className, type = 'note', ...props }: CalloutTitleProps) {
 	const config = calloutConfig[type?.toLowerCase()] ?? fallbackConfig;
 
 	return (
@@ -167,8 +167,8 @@ export function CalloutTitle({ type = 'note', className, children, ...props }: C
 /* ------------------------------------------------------------------ */
 
 export function CalloutBody({
-	className,
 	children,
+	className,
 	...props
 }: ComponentPropsWithoutRef<'div'>) {
 	return (
@@ -185,13 +185,13 @@ export function CalloutBody({
 function getTitle(children: ReactNode): ReactNode {
 	if (!Array.isArray(children)) return children;
 	return children.find(
-		(child) => child?.type === CalloutTitle || child?.props?.mdxType === 'CalloutTitle',
+		child => child?.type === CalloutTitle || child?.props?.mdxType === 'CalloutTitle',
 	) ?? children[0];
 }
 
 function getBody(children: ReactNode): ReactNode {
 	if (!Array.isArray(children)) return null;
 	return children.filter(
-		(child) => child?.type !== CalloutTitle && child?.props?.mdxType !== 'CalloutTitle',
+		child => child?.type !== CalloutTitle && child?.props?.mdxType !== 'CalloutTitle',
 	);
 }

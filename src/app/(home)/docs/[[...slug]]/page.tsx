@@ -42,15 +42,15 @@ export default async function Page(props: { params: Promise<{ slug?: string[] }>
 	// B. Setup options
 
 	const editOnGithubOptions = {
-		owner: 'carrismetropolitana',
-		path: `content/${page.path}`,
+		owner: 'tmlmobilidade',
+		path: `content/docs/${page.path}`,
 		repo: 'docs',
 		sha: 'production',
 	};
 
 	const lastUpdateOptions = await getGithubLastEdit({
-		owner: 'carrismetropolitana',
-		path: `content/${page.path}`,
+		owner: 'tmlmobilidade',
+		path: `content/docs/${page.path}`,
 		repo: 'docs',
 	});
 

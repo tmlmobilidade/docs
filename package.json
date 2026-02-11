@@ -5,7 +5,6 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev",
-    "generate": "tsx scripts/generate",
     "lint": "eslint",
     "postinstall": "fumadocs-mdx",
     "rinse": "npx --yes @tmlmobilidade/repo-rinse",

@@ -11,6 +11,7 @@ const config = {
   assetPrefix: isGitHubPages ? '/docs/' : '',
   basePath: isGitHubPages ? '/docs' : '',
   output: 'export',
+  images: { unoptimized: true },
   reactStrictMode: true,
 }
 

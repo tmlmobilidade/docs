@@ -1,10 +1,13 @@
+/* * */
+
+import { HomeHero } from '@/components/home/HomeHero';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/cn';
 import { getName } from '@/lib/getName';
+import { BASE_OPTIONS, NAVBAR_LINKS } from '@/lib/navbar';
 import { sourceBlog } from '@/lib/source';
-import { NAVBAR_LINKS } from '#/src/lib/navbar';
 import { HomeLayout } from 'fumadocs-ui/layouts/home';
-import { ArrowRight, BookOpen, Rss } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
 /* * */
@@ -15,48 +18,16 @@ export default function Page() {
 		.slice(0, 4);
 
 	return (
-		<HomeLayout links={NAVBAR_LINKS} nav={{ title: 'TML' }}>
+		<HomeLayout
+			githubUrl={BASE_OPTIONS.github_url}
+			links={NAVBAR_LINKS}
+			nav={{ title: BASE_OPTIONS.title }}
+			themeSwitch={{ mode: 'light-dark-system' }}
+		>
+
 			<main className="text-landing-foreground pt-6 pb-8 md:pb-16">
-				{/* ── Hero Section ─────────────────────────────────── */}
-				<section className="relative mx-auto max-w-[1400px] px-4">
-					<div className="relative flex min-h-[280px] flex-col justify-center overflow-hidden rounded-2xl border border-fd-border bg-gradient-to-br from-brand/5 via-fd-background to-brand-secondary/10 px-6 py-12 md:px-16 md:py-16">
-						{/* Decorative dot grid */}
-						<div
-							aria-hidden="true"
-							className="pointer-events-none absolute inset-0 opacity-[0.03]"
-							style={{
-								backgroundImage: 'radial-gradient(circle, currentColor 1px, transparent 1px)',
-								backgroundSize: '24px 24px',
-							}}
-						/>
 
-						<h1 className="relative z-10 max-w-3xl text-3xl font-semibold leading-tight tracking-tight md:text-4xl xl:text-5xl">
-							Descobre a melhor
-							<br className="md:hidden" />{' '}
-							<span className="text-brand">documentação</span> sobre veículos,
-							<br className="hidden md:block" />
-							{' '}tudo sobre a rede de autocarros da AML.
-						</h1>
-
-						<p className="relative z-10 mt-4 max-w-2xl text-fd-muted-foreground md:text-lg">
-							Documentação técnica, guias e recursos para a rede de transportes da Área Metropolitana de Lisboa.
-						</p>
-
-						<div className="relative z-10 mt-8 flex flex-row flex-wrap items-center gap-3">
-							<Link className={cn(buttonVariants(), 'gap-2 max-sm:text-sm')} href="/docs">
-								<BookOpen className="size-4" />
-								Começar a ler
-							</Link>
-							<Link
-								className={cn(buttonVariants({ variant: 'secondary' }), 'gap-2 max-sm:text-sm')}
-								href="/blog"
-							>
-								<Rss className="size-4" />
-								Ver Blog
-							</Link>
-						</div>
-					</div>
-				</section>
+				<HomeHero />
 
 				{/* ── Blog Posts Section ───────────────────────────── */}
 				<section className="mx-auto mt-16 w-full max-w-[1400px] px-4 md:px-6">

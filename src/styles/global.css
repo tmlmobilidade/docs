@@ -1,0 +1,123 @@
+@import 'tailwindcss';
+@import 'fumadocs-ui/css/black.css';
+@import 'fumadocs-ui/css/preset.css';
+
+/* * */
+/* THEME COLORS */
+
+.light {
+
+	--color-fd-background: var(--color-system-background-200);
+
+	--color-landing-foreground: #FF0000;
+	--color-landing-foreground-200: #FF0000;
+
+	--color-callout-note: #FF0000;
+	--color-callout-tip: #FF0000;
+	--color-callout-warning: #FF0000;
+	--color-callout-danger: #FF0000;
+	--color-callout-info: #FF0000;
+	--color-callout-quote: #FF0000;
+
+	--color-code-surface: #FF0000;
+	--color-code-border: #FF0000;
+
+	--color-blockquote-border: #FF0000;
+	--color-blockquote-bg: #FF0000;
+
+	--color-tag: #FF0000;
+	--color-tag-bg: #FF0000;
+
+}
+
+.dark {
+
+	--color-brand: #2864B9;
+	--color-brand-secondary: #1E4B96;
+
+	--color-fd-background: #19191E;
+
+}
+
+/* * */
+/* TYPOGRAPHY */
+
+body {
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-rendering: optimizeLegibility;
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4 {
+	letter-spacing: -0.02em;
+	font-weight: 600;
+}
+
+.prose h1 {
+	font-size: 2em;
+	margin-top: 1.5em;
+	margin-bottom: 0.6em;
+}
+
+.prose h2 {
+	font-size: 1.5em;
+	margin-top: 1.4em;
+	margin-bottom: 0.5em;
+	padding-bottom: 0.3em;
+	border-bottom: 1px solid var(--color-fd-border);
+}
+
+.prose h3 {
+	font-size: 1.25em;
+	margin-top: 1.2em;
+	margin-bottom: 0.4em;
+}
+
+.prose p a,
+.prose li a {
+	color: var(--color-brand);
+	text-decoration: none;
+	border-radius: 2px;
+	transition: color 0.15s ease;
+}
+
+.prose a:hover {
+	color: var(--color-brand-secondary);
+	text-underline-offset: 2px;
+	background-color: #E6F0FF;
+	text-decoration: underline;
+}
+
+.prose hr {
+	border-color: var(--color-fd-border);
+	margin: 2em 0;
+}
+
+/* * */
+/* THEME SWITCH */
+
+html.dark .theme-light {
+	display: none;
+}
+
+html.light .theme-dark {
+	display: none;
+}
+
+/* * */
+/* OPTIMIZATIONS */
+
+*,
+*::before,
+*::after {
+	transition: background-color 0.2s ease,
+				border-color 0.2s ease, color 0.15s ease;
+}
+
+.contain-content {
+	contain: unset !important;
+	content-visibility: visible !important;
+}
