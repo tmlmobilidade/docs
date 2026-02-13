@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "005e8c4aefbbf7d0",
+        "id": "e164bcb8a437a462",
         "type": "tabs",
         "children": [
           {
-            "id": "5e351f447eb97bdd",
+            "id": "192fdd228eefc883",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -171,7 +171,7 @@
       "edit-mdx:New .mdx file": false
     }
   },
-  "active": "5e351f447eb97bdd",
+  "active": "192fdd228eefc883",
   "lastOpenFiles": [
     "reference/(intro)/bugs.mdx",
     "blog/hello.md",
