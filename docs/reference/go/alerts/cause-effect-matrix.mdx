@@ -2,168 +2,169 @@
 title: Relações Causa e Efeitos
 description: Matriz completa de combinações válidas entre causa, efeito e tipo de referência para validação semântica dos alertas.
 ---
-Nem todas as combinações de causa, efeito e tipo de referência são válidas. A plataforma impõe regras de validação que garantem coerência semântica. Por exemplo, `DRIVER_ABSENCE` só pode afectar `rides` (viagens específicas), enquanto `CONSTRUCTION` pode afectar linhas, paragens e viagens.
+
+Nem todas as combinações de causa, efeito e tipo de referência são válidas. A plataforma impõe regras de validação que garantem coerência semântica. Por exemplo, `DRIVER_ABSENCE` só pode afectar `Viagens` viagens específicas), enquanto `CONSTRUCTION` pode afectar linhas, paragens e viagens.
 
 A tabela seguinte apresenta a matriz completa de relações válidas.
 
 ### ABUSIVE_PARKING
 
-|Efeito|Referências permitidas|
-|---|---|
-|`ACCESSIBILITY_ISSUE`|rides, lines, stops|
-|`DETOUR`|rides, lines, stops|
-|`NO_SERVICE`|rides, lines, stops|
-|`REDUCED_SERVICE`|rides, lines, stops|
-|`SIGNIFICANT_DELAYS`|rides, lines, stops|
+| Efeito                | Referências permitidas |
+| --------------------- | ---------------------- |
+| `ACCESSIBILITY_ISSUE` | Viagens, Linhas, Paragens    |
+| `DETOUR`              | Viagens, Linhas, Paragens    |
+| `NO_SERVICE`          | Viagens, Linhas, Paragens    |
+| `REDUCED_SERVICE`     | Viagens, Linhas, Paragens    |
+| `SIGNIFICANT_DELAYS`  | Viagens, Linhas, Paragens    |
 
 ### ACCIDENT
 
 |Efeito|Referências permitidas|
 |---|---|
-|`DETOUR`|rides, stops|
-|`NO_SERVICE`|rides, lines|
-|`REDUCED_SERVICE`|rides, lines|
-|`SIGNIFICANT_DELAYS`|rides, agency, lines|
+|`DETOUR`|Viagens, Paragens|
+|`NO_SERVICE`|Viagens, Linhas|
+|`REDUCED_SERVICE`|Viagens, Linhas|
+|`SIGNIFICANT_DELAYS`|Viagens, agency, Linhas|
 
 ### CONSTRUCTION
 
 |Efeito|Referências permitidas|
 |---|---|
-|`ACCESSIBILITY_ISSUE`|rides, lines, stops|
-|`DETOUR`|rides, lines, stops|
-|`NO_SERVICE`|rides, lines, stops|
-|`REDUCED_SERVICE`|rides, lines, stops|
-|`SIGNIFICANT_DELAYS`|rides, lines, stops|
-|`STOP_MOVED`|stops|
+|`ACCESSIBILITY_ISSUE`|Viagens, Linhas, Paragens|
+|`DETOUR`|Viagens, Linhas, Paragens|
+|`NO_SERVICE`|Viagens, Linhas, Paragens|
+|`REDUCED_SERVICE`|Viagens, Linhas, Paragens|
+|`SIGNIFICANT_DELAYS`|Viagens, Linhas, Paragens|
+|`STOP_MOVED`|Paragens|
 
 ### DEMONSTRATION
 
 |Efeito|Referências permitidas|
 |---|---|
-|`ACCESSIBILITY_ISSUE`|rides|
-|`ADDITIONAL_SERVICE`|rides, lines, agency|
-|`DETOUR`|rides, lines, stops|
-|`NO_SERVICE`|rides, lines, stops|
-|`REDUCED_SERVICE`|rides, lines, stops|
-|`SIGNIFICANT_DELAYS`|rides, lines, stops, agency|
+|`ACCESSIBILITY_ISSUE`|Viagens|
+|`ADDITIONAL_SERVICE`|Viagens, Linhas, agency|
+|`DETOUR`|Viagens, Linhas, Paragens|
+|`NO_SERVICE`|Viagens, Linhas, Paragens|
+|`REDUCED_SERVICE`|Viagens, Linhas, Paragens|
+|`SIGNIFICANT_DELAYS`|Viagens, Linhas, Paragens, agency|
 
 ### DRIVER_ABSENCE
 
 |Efeito|Referências permitidas|
 |---|---|
-|`NO_SERVICE`|rides|
-|`SIGNIFICANT_DELAYS`|rides|
+|`NO_SERVICE`|Viagens|
+|`SIGNIFICANT_DELAYS`|Viagens|
 
 ### DRIVER_ISSUE
 
 |Efeito|Referências permitidas|
 |---|---|
-|`DETOUR`|rides|
-|`NO_SERVICE`|rides|
-|`REDUCED_SERVICE`|rides|
-|`SIGNIFICANT_DELAYS`|rides|
+|`DETOUR`|Viagens|
+|`NO_SERVICE`|Viagens|
+|`REDUCED_SERVICE`|Viagens|
+|`SIGNIFICANT_DELAYS`|Viagens|
 
 ### HIGH_PASSENGER_LOAD
 
 |Efeito|Referências permitidas|
 |---|---|
-|`ACCESSIBILITY_ISSUE`|rides|
-|`ADDITIONAL_SERVICE`|rides|
-|`SIGNIFICANT_DELAYS`|rides|
+|`ACCESSIBILITY_ISSUE`|Viagens|
+|`ADDITIONAL_SERVICE`|Viagens|
+|`SIGNIFICANT_DELAYS`|Viagens|
 
 ### MEDICAL_EMERGENCY
 
 |Efeito|Referências permitidas|
 |---|---|
-|`DETOUR`|rides|
-|`NO_SERVICE`|rides|
-|`REDUCED_SERVICE`|rides|
-|`SIGNIFICANT_DELAYS`|rides|
+|`DETOUR`|Viagens|
+|`NO_SERVICE`|Viagens|
+|`REDUCED_SERVICE`|Viagens|
+|`SIGNIFICANT_DELAYS`|Viagens|
 
 ### NETWORK_UPDATE
 
 |Efeito|Referências permitidas|
 |---|---|
-|`ADDITIONAL_SERVICE`|lines, stops|
-|`DETOUR`|lines, stops|
-|`MODIFIED_SERVICE`|lines, stops|
-|`NO_SERVICE`|lines, stops|
-|`STOP_MOVED`|stops|
+|`ADDITIONAL_SERVICE`|Linhas, Paragens|
+|`DETOUR`|Linhas, Paragens|
+|`MODIFIED_SERVICE`|Linhas, Paragens|
+|`NO_SERVICE`|Linhas, Paragens|
+|`STOP_MOVED`|Paragens|
 
 ### POLICE_ACTIVITY
 
 |Efeito|Referências permitidas|
 |---|---|
-|`DETOUR`|rides, lines|
-|`NO_SERVICE`|rides, lines|
-|`REDUCED_SERVICE`|rides, lines|
-|`SIGNIFICANT_DELAYS`|rides, lines, agency|
+|`DETOUR`|Viagens, Linhas|
+|`NO_SERVICE`|Viagens, Linhas|
+|`REDUCED_SERVICE`|Viagens, Linhas|
+|`SIGNIFICANT_DELAYS`|Viagens, Linhas, agency|
 
 ### PUBLIC_DISORDER
 
 |Efeito|Referências permitidas|
 |---|---|
-|`DETOUR`|rides|
-|`NO_SERVICE`|rides|
-|`REDUCED_SERVICE`|rides|
-|`SIGNIFICANT_DELAYS`|rides|
+|`DETOUR`|Viagens|
+|`NO_SERVICE`|Viagens|
+|`REDUCED_SERVICE`|Viagens|
+|`SIGNIFICANT_DELAYS`|Viagens|
 
 ### ROAD_ISSUE
 
 |Efeito|Referências permitidas|
 |---|---|
-|`ACCESSIBILITY_ISSUE`|rides, lines, stops|
-|`DETOUR`|rides, lines, stops|
-|`NO_SERVICE`|rides, lines, stops|
-|`REDUCED_SERVICE`|rides, lines, stops|
-|`SIGNIFICANT_DELAYS`|rides, lines, stops|
+|`ACCESSIBILITY_ISSUE`|Viagens, Linhas, Paragens|
+|`DETOUR`|Viagens, Linhas, Paragens|
+|`NO_SERVICE`|Viagens, Linhas, Paragens|
+|`REDUCED_SERVICE`|Viagens, Linhas, Paragens|
+|`SIGNIFICANT_DELAYS`|Viagens, Linhas, Paragens|
 
 ### STRIKE
 
 |Efeito|Referências permitidas|
 |---|---|
-|`ADDITIONAL_SERVICE`|lines, stops, agency|
-|`DETOUR`|rides, lines, stops|
-|`NO_SERVICE`|rides, agency, lines|
-|`REDUCED_SERVICE`|rides, lines|
-|`SIGNIFICANT_DELAYS`|rides, agency|
+|`ADDITIONAL_SERVICE`|Linhas, Paragens, agency|
+|`DETOUR`|Viagens, Linhas, Paragens|
+|`NO_SERVICE`|Viagens, agency, Linhas|
+|`REDUCED_SERVICE`|Viagens, Linhas|
+|`SIGNIFICANT_DELAYS`|Viagens, agency|
 
 ### TECHNICAL_ISSUE
 
 |Efeito|Referências permitidas|
 |---|---|
-|`ACCESSIBILITY_ISSUE`|rides|
-|`NO_SERVICE`|rides|
-|`ON_BOARD_SALE_ISSUE`|rides|
-|`REALTIME_INFO_ISSUE`|rides, agency|
-|`REDUCED_SERVICE`|rides|
-|`SIGNIFICANT_DELAYS`|rides, agency|
+|`ACCESSIBILITY_ISSUE`|Viagens|
+|`NO_SERVICE`|Viagens|
+|`ON_BOARD_SALE_ISSUE`|Viagens|
+|`REALTIME_INFO_ISSUE`|Viagens, agency|
+|`REDUCED_SERVICE`|Viagens|
+|`SIGNIFICANT_DELAYS`|Viagens, agency|
 
 ### TRAFFIC_JAM
 
 |Efeito|Referências permitidas|
 |---|---|
-|`DETOUR`|rides, lines, stops|
-|`NO_SERVICE`|rides|
-|`REDUCED_SERVICE`|rides|
-|`SIGNIFICANT_DELAYS`|rides, agency, lines, stops|
+|`DETOUR`|Viagens, Linhas, Paragens|
+|`NO_SERVICE`|Viagens|
+|`REDUCED_SERVICE`|Viagens|
+|`SIGNIFICANT_DELAYS`|Viagens, agency, Linhas, Paragens|
 
 ### VEHICLE_ISSUE
 
 |Efeito|Referências permitidas|
 |---|---|
-|`ACCESSIBILITY_ISSUE`|rides|
-|`NO_SERVICE`|rides|
-|`ON_BOARD_SALE_ISSUE`|rides|
-|`REDUCED_SERVICE`|rides|
-|`SIGNIFICANT_DELAYS`|rides|
+|`ACCESSIBILITY_ISSUE`|Viagens|
+|`NO_SERVICE`|Viagens|
+|`ON_BOARD_SALE_ISSUE`|Viagens|
+|`REDUCED_SERVICE`|Viagens|
+|`SIGNIFICANT_DELAYS`|Viagens|
 
 ### WEATHER
 
 |Efeito|Referências permitidas|
 |---|---|
-|`ACCESSIBILITY_ISSUE`|rides, lines, stops|
-|`DETOUR`|rides, lines, stops|
-|`NO_SERVICE`|rides, lines, stops|
-|`REDUCED_SERVICE`|rides, lines, stops|
-|`SIGNIFICANT_DELAYS`|rides, lines, stops, agency|
+|`ACCESSIBILITY_ISSUE`|Viagens, Linhas, Paragens|
+|`DETOUR`|Viagens, Linhas, Paragens|
+|`NO_SERVICE`|Viagens, Linhas, Paragens|
+|`REDUCED_SERVICE`|Viagens, Linhas, Paragens|
+|`SIGNIFICANT_DELAYS`|Viagens, Linhas, Paragens, agency|
