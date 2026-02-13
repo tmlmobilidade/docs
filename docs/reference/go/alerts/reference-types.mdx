@@ -16,17 +16,19 @@ No GO, com as referências, podemos ainda identificar com ainda mais granularida
 
 Por exemplo, um alerta que afecta uma linha específica, em apenas determinadas paragens.
 
+No caso abaixo vemos que este alerta afeta duas linhas, a 1001 e a 
+
 ```json
 {
   "reference_type": "lines",
   references: [
 	  {
 		  "parent_id": "1001",
-		  "child_ids": ["stop_id1", "stop_id2"]
+		  "child_ids": ["030001", "030010"]
 	  },
 	  {
-		  "parent_id": "1001",
-		  "child_ids": ["stop_id1", "stop_id2"]
+		  "parent_id": "1002",
+		  "child_ids": []
 	  }
   ]
 }
