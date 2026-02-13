@@ -19,8 +19,16 @@ Por exemplo, um alerta que afecta uma linha específica, em apenas determinadas 
 ```json
 {
   "reference_type": "lines",
-  "parent_id": "1001",
-  "child_ids": ["stop_id1", "stop_id2"]
+  references: [
+	  {
+		  "parent_id": "1001",
+		  "child_ids": ["stop_id1", "stop_id2"]
+	  },
+	  {
+		  "parent_id": "1001",
+		  "child_ids": ["stop_id1", "stop_id2"]
+	  }
+  ]
 }
 ```
 
