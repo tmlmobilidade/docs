@@ -1,17 +1,46 @@
 ---
 title: Alertas
-description: Esta plataforma permite criar, gerir e publicar alertas de serviço que são transformados em, seguindo a especificação oficial com extensões próprias adaptadas à realidade operacional dos operadores de transporte.
+description: O que é um alerta, para que serve, como criar um alerta e que visibilidade tem após publicação.
 ---
-## Visão Geral
 
-A plataforma funciona como uma camada de gestão interna de alertas que, após publicação, são convertidos automaticamente no formato "[[service-alerts.mdx|GTFS RT]]" para consumo por aplicações de passageiros, painéis de informação e sistemas de terceiros.
+## O que é um Alerta e para que serve
 
-## Padrões de Utilização Comuns
+Um **alerta** é uma mensagem de serviço que informa passageiros e sistemas externos sobre situações que afectam a operação — acidentes, obras, greves, alterações de rede, entre outras. A plataforma funciona como uma camada de gestão interna: os alertas são criados e editados aqui e, após publicação, são convertidos automaticamente no formato [GTFS Realtime](/reference/gtfs/realtime/service-alerts) para consumo por aplicações de passageiros, painéis de informação e sistemas de terceiros.
 
-**Alerta operacional imediato** (ex: acidente em curso) — Causa `ACCIDENT`, efeito `SIGNIFICANT_DELAYS`, referência `rides`. Período ativo com início imediato e sem data de fim definida. Publicação imediata.
+Em resumo, um alerta serve para:
 
-**Alerta planeado** (ex: obras na via) — Causa `CONSTRUCTION`, efeito `DETOUR`, referência `lines` ou `stops`. Período ativo futuro com datas definidas. Publicação antecipada para informar passageiros.
+- **Comunicar** interrupções, atrasos, desvios ou alterações de serviço aos passageiros.
+- **Publicar** informação estruturada e normalizada (causa, efeito, entidades afectadas) em feeds padrão.
+- **Distinguir** período em que o problema ocorre (período ativo) do período em que o alerta é visível (período de publicação), permitindo avisos antecipados ou alertas em curso.
 
-**Alerta de rede** (ex: nova paragem) — Causa `NETWORK_UPDATE`, efeito `MODIFIED_SERVICE`, referência `lines` ou `stops`. Utilizado para comunicar alterações permanentes à rede.
+Para o modelo de dados completo e todos os campos do alerta, consulte o [Modelo de dados](data-types).
 
-**Greve** — Causa `STRIKE`, efeito `REDUCED_SERVICE` ou `NO_SERVICE`, referência `agency` (toda a operação) ou `lines` (linhas específicas). Permite publicação antecipada com período ativo correspondente à data da greve.
+---
+
+## Passos para criar um Alerta
+
+1. **Definir o conteúdo** — Título, descrição e, se aplicável, URL de informação adicional ou imagem. Os detalhes dos campos estão no [Modelo de dados](data-types).
+
+2. **Classificar o alerta** — Escolher a **causa** (o que originou a situação) e o **efeito** (como afecta o serviço). A lista de causas e efeitos disponíveis está em [Causas e Efeitos](causes-effects). Nem todas as combinações são válidas; as combinações permitidas estão na [Relações entre Causas e Efeitos](cause-effect-matrix).
+
+3. **Definir o âmbito** — Indicar **que entidades** são afectadas: toda a agência, linhas, paragens ou viagens específicas. Isto faz-se através do tipo de referência e das referências (ex.: linhas/paragens/viagens concretas). Para mais detalhe e exemplos, consulte [Referências](reference-types).
+
+4. **Definir os períodos** — Configurar o **período ativo** (quando a situação ocorre) e o **período de publicação** (quando o alerta fica visível no feed). O [Modelo de dados](data-types) descreve estes campos.
+
+5. **Guardar e publicar** — O alerta pode ficar em rascunho até estar pronto. Após publicação, passa a ser incluído no feed GTFS-RT conforme a visibilidade descrita abaixo.
+
+Para exemplos por tipo de situação (alerta imediato, planeado, greve, etc.), consulte [Padrões de Utilização Comuns](usage-patterns).
+
+---
+
+## Visibilidade do alerta após publicação
+
+Assim que um alerta é **publicado**:
+
+- **Inclusão no feed** — O alerta é convertido para o formato GTFS Realtime e incluído no feed de Service Alerts, desde que esteja dentro do **período de publicação** (`publish_start_date` / `publish_end_date`). Aplicações, painéis e sistemas que consomem o feed passam então a receber este alerta.
+
+- **Período de publicação vs período ativo** — A **visibilidade** no feed é controlada pelo período de publicação. O **período ativo** indica quando a situação descrita está efectivamente a ocorrer. Assim, é possível publicar um alerta antes do início do período ativo (ex.: obras na próxima semana) ou mantê-lo visível após o fim do período ativo, conforme configurado.
+
+- **Estado de publicação** — O campo `publish_status` pode ser `draft`, `published` ou `archived`. Apenas alertas com estado `published` e dentro do intervalo de datas de publicação são expostos no feed.
+
+O detalhe dos campos de período ativo, período de publicação e estado está no [Modelo de dados](data-types), na secção «Períodos Temporais» e «Auditoria e Controlo».
