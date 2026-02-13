@@ -32,11 +32,7 @@
   "fileIcons": {},
   "bookmarkIcons": {},
   "tagIcons": {},
-  "propertyIcons": {
-    "author": {
-      "icon": "lucide-user-pen"
-    }
-  },
+  "propertyIcons": {},
   "ribbonIcons": {},
   "fileRules": [
     {
