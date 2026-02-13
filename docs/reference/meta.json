@@ -1,15 +1,15 @@
 {
   "pages": [
-    "...news",
-    "---Introduction---",
+    "---Introdução---",
     "index",
-    "(intro)/covered-area",
-    "(intro)/open-data",
-    "(intro)/bugs",
-    "(intro)/contact-us",
+    "...(intro)",
+    "---Dados Abertos---",
+    "...open-data",
+    "---GO---",
+    "...go",
     "---GTFS---",
     "...gtfs",
-    "---API---",
+    "---APEX---",
     "...api"
   ],
   "root": true
