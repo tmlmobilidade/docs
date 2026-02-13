@@ -175,8 +175,9 @@
       "edit-mdx:New .mdx file": false
     }
   },
-  "active": "33076def42fbc613",
+  "active": "192fdd228eefc883",
   "lastOpenFiles": [
+    "reference/(intro)/iso.mdx.md",
     "reference/go/cli/export-data/index.mdx",
     "reference/go/cli/export-data",
     "reference/go/cli",
@@ -187,8 +188,6 @@
     "reference/apex",
     "reference/(intro)/iso.mdx",
     "reference/go/performance/index.mdx",
-    "reference/go/controller/index.mdx",
-    "reference/(intro)/iso.mdx.md",
     "reference/go/controller/Untitled 1.md",
     "reference/go/controller/Untitled.md",
     "reference/go/alerts/index.md",
