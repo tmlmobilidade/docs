@@ -14,7 +14,7 @@
     "---GTFS---",
     "...gtfs",
     "---APEX---",
-    "...api"
+    "...apex"
   ],
   "root": true
 }
