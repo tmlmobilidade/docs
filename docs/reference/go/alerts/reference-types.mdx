@@ -37,3 +37,23 @@ No caso abaixo vemos que este alerta afeta duas linhas, a `1001` e a `1002`. Mas
 ![[Pasted image 20260213200631.png]]
 
 Ou um alerta que afecta uma paragem que por lá passam muitas linhas, mas apenas algumas são afetadas.
+
+No caso 
+
+```json
+{
+  "reference_type": "stops",
+  references: [
+	  {
+		  "parent_id": "070019",
+		  "child_ids": ["2002", "2505", "2621"]
+	  },
+	  {
+		  "parent_id": "070396",
+		  "child_ids": []
+	  }
+  ]
+}
+```
+
+![[Pasted image 20260213201145.png]]
