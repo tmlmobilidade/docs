@@ -11,3 +11,18 @@ Seguindo a especificação oficial, as referências podem ser:
 - `lines` - O alerta afecta linhas específicas.
 - `stops` - O alerta afecta paragens específicas.
 - `trips` - O alerta afecta viagens específicas.
+
+No GO, com as referências, podemos ainda identificar com ainda mais granularidade, as entidades que vão ser afetadas.
+
+Por exemplo, um alerta que afecta uma linha específica, em apenas determinadas paragens.
+
+```json
+{
+  "reference_type": "lines",
+  "parent_id": "1001",
+  "child_ids": ["stop_id1", "stop_id2"]
+}
+```
+
+![[Pasted image 20260213200526.png]]
+Ou um alerta que afecta uma paragem que por lá passam muitas linhas, mas apenas algumas são afetadas.
