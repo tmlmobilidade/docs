@@ -9,33 +9,53 @@ A plataforma define um conjunto de **causas** (`cause`) e **efeitos** (`effect`)
 
 As causas dividem-se em duas categorias:
 
-**Causas da especificação GTFS-RT** - Presentes directamente na especificação oficial.
+#### Standard
+Presentes directamente na especificação oficial.
 
 | Causa | Descrição |
 |-------|-----------|
 | `ACCIDENT` | Acidente |
 | `CONSTRUCTION` | Obras |
-| `DEMONSTRATION` | Manifestação |
-| `MEDICAL_EMERGENCY` | Emergência Médica |
-| `POLICE_ACTIVITY` | Atividade Policial |
-| `STRIKE` | Greve |
-| `TECHNICAL_ISSUE` | Problema Técnico |
+| `DEMONSTRATION` | Manifestação (não relacionada com a rede de transportes)|
+| `MEDICAL_EMERGENCY` | Emergência médica |
+| `POLICE_ACTIVITY` | Atividade policial (ex: loqueio de via, operação STOP) |
+| `STRIKE` | Greve dos transportes públicos|
+| `TECHNICAL_ISSUE` | Problema técnico |
 | `WEATHER` | Mau tempo |
 
-**Causas personalizadas** - Extensões específicas para a realidade operacional não contem no [[service-alerts.mdx|GTFS RT]].
+#### Extenção
+Extensões específicas para a realidade operacional não contem no [[service-alerts.mdx|GTFS RT]].
 
 | Causa | Descrição |
 |-------|-----------|
-| `ABUSIVE_PARKING` | Estacionamento Abusivo |
-| `DRIVER_ABSENCE` | Condutor Ausente |
-| `DRIVER_ISSUE` | Problema com Condutor |
-| `HIGH_PASSENGER_LOAD` | Elevado Volume de Passageiros |
-| `NETWORK_UPDATE` | Alteração na Rede |
-| `PUBLIC_DISORDER` | Desordem Pública |
-| `ROAD_ISSUE` | Problema na Estrada |
+| `ABUSIVE_PARKING` | Estacionamento abusivo |
+| `DRIVER_ABSENCE` | Condutor ausente |
+| `DRIVER_ISSUE` | Problema com o condutor |
+| `HIGH_PASSENGER_LOAD` | Elevado volume de passageiros |
+| `NETWORK_UPDATE` | Alteração na rede de transportes |
+| `PUBLIC_DISORDER` | Desacatos dentro do veículo |
+| `ROAD_ISSUE` | Problema na via |
 
 ### Efeitos Disponíveis
 
-**Efeitos da especificação GTFS-RT:** `ACCESSIBILITY_ISSUE`, `ADDITIONAL_SERVICE`, `DETOUR`, `MODIFIED_SERVICE`, `NO_SERVICE`, `REDUCED_SERVICE`, `SIGNIFICANT_DELAYS`, `STOP_MOVED`
+#### Standard
+Presentes directamente na especificação oficial.
 
-**Efeitos personalizados:** `REALTIME_INFO_ISSUE`, `ON_BOARD_SALE_ISSUE`
+| Efeito | Descrição |
+|-------|-----------|
+| `ACCESSIBILITY_ISSUE` | Problema de acessibilidade |
+| `ADDITIONAL_SERVICE` | Serviço adicional |
+| `DETOUR` | Desvio |
+| `MODIFIED_SERVICE` | Alteração no serviço |
+| `NO_SERVICE` | Serviço cancelado |
+| `REDUCED_SERVICE` | Encurtamento do serviço |
+| `SIGNIFICANT_DELAYS` | Atrasos significativos |
+| `STOP_MOVED` | Paragem deslocada |
+
+#### Extenção
+Extensões específicas para a realidade operacional não contem no [[service-alerts.mdx|GTFS RT]].
+
+| Efeito | Descrição |
+|-------|-----------|
+| `REALTIME_INFO_ISSUE` | Problema de Informação em Tempo Real |
+| `ON_BOARD_SALE_ISSUE` | Problema de Venda a Bordo |
