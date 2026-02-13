@@ -1,23 +1,25 @@
 ---
 title: Referências
-description:
+description: As Referências determinão quais linhas, paragens, viagens ou agencias vão ser afetadas.
+
 ---
+
 As referências são a nossa forma de identificar quais as [entidades](https://gtfs.org/documentation/realtime/reference/#message-entityselector) que serão afetadas por um alerta. Elas permitem especificar o âmbito exato do impacto de cada alerta no sistema de transportes.
 
 ## Tipos de Referências
 
 Seguindo a especificação oficial do GTFS Realtime, as referências podem ser de quatro tipos:
 
-**`agency`** - O alerta afeta toda a operação de um operador, impactando todos os seus serviços e infraestrutura.
-**`lines`** - O alerta afeta linhas específicas da rede de transportes.
-**`stops`** - O alerta afeta paragens específicas.
-**`trips`** - O alerta afeta viagens específicas.
+- `agency` - O alerta afeta toda a operação de um operador, impactando todos os seus serviços e infraestrutura.
+- `lines` - O alerta afeta linhas específicas da rede de transportes.
+- `stops` - O alerta afeta paragens específicas.
+- `trips` - O alerta afeta viagens específicas.
 
 ## Granularidade Adicional no GO
 
 No sistema GO, as referências vão além da especificação básica, permitindo identificar com granularidade ainda maior as entidades que serão afetadas. Esta funcionalidade torna-se especialmente útil quando um alerta não deve impactar toda uma entidade, mas apenas parte dela.
 
-O sistema utiliza uma estrutura hierárquica de `parent_id` e `child_ids`, onde o elemento pai representa a entidade principal e os elementos filho representam as sub-entidades específicas que serão afetadas. Quando o array `child_ids` está vazio, significa que toda a entidade pai será afetada.
+O sistema utiliza uma estrutura hierárquica de `parent_id` e `child_ids`, onde o elemento pai representa a entidade principal e os elementos filho representam as sub-entidades específicas que serão afetadas. Quando a lista de `child_ids` está vazia, significa que toda a entidade pai será afetada.
 
 ### Exemplo 1: Alertas por Linha com Paragens Específicas
 
