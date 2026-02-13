@@ -3,13 +3,13 @@ title: Causas e Efeitos
 description: Conjunto de causas e efeitos disponíveis na plataforma
 ---
 
-A plataforma define um conjunto de **causas** (`cause`) e **efeitos** (`effect`) que estendem a especificação GTFS-RT base, adicionando causas específicas para a realidade operacional.
+A plataforma define um conjunto de **causas** (`cause`) e **efeitos** (`effect`) que estendem a especificação [[service-alerts.mdx|GTFS RT]] base, adicionando causas específicas para a realidade operacional.
 
 ### Causas Disponíveis
 
 As causas dividem-se em duas categorias:
 
-**Causas da especificação GTFS-RT** 
+**Causas da especificação GTFS-RT** - Presentes directamente na especificação oficial.
 
 | Causa | Descrição |
 |-------|-----------|
@@ -22,7 +22,17 @@ As causas dividem-se em duas categorias:
 | `TECHNICAL_ISSUE` | Problema Técnico |
 | `WEATHER` | Mau tempo |
 
-**Causas personalizadas** — extensões específicas da plataforma, mapeadas para `UNKNOWN_CAUSE` no feed GTFS-RT mas com informação detalhada no título/descrição: `ABUSIVE_PARKING`, `DRIVER_ABSENCE`, `DRIVER_ISSUE`, `HIGH_PASSENGER_LOAD`, `NETWORK_UPDATE`, `PUBLIC_DISORDER`, `ROAD_ISSUE`, `TRAFFIC_JAM`, `VEHICLE_ISSUE`
+**Causas personalizadas** - Extensões específicas para a realidade operacional não contem no [[service-alerts.mdx|GTFS RT]].
+
+| Causa | Descrição |
+|-------|-----------|
+| `ABUSIVE_PARKING` | Estacionamento Abusivo |
+| `DRIVER_ABSENCE` | Condutor Ausente |
+| `DRIVER_ISSUE` | Problema com Condutor |
+| `HIGH_PASSENGER_LOAD` | Elevado Volume de Passageiros |
+| `NETWORK_UPDATE` | Alteração na Rede |
+| `PUBLIC_DISORDER` | Desordem Pública |
+| `ROAD_ISSUE` | Problema na Estrada |
 
 ### Efeitos Disponíveis
 
