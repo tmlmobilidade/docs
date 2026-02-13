@@ -4,10 +4,4 @@ description: Esta plataforma permite criar, gerir e publicar alertas de serviço
 ---
 ## Visão Geral
 
-A plataforma funciona como uma camada de gestão interna de alertas que, após publicação, são convertidos automaticamente no formato **GTFS Realtime (protobuf)** para consumo por aplicações de passageiros, painéis de informação e sistemas de terceiros.
-
-O fluxo principal é:
-
-1. Um operador cria um alerta na plataforma, preenchendo causa, efeito, entidades afetadas e períodos de validade.
-2. O alerta passa por um ciclo de vida (`draft` → `published` → `archived`).
-3. Alertas publicados são transformados em `FeedEntity` do tipo `ServiceAlert` no feed GTFS-RT.
+A plataforma funciona como uma camada de gestão interna de alertas que, após publicação, são convertidos automaticamente no [[gtfs-rt.mdx]] para consumo por aplicações de passageiros, painéis de informação e sistemas de terceiros.
