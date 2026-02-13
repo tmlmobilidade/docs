@@ -11,10 +11,14 @@
             "id": "192fdd228eefc883",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "reference/(intro)/open-data.mdx",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "open-data"
             }
           }
         ]
@@ -171,10 +175,14 @@
       "edit-mdx:New .mdx file": false
     }
   },
-  "active": "33076def42fbc613",
+  "active": "192fdd228eefc883",
   "lastOpenFiles": [
-    "reference/GO",
+    "reference/(intro)/covered-area.mdx",
+    "reference/(intro)/contact-us.mdx",
     "reference/(intro)/bugs.mdx",
+    "reference/open-data",
+    "reference/apex",
+    "reference/go",
     "blog/hello.md",
     "blog/hello-2.md",
     "2026-01-22.md",
@@ -187,10 +195,6 @@
     "docs/(intro)/covered-area.mdx",
     "docs/(intro)/contact-us.mdx",
     "docs/index.md",
-    "docs/index.mdx",
-    "docs/news/meta.json",
-    "docs/news/index.mdx",
-    "docs/news/20250101.mdx",
     "docs/Carris Metropolitana/docs/index.md",
     "docs/Carris Metropolitana/docs/API Quick Start.md",
     "docs/Carris Metropolitana/docs/Component Showcase.md",
