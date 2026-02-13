@@ -9,12 +9,12 @@
     "(intro)/open-data",
     "(intro)/bugs",
     "(intro)/contact-us",
-    "---GO---",
-    "...go",
     "---GTFS---",
     "...gtfs",
     "---APEX---",
-    "...apex"
+    "...apex",
+    "---GO---",
+    "...go"
   ],
   "root": true
 }
