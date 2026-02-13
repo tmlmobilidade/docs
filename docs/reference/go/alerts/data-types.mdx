@@ -3,14 +3,14 @@ title: Modelo de dados
 description: O modelo de dados do alerta e que campos compõem a nossa estrutura interna.
 ---
 
-Cada alerta é representado internamente pela seguinte estrutura.
+Cada alerta é representado internamente pela seguinte estrutura. Os campos são depois mapeados para os campos equivalentes da especificação GTFS-RT.
 
 ### Campos de Identificação
 
 |Campo|Tipo|Descrição|
 |---|---|---|
 |`_id`|`string`|Identificador único do alerta|
-|`external_id`|`string?`|Identificador externo (ex: integração com sistemas legados)|
+|`external_id`|`string?`|Identificador externo (ex: integração com sistemas externos)|
 |`agency_id`|`string`|Operador/agência a que o alerta pertence|
 
 ### Conteúdo
