@@ -48,11 +48,11 @@ export default async function Page(props: { params: Promise<{ slug?: string[] }>
 		sha: 'production',
 	};
 
-	const lastUpdateOptions = await getGithubLastEdit({
-		owner: 'tmlmobilidade',
-		path: `docs/reference/${page.path}`,
-		repo: 'docs',
-	});
+	// const lastUpdateOptions = await getGithubLastEdit({
+	// 	owner: 'tmlmobilidade',
+	// 	path: `docs/reference/${page.path}`,
+	// 	repo: 'docs',
+	// });
 
 	const MDX = page.data.body;
 
@@ -62,7 +62,7 @@ export default async function Page(props: { params: Promise<{ slug?: string[] }>
 	return (
 		<DocsPage
 			editOnGithub={editOnGithubOptions}
-			lastUpdate={new Date(lastUpdateOptions ?? 0)}
+			// lastUpdate={new Date(lastUpdateOptions ?? 0)}
 			toc={page.data.toc}
 			tableOfContent={{
 				enabled: true,
