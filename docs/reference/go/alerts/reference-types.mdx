@@ -1,15 +1,4 @@
 ---
-title: Tipos de Referência e Entidades Informadas
-description: Como o campo reference_type determina a granularidade do alerta e o mapeamento para informed_entity do GTFS-RT.
+title: Referências
+description: As Referências determinão que linhas, paragens, viagens ou agencias vão ser afetadas.
 ---
-O campo `reference_type` determina a granularidade do alerta e como as `references` são mapeadas para o campo `informed_entity` do GTFS-RT.
-
-**`agency`** — O alerta afecta toda a operação do operador. Mapeado para `informed_entity.agency_id`.
-
-**`lines`** — O alerta afecta linhas/rotas específicas. Cada `parent_id` corresponde a um `route_id` no GTFS. Os `child_ids` podem referenciar `trip_id`s específicos dessa linha.
-
-**`stops`** — O alerta afecta paragens específicas. Cada `parent_id` corresponde a um `stop_id` no GTFS.
-
-**`rides`** — O alerta afecta viagens específicas. Cada `parent_id` corresponde a um `trip_id` no GTFS.
-
-A estrutura de `references` permite uma hierarquia pai-filho flexível. Por exemplo, para um alerta que afecta determinadas viagens de uma linha, o `parent_id` seria o `route_id` e os `child_ids` os `trip_id`s afetados.
