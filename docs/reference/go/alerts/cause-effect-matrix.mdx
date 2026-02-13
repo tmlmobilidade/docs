@@ -1,11 +1,11 @@
 ---
-title: Relações Causa e Efeitos
+title: Relações entre Causas e Efeitos
 description: Matriz completa de combinações válidas entre causa, efeito e tipo de referência para validação semântica dos alertas.
 ---
 
-Nem todas as combinações de causa, efeito e tipo de referência são válidas. A plataforma impõe regras de validação que garantem coerência semântica. Por exemplo, `DRIVER_ABSENCE` só pode afectar `Viagens` viagens específicas), enquanto `CONSTRUCTION` pode afectar linhas, paragens e viagens.
+Nem todas as combinações de causa, efeito e tipo de referência são válidas. A plataforma impõe regras de validação que garantem coerência semântica. Por exemplo, `DRIVER_ABSENCE` só pode afectar Viagens viagens específicas, enquanto `CONSTRUCTION` pode afectar linhas, Paragens e Viagens.
 
-A tabela seguinte apresenta a matriz completa de relações válidas.
+A tabela seguinte apresenta a matriz completa de relações válidas entre causa, efeito e tipos de referência.
 
 ### ABUSIVE_PARKING
 
@@ -24,7 +24,7 @@ A tabela seguinte apresenta a matriz completa de relações válidas.
 |`DETOUR`|Viagens, Paragens|
 |`NO_SERVICE`|Viagens, Linhas|
 |`REDUCED_SERVICE`|Viagens, Linhas|
-|`SIGNIFICANT_DELAYS`|Viagens, agency, Linhas|
+|`SIGNIFICANT_DELAYS`|Viagens, Agencias, Linhas|
 
 ### CONSTRUCTION
 
@@ -42,11 +42,11 @@ A tabela seguinte apresenta a matriz completa de relações válidas.
 |Efeito|Referências permitidas|
 |---|---|
 |`ACCESSIBILITY_ISSUE`|Viagens|
-|`ADDITIONAL_SERVICE`|Viagens, Linhas, agency|
+|`ADDITIONAL_SERVICE`|Viagens, Linhas, Agencias|
 |`DETOUR`|Viagens, Linhas, Paragens|
 |`NO_SERVICE`|Viagens, Linhas, Paragens|
 |`REDUCED_SERVICE`|Viagens, Linhas, Paragens|
-|`SIGNIFICANT_DELAYS`|Viagens, Linhas, Paragens, agency|
+|`SIGNIFICANT_DELAYS`|Viagens, Linhas, Paragens, Agencias|
 
 ### DRIVER_ABSENCE
 
@@ -98,7 +98,7 @@ A tabela seguinte apresenta a matriz completa de relações válidas.
 |`DETOUR`|Viagens, Linhas|
 |`NO_SERVICE`|Viagens, Linhas|
 |`REDUCED_SERVICE`|Viagens, Linhas|
-|`SIGNIFICANT_DELAYS`|Viagens, Linhas, agency|
+|`SIGNIFICANT_DELAYS`|Viagens, Linhas, Agencias|
 
 ### PUBLIC_DISORDER
 
@@ -123,11 +123,11 @@ A tabela seguinte apresenta a matriz completa de relações válidas.
 
 |Efeito|Referências permitidas|
 |---|---|
-|`ADDITIONAL_SERVICE`|Linhas, Paragens, agency|
+|`ADDITIONAL_SERVICE`|Linhas, Paragens, Agencias|
 |`DETOUR`|Viagens, Linhas, Paragens|
-|`NO_SERVICE`|Viagens, agency, Linhas|
+|`NO_SERVICE`|Viagens, Agencias, Linhas|
 |`REDUCED_SERVICE`|Viagens, Linhas|
-|`SIGNIFICANT_DELAYS`|Viagens, agency|
+|`SIGNIFICANT_DELAYS`|Viagens, Agencias|
 
 ### TECHNICAL_ISSUE
 
@@ -136,9 +136,9 @@ A tabela seguinte apresenta a matriz completa de relações válidas.
 |`ACCESSIBILITY_ISSUE`|Viagens|
 |`NO_SERVICE`|Viagens|
 |`ON_BOARD_SALE_ISSUE`|Viagens|
-|`REALTIME_INFO_ISSUE`|Viagens, agency|
+|`REALTIME_INFO_ISSUE`|Viagens, Agencias|
 |`REDUCED_SERVICE`|Viagens|
-|`SIGNIFICANT_DELAYS`|Viagens, agency|
+|`SIGNIFICANT_DELAYS`|Viagens, Agencias|
 
 ### TRAFFIC_JAM
 
@@ -147,7 +147,7 @@ A tabela seguinte apresenta a matriz completa de relações válidas.
 |`DETOUR`|Viagens, Linhas, Paragens|
 |`NO_SERVICE`|Viagens|
 |`REDUCED_SERVICE`|Viagens|
-|`SIGNIFICANT_DELAYS`|Viagens, agency, Linhas, Paragens|
+|`SIGNIFICANT_DELAYS`|Viagens, Agencias, Linhas, Paragens|
 
 ### VEHICLE_ISSUE
 
@@ -167,4 +167,4 @@ A tabela seguinte apresenta a matriz completa de relações válidas.
 |`DETOUR`|Viagens, Linhas, Paragens|
 |`NO_SERVICE`|Viagens, Linhas, Paragens|
 |`REDUCED_SERVICE`|Viagens, Linhas, Paragens|
-|`SIGNIFICANT_DELAYS`|Viagens, Linhas, Paragens, agency|
+|`SIGNIFICANT_DELAYS`|Viagens, Linhas, Paragens, Agencias|
