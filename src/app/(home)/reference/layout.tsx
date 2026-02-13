@@ -13,6 +13,7 @@ export default function Layout({ children }: PropsWithChildren) {
 			githubUrl={BASE_OPTIONS.github_url}
 			links={NAVBAR_LINKS}
 			nav={{ title: BASE_OPTIONS.title }}
+			sidebar={{ className: 'w-auto' }}
 			themeSwitch={{ mode: 'light-dark-system' }}
 			tree={sourceReference.getPageTree()}
 		>
