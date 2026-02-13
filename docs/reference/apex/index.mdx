@@ -17,7 +17,9 @@ A APEX é uma biblioteca de software que é instalada nos softwares dos validado
 
 Sempre que um cartão navegante® se encosta a um validador, é gerada uma transação. Estas transações não são mais do que ficheiros de texto que contêm todas as informações necessárias para descrever a ação que acabou de ocorrer. Por exemplo, quando um cartão navegante® toca no validador de um autocarro é gerada uma **transação de validação**, onde ficam registadas informações como o ID da Linha (ex: 1715), o ID do veículo, a data e hora, o número do cartão, o título utilizado para "validar" o acesso, e muitos outros dados essenciais para as equipas de gestão.
 
-```
+Aqui está um exemplo de uma transação de validação APEX.
+
+```json
 {
 	"transactionInfo": {
 		"apexTransactionType": 11,
