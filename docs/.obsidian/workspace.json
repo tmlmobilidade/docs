@@ -11,14 +11,10 @@
             "id": "192fdd228eefc883",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "reference/(intro)/open-data.mdx",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "open-data"
+              "title": "New tab"
             }
           }
         ]
@@ -177,23 +173,23 @@
   },
   "active": "192fdd228eefc883",
   "lastOpenFiles": [
-    "reference/(intro)/covered-area.mdx",
-    "reference/(intro)/contact-us.mdx",
-    "reference/(intro)/bugs.mdx",
-    "reference/open-data",
-    "reference/apex",
-    "reference/go",
+    "reference/open-data/other/v1/network/stops.mdx",
+    "reference/open-data/other/v1/network/patterns.mdx",
+    "reference/open-data/other/v1/network/index.mdx",
+    "reference/open-data/other/v1/metrics/stops.mdx",
+    "reference/open-data/other/v1/metrics/patterns.mdx",
+    "reference/open-data/other/v1/metrics/index.mdx",
+    "reference/open-data/other/v1/facilities/stops.mdx",
+    "reference/open-data/other/v1/facilities/patterns.mdx",
+    "reference/open-data/other/v1/facilities/index.mdx",
+    "reference/open-data/other/v1/network",
+    "reference/open-data/other/v1/metrics",
     "blog/hello.md",
     "blog/hello-2.md",
     "2026-01-22.md",
-    "reference/index.mdx",
     "reference/index.md",
     "index.md",
-    "docs/(intro)/open-data.mdx",
     "docs/(intro)/bugs.md",
-    "docs/(intro)/bugs.mdx",
-    "docs/(intro)/covered-area.mdx",
-    "docs/(intro)/contact-us.mdx",
     "docs/index.md",
     "docs/Carris Metropolitana/docs/index.md",
     "docs/Carris Metropolitana/docs/API Quick Start.md",
