@@ -1,0 +1,10 @@
+{
+  "pages": [
+    "index",
+    "alerts",
+    "controller",
+    "offer",
+    "plans",
+    "performance"
+  ]
+}
