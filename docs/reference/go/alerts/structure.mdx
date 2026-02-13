@@ -1,0 +1,62 @@
+---
+title: Estrutura Interna do Alerta
+description: Campos que compõem a estrutura interna de um alerta, mapeados para os campos equivalentes da especificação GTFS-RT.
+---
+Cada alerta é representado internamente pela seguinte estrutura. Os campos são depois mapeados para os campos equivalentes da especificação GTFS-RT.
+
+### Campos de Identificação
+
+|Campo|Tipo|Descrição|
+|---|---|---|
+|`_id`|`string`|Identificador único do alerta|
+|`external_id`|`string?`|Identificador externo (ex: integração com sistemas legados)|
+|`agency_id`|`string`|Operador/agência a que o alerta pertence|
+
+### Conteúdo
+
+|Campo|Tipo|Descrição|
+|---|---|---|
+|`title`|`string`|Título do alerta, visível aos passageiros|
+|`description`|`string`|Descrição detalhada da situação|
+|`info_url`|`string?`|URL com informação adicional|
+|`file_id`|`string?`|Referência a uma imagem associada ao alerta|
+|`coordinates`|`[number, number]?`|Coordenadas geográficas relevantes (ex: local do acidente)|
+
+### Classificação
+
+|Campo|Tipo|Descrição|
+|---|---|---|
+|`cause`|`AlertCause`|Causa do alerta (ver secção dedicada)|
+|`effect`|`AlertEffect`|Efeito no serviço (ver secção dedicada)|
+|`reference_type`|`"agency" \| "lines" \| "stops" \| "rides"`|Tipo de entidade afetada|
+|`references`|`{ parent_id, child_ids }[]?`|Entidades específicas afetadas, transformadas em `informed_entity`|
+
+### Períodos Temporais
+
+A plataforma distingue dois conceitos temporais independentes:
+
+**Período Ativo** — corresponde ao `active_period` do GTFS-RT. Define quando a situação descrita pelo alerta está efectivamente a ocorrer.
+
+|Campo|Tipo|Descrição|
+|---|---|---|
+|`active_period_start_date`|`number`|Início do período ativo (timestamp Unix)|
+|`active_period_end_date`|`number?`|Fim do período ativo (pode ser indefinido para alertas em curso)|
+
+**Período de Publicação** — controla a visibilidade do alerta no feed, independentemente do período ativo. Permite agendar a publicação antecipada de alertas (ex: obras planeadas) ou manter um alerta visível após o fim do período ativo.
+
+|Campo|Tipo|Descrição|
+|---|---|---|
+|`publish_start_date`|`number?`|Quando o alerta se torna visível|
+|`publish_end_date`|`number?`|Quando o alerta deixa de ser visível|
+|`publish_status`|`"draft" \| "published" \| "archived"`|Estado atual de publicação|
+
+### Auditoria e Controlo
+
+|Campo|Tipo|Descrição|
+|---|---|---|
+|`created_at`|`number`|Timestamp de criação|
+|`updated_at`|`number`|Timestamp da última atualização|
+|`created_by`|`string?`|Utilizador que criou o alerta|
+|`updated_by`|`string?`|Último utilizador a modificar o alerta|
+|`is_locked`|`boolean?`|Alerta bloqueado para edição (ex: em revisão)|
+|`municipality_ids`|`string[]?`|Municípios afetados pelo alerta|

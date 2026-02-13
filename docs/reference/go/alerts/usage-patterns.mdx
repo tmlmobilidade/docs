@@ -1,0 +1,11 @@
+---
+title: Padrões de Utilização Comuns
+description: Exemplos de padrões típicos de criação de alertas para diferentes cenários operacionais.
+---
+**Alerta operacional imediato** (ex: acidente em curso) — Causa `ACCIDENT`, efeito `SIGNIFICANT_DELAYS`, referência `rides`. Período ativo com início imediato e sem data de fim definida. Publicação imediata.
+
+**Alerta planeado** (ex: obras na via) — Causa `CONSTRUCTION`, efeito `DETOUR`, referência `lines` ou `stops`. Período ativo futuro com datas definidas. Publicação antecipada para informar passageiros.
+
+**Alerta de rede** (ex: nova paragem) — Causa `NETWORK_UPDATE`, efeito `MODIFIED_SERVICE`, referência `lines` ou `stops`. Utilizado para comunicar alterações permanentes à rede.
+
+**Greve** — Causa `STRIKE`, efeito `REDUCED_SERVICE` ou `NO_SERVICE`, referência `agency` (toda a operação) ou `lines` (linhas específicas). Permite publicação antecipada com período ativo correspondente à data da greve.
