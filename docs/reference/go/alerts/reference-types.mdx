@@ -1,57 +1,64 @@
 ---
 title: Referências
-description: As Referências determinão que linhas, paragens, viagens ou agencias vão ser afetadas.
+description:
 ---
+As referências são a nossa forma de identificar quais as [entidades](https://gtfs.org/documentation/realtime/reference/#message-entityselector) que serão afetadas por um alerta. Elas permitem especificar o âmbito exato do impacto de cada alerta no sistema de transportes.
 
-As referências são a nossa forma de identificar quais as (entidades)[https://gtfs.org/documentation/realtime/reference/#message-entityselector] que vão ser afetadas pelo alerta.
+## Tipos de Referências
 
-Seguindo a especificação oficial, as referências podem ser:
+Seguindo a especificação oficial do GTFS Realtime, as referências podem ser de quatro tipos:
 
-- `agency` - O alerta afecta toda a operação de um operador.
-- `lines` - O alerta afecta linhas específicas.
-- `stops` - O alerta afecta paragens específicas.
-- `trips` - O alerta afecta viagens específicas.
+**`agency`** - O alerta afeta toda a operação de um operador, impactando todos os seus serviços e infraestrutura.
+**`lines`** - O alerta afeta linhas específicas da rede de transportes.
+**`stops`** - O alerta afeta paragens específicas.
+**`trips`** - O alerta afeta viagens específicas.
 
-No GO, com as referências, podemos ainda identificar com ainda mais granularidade, as entidades que vão ser afetadas.
+## Granularidade Adicional no GO
 
-Por exemplo, um alerta que afecta uma linha específica, em apenas determinadas paragens.
+No sistema GO, as referências vão além da especificação básica, permitindo identificar com granularidade ainda maior as entidades que serão afetadas. Esta funcionalidade torna-se especialmente útil quando um alerta não deve impactar toda uma entidade, mas apenas parte dela.
 
-No caso abaixo vemos que este alerta afeta duas linhas, a `1001` e a `1002`. Mas na linha `1001` apenas irá afetar as paragens `030001` e `030010`, enquanto que a paragem `1002` será afetada em todas as suas paragens.
+O sistema utiliza uma estrutura hierárquica de `parent_id` e `child_ids`, onde o elemento pai representa a entidade principal e os elementos filho representam as sub-entidades específicas que serão afetadas. Quando o array `child_ids` está vazio, significa que toda a entidade pai será afetada.
 
+### Exemplo 1: Alertas por Linha com Paragens Específicas
+
+Considere um cenário onde um alerta afeta uma linha específica, mas apenas em determinadas paragens. Isto é comum quando há obras ou incidentes localizados que não justificam alertar toda a linha.
+
+No exemplo abaixo, o alerta afeta duas linhas com comportamentos diferentes. A linha `1001` será afetada apenas nas paragens `030001` e `030010`, enquanto a linha `1002` será afetada em todas as suas paragens:
 ```json
 {
   "reference_type": "lines",
-  references: [
-	  {
-		  "parent_id": "1001",
-		  "child_ids": ["030001", "030010"]
-	  },
-	  {
-		  "parent_id": "1002",
-		  "child_ids": []
-	  }
+  "references": [
+    {
+      "parent_id": "1001",
+      "child_ids": ["030001", "030010"]
+    },
+    {
+      "parent_id": "1002",
+      "child_ids": []
+    }
   ]
 }
 ```
 
 ![[Pasted image 20260213200631.png]]
 
-Ou um alerta que afecta uma paragem que por lá passam muitas linhas, mas apenas algumas são afetadas.
+### Exemplo 2: Alertas por Paragem com Linhas Específicas
 
-Neste caso a lógica mantém se igual mas no seu inverso, este alerta irá afetar duas paragens, a paragem `070019` que apenas terá impacto nas linhas `2002`, `2505` e `2621`. Já a paragem `070396` irá ver todas as linhas que por ali passam afetadas.
+A lógica inverte-se quando queremos afetar uma paragem por onde passam múltiplas linhas, mas o alerta é relevante apenas para algumas delas. Esta situação ocorre frequentemente em paragens centrais com grande volume de linhas.
 
+Neste caso, o alerta afetará duas paragens com impactos distintos. A paragem `070019` terá impacto apenas nas linhas `2002`, `2505` e `2621`, enquanto a paragem `070396` verá todas as linhas que por ali passam afetadas:
 ```json
 {
   "reference_type": "stops",
-  references: [
-	  {
-		  "parent_id": "070019",
-		  "child_ids": ["2002", "2505", "2621"]
-	  },
-	  {
-		  "parent_id": "070396",
-		  "child_ids": []
-	  }
+  "references": [
+    {
+      "parent_id": "070019",
+      "child_ids": ["2002", "2505", "2621"]
+    },
+    {
+      "parent_id": "070396",
+      "child_ids": []
+    }
   ]
 }
 ```
