@@ -11,10 +11,14 @@
             "id": "192fdd228eefc883",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "backup/(intro)/bugs.mdx",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "bugs"
             }
           }
         ]
@@ -171,19 +175,23 @@
       "edit-mdx:New .mdx file": false
     }
   },
-  "active": "192fdd228eefc883",
+  "active": "33076def42fbc613",
   "lastOpenFiles": [
-    "reference/(intro)/Untitled.md",
-    "backup/(intro)/open-data.mdx",
-    "backup/(intro)/covered-area.mdx",
-    "backup/(intro)/contact-us.mdx",
+    "reference/go/plans/index.mdx",
+    "reference/go/plans",
+    "reference/apex/index.mdx",
+    "reference/apex",
+    "reference/(intro)/iso.mdx",
+    "reference/go/performance/index.mdx",
+    "reference/go/controller/index.mdx",
+    "reference/go/alerts/index.mdx",
     "backup/(intro)/bugs.mdx",
-    "backup/index.mdx",
-    "backup/(intro)",
-    "backup",
-    "reference/open-data/other/v1/network/stops.mdx",
-    "reference/open-data/other/v1/network/patterns.mdx",
-    "reference/open-data/other/v1/network/index.mdx",
+    "reference/(intro)/iso.mdx.md",
+    "reference/go/controller/Untitled 1.md",
+    "reference/go/controller/Untitled.md",
+    "reference/go/alerts/index.md",
+    "reference/go/controller",
+    "reference/go/performance",
     "blog/hello.md",
     "blog/hello-2.md",
     "2026-01-22.md",
