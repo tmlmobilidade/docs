@@ -56,8 +56,8 @@ export default defineConfig({
 	mdxOptions: async () => {
 		const files = await readVaultFiles({ dir: 'docs' });
 		return {
+			addLanguageClass: true,
 			rehypeCodeOptions: {
-				addLanguageClass: true,
 				themes: {
 					dark: 'github-dark',
 					light: 'github-light',
