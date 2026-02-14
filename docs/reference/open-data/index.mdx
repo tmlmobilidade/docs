@@ -4,20 +4,20 @@ description: Descobre como podes usar o API para construir aplicações com dado
 ---
 ## Nenhum tratamento especial
 
-Todas as rotas aqui documentadas são as mesmas que utilizamos para suportar as aplicações da TML, como o website e app da Carris Metropolitana e inúmeras ferramentas internas. Não aplicamos qualquer "tratamento especial" às nossas APIs — todos têm acesso à mesma informação ao mesmo tempo, garantindo equidade e transparência na partilha dos dados.
+Todas as rotas aqui documentadas são as mesmas que utilizamos para suportar as aplicações da TML, como o website e app da Carris Metropolitana e inúmeras ferramentas internas. Não aplicamos qualquer "tratamento especial" aos nossos APIs — todos têm acesso à mesma informação ao mesmo tempo, garantindo equidade e transparência na partilha dos dados.
 
 ## Versões
 
-A API é versioanda para permitir o desenvolvimento de novas funcionalidades sem comprometer a compatibilidade com sistemas que dependem das estruturas de dados de versões anteriores.
+O API é versionado para permitir o desenvolvimento de novas funcionalidades sem comprometer a compatibilidade com sistemas que dependem das estruturas de dados de versões anteriores.
 
-Uma vez que esta é uma API JSON, adicionar novas propriedades aos endpoints não é considerado uma alteração significativa, pois estas propriedades podem ser ignoradas com segurança pelos consumidores. Portanto, nesses casos, a versão pode não ser alterada. Esta abordagem parece-nos equilibrada pois permite-nos introduzir melhorias mais rapidamente enquanto minimizamos o impacto nas integrações existentes.
+Uma vez que todas as respostas são JSON, adicionar novas propriedades aos endpoints não é considerado uma alteração significativa, pois estas propriedades podem ser ignoradas com segurança pelos consumidores. Portanto, nesses casos, a versão pode não ser alterada. Esta abordagem parece-nos equilibrada pois permite-nos introduzir melhorias mais rapidamente enquanto minimizamos o impacto nas integrações existentes.
 
 
 ## Estrutura uniforme da resposta
 
-Todas as respostas da API são concebidas para seguir a especificação [JSend](https://github.com/omniti-labs/jsend). Esta estrutura padronizada garante a consistência em todos os endpoints e fornece uma framework para incluir informações adicionais de debugging quando necessário.
+Todas as respostas do API seguem a especificação [JSend](https://github.com/omniti-labs/jsend). Esta estrutura padronizada garante a consistência em todos os endpoints e fornece uma framework para incluir informações adicionais de debugging quando necessário.
 
-Em caso de erros, o formato JSend oferece uma forma clara e estruturada de descrever o que correu mal e, quando possível, como o problema poderá ser resolvido. Esta abordagem simplifica o tratamento de erros para os consumidores da API e melhora a developer experience do programador.
+Em caso de erros, o formato JSend oferece uma forma clara e estruturada de descrever o que correu mal e, quando possível, como o problema poderá ser resolvido. Esta abordagem simplifica o tratamento de erros para os consumidores do API e melhora a developer experience do programador.
 
 ```json title="Success Response"
 {
@@ -38,9 +38,7 @@ Em caso de erros, o formato JSend oferece uma forma clara e estruturada de descr
 
 ## TypeScript
 
-Para facilitar o trabalho com as respostas da nossa API, fornecemos um [pacote NPM](https://www.npmjs.com/package/@carrismetropolitana/api-types)
-que inclui definições TypeScript para todas as respostas de API. Este pacote ajuda a garantir segurança de tipos e melhora a eficiência do desenvolvimento
-ao integrar com a nossa API em projetos JavaScript ou TypeScript.
+A utilização de uma linguagem tipificada é fortemente recomendado. Para utilizadores de Typescript, fornecemos um [pacote no NPM](https://www.npmjs.com/package/@tmlmobilidade/types) que inclui tipos para todas as estruturas disponíveis. A utilização deste pacote melhora a eficiência dos ciclos de desenvolvimento. A forma como decidimos versionar este pacote
 
 Temos planos para expandir este pacote com funcionalidades adicionais no futuro, e acolhemos contribuições! Se quiseres ajudar,
 sinta-se à vontade para submeter um pull request ao repositório.
