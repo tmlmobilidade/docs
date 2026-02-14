@@ -53,7 +53,7 @@ Ok to proceed? (y) y
 │
 ●  O ID desta exportação é: 7DTHDZ
 │
-●  Todos os resultados serão guardados aqui: /Users/josue.monteiro/export-7DTHDZ <-- Este é o local onde serão guardados os resultados da exportação.**
+●  Todos os resultados serão guardados aqui: /Users/josue.monteiro/export-7DTHDZ <-- Este é o local onde serão guardados os resultados da exportação.
 │
 ◇  Chave de acesso encontrada no armazenamento seguro do sistema.
 │
@@ -105,15 +105,36 @@ Formas geográficas de percursos (por exemplo, traçados de linhas) exportadas c
 Dados raw de SAM (Sequencialidade): informação sobre sequências de transações (por exemplo, transações esperadas vs encontradas vs em falta). Utilizados para análise de sequência e consistência, tipicamente por operador.
 
 
-## Como restringir os dados
+## Exemplo de extração de Validações Agregadas
 
-Para a maioria dos tipos de exportação é possível restringir o que é incluído:
+1. Selecionar (com a barra de espaços) a opção de validações agregadas.
+```bash
+◆  Escolhe os dados que queres exportar:
+│  ◻ 1. Validações APEX
+│  │ ◻ 1.0. Validações em bruto
+│  └ ◼ 1.1. Validações agregadas (escolher campos)
+```
 
-- Intervalo de datas — Apenas dados dentro das datas operacionais escolhidas.
-- Operador (agência) — Apenas dados dos operadores selecionados.
-- Linha — Apenas dados das linhas selecionadas.
-- Pattern — Apenas dados dos patterns selecionados.
-- Paragem — Apenas dados das paragens selecionados.
-- Veículo — Apenas dados dos veículos selecionados.
-
-Escolhe-se quais destes filtros aplicar; não é obrigatório utilizar todos. Alguns tipos de exportação (por exemplo, HashedShapes) utilizam o seu próprio método de seleção (por exemplo, IDs de shape) em vez destes filtros.
+2. Escolher que colunas queremos no nosso ficheiro final CSV, neste exemplo vamos selecionar Linha, Tipo de Passe e Paragem
+```bash
+◆  Escolhe os campos para agrupar as validações (a data é sempre incluída):
+│  ◼ Linha (line_id)
+│  ◻ Pattern (pattern_id)
+│  ◼ Tipo de passe (product_id)
+│  ◻ Viagem (trip_id)
+│  ◼ Paragem (stop_id)
+│  ◻ Operador (agency_id)
+│  ◻ Veículo (vehicle_id)
+└
+```
+3. De seguida escolhemos que filtros queremos aplicar à nossa procura
+```bash
+◆  Escolhe os filtros que queres aplicar:
+│  ◻ Operador (agency_id)
+│  ◼ Paragem (stop_id)
+│  ◼ Linha (line_id)
+│  ◻ Pattern (pattern_id)
+│  ◻ Veículo (vehicle_id)
+└
+``` 
+```
