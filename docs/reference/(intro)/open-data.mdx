@@ -2,13 +2,20 @@
 title: 🐝 Dados Abertos
 description: Descobre como podes usar o API para construir aplicações com dados de transportes em tempo real.
 ---
-## Nenhum tratamento especial
+## Comprometidos em ser abertos
 
-Todas as rotas aqui documentadas são as mesmas que utilizamos para suportar as aplicações da TML, como o website e app da Carris Metropolitana e inúmeras ferramentas internas. Não aplicamos qualquer "tratamento especial" aos nossos APIs — todos têm acesso à mesma informação ao mesmo tempo, garantindo equidade e transparência na partilha dos dados.
+Estamos profundamente comprometidos com a transparência. A maior parte do código produzido no âmbito do desenvolvimento da Carris Metropolitana e do GO está publicado no Github. Agradecemos o teu feedback, comentários ou PRs! Regularmente são publicados dados sobre a nossa operação rodoviária, o que inclui grandes números (ex. total de passageiros transportados) e outras informações mais detalhadas (ex. qualidade do serviço prestado para cada linha).
+
+A maior parte destes números estão disponíveis no API e podem ser consumidos em tempo real. Todas as rotas aqui documentadas são as mesmas que utilizamos para suportar as aplicações da TML, como o website e app da Carris Metropolitana e inúmeras ferramentas internas. Não aplicamos qualquer "tratamento especial" aos nossos APIs — todos têm acesso à mesma informação ao mesmo tempo, garantindo equidade e transparência na partilha dos dados.
+
+Estas estratégias permitem simplificar a nossa stack técnica, melhorando o acesso para todos.
+Many of these numbers are provided in the API so that they can be consumed in realtime. All our public facing apps, and many of our internal tools, consume the same endpoints provided to the public, as this ensures everyone has access to the same up-to-date information while also simplifying our tech stack.
+
+**If you'd like to help shape the future of transit in Lisbon, don't hesitate to [**reach out to us**](/intro/contact-us).**
 
 ## Versões
 
-Algumas rotas do API são versionadas para permitir o desenvolvimento de novas funcionalidades sem comprometer a compatibilidade com sistemas que dependem das estruturas de dados de versões anteriores.
+O API é versionado para permitir o desenvolvimento de novas funcionalidades sem comprometer a compatibilidade com sistemas que dependem das estruturas de dados de versões anteriores.
 
 Uma vez que todas as respostas são JSON, adicionar novas propriedades aos endpoints não é considerado uma alteração significativa, pois estas propriedades podem ser ignoradas com segurança pelos consumidores. Portanto, nesses casos, a versão pode não ser alterada. Esta abordagem parece-nos equilibrada pois permite-nos introduzir melhorias mais rapidamente enquanto minimizamos o impacto nas integrações existentes.
 
@@ -52,34 +59,7 @@ A organização do API está intimamente relacionada com a organização dos mó
 
 
 
-## Committed to be Open
 
-Carris Metropolitana is deeply commited to open data. Most, if not all, of the code produced internally is published on Github. We welcome comments and PRs.
-We also regularly shares metrics about our bus operation. This includes big numbers (eg. transported passengers) and more detailed information (eg. data about the quality of service for each line).
-
-Many of these numbers are provided in the API so that they can be consumed in realtime. All our public facing apps, and many of our internal tools, consume the same endpoints provided to the public,
-as this ensures everyone has access to the same up-to-date information while also simplifying our tech stack.
-
-**If you'd like to help shape the future of transit in Lisbon, don't hesitate to [**reach out to us**](/intro/contact-us).**
-
-## Our projects
-
-Here are some of our own projects we're proud of. They are works in progress and we're a small team, so some things might be out of order. PRs are very welcome. Explore our [Github](https://github.com/carrismetropolitana) for more.
-
-<Cards>
-    <Card icon="🛠️" title="JSON API" href="https://github.com/carrismetropolitana/api">
-        The code behind our API is open-source and available on GitHub. It is built as a modular system, designed to fetch, parse, and integrate data from multiple sources into a unified, easy-to-access platform.
-    </Card>
-    <Card icon="🦄" title="Website" href="https://github.com/carrismetropolitana/website">
-        Our Next.js website is a key focus of our development efforts. With around 50K daily visitors, we prioritize delivering a stable, user-friendly, and efficient platform for exploring our bus network.
-    </Card>
-    <Card icon="☎️" title="Mobile App" href="https://github.com/carrismetropolitana/app">
-        Our mobile app is designed to be every bus rider’s trusted companion. Check out our roadmap to discover the exciting features and improvements we have planned for this project, full of potential to enhance every rider's transit experience.
-    </Card>
-    <Card icon="📍" title="Map Server" href="https://github.com/carrismetropolitana/maps">
-        Maps are at the heart of all our projects, and this server is what makes them possible. Powered by data from OpenStreetMap, it provides the foundation for accurate and up-to-date mapping across our applications.
-    </Card>
-</Cards>
 
 ## Community projects 💛
 
