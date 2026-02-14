@@ -9,12 +9,60 @@ O acesso é controlado através de uma chave de acesso que é introduzida ao ini
 ## Como correr a ferramenta de exportação?
 
 É necessário ter instalado o (Node.js)[https://nodejs.org/en/download].
-Na linha de comandos (*Powershell no Windows*, ou *Terminal no Mac*) correr o seguinte comando
+
+1. Na linha de comandos (*Powershell no Windows*, ou *Terminal no Mac*) correr o seguinte comando
 
 ```npm
 npx @tmlmobilidade/export-data
 ```
 
+2. Pode ser necessário instalar a ferramenta, aqui confirmamos
+
+```bash
+❯ npx @tmlmobilidade/export-data
+Need to install the following packages:
+@tmlmobilidade/export-data@20260213.1500.47
+Ok to proceed? (y) y
+```
+
+3. A primeira vez que corremos a ferramenta é nos pedida a chave de acesso, esta apenas é pedida uma vez e depois fica guarda no sistema.
+
+   ```bash
+    ▒▒▒▒▒▒▒▒▒   ▒▒▒▒▒▒▒▒   ▒▒▒▒▒▒▒▒
+  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+▒▒▒▒▒▒▒  ▒▒▒▒▒▒▒▒▒▒  ▒▒▒▒▒▒▒▒▒  ▒▒▒▒▒▒
+▒▒▒▒▒       ▒▒▒▒▒      ▒▒▒▒▒     ▒▒██▒
+▒▒▒▒         ▒▒▒       ▒▒▒▒      ▒████▒
+▒▒▒▒▒                             ▒██▒
+▒▒▒▒▒▒▒ ▒██▒
+  ▒▒▒▒▒▒████▒
+    ▒▒▒▒▒██▒
+
+  
+
+┌  Bem-vindo ao exportador de dados da CM!
+│
+●  A versão da aplicação é: 20260213.1500.47
+│
+●  O ID desta exportação é: 80T1VS
+│
+●  Todos os resultados serão guardados aqui: /Users/jusi.monteiro/export-80T1VS
+│
+◇  Nenhuma chave de acesso encontrada.
+│
+◇   ───────────────────────────────────────────────────╮
+│                                                      │
+│  A chave de acesso será guardada de forma segura:    │
+│    • macOS: Keychain                                 │
+│    • Windows: Credential Manager                     │
+│    • Linux: Secret Service (ou ficheiro encriptado)  │
+│                                                      │
+├──────────────────────────────────────────────────────╯
+│
+◆  Por favor introduz a chave de acesso:
+│  Chave de acesso...
+└ 
+   ```
 
 
 ## Tipos de dados que podem ser exportados
