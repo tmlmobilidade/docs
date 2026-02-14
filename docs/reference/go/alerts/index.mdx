@@ -2,21 +2,7 @@
 title: Alertas
 description: O que é um alerta, para que serve, como criar um alerta e que visibilidade tem após publicação.
 ---
-```tsx
-import { Tag } from '@/components/mdx/tag';
 
-export function BlogTags(tags?: string | string[]) {
-	if (!Array.isArray(tags) || tags.length === 0) return null;
-
-	return (
-		<div className="mt-3 flex flex-wrap gap-1.5">
-			{tags.map((tag, idx) => (
-				<Tag key={idx} label={String(tag)} />
-			))}
-		</div>
-	);
-}
-```
 ## O que é um Alerta e para que serve
 
 Um **alerta** é uma mensagem de serviço que informa passageiros e sistemas externos sobre situações que afectam a operação — acidentes, obras, greves, alterações de rede, entre outras.
