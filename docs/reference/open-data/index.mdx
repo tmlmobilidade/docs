@@ -40,27 +40,12 @@ Em caso de erros, o formato JSend oferece uma forma clara e estruturada de descr
 
 A utilização de uma linguagem tipificada é fortemente recomendado. Para utilizadores de Typescript, fornecemos um [pacote no NPM](https://www.npmjs.com/package/@tmlmobilidade/types) que inclui tipos para todas as estruturas disponíveis. A utilização deste pacote melhora a eficiência dos ciclos de desenvolvimento. Decidimos utilizar Calendar Versioning para este pacote.
 
-## Coleções
+## Módulos disponíveis
 
-A organização do API está intimamente relacionada com a organização dos módulos do GO. Por exemplo, os dados de Alertas de Serviço são "publicados" pelo módulo `alerts`. Podes saber mais sobre cada um dos módulos do GO para 
-Todos os endpoints JSON ao longo das coleções seguem a mesma estrutura padronizada, garantindo consistência e simplicidade.
-Abaixo estão as coleções disponíveis:
+A organização do API está intimamente relacionada com a organização dos módulos do GO. Por exemplo, os dados de Alertas de Serviço são "publicados" pelo módulo `alerts`. Podes saber mais sobre cada um dos módulos do GO na secção correspondente, mas para facilitar o acesso mais direto à informação esta página funciona como índice para todas as rotas de todos os módulos que não necessitam de autenticação.
 
-<Cards>
-    <Card title="network" href="/api/current/network">
-        Endpoints relacionados com a rede de transportes, incluindo paragens, linhas, rotas, padrões, shapes, veículos, dados GTFS, e muito mais.
-    </Card>
-    <Card title="facilities" href="/api/current/facilities">
-        Cobre instalações na Área Metropolitana de Lisboa servidas pela Carris Metropolitana, como escolas, hospitais e outras localizações-chave.
-		Cada tipo de instalação tem um endpoint dedicado.
-    </Card>
-    <Card title="locations" href="/api/current/locations">
-        Fornece dados sobre divisões administrativas na Área Metropolitana de Lisboa, incluindo distritos, municípios, freguesias e localidades.
-		Estes são utilizados para identificar as localizações dos pontos da rede e instalações.
-    </Card>
-    <Card title="metrics" href="/api/current/metrics">
-        Oferece métricas em tempo real das operações da Carris Metropolitana, fornecendo informações sobre o desempenho do sistema e atividade.
-    </Card>
-</Cards>
 
-##
+| Módulo | Endpoint          |
+| ------ | ----------------- |
+| alerts | /alerts/published |
+| plans  | /plans/approved   |
