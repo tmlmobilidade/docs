@@ -6,10 +6,10 @@ import { useCopyButton } from 'fumadocs-ui/utils/use-copy-button';
 import { Check, Clipboard } from 'lucide-react';
 import { type ComponentProps, createContext, type HTMLAttributes, type ReactNode, type RefObject, use, useMemo, useRef } from 'react';
 
-import { cn } from '../lib/cn';
-import { mergeRefs } from '../lib/merge-refs';
-import { buttonVariants } from './ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+import { cn } from '../../lib/cn';
+import { mergeRefs } from '../../lib/merge-refs';
+import { buttonVariants } from '../ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 
 /* * */
 
