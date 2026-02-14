@@ -2,7 +2,59 @@
 title: Alertas
 description: O que é um alerta, para que serve, como criar um alerta e que visibilidade tem após publicação.
 ---
+```tsx
+import * as Base from 'fumadocs-ui/components/codeblock';
 
+import { cn } from '@/lib/cn';
+
+import { highlight } from 'fumadocs-core/highlight/core';
+
+import { shikiConfig } from '@/lib/shiki';
+
+  
+
+export interface CodeBlockProps {
+
+code: string;
+
+wrapper?: Base.CodeBlockProps;
+
+lang: string;
+
+}
+
+  
+
+export async function CodeBlock({ code, lang, wrapper }: CodeBlockProps) {
+
+const rendered = await highlight(code, {
+
+config: shikiConfig,
+
+lang,
+
+components: {
+
+pre: Base.Pre,
+
+},
+
+});
+
+  
+
+return (
+
+<Base.CodeBlock {...wrapper} className={cn('my-0', wrapper?.className)}>
+
+{rendered}
+
+</Base.CodeBlock>
+
+);
+
+}
+```
 ## O que é um Alerta e para que serve
 
 Um **alerta** é uma mensagem de serviço que informa passageiros e sistemas externos sobre situações que afectam a operação — acidentes, obras, greves, alterações de rede, entre outras.

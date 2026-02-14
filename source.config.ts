@@ -56,6 +56,13 @@ export default defineConfig({
 	mdxOptions: async () => {
 		const files = await readVaultFiles({ dir: 'docs' });
 		return {
+			rehypeCodeOptions: {
+				themes: {
+					dark: 'github-dark',
+					light: 'github-light',
+				},
+				transformers: [transformerEscape()],
+			},
 			remarkPlugins: plugins => [
 				[
 					remarkObsidian,

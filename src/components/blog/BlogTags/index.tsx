@@ -1,4 +1,4 @@
-import { Tag } from '@/components/mdx/Tag';
+import { Tag } from '@/components/mdx/tag';
 
 export function BlogTags(tags?: string | string[]) {
 	if (!Array.isArray(tags) || tags.length === 0) return null;

@@ -4,42 +4,6 @@
 
 /* relative to the CSS file, make sure it's correct for your app */
 @source '../node_modules/fumadocs-ui/dist/**/*.js';
-/* * */
-/* THEME COLORS */
-
-.light {
-
-	--color-fd-background: var(--color-system-background-200);
-
-	--color-landing-foreground: #FF0000;
-	--color-landing-foreground-200: #FF0000;
-
-	--color-callout-note: #FF0000;
-	--color-callout-tip: #FF0000;
-	--color-callout-warning: #FF0000;
-	--color-callout-danger: #FF0000;
-	--color-callout-info: #FF0000;
-	--color-callout-quote: #FF0000;
-
-	--color-code-surface: #FF0000;
-	--color-code-border: #FF0000;
-
-	--color-blockquote-border: #FF0000;
-	--color-blockquote-bg: #FF0000;
-
-	--color-tag: #FF0000;
-	--color-tag-bg: #FF0000;
-
-}
-
-.dark {
-
-	--color-brand: #2864B9;
-	--color-brand-secondary: #1E4B96;
-
-	--color-fd-background: #19191E;
-
-}
 
 /* * */
 /* TYPOGRAPHY */
@@ -80,7 +44,7 @@ body {
 
 .prose p a,
 .prose li a {
-	color: var(--color-brand);
+	color: var(--color-brand-secondary);
 	text-decoration: none;
 	border-radius: 2px;
 	transition: color 0.15s ease;
@@ -96,6 +60,10 @@ body {
 .prose hr {
 	border-color: var(--color-fd-border);
 	margin: 2em 0;
+}
+
+.prose code {
+	color: var(--color-brand-secondary);
 }
 
 /* * */
