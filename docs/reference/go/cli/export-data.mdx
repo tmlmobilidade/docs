@@ -1,0 +1,61 @@
+---
+title: Export Data
+description: Ferramenta de exportação de dados
+---
+
+Exportar Dados — CM Data Exporter
+Esta aplicação é a ferramenta oficial de exportação de dados da Carris Metropolitana (CM). Permite que utilizadores autorizados extraiam dados operacionais e analíticos da plataforma GO e os guardem em ficheiros para relatórios, análise ou utilização noutros sistemas.
+
+O que faz
+A ferramenta é utilizada quando é necessário extrair dados do GO de forma estruturada (por exemplo, CSV ou GeoJSON). Escolhe-se o tipo de dados a exportar, opcionalmente restringem-se com filtros (datas, linhas, paragens, veículos, etc.), e a ferramenta escreve os resultados numa pasta na máquina do utilizador.
+Cada execução de exportação é identificada com um ID único, e todos os ficheiros dessa execução são armazenados na mesma pasta de saída para facilitar a sua localização e partilha.
+
+A quem se destina
+
+Pessoas que necessitam de dados de validação ou passageiros para relatórios ou dashboards
+Equipas que analisam desempenho do serviço (por exemplo, SLAs, eventos de veículos)
+Qualquer pessoa que necessite de geometria de percursos (por exemplo, traçados de linhas) para mapas ou GIS
+Pessoal que trabalha com análise de sequência/transações (SAMs)
+
+O acesso é controlado através de uma chave de acesso que é introduzida ao iniciar a ferramenta.
+
+O que pode ser exportado
+1. Validações APEX
+
+Validações (raw)
+Cada validação de título individual (cada vez que um passageiro valida um passe). Utilizar quando são necessários dados detalhados ao nível de registo individual.
+Validações (agregadas)
+Os mesmos dados de validação resumidos por data e pelas dimensões escolhidas (por exemplo, linha, paragem, veículo, operador, viagem, tipo de título). Utilizar para relatórios e KPIs (por exemplo, validações por linha por dia) sem ter de lidar com ficheiros raw volumosos.
+
+2. Rides
+
+Rides (raw)
+Dados raw de viagens/serviço. Utilizados para análise ao nível de serviço e de tipo SLA (por exemplo, compreender como as viagens foram executadas num período).
+
+3. Eventos de veículos
+
+Eventos de veículos (raw)
+Eventos raw provenientes de veículos (por exemplo, em paragens). Utilizados para análise operacional de como os serviços foram efetivamente operados no terreno.
+
+4. HashedShapes
+
+HashedShapes para GeoJSON
+Formas geográficas de percursos (por exemplo, traçados de linhas) exportadas como GeoJSON. Utilizar quando é necessário representar linhas num mapa ou utilizar os dados em ferramentas GIS ou de mapeamento. Especificam-se as formas a exportar pelos seus IDs.
+
+5. SAMs
+
+SAMs (raw)
+Dados raw de SAM (Sequencialidade): informação sobre sequências de transações (por exemplo, transações esperadas vs encontradas vs em falta). Utilizados para análise de sequência e consistência, tipicamente por operador.
+
+
+Como restringir os dados
+Para a maioria dos tipos de exportação é possível restringir o que é incluído:
+
+Intervalo de datas — Apenas dados dentro das datas operacionais escolhidas.
+Operador (agência) — Apenas dados dos operadores selecionados.
+Linha — Apenas dados das linhas selecionadas.
+Pattern — Apenas dados dos patterns selecionados.
+Paragem — Apenas dados das paragens selecionadas.
+Veículo — Apenas dados dos veículos selecionados.
+
+Escolhe-se quais destes filtros aplicar; não é obrigatório utilizar todos. Alguns tipos de exportação (por exemplo, HashedShapes) utilizam o seu próprio método de seleção (por exemplo, IDs de shape) em vez destes filtros.
