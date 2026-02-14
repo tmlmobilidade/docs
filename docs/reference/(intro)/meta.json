@@ -2,6 +2,7 @@
   "pages": [
     "index",
     "bugs",
+    "coverage",
     "team"
   ],
   "root": true
