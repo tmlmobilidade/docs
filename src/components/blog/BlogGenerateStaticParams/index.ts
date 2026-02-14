@@ -1,6 +1,6 @@
 import { sourceBlog } from '@/lib/source';
 
-export async function BlogGenerateStaticParams(): Promise<{ slug: string[] }[]> {
+export async function blogGenerateStaticParams(): Promise<{ slug: string[] }[]> {
 	//
 
 	//

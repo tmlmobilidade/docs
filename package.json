@@ -5,7 +5,8 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev",
-    "lint": "eslint",
+    "lint": "eslint ./src && tsc --noEmit",
+    "lint:fix": "eslint ./src --fix",
     "postinstall": "fumadocs-mdx",
     "rinse": "npx --yes @tmlmobilidade/repo-rinse",
     "start": "next start",
@@ -13,7 +14,10 @@
   },
   "dependencies": {
     "@orama/orama": "3.1.18",
+    "@radix-ui/react-collapsible": "^1.1.12",
+    "@radix-ui/react-tabs": "^1.1.13",
     "@tabler/icons-react": "3.36.1",
+    "class-variance-authority": "^0.7.1",
     "fumadocs-core": "16.6.0",
     "fumadocs-mdx": "14.2.7",
     "fumadocs-obsidian": "0.0.11",
@@ -21,12 +25,13 @@
     "lucide-react": "0.564.0",
     "next": "16.1.6",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
     "@carrismetropolitana/eslint": "20251107.1231.48",
     "@tailwindcss/postcss": "4.1.18",
-    "@tmlmobilidade/tsconfig": "20260209.2202.10",
+    "@tmlmobilidade/tsconfig": "20260213.1500.47",
     "@types/mdx": "2.0.13",
     "@types/node": "25.2.3",
     "@types/react": "19.2.14",
