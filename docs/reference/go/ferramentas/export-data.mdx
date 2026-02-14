@@ -2,38 +2,51 @@
 title: Export Data
 description: Ferramenta de exportação de dados
 ---
+
 Esta aplicação é a ferramenta oficial de exportação de dados da Transportes Metropolitanos de Lisboa. Permite que utilizadores autorizados extraiam dados operacionais e analíticos da plataforma GO e os guardem em ficheiros CSV para relatórios, análise ou utilização noutros sistemas.
 
-O acesso é controlado através de uma chave de acesso que é introduzida ao iniciar a ferramenta.
+O acesso é controlado através de uma **chave de acesso** que é introduzida ao iniciar a ferramenta.
 
-## Como correr a ferramenta de exportação?
 
-É necessário ter instalado o (Node.js)[https://nodejs.org/en/download].
+## Requisitos
 
-1. Na linha de comandos (*Powershell no Windows*, ou *Terminal no Mac*) correr o seguinte comando
+É necessário ter instalado o [Node.js](https://nodejs.org/en/download) no computador.
 
-```npm
+
+## Como usar a ferramenta
+
+### 1. Abrir a linha de comandos
+
+- **Windows**: Abrir o PowerShell
+- **Mac**: Abrir o Terminal
+
+### 2. Executar a ferramenta
+
+Escrever o seguinte comando e pressionar Enter:
+```bash
 npx @tmlmobilidade/export-data
 ```
 
-2. Pode ser necessário instalar a ferramenta, aqui confirmamos
+### 3. Instalar a ferramenta (apenas na primeira vez)
 
+Se for a primeira vez que usa a ferramenta, aparecerá uma mensagem a pedir confirmação para instalar. Escrever `y` e pressionar Enter:
 ```bash
-❯ npx @tmlmobilidade/export-data
 Need to install the following packages:
 @tmlmobilidade/export-data@20260213.1500.47
 Ok to proceed? (y) y
 ```
 
-3. A primeira vez que corremos a ferramenta é nos pedida a chave de acesso, esta apenas é pedida uma vez e depois fica guarda no sistema.
+### 4. Introduzir a chave de acesso (apenas na primeira vez)
 
+Na primeira utilização, será pedida a chave de acesso. Esta fica guardada no sistema e não será necessário voltar a introduzi-la:
 ```bash
-◆  Por favor introduz a chave de acesso:
-│  Chave de acesso...
+◆  Por favor introduz a chave de acesso:
+│  Chave de acesso...
 ```
 
-4. A ferramenta vai pedir para escolher o tipo de exportação que deseja. Aqui podemos usar as setas do teclado para navegar pelas opções e pressionar no espaço para selecionar a opção e no enter para confirmar.
+### 5. Identificar a exportação
 
+A ferramenta mostra informações importantes sobre a exportação:
 ```bash
 ┌  Bem-vindo ao exportador de dados da CM!
 │
@@ -41,10 +54,17 @@ Ok to proceed? (y) y
 │
 ●  O ID desta exportação é: 7DTHDZ
 │
-●  Todos os resultados serão guardados aqui: /Users/{nome-de-utilizador}/export-7DTHDZ <-- Este é o local onde serão guardados os resultados da exportação.
+●  Todos os resultados serão guardados aqui: /Users/{nome}/export-7DTHDZ
 │
 ◇  Chave de acesso encontrada no armazenamento seguro do sistema.
-│
+```
+
+**Nota**: O caminho mostrado é onde os ficheiros exportados serão guardados.
+
+### 6. Escolher o tipo de dados a exportar
+
+Use as **setas do teclado** para navegar, a **barra de espaços** para selecionar e **Enter** para confirmar:
+```bash
 ◆  Escolhe os dados que queres exportar:
 │  ◻ 1. Validações APEX
 │  │ ◻ 1.0. Validações em bruto
@@ -60,73 +80,96 @@ Ok to proceed? (y) y
 └
 ```
 
-## Tipos de dados que podem ser exportados
 
-1. Validações APEX
+## Tipos de dados disponíveis
 
-- **Validações (raw)**
-Cada validação de título individual (cada vez que um passageiro valida um passe). Utilizar quando são necessários dados detalhados ao nível de registo individual.
+### 1. Validações APEX
 
-- **Validações (agregadas)**
-Os mesmos dados de validação resumidos por data e pelas dimensões escolhidas (por exemplo, linha, paragem, veículo, operador, viagem, tipo de título). Utilizar para relatórios e KPIs (por exemplo, validações por linha por dia) sem ter de lidar com ficheiros raw volumosos.
+Dados sobre validações de títulos de transporte.
 
-Ver abaixo mais detalhes de como exportar validações agregadas.
+- **Validações em bruto**  
+  Cada validação individual (cada vez que um passageiro valida um passe). Gera ficheiros grandes com todos os detalhes.
 
-2. Rides
+- **Validações agregadas**  
+  Dados de validação resumidos por data e dimensões escolhidas (linha, paragem, veículo, operador, viagem, tipo de título). Ideal para relatórios e análise sem ficheiros volumosos.
 
-- Rides (raw)
-Dados raw de viagens/serviço. Utilizados para análise ao nível de serviço e de tipo SLA (por exemplo, compreender como as viagens foram executadas num período).
+### 2. Rides
 
-3. Eventos de veículos
+- **Rides em bruto**  
+  Dados completos de viagens/serviço. Útil para análise de SLAs e desempenho operacional.
 
-- Eventos de veículos (raw)
-Eventos raw provenientes de veículos (por exemplo, em paragens). Utilizados para análise operacional de como os serviços foram efetivamente operados no terreno.
+### 3. Eventos de veículos
 
-4. HashedShapes
+- **Eventos de veículos em bruto**  
+  Eventos registados pelos veículos (passagens em paragens, etc.). Útil para análise operacional detalhada.
 
-- HashedShapes para GeoJSON
-Formas geográficas de percursos (por exemplo, traçados de linhas) exportadas como GeoJSON. Utilizar quando é necessário representar linhas num mapa ou utilizar os dados em ferramentas GIS ou de mapeamento. Especificam-se as formas a exportar pelos seus IDs.
+### 4. HashedShapes
 
-5. SAMs
+- **HashedShapes para GeoJSON**  
+  Traçados geográficos de percursos exportados como GeoJSON. Útil para visualização em mapas ou ferramentas GIS. Requer especificar os IDs das formas a exportar.
 
-- SAMs (raw)
-Dados raw de SAM (Sequencialidade): informação sobre sequências de transações (por exemplo, transações esperadas vs encontradas vs em falta). Utilizados para análise de sequência e consistência, tipicamente por operador.
+### 5. SAMs
+
+- **SAMs em bruto**  
+  Dados de Sequencialidade: informação sobre sequências de transações (esperadas vs encontradas vs em falta). Útil para análise de consistência, tipicamente por operador.
 
 
-## Exemplo de extração de Validações Agregadas
+## Exemplo prático: Exportar validações agregadas
 
-1. Selecionar (com a barra de espaços) a opção de validações agregadas.
+Este exemplo mostra como exportar validações agregadas por linha, tipo de passe e paragem, para as linhas 1001 e 4701, em paragens específicas, durante dois dias.
+
+### Passo 1: Selecionar o tipo de exportação
+
+Usar a barra de espaços para marcar "1.1. Validações agregadas":
 ```bash
-◆  Escolhe os dados que queres exportar:
-│  ◻ 1. Validações APEX
-│  │ ◻ 1.0. Validações em bruto
-│  └ ◼ 1.1. Validações agregadas (escolher campos)
+◆  Escolhe os dados que queres exportar:
+│  ◻ 1. Validações APEX
+│  │ ◻ 1.0. Validações em bruto
+│  └ ◼ 1.1. Validações agregadas (escolher campos)
 ```
 
-2. Escolher que colunas queremos no nosso ficheiro final CSV, neste exemplo vamos selecionar Linha, Tipo de Passe e Paragem
+Pressionar Enter para confirmar.
+
+### Passo 2: Escolher as dimensões de agregação
+
+Selecionar as colunas que pretende no ficheiro final. A **data é sempre incluída automaticamente**.
+
+Neste exemplo, vamos selecionar:
+- Linha (line_id)
+- Tipo de passe (product_id)  
+- Paragem (stop_id)
 ```bash
-◆  Escolhe os campos para agrupar as validações (a data é sempre incluída):
-│  ◼ Linha (line_id)
-│  ◻ Pattern (pattern_id)
-│  ◼ Tipo de passe (product_id)
-│  ◻ Viagem (trip_id)
-│  ◼ Paragem (stop_id)
-│  ◻ Operador (agency_id)
-│  ◻ Veículo (vehicle_id)
+◆  Escolhe os campos para agrupar as validações (a data é sempre incluída):
+│  ◼ Linha (line_id)
+│  ◻ Pattern (pattern_id)
+│  ◼ Tipo de passe (product_id)
+│  ◻ Viagem (trip_id)
+│  ◼ Paragem (stop_id)
+│  ◻ Operador (agency_id)
+│  ◻ Veículo (vehicle_id)
 └
 ```
-3. De seguida escolhemos que filtros queremos aplicar à nossa procura
+
+Pressionar Enter para confirmar.
+
+### Passo 3: Escolher os filtros
+
+Selecionar que filtros aplicar aos dados:
 ```bash
-◆  Escolhe os filtros que queres aplicar:
-│  ◻ Operador (agency_id)
-│  ◼ Paragem (stop_id)
-│  ◼ Linha (line_id)
-│  ◻ Pattern (pattern_id)
-│  ◻ Veículo (vehicle_id)
+◆  Escolhe os filtros que queres aplicar:
+│  ◻ Operador (agency_id)
+│  ◼ Paragem (stop_id)
+│  ◼ Linha (line_id)
+│  ◻ Pattern (pattern_id)
+│  ◻ Veículo (vehicle_id)
 └
 ```
-Neste exemplo vamos filtrar por Line ID, para isso vamos introduzir os IDs separados por vírgulas. Vamos filtrar por duas linhas, a 1001 e a 4701.
 
+Neste exemplo, vamos filtrar por Linha e por Paragem.
+
+### Passo 4: Filtrar por linha
+
+Introduzir os IDs das linhas separados por vírgulas. Neste exemplo: `1001,4701`
 ```bash
 ◇
 │  FILTRAR POR LINE ID:
@@ -138,8 +181,11 @@ Neste exemplo vamos filtrar por Line ID, para isso vamos introduzir os IDs separ
 └
 ```
 
-De seguida vamos filtrar por Paragem ID, para isso vamos introduzir os IDs separados por vírgulas. Vamos filtrar por 4 paragens, a 030009 e 030021 (Pertencem à linha 1001), a 060001 e a 090099 (Pertencem à linha 4701).
+### Passo 5: Filtrar por paragem
 
+Introduzir os IDs das paragens separados por vírgulas. **Não esquecer o zero à esquerda.**
+
+Neste exemplo: `030009,030021,060001,090099`
 ```bash
 ◇
 │  FILTRAR POR STOP ID:
@@ -147,32 +193,71 @@ De seguida vamos filtrar por Paragem ID, para isso vamos introduzir os IDs separ
 │    • Não te esqueças do zero à esquerda.
 │    • Se não introduzires nenhum Stop ID, este filtro não será aplicado.
 │
-◇  Stop IDs:
-│  030009, 030021, 060001, 090099
+◆  Stop IDs:
+│  030009,030021,060001,090099
+└
 ```
 
-5. Finalmente vamos filtrar por Data (que é um filtro obrigatório), para isso vamos introduzir a data de início e de fim, no formato de dia operacional (YYYYMMDD).
+### Passo 6: Filtrar por data (obrigatório)
 
+Introduzir a data de início e de fim no formato `YYYYMMDD` ou `YYYY-MM-DD`.
+
+**Importante**: 
+- Filtrar por datas é obrigatório
+- A data de início não pode ser anterior a 1 de janeiro de 2024 (20240101)
+
+Neste exemplo: de 16 de março de 2025 até 17 de março de 2025
 ```bash
 ◇
-│ • Introduz as datas operacionais no formato ano-mês-dia. Exemplo: 20250101 ou 2025-01-01
+│ • Introduz as datas operacionais no formato ano-mês-dia
+│   Exemplo: 20250101 ou 2025-01-01
 │ • Devido ao enorme volume de dados, filtrar por datas é obrigatório.
 │ • A data de início não pode ser anterior a 1 Jan. 2024 (20240101).
 │
-◇  Data de Início:
+◆  Data de Início:
 │  20250316
 │
-◇  Data de Fim:
+◆  Data de Fim:
 │  20250317
+└
 ```
 
-6. A Nossa exportação vai ser executada e os resultados serão guardados no local indicado no início da ferramenta. Neste exemplo o ficheiro será guardado em `/Users/{nome-de-utilizador}/export-7DTHDZ/validations-by-line_id-product_id-stop_id-20250316-20250317.csv`. com o seguinte resultado.
+### Passo 7: Aguardar e localizar o ficheiro
 
-| date     | line_id | product_id                          | stop_id | validations |
-|----------|---------|-------------------------------------|---------|-------------|
-| 20250316 | 1001    | id-prod-navegante-metro             | 030009  | 857         |
-| 20250316 | 1001    | id-prod-tarifa-rapida               | 030009  | 104         |
-| 20250316 | 1001    | id-prod-zapping                     | 030009  | 33          |
-| 20250316 | 4701    | id-prod-navegante-metro-418-gratuito| 060001  | 97          |
-| 20250316 | 4701    | id-prod-navegante-metro-sub23-grat  | 060001  | 221         |
-| ...      | ...     | ...                                 | ...     | ...         |
+A exportação será executada e o ficheiro será guardado no local indicado no início.
+
+**Localização do ficheiro**:  
+`/Users/{nome-de-utilizador}/export-7DTHDZ/validations-by-line_id-product_id-stop_id-20250316-20250317.csv`
+
+**Exemplo do conteúdo do ficheiro**:
+
+| date     | line_id | product_id                           | stop_id | validations |
+----|
+| 20250316 | 1001    | id-prod-navegante-metro              | 030009  | 857         |
+| 20250316 | 1001    | id-prod-tarifa-rapida                | 030009  | 104         |
+| 20250316 | 1001    | id-prod-zapping                      | 030009  | 33          |
+| 20250316 | 4701    | id-prod-navegante-metro-418-gratuito | 060001  | 97          |
+| 20250316 | 4701    | id-prod-navegante-metro-sub23-grat   | 060001  | 221         |
+| ...      | ...     | ...                                  | ...     | ...         |
+
+
+## Dicas úteis
+
+- **Navegação**: Use as setas do teclado para navegar entre opções
+- **Seleção**: Use a barra de espaços para selecionar/desselecionar
+- **Confirmação**: Use Enter para confirmar e avançar
+- **IDs de paragens**: Não esquecer o zero à esquerda (exemplo: `030009` em vez de `30009`)
+- **Datas**: Podem ser escritas como `20250316` ou `2025-03-16`
+- **Ficheiros**: Todos os ficheiros da mesma exportação ficam na mesma pasta, identificada pelo ID da exportação
+
+
+## Resolução de problemas
+
+**A ferramenta não inicia**  
+Verificar se o Node.js está instalado: executar `node --version` na linha de comandos
+
+**Erro de chave de acesso**  
+Contactar o administrador para obter uma nova chave de acesso
+
+**Não encontro os ficheiros exportados**  
+O caminho completo é mostrado no início da exportação. Procurar pela pasta `export-{ID}`
