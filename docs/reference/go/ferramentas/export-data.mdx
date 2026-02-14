@@ -27,33 +27,21 @@ Ok to proceed? (y) y
 
 3. A primeira vez que corremos a ferramenta é nos pedida a chave de acesso, esta apenas é pedida uma vez e depois fica guarda no sistema.
 
-   ```bash
+```bash
 ◆  Por favor introduz a chave de acesso:
 │  Chave de acesso...
-└ 
-   ```
+```
 
 4. A ferramenta vai pedir para escolher o tipo de exportação que deseja. Aqui podemos usar as setas do teclado para navegar pelas opções e pressionar no espaço para selecionar a opção e no enter para confirmar.
 
 ```bash
-
-    ▒▒▒▒▒▒▒▒▒   ▒▒▒▒▒▒▒▒   ▒▒▒▒▒▒▒▒
-  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-▒▒▒▒▒▒▒  ▒▒▒▒▒▒▒▒▒▒  ▒▒▒▒▒▒▒▒▒  ▒▒▒▒▒▒
-▒▒▒▒▒       ▒▒▒▒▒      ▒▒▒▒▒     ▒▒██▒
-▒▒▒▒         ▒▒▒       ▒▒▒▒      ▒████▒
-▒▒▒▒▒                             ▒██▒
-▒▒▒▒▒▒▒ ▒██▒
-  ▒▒▒▒▒▒████▒
-    ▒▒▒▒▒██▒
-
 ┌  Bem-vindo ao exportador de dados da CM!
 │
 ●  A versão da aplicação é: 20260213.1500.47
 │
 ●  O ID desta exportação é: 7DTHDZ
 │
-●  Todos os resultados serão guardados aqui: /Users/jusi.monteiro/export-7DTHDZ <-- Este é o local onde serão guardados os resultados da exportação.
+●  Todos os resultados serão guardados aqui: /Users/{nome-de-utilizador}/export-7DTHDZ <-- Este é o local onde serão guardados os resultados da exportação.
 │
 ◇  Chave de acesso encontrada no armazenamento seguro do sistema.
 │
@@ -140,13 +128,10 @@ Dados raw de SAM (Sequencialidade): informação sobre sequências de transaçõ
 Neste exemplo vamos filtrar por Line ID, para isso vamos introduzir os IDs separados por vírgulas. Vamos filtrar por duas linhas, a 1001 e a 4701.
 
 ```bash
-◇   ───────────────────────────────────────────────────────────────────────────╮
-│                                                                              │
-│  FILTRAR POR LINE ID:                                                        │
-│    • Introduz os Line IDs separados por vírgulas. Exemplo: 1001,1002,etc...  │
-│    • Se não introduzires nenhum Line ID, este filtro não será aplicado.      │
-│                                                                              │
-├──────────────────────────────────────────────────────────────────────────────╯
+◇
+│  FILTRAR POR LINE ID:
+│    • Introduz os Line IDs separados por vírgulas. Exemplo: 1001,1002,etc...
+│    • Se não introduzires nenhum Line ID, este filtro não será aplicado.
 │
 ◆  Line IDs:
 │  1001,4701
@@ -156,14 +141,11 @@ Neste exemplo vamos filtrar por Line ID, para isso vamos introduzir os IDs separ
 De seguida vamos filtrar por Paragem ID, para isso vamos introduzir os IDs separados por vírgulas. Vamos filtrar por 4 paragens, a 030009 e 030021 (Pertencem à linha 1001), a 060001 e a 090099 (Pertencem à linha 4701).
 
 ```bash
-◇   ───────────────────────────────────────────────────────────────────────────────╮
-│                                                                                  │
-│  FILTRAR POR STOP ID:                                                            │
-│    • Introduz os Stop IDs separados por vírgulas. Exemplo: 010101,020202,etc...  │
-│    • Não te esqueças do zero à esquerda.                                         │
-│    • Se não introduzires nenhum Stop ID, este filtro não será aplicado.          │
-│                                                                                  │
-├──────────────────────────────────────────────────────────────────────────────────╯
+◇
+│  FILTRAR POR STOP ID:
+│    • Introduz os Stop IDs separados por vírgulas. Exemplo: 010101,020202,etc...
+│    • Não te esqueças do zero à esquerda.
+│    • Se não introduzires nenhum Stop ID, este filtro não será aplicado.
 │
 ◇  Stop IDs:
 │  030009, 030021, 060001, 090099
@@ -172,14 +154,10 @@ De seguida vamos filtrar por Paragem ID, para isso vamos introduzir os IDs separ
 5. Finalmente vamos filtrar por Data (que é um filtro obrigatório), para isso vamos introduzir a data de início e de fim, no formato de dia operacional (YYYYMMDD).
 
 ```bash
-◇   ───────────────────────────────────────────────────────────────────────────────────────────╮
-│                                                                                              │
-│  FILTRAR POR DATAS:                                                                          │
-│    • Introduz as datas operacionais no formato ano-mês-dia. Exemplo: 20250101 ou 2025-01-01  │
-│    • Devido ao enorme volume de dados, filtrar por datas é obrigatório.                      │
-│    • A data de início não pode ser anterior a 1 Jan. 2024 (20240101).                        │
-│                                                                                              │
-├──────────────────────────────────────────────────────────────────────────────────────────────╯
+◇
+│ • Introduz as datas operacionais no formato ano-mês-dia. Exemplo: 20250101 ou 2025-01-01
+│ • Devido ao enorme volume de dados, filtrar por datas é obrigatório.
+│ • A data de início não pode ser anterior a 1 Jan. 2024 (20240101).
 │
 ◇  Data de Início:
 │  20250316
@@ -188,14 +166,13 @@ De seguida vamos filtrar por Paragem ID, para isso vamos introduzir os IDs separ
 │  20250317
 ```
 
-6. A Nossa exportação vai ser executada e os resultados serão guardados no local indicado no início da ferramenta. Neste exemplo o ficheiro será guardado em `/Users/jusi.monteiro/export-7DTHDZ`. com o seguinte resultado.
+6. A Nossa exportação vai ser executada e os resultados serão guardados no local indicado no início da ferramenta. Neste exemplo o ficheiro será guardado em `/Users/{nome-de-utilizador}/export-7DTHDZ/validations-by-line_id-product_id-stop_id-20250316-20250317.csv`. com o seguinte resultado.
 
-```csv
-date,line_id,product_id,stop_id,validations
-20250316,1001,id-prod-navegante-metro,030009,857
-20250316,1001,id-prod-tarifa-rapida,030009,104
-20250316,1001,id-prod-zapping,030009,33
-20250316,4701,id-prod-navegante-metro-418-gratuito,060001,97
-20250316,4701,id-prod-navegante-metro-sub23-grat,060001,221
-...
-```
+| date     | line_id | product_id                          | stop_id | validations |
+|----------|---------|-------------------------------------|---------|-------------|
+| 20250316 | 1001    | id-prod-navegante-metro             | 030009  | 857         |
+| 20250316 | 1001    | id-prod-tarifa-rapida               | 030009  | 104         |
+| 20250316 | 1001    | id-prod-zapping                     | 030009  | 33          |
+| 20250316 | 4701    | id-prod-navegante-metro-418-gratuito| 060001  | 97          |
+| 20250316 | 4701    | id-prod-navegante-metro-sub23-grat  | 060001  | 221         |
+| ...      | ...     | ...                                 | ...     | ...         |
