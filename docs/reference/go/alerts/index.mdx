@@ -3,56 +3,18 @@ title: Alertas
 description: O que é um alerta, para que serve, como criar um alerta e que visibilidade tem após publicação.
 ---
 ```tsx
-import * as Base from 'fumadocs-ui/components/codeblock';
+import { Tag } from '@/components/mdx/tag';
 
-import { cn } from '@/lib/cn';
+export function BlogTags(tags?: string | string[]) {
+	if (!Array.isArray(tags) || tags.length === 0) return null;
 
-import { highlight } from 'fumadocs-core/highlight/core';
-
-import { shikiConfig } from '@/lib/shiki';
-
-  
-
-export interface CodeBlockProps {
-
-code: string;
-
-wrapper?: Base.CodeBlockProps;
-
-lang: string;
-
-}
-
-  
-
-export async function CodeBlock({ code, lang, wrapper }: CodeBlockProps) {
-
-const rendered = await highlight(code, {
-
-config: shikiConfig,
-
-lang,
-
-components: {
-
-pre: Base.Pre,
-
-},
-
-});
-
-  
-
-return (
-
-<Base.CodeBlock {...wrapper} className={cn('my-0', wrapper?.className)}>
-
-{rendered}
-
-</Base.CodeBlock>
-
-);
-
+	return (
+		<div className="mt-3 flex flex-wrap gap-1.5">
+			{tags.map((tag, idx) => (
+				<Tag key={idx} label={String(tag)} />
+			))}
+		</div>
+	);
 }
 ```
 ## O que é um Alerta e para que serve

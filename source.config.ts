@@ -57,6 +57,7 @@ export default defineConfig({
 		const files = await readVaultFiles({ dir: 'docs' });
 		return {
 			rehypeCodeOptions: {
+				addLanguageClass: true,
 				themes: {
 					dark: 'github-dark',
 					light: 'github-light',
@@ -84,32 +85,6 @@ export const blog = defineDocs({
 			tags: z.array(z.string()),
 		}),
 	},
-	// async mdxOptions(environment) {
-	// 	const { rehypeCodeDefaultOptions } = await import('fumadocs-core/mdx-plugins/rehype-code');
-	// 	const { remarkSteps } = await import('fumadocs-core/mdx-plugins/remark-steps');
-
-	// 	return applyMdxPreset({
-	// 		rehypeCodeOptions: {
-	// 			inline: 'tailing-curly-colon',
-	// 			themes: {
-	// 				dark: 'catppuccin-mocha',
-	// 				light: 'catppuccin-latte',
-	// 			},
-	// 			transformers: [...(rehypeCodeDefaultOptions.transformers ?? []), transformerEscape()],
-	// 		},
-	// 		remarkCodeTabOptions: {
-	// 			parseMdx: true,
-	// 		},
-	// 		remarkNpmOptions: {
-	// 			persist: {
-	// 				id: 'package-manager',
-	// 			},
-	// 		},
-	// 		remarkPlugins: [remarkSteps],
-	// 	})(environment);
-
-	// },
-	// type: 'doc',
 });
 
 function transformerEscape(): ShikiTransformer {
