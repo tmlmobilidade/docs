@@ -1,32 +1,30 @@
 ---
-title: Introduction to API
-description: Discover how you can use the API to build realtime apps with Carris Metropolitana.
+title: Introdução
+description: Descobre como podes utilizar a API para construir aplicações em tempo real com a Carris Metropolitana.
 ---
+## Sem tratamento especial
 
-## No special treatment
-
-All routes documented here are the same ones we use in our website, mobile apps, and internal tools.
-We don’t apply any “special treatment” to our APIs—everyone has access to the same information at the same time,
-ensuring fairness and transparency in how the data is shared and utilized.
-
-
-## Versions
-
-The API is versioned to ensure stability and backward compatibility. If we need to make breaking changes to how endpoints
-behave in order to support new features, we will always increment the API version to avoid disrupting existing usage.
-
-Since this is a JSON API, adding new properties to endpoints is not considered a breaking change, as these properties
-can be safely ignored by API consumers. Therefore, in such cases, the API version may not be bumped.
-This approach allows us to introduce enhancements while minimizing the impact on existing integrations.
+Todas as rotas documentadas aqui são as mesmas que utilizamos no nosso website, apps móveis e ferramentas internas.
+Não aplicamos qualquer "tratamento especial" às nossas APIs—todos têm acesso à mesma informação ao mesmo tempo,
+garantindo equidade e transparência em como os dados são partilhados e utilizados.
 
 
-## Uniform Response Structure
+## Versões
 
-All API responses are designed to follow the JSend specification. This standardized structure ensures consistency across endpoints
-and provides a framework for including additional debugging information when needed.
+A API é versionada para assegurar estabilidade e compatibilidade com versões anteriores. Se precisarmos fazer alterações significativas na forma como os endpoints se comportam de modo a suportar novas funcionalidades, sempre incrementamos a versão da API para evitar prejudicar a utilização existente.
 
-In the case of errors, the JSend format offers a clear and structured way to describe what went wrong and, where possible,
-how the issue might be resolved. This approach simplifies error handling for API consumers and improves the overall developer experience.
+Uma vez que esta é uma API JSON, adicionar novas propriedades aos endpoints não é considerado uma alteração significativa, pois estas propriedades
+podem ser ignoradas com segurança pelos consumidores da API. Portanto, nesses casos, a versão da API pode não ser alterada.
+Esta abordagem permite-nos introduzir melhorias enquanto minimizamos o impacto nas integrações existentes.
+
+
+## Estrutura Uniforme de Respostas
+
+Todas as respostas da API são concebidas para seguir a especificação JSend. Esta estrutura padronizada garante consistência em todos os endpoints
+e fornece um framework para incluir informações adicionais de debugging quando necessário.
+
+Em caso de erros, o formato JSend oferece uma forma clara e estruturada de descrever o que correu mal e, quando possível,
+como o problema poderia ser resolvido. Esta abordagem simplifica o tratamento de erros para consumidores da API e melhora a experiência geral do programador.
 
 ```json title="Success Response"
 {
@@ -45,14 +43,14 @@ how the issue might be resolved. This approach simplifies error handling for API
 ```
 
 
-## Typescript
+## TypeScript
 
-To make working with our API responses easier, we provide an [NPM package](https://www.npmjs.com/package/@carrismetropolitana/api-types)
-that includes TypeScript definitions for all API responses. This package helps ensure type safety and improves development efficiency
-when integrating with our API in JavaScript or TypeScript projects.
+Para facilitar o trabalho com as respostas da nossa API, fornecemos um [pacote NPM](https://www.npmjs.com/package/@carrismetropolitana/api-types)
+que inclui definições TypeScript para todas as respostas de API. Este pacote ajuda a garantir segurança de tipos e melhora a eficiência do desenvolvimento
+ao integrar com a nossa API em projetos JavaScript ou TypeScript.
 
-We plan to expand this package with additional functionality in the future, and we welcome contributions! If you’d like to help,
-feel free to submit a pull request to the repository.
+Temos planos para expandir este pacote com funcionalidades adicionais no futuro, e acolhemos contribuições! Se quiseres ajudar,
+sinta-se à vontade para submeter um pull request ao repositório.
 
 
 ## Collections
