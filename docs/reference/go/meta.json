@@ -1,11 +1,7 @@
 {
   "pages": [
     "index",
-    "alerts",
-    "ferramentas",
-    "controller",
-    "offer",
-    "plans",
-    "performance"
+    "modules",
+    "tools"
   ]
 }
