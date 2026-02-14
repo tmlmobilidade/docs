@@ -82,7 +82,7 @@ body {
 }
 
 .prose code {
-	color: var(--color-brand-secondary);
+	color: var(--color-system-text-100);
 }
 
 .prose > *:last-child {
