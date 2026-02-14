@@ -28,42 +28,47 @@ Ok to proceed? (y) y
 3. A primeira vez que corremos a ferramenta é nos pedida a chave de acesso, esta apenas é pedida uma vez e depois fica guarda no sistema.
 
    ```bash
-    ▒▒▒▒▒▒▒▒▒   ▒▒▒▒▒▒▒▒   ▒▒▒▒▒▒▒▒
-  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
-▒▒▒▒▒▒▒  ▒▒▒▒▒▒▒▒▒▒  ▒▒▒▒▒▒▒▒▒  ▒▒▒▒▒▒
-▒▒▒▒▒       ▒▒▒▒▒      ▒▒▒▒▒     ▒▒██▒
-▒▒▒▒         ▒▒▒       ▒▒▒▒      ▒████▒
-▒▒▒▒▒                             ▒██▒
-▒▒▒▒▒▒▒ ▒██▒
-  ▒▒▒▒▒▒████▒
-    ▒▒▒▒▒██▒
-
-  
-
-┌  Bem-vindo ao exportador de dados da CM!
-│
-●  A versão da aplicação é: 20260213.1500.47
-│
-●  O ID desta exportação é: 80T1VS
-│
-●  Todos os resultados serão guardados aqui: /Users/jusi.monteiro/export-80T1VS
-│
-◇  Nenhuma chave de acesso encontrada.
-│
-◇   ───────────────────────────────────────────────────╮
-│                                                      │
-│  A chave de acesso será guardada de forma segura:    │
-│    • macOS: Keychain                                 │
-│    • Windows: Credential Manager                     │
-│    • Linux: Secret Service (ou ficheiro encriptado)  │
-│                                                      │
-├──────────────────────────────────────────────────────╯
-│
 ◆  Por favor introduz a chave de acesso:
 │  Chave de acesso...
 └ 
    ```
 
+4. A ferramenta vai pedir para escolher o tipo de exportação que deseja. Aqui podemos usar as setas do teclado para navegar pelas opções e pressionar no espaço para selecionar a opção e no enter para confirmar.
+
+````
+    ▒▒▒▒▒▒▒▒▒   ▒▒▒▒▒▒▒▒   ▒▒▒▒▒▒▒▒
+  ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+▒▒▒▒▒▒▒  ▒▒▒▒▒▒▒▒▒▒  ▒▒▒▒▒▒▒▒▒  ▒▒▒▒▒▒
+▒▒▒▒▒       ▒▒▒▒▒      ▒▒▒▒▒     ▒▒██▒
+▒▒▒▒         ▒▒▒       ▒▒▒▒      ▒████▒
+▒▒▒▒▒                             ▒██▒
+▒▒▒▒▒▒▒ ▒██▒
+  ▒▒▒▒▒▒████▒
+    ▒▒▒▒▒██▒
+
+┌  Bem-vindo ao exportador de dados da CM!
+│
+●  A versão da aplicação é: 20260213.1500.47
+│
+●  O ID desta exportação é: 7DTHDZ
+│
+●  Todos os resultados serão guardados aqui: /Users/josue.monteiro/export-7DTHDZ <-- Este é o local onde serão guardados os resultados da exportação.**
+│
+◇  Chave de acesso encontrada no armazenamento seguro do sistema.
+│
+◆  Escolhe os dados que queres exportar:
+│  ◻ 1. Validações APEX
+│  │ ◻ 1.0. Validações em bruto
+│  └ ◻ 1.1. Validações agregadas (escolher campos)
+│  ◻ 2. Rides
+│  └ ◻ 2.0. Rides em bruto (SLAs)
+│  ◻ 3. Vehicle Events
+│  └ ◻ 3.0. Vehicle Events em bruto
+│  ◻ 4. HashedShapes
+│  └ ◻ 4.0. HashedShapes para GeoJSON
+│  ◻ 5. SAMs
+│  └ ◻ 5.0. SAMs em bruto (Sequencialidade)
+└```
 
 ## Tipos de dados que podem ser exportados
 
@@ -74,6 +79,8 @@ Cada validação de título individual (cada vez que um passageiro valida um pas
 
 - **Validações (agregadas)**
 Os mesmos dados de validação resumidos por data e pelas dimensões escolhidas (por exemplo, linha, paragem, veículo, operador, viagem, tipo de título). Utilizar para relatórios e KPIs (por exemplo, validações por linha por dia) sem ter de lidar com ficheiros raw volumosos.
+
+Ver abaixo mais detalhes de como exportar validações agregadas.
 
 2. Rides
 
