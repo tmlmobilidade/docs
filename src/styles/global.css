@@ -9,57 +9,56 @@
 /* TYPOGRAPHY */
 
 body {
-	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	text-rendering: optimizeLegibility;
+	text-rendering: optimizelegibility;
+	-webkit-font-smoothing: antialiased;
 }
 
 .prose h1,
 .prose h2,
 .prose h3,
 .prose h4 {
-	letter-spacing: -0.02em;
 	font-weight: 600;
+	letter-spacing: -0.02em;
 }
 
 .prose h1 {
-	font-size: 2em;
 	margin-top: 1.5em;
 	margin-bottom: 0.6em;
+	font-size: 2em;
 }
 
 .prose h2 {
-	font-size: 1.5em;
+	padding-bottom: 0.3em;
 	margin-top: 1.4em;
 	margin-bottom: 0.5em;
-	padding-bottom: 0.3em;
+	font-size: 1.5em;
 	border-bottom: 1px solid var(--color-fd-border);
 }
 
 .prose h3 {
-	font-size: 1.25em;
 	margin-top: 1.2em;
 	margin-bottom: 0.4em;
+	font-size: 1.25em;
 }
 
 .prose p a,
 .prose li a {
 	color: var(--color-brand-secondary);
-	text-decoration: none;
+	text-decoration: underline;
+	text-underline-offset: 2px;
 	border-radius: 2px;
-	transition: color 0.15s ease;
+	transition: color 150ms ease;
 }
 
-.prose a:hover {
+.prose p a:hover {
 	color: var(--color-brand-secondary);
-	text-underline-offset: 2px;
-	background-color: #E6F0FF;
-	text-decoration: underline;
+	background-color: var(--color-brand-background);
 }
 
 .prose hr {
-	border-color: var(--color-fd-border);
 	margin: 2em 0;
+	border-color: var(--color-fd-border);
 }
 
 .prose code {
@@ -83,8 +82,8 @@ html.light .theme-dark {
 *,
 *::before,
 *::after {
-	transition: background-color 0.2s ease,
-				border-color 0.2s ease, color 0.15s ease;
+	transition: background-color 200ms ease,
+				border-color 200ms ease, color 150ms ease;
 }
 
 .contain-content {
