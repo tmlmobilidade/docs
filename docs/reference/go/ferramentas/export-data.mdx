@@ -3,29 +3,18 @@ title: Export Data
 description: Ferramenta de exportação de dados
 ---
 
-Esta aplicação é a ferramenta oficial de exportação de dados da Transportes Metropolitanos de Lisboa. Permite que utilizadores autorizados extraiam dados operacionais e analíticos da plataforma GO e os guardem em ficheiros para relatórios, análise ou utilização noutros sistemas.
-
-## O que faz
-
-A ferramenta é utilizada quando é necessário extrair dados do GO de forma estruturada (por exemplo, CSV ou GeoJSON). Escolhe-se o tipo de dados a exportar, opcionalmente restringem-se com filtros (datas, linhas, paragens, veículos, etc.), e a ferramenta escreve os resultados numa pasta na máquina do utilizador.
-Cada execução de exportação é identificada com um ID único, e todos os ficheiros dessa execução são armazenados na mesma pasta de saída para facilitar a sua localização e partilha.
-
-## A quem se destina
-
-Pessoas que necessitam de dados de validação ou passageiros para relatórios ou dashboards
-Equipas que analisam desempenho do serviço (por exemplo, SLAs, eventos de veículos)
-Qualquer pessoa que necessite de geometria de percursos (por exemplo, traçados de linhas) para mapas ou GIS
-Pessoal que trabalha com análise de sequência/transações (SAMs)
+Esta aplicação é a ferramenta oficial de exportação de dados da Transportes Metropolitanos de Lisboa. Permite que utilizadores autorizados extraiam dados operacionais e analíticos da plataforma GO e os guardem em ficheiros CSV para relatórios, análise ou utilização noutros sistemas.
 
 O acesso é controlado através de uma chave de acesso que é introduzida ao iniciar a ferramenta.
 
-## O que pode ser exportado
+## Tipos de dados que podem ser exportados
 
 1. Validações APEX
 
-- Validações (raw)
+- **Validações (raw)**
 Cada validação de título individual (cada vez que um passageiro valida um passe). Utilizar quando são necessários dados detalhados ao nível de registo individual.
-- Validações (agregadas)
+
+- **Validações (agregadas)**
 Os mesmos dados de validação resumidos por data e pelas dimensões escolhidas (por exemplo, linha, paragem, veículo, operador, viagem, tipo de título). Utilizar para relatórios e KPIs (por exemplo, validações por linha por dia) sem ter de lidar com ficheiros raw volumosos.
 
 2. Rides

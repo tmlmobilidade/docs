@@ -2,6 +2,7 @@
   "pages": [
     "index",
     "alerts",
+    "ferramentas",
     "controller",
     "offer",
     "plans",
