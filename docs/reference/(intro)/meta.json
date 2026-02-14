@@ -1,8 +1,9 @@
 {
   "pages": [
     "index",
-    "bugs",
+    "open-data",
     "coverage",
+    "bugs",
     "team"
   ],
   "root": true

@@ -1,7 +1,57 @@
 ---
-title: 🐝 Open Data
-description: We love Open Source! Here's how you can contribute to our projects.
+title: 🐝 Dados Abertos
+description: Descobre como podes usar o API para construir aplicações com dados de transportes em tempo real.
 ---
+## Nenhum tratamento especial
+
+Todas as rotas aqui documentadas são as mesmas que utilizamos para suportar as aplicações da TML, como o website e app da Carris Metropolitana e inúmeras ferramentas internas. Não aplicamos qualquer "tratamento especial" aos nossos APIs — todos têm acesso à mesma informação ao mesmo tempo, garantindo equidade e transparência na partilha dos dados.
+
+## Versões
+
+O API é versionado para permitir o desenvolvimento de novas funcionalidades sem comprometer a compatibilidade com sistemas que dependem das estruturas de dados de versões anteriores.
+
+Uma vez que todas as respostas são JSON, adicionar novas propriedades aos endpoints não é considerado uma alteração significativa, pois estas propriedades podem ser ignoradas com segurança pelos consumidores. Portanto, nesses casos, a versão pode não ser alterada. Esta abordagem parece-nos equilibrada pois permite-nos introduzir melhorias mais rapidamente enquanto minimizamos o impacto nas integrações existentes.
+
+
+## Estrutura uniforme da resposta
+
+Todas as respostas do API seguem a especificação [JSend](https://github.com/omniti-labs/jsend). Esta estrutura padronizada garante a consistência em todos os endpoints e fornece uma framework para incluir informações adicionais de debugging quando necessário.
+
+Em caso de erros, o formato JSend oferece uma forma clara e estruturada de descrever o que correu mal e, quando possível, como o problema poderá ser resolvido. Esta abordagem simplifica o tratamento de erros para os consumidores do API e melhora a developer experience do programador.
+
+```json title="Success Response"
+{
+	status: "success",
+	timestamp: 1721023200,
+	data: [ ... ] or { ... } // The requested data
+}
+```
+
+```json title="Error Response"
+{
+	status: "error",
+	timestamp: 1721023200,
+	message: "Unable to communicate with database"
+}
+```
+
+
+## TypeScript
+
+A utilização de uma linguagem tipificada é fortemente recomendado. Para utilizadores de Typescript, fornecemos um [pacote no NPM](https://www.npmjs.com/package/@tmlmobilidade/types) que inclui tipos para todas as estruturas disponíveis. A utilização deste pacote melhora a eficiência dos ciclos de desenvolvimento. Decidimos utilizar Calendar Versioning para este pacote.
+
+## Módulos disponíveis
+
+A organização do API está intimamente relacionada com a organização dos módulos do GO. Por exemplo, os dados de Alertas de Serviço são "publicados" pelo módulo `alerts`. Podes saber mais sobre cada um dos módulos do GO na secção correspondente, mas para facilitar o acesso mais direto à informação esta página funciona como índice para todas as rotas de todos os módulos que não necessitam de autenticação.
+
+
+| Módulo | Endpoint          |
+| ------ | ----------------- |
+| alerts | /alerts/published |
+| plans  | /plans/approved   |
+
+
+
 ## Committed to be Open
 
 Carris Metropolitana is deeply commited to open data. Most, if not all, of the code produced internally is published on Github. We welcome comments and PRs.
