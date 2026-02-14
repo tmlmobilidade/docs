@@ -2,7 +2,6 @@
 /* CONTAINER */
 
 .container {
-	color: var(--color-system-text-300);
 	padding: 4px 10px;
 	display: flex;
 	align-items: center;
@@ -13,6 +12,8 @@
 	text-transform: uppercase;
 	border: 2px solid transparent;
 	border-color: var(--color-system-background-100);
+	color: var(--color-brand-contrast);
+	background-color: var(--color-brand-primary);
 }
 
 .container:hover {
