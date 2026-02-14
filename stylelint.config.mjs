@@ -8,4 +8,5 @@ import { css } from '@carrismetropolitana/eslint'
 
 export default {
   ...css,
+  'unit-allowed-list': ['px', '%', 'fr', 'ms', 'deg', 'vh', 'vw', 'em'],
 }
