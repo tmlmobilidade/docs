@@ -1,6 +1,6 @@
 /* * */
 
-import { defineConfig, defineDocs, frontmatterSchema, metaSchema } from 'fumadocs-mdx/config';
+import { defineCollections, defineConfig, defineDocs, frontmatterSchema, metaSchema } from 'fumadocs-mdx/config';
 import { readVaultFiles } from 'fumadocs-obsidian';
 import { remarkObsidian, RemarkObsidianOptions } from 'fumadocs-obsidian/mdx';
 import { type ElementContent } from 'hast';
@@ -76,15 +76,16 @@ export default defineConfig({
 	},
 });
 
-export const blog = defineDocs({
+export const blog = defineCollections({
+	async: true,
 	dir: 'docs/blog',
-	meta: {
-		schema: frontmatterSchema.extend({
-			author: z.string(),
-			date: z.iso.date().or(z.date()),
-			tags: z.array(z.string()),
-		}),
-	},
+	schema: frontmatterSchema.extend({
+		author: z.string(),
+		cover: z.string(),
+		date: z.iso.date().or(z.date()),
+		tags: z.array(z.string()),
+	}),
+	type: 'doc',
 });
 
 function transformerEscape(): ShikiTransformer {

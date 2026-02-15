@@ -2,6 +2,7 @@
 
 import { blog, reference } from '#/.source/server';
 import { type InferPageType, loader } from 'fumadocs-core/source';
+import { toFumadocsSource } from 'fumadocs-mdx/runtime/server';
 
 /* * */
 
@@ -12,7 +13,7 @@ export const sourceReference = loader({
 
 export const sourceBlog = loader({
 	baseUrl: '/blog',
-	source: blog.toFumadocsSource(),
+	source: toFumadocsSource(blog, []),
 });
 
 /* * */

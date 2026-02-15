@@ -7,7 +7,6 @@ tags:
   - Análise
 author: Jusi Monteiro
 ---
-
 Mixpanel revolutionized product analytics by making it easy to track user behavior beyond simple pageviews. But as powerful as it is, many teams are searching for Mixpanel alternatives that better fit their needs, budget, or privacy requirements.
 
 The surge in demand for Mixpanel alternatives stems from several pain points that teams frequently encounter:
