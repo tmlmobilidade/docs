@@ -1,6 +1,6 @@
 ---
-title: GTFS
-description: Introdução ao GTFS extendido da TML
+title: Introdução
+description: O que é um GTFS?
 ---
 ## O que é um GTFS?
 
@@ -14,39 +14,7 @@ Embora não seja uma base de dados tradicional, funciona como um conjunto de dad
 
 A especificação foi inicialmente lançada pela Google, mas é agora mantida e orientada pela equipa da [Mobility Data](https://mobilitydata.org). Pode consultar a documentação oficial pode ser vista [aqui](https://gtfs.org/).
 
-## Como posso abrir/ler um GTFS?
 
-Pode descompactar o ficheiro e abrir cada ficheiro em ferramentas como o Microsoft Excel ou o Google Sheets. No entanto, alguns destes ficheiros podem ser demasiado grandes, o que pode exceder os limites destes programas.
-
-Nestes casos, é melhor utilizar ferramentas automatizadas concebidas para lidar com dados GTFS. Embora os ficheiros GTFS sejam legíveis por humanos, destinam-se ao processamento por sistemas automatizados para gerir e manipular eficientemente os dados neles armazenados.
-
-## Exemplo de ficheiro GTFS
-
-Aqui está um ficheiro GTFS simples para a Linha Amarela do Metro de Lisboa. Para manter a clareza e evitar complexidade desnecessária, incluímos apenas as colunas necessárias e 4 horários.
-
-Pode utilizar este ficheiro para explorar as relações entre os ficheiros e compreender a lógica subjacente dos ficheiros GTFS.
-
-Isto irá ajudá-lo a familiarizar-se com a interação entre os vários ficheiros, como paragens, viagens e horários, e como trabalham em conjunto para formar um feed de transporte completo.
-
-Ao examinar este ficheiro, obterá uma compreensão mais clara da estrutura de dados e da sua utilização prática em aplicações do mundo real.
-
-[**Descarregar GTFS de Exemplo**](#) // TODO
-
-## GTFS em Tempo Real
-
-O padrão GTFS consiste, na realidade, em duas partes. O **GTFS de Horários** é o ficheiro `.zip` que contém todos os dados **programados** para uma determinada rede de transportes públicos.
-
-Isto inclui informações como rotas, paragens e horários. Quando tem acesso a estes dados programados, pode sobrepor informações em tempo real dos veículos.
-
-Esta combinação de dados programados e em tempo real é o que permite a aplicações como o [Citymapper](https://citymapper.com/) e outras exibir veículos num mapa e calcular estimativas precisas de chegada para a sua paragem.
-
-Os dados programados fornecem a base, enquanto as atualizações em tempo real garantem que os utilizadores têm as informações mais atuais disponíveis.
-
-A parte **em tempo real** do GTFS requer uma compreensão mais profunda de como os dados estão relacionados, bem como conhecimento do sistema para manter um fluxo de informação em constante atualização.
-
-O GTFS em tempo real utiliza o formato [protobuf](https://protobuf.dev) para trocar dados, que não é legível por humanos. Como resultado, trabalhar com o GTFS em tempo real requer normalmente alguma experiência em programação para processar, descodificar e manipular os dados de forma eficaz.
-
-A complexidade de trabalhar com o GTFS Realtime decorre da necessidade de gerir atualizações em tempo real, como as posições dos veículos e o estado das viagens, que exigem atualizações contínuas e integração com os dados horários. Compreender como estas atualizações se relacionam com os dados estáticos de horários do GTFS é crucial para a construção de sistemas que possam fornecer informações de transporte público em tempo real.
 
 ## GTFS da Transportes Metropolitanos de Lisboa
 
