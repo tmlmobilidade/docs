@@ -1,0 +1,20 @@
+## Análise: EXPECTED_VEHICLE_ID_QTY
+
+Esta análise verifica se a circulação teve **um número coerente de veículos associados**.
+É permitido que uma viagem tenha **1 ou 2 veículos** (por exemplo, devido a troca de viatura durante o serviço).
+Se não houver qualquer veículo associado, ou se forem identificados mais de dois, a circulação é considerada inconsistente.
+
+Caso não existam eventos de veículo, a análise falha de imediato, pois não existe base para confirmar a associação da viatura.
+
+---
+
+### Tabela de Resultados Possíveis
+
+| Reason | Descrição | Grade | Value |
+|---|---|---|---|
+| `NO_VEHICLE_EVENTS` | Não existem eventos de veículo para validar a associação | `fail` | `null` |
+| `EXPECTED_VEHICLE_ID_QTY` | A circulação utilizou um número de veículos dentro do previsto (1 a 2) | `pass` | Nº de veículos identificados |
+| `UNEXPECTED_VEHICLE_ID_QTY` | Foi identificado um número de veículos fora do permitido (0 ou >2) | `fail` | Nº de veículos identificados |
+| *(erro inesperado)* | Erro interno ao executar a análise | `error` | `null` |
+
+---

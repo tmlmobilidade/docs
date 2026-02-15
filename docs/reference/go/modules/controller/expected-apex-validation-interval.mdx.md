@@ -1,0 +1,21 @@
+## Análise: EXPECTED_APEX_VALIDATION_INTERVAL
+
+Esta análise verifica se o intervalo de tempo entre validações APEX realizadas durante a circulação é consistente com o comportamento normal de validação a bordo.
+Considera-se uma operação normal quando **o intervalo entre validações consecutivas é igual ou superior a ~3 segundos** (internamente definido como 2000 ms devido a margens e tempos de processamento).
+Intervalos muito curtos podem indicar situações como **validações duplicadas indevidas**, problemas de hardware, ou um comportamento anómalo do validador.
+
+Se a circulação não tiver validações suficientes para avaliar (i.e., zero ou apenas uma), a análise é **marcada como `skip`** porque não existe informação suficiente para concluir.
+
+---
+
+### Tabela de Resultados Possíveis
+
+| Reason | Descrição | Grade |
+|---|---|---|
+| `NO_APEX_VALIDATIONS` | Não existem validações APEX nesta circulação | `skip` |
+| `NOT_ENOUGH_VALIDATIONS` | Existe apenas uma validação, impossibilitando comparação de intervalos | `skip` |
+| `EXPECTED_VALIDATION_INTERVALS` | Os intervalos entre validações são normais (≥ 3 segundos) | `pass` |
+| `INTERVALS_TOO_SHORT` | Foi detetado pelo menos um intervalo anormalmente curto entre validações | `fail` |
+| *(sem reason — erro interno)* | Ocorreu um erro inesperado ao executar a análise | `error` |
+
+---

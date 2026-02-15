@@ -1,0 +1,16 @@
+## Análise: TRANSACTION_SEQUENTIALITY
+
+Esta análise verifica se **faltam transações APEX** (Locations, On-board Sales, On-board Refunds e Validations) para a circulação, avaliando a **sequencialidade do contador ASE** por cada **SAM Serial Number**.
+
+Para cada SAM, as transações são ordenadas pelo `mac_ase_counter_value` e calcula-se o número **esperado** (intervalo contínuo entre o mínimo e o máximo, inclusivo) e o número **encontrado**. A diferença indica **lacunas (transações em falta).**
+
+---
+
+| Reason                      | Descrição                                                                      | Grade   | Expected_qty | found_qty | missing_qty |
+| --------------------------- | ------------------------------------------------------------------------------ | ------- | -----------: | --------: | ----------: |
+| `NO_TRANSACTIONS`           | Não existem transações APEX (nenhuma das quatro tipologias)                    | `skip`  |       `null` |    `null` |      `null` |
+| `ALL_TRANSACTIONS_RECEIVED` | Sequência contínua: não há quebras no contador ASE                             | `pass`  |           ≥0 |        ≥0 |           0 |
+| `MISSING_TRANSACTIONS`      | Existem quebras na sequência do contador ASE (uma ou mais transações em falta) | `fail`  |  ≥ found_qty |        ≥0 |          >0 |
+| *(erro inesperado)*         | Erro interno ao executar a análise                                             | `error` |       `null` |    `null` |      `null` |
+
+---

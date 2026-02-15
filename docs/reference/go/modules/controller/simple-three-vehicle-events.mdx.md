@@ -1,0 +1,19 @@
+## Análise: SIMPLE_THREE_VEHICLE_EVENTS
+
+Esta análise verifica se existem **eventos de veículo em três segmentos-chave da viagem:**
+(i) primeiras paragens, (ii) paragens intermédias e (iii) últimas paragens.
+
+O algoritmo seleciona as **2 primeiras paragens, 4 paragens centrais** (2 antes e 2 depois do meio) e as **2 últimas paragens** do `hashed_trip.path` (ordenado por `stop_sequence`). Depois, procura **pelo menos um** `stop_id` **correspondente** em cada segmento dentro dos `vehicle_events`.
+
+----
+
+| Reason                 | Descrição                                                                | Grade | Campos devolvidos                                                |
+| ---------------------- | ------------------------------------------------------------------------ | --------------- | ---------------------------------------------------------------- |
+| `NO_PATH_DATA`         | Não existe `hashed_trip.path` para identificar os segmentos              | `fail`          | `stop_ids_first: []`, `stop_ids_middle: []`, `stop_ids_last: []` |
+| `MISSING_FIRST_STOPS`  | Não foi encontrado nenhum evento nas paragens do **primeiro** segmento   | `fail`          | Listas de `stop_ids` consideradas para cada segmento             |
+| `MISSING_MIDDLE_STOPS` | Não foi encontrado nenhum evento nas paragens do **segmento intermédio** | `fail`          | Listas de `stop_ids` consideradas para cada segmento             |
+| `MISSING_LAST_STOPS`   | Não foi encontrado nenhum evento nas paragens do **último** segmento     | `fail`          | Listas de `stop_ids` consideradas para cada segmento             |
+| `ALL_STOPS_FOUND`      | Encontrado **pelo menos um evento** em **cada** segmento                 | `pass`          | Listas de `stop_ids` consideradas para cada segmento             |
+| *(erro inesperado)*    | Erro interno ao executar a análise                                       | `error`         | `null`                                                           |
+
+---

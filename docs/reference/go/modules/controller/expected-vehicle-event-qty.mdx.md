@@ -1,0 +1,25 @@
+## Análise: EXPECTED_VEHICLE_EVENT_QTY
+
+Esta análise verifica se a quantidade de **eventos de localização do veículo** recebidos para a circulação é **suficiente**, comparando o número observado com o número esperado.
+A quantidade esperada é calculada como:
+
+> **expected_qty = número de paragens no percurso × 2**
+
+Isto assume que, em média, existe pelo menos um evento ao aproximar-se da paragem e outro ao sair da mesma.
+Se o número de eventos observados (`found_qty`) for **maior que** o valor esperado, considera-se que a circulação tem telemetria suficiente.
+
+Se não existirem dados de percurso ou eventos de veículo, a análise pode ser marcada como `skip` ou `fail`.
+
+---
+
+### Tabela de Resultados Possíveis
+
+| Reason | Descrição | Grade | Expected_qty | Found_qty |
+|---|---|---|---|---|
+| `NO_PATH_DATA` | Não existe informação de percurso para calcular o número esperado de eventos | `skip` | `null` | `null` |
+| `NO_VEHICLE_EVENTS` | Não existem eventos de veículo para avaliação | `fail` | `null` | `null` |
+| `EXPECTED_VEHICLE_EVENT_QTY` | A quantidade observada de eventos é **superior** ao valor esperado | `pass` | valor calculado | nº de eventos observados |
+| `UNEXPECTED_VEHICLE_EVENT_QTY` | A quantidade observada é **igual ou inferior** ao valor esperado | `fail` | valor calculado | nº de eventos observados |
+| *(erro inesperado)* | Ocorreu um erro interno | `error` | `null` | `null` |
+
+---

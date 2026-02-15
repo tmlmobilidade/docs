@@ -1,0 +1,18 @@
+## Análise: SIMPLE_ONE_VEHICLE_EVENT_OR_APEX_VALIDATION
+
+Esta análise verifica se a circulação possui **algum registo mínimo de operação**, seja através de:
+- **um evento de veículo** (`vehicle_events`), ou
+- **uma validação APEX** (`apex_validations`).
+
+Ou seja, basta existir **um destes dois indícios** para confirmar que a viagem teve atividade registada em sistemas.
+Se nenhum destes dados existir, considera-se que **não há evidência de que a circulação ocorreu.**
+
+----
+
+| Reason                                   | Descrição                                                                  | Grade |
+| ---------------------------------------- | -------------------------------------------------------------------------- | --------------- |
+| `FOUND_VEHICLE_EVENT_OR_APEX_VALIDATION` | Foi identificado pelo menos um evento de veículo ou uma validação APEX     | `pass`          |
+| `NO_VEHICLE_EVENTS_OR_APEX_VALIDATIONS`  | Não existe qualquer evento de veículo nem validação APEX para a circulação | `fail`          |
+| *(erro inesperado)*                      | Erro interno ao executar a análise                                         | `error`         |
+
+---

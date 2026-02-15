@@ -1,0 +1,19 @@
+## Análise: EXPECTED_VEHICLE_EVENT_DELAY
+
+Esta análise verifica se existe **atraso excessivo** entre o momento em que o evento do veículo ocorreu (`created_at`) e o momento em que foi recebido no sistema (`received_at`).
+Este atraso reflete o **tempo de transmissão** entre o veículo e o servidor (PCGI).
+Considera-se normal que este atraso seja inferior a **10 segundos**.
+Atrasos superiores podem indicar problemas de rede, saturação de comunicação ou falhas intermitentes de conectividade.
+
+---
+
+### Tabela de Resultados Possíveis
+
+| Reason | Descrição | Grade | Value |
+|---|---|---|---|
+| `NO_VEHICLE_EVENTS` | Não existem eventos de veículo para avaliar o atraso | `fail` | `null` |
+| `EXPECTED_VEHICLE_EVENTS_DELAY` | Todos os eventos foram recebidos com atraso inferior a 10 segundos | `pass` | Nº de eventos com atraso excessivo (neste caso, 0) |
+| `UNEXPECTED_VEHICLE_EVENTS_DELAY` | Foram identificados um ou mais eventos recebidos com atraso ≥ 10 segundos | `fail` | Nº de eventos com atraso excessivo |
+| *(erro inesperado)* | Erro interno ao executar a análise | `error` | `null` |
+
+---

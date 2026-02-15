@@ -1,0 +1,15 @@
+## Análise: MATCHING_VEHICLE_IDS
+
+Verifica se os `**Vehicle IDs** presentes nas transações APEX (validações e/ou localizações) **coincidem** com os **Vehicle IDs** observados nos **Vehicle Events** da viagem.
+A análise passa quando todos os conjuntos de IDs são consistentes entre si.
+
+---
+
+| Reason                 | Grade   |
+| -----------------------| --------|
+| `NO_APEX_TRANSACTIONS` | `skip`  |
+| `NO_VEHICLE_EVENTS`    | `skip`  |
+| `VEHICLE_ID_MISMATCH`  | `fail`  |
+| `MATCHING_VEHICLE_IDS` | `pass`  |
+
+---

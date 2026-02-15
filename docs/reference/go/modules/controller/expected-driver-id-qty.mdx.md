@@ -1,0 +1,18 @@
+## Análise: EXPECTED_DRIVER_ID_QTY
+Esta análise verifica se o número de motoristas associados a uma circulação (`driver_ids`) é coerente com a operação.
+Admite-se que uma viagem possa ter **1 ou 2 motoristas**.
+Se não existir motorista associado, ou se forem associados mais de dois, a circulação é considerada inconsistente.
+Caso não existam eventos de veículo, não é possível validar esta informação e a análise falha.
+
+---
+
+### Tabela de Resultados Possíveis
+
+| Reason | Descrição | Grade | Value |
+|--------|-----------|-------|-------|
+| `NO_VEHICLE_EVENTS` | Não existem eventos de veículo para validar a presença de motorista | `fail` | `null` |
+| `EXPECTED_DRIVER_ID_QTY` | Número de motoristas dentro do intervalo esperado (1 a 2) | `pass` | `driver_ids.length` |
+| `UNEXPECTED_DRIVER_ID_QTY` | Número de motoristas fora do intervalo permitido (0 ou mais de 2) | `fail` | `driver_ids.length` |
+| *(sem reason — erro interno)* | Erro inesperado ao executar a análise | `error` | `null` |
+
+---

@@ -1,0 +1,26 @@
+## Análise: EXPECTED_START_TIME
+
+Esta análise verifica se a circulação **iniciou no horário previsto**, comparando o tempo de início observado (`start_time_observed`) com o tempo de início planeado (`start_time_scheduled`).
+O atraso é calculado em **minutos**.
+A circulação é considerada:
+- **No horário** quando o início ocorre até 5 minutos após o previsto.
+- **Antecipada** quando começa mais de 1 minuto antes da hora prevista.
+- **Atrasada** quando se inicia mais de 5 minutos depois da hora prevista.
+
+Se não existirem dados de horário planeado ou hora observada, ou se não existirem eventos de veículo que permitam determinar o início, a análise pode ser marcada como `skip` ou `fail`, conforme indicado na tabela.
+
+---
+
+### Tabela de Resultados Possíveis
+
+| Reason | Descrição | Grade | Value |
+|---|---|---|---|
+| `NO_START_TIME_SCHEDULED` | Não existe hora de início planeada disponível | `skip` | `null` |
+| `NO_VEHICLE_EVENTS` | Não existem eventos de veículo para determinar o início | `fail` | `null` |
+| `UNKNOWN_START` | Não é possível determinar a hora observada de início | `skip` | `null` |
+| `EARLY_START` | A circulação iniciou **mais de 1 minuto antes** do previsto | `fail` | atraso em minutos (valor negativo) |
+| `START_ON_TIME` | Início **no horário** (entre -1 e +5 minutos face ao planeado) | `pass` | atraso em minutos |
+| `LATE_START` | Início **mais de 5 minutos após** o planeado | `fail` | atraso em minutos |
+| *(erro inesperado)* | Erro interno ao executar a análise | `error` | `null` |
+
+---

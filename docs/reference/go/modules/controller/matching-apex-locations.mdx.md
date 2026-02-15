@@ -1,0 +1,16 @@
+## Análise: MATCHING_APEX_LOCATIONS
+
+Verifica se existem **transações de localização APEX** para **todas as paragens** do percurso da viagem (path).
+Compara o conjunto de `stop_id` do `hashed_trip.path` com os `stop_id` presentes nas `simplified_apex_locations`.
+
+---
+
+### Tabela de Resultados Possíveis
+| Reason                                        | Grade |
+| --------------------------------------------- | ------- |
+| `NO_PATH_DATA`                                | `fail`  |
+| `NO_APEX_LOCATIONS`                           | `fail`  |
+| `MISSING_APEX_LOCATION_FOR_AT_LEAST_ONE_STOP` | `fail`  |
+| `MATCHING_APEX_LOCATIONS`                     | `pass`  |
+
+---

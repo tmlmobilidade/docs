@@ -1,0 +1,21 @@
+## Análise: AT_LEAST_ONE_VEHICLE_EVENT_ON_FIRST_STOP
+
+Esta análise verifica se a circulação teve **pelo menos um evento de localização do veículo na primeira paragem do percurso**.
+
+A validação compara a posição dos eventos do veículo com a posição geográfica da primeira paragem (`hashed_trip.path`), considerando um **raio de tolerância de 50 metros**.
+
+Se não existirem dados de percurso ou eventos do veículo, a análise é marcada como `skip`, pois não é possível determinar se a circulação passou pela paragem inicial.
+
+---
+
+### Tabela de Resultados Possíveis
+
+| Reason | Descrição | Grade | Value |
+|---|---|---|---|
+| `NO_PATH_DATA` | Não existe informação de percurso para identificar a primeira paragem | `skip` | `null` |
+| `NO_VEHICLE_EVENTS` | Não existem eventos de veículo para avaliar a presença na paragem inicial | `skip` | `null` |
+| `ONE_OR_MORE_VEHICLE_EVENTS_ON_FIRST_STOP` | Foram encontrados eventos de veículo dentro do raio da paragem inicial | `pass` | Nº de eventos encontrados |
+| `NO_VEHICLE_EVENTS_ON_FIRST_STOP` | Não foi encontrado nenhum evento próximo da primeira paragem | `fail` | 0 |
+| *(erro inesperado)* | Erro interno ao executar a análise | `error` | `null` |
+
+---

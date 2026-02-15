@@ -1,0 +1,19 @@
+## Análise: SIMPLE_ONE_APEX_VALIDATION
+
+Esta análise verifica se a circulação teve **pelo menos uma validação APEX**
+A presença de validações confirma que:
+- O equipamento de validação estava operacional;
+- Existiu, pelo menos, um passageiro a bordo;
+- Os dados foram transmitidos corretamente.
+
+Se não existir nenhuma validação associada, a análise é marcada como falha.
+
+---
+
+| Reason                         | Descrição                                          | Grade | Value            |
+| ------------------------------ | -------------------------------------------------- | --------------- | ---------------- |
+| `NO_APEX_VALIDATIONS`          | Não foram registadas validações APEX na circulação | `fail`          | 0                |
+| `ONE_OR_MORE_APEX_VALIDATIONS` | Foi registada pelo menos uma validação APEX        | `pass`          | Nº de validações |
+| *(erro inesperado)*            | Erro interno ao executar a análise                 | `error`         | `null`           |
+
+---

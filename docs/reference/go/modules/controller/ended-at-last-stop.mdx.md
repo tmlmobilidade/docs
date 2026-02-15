@@ -1,0 +1,21 @@
+## Análise: ENDED_AT_LAST_STOP
+
+Esta análise verifica se a circulação terminou efetivamente na **última paragem prevista no percurso**.
+A verificação baseia-se na posição geográfica dos eventos de veículo e na coordenada da última paragem no caminho (`hashed_trip.path`).
+Considera-se que a viagem terminou corretamente quando pelo menos um evento de localização do veículo se encontra **a menos de 50 metros da paragem final**.
+
+Se não existirem dados de percurso ou eventos de veículo, a análise é marcada como `skip`, porque não é possível determinar o ponto de término.
+
+---
+
+### Tabela de Resultados Possíveis
+
+| Reason | Descrição | Grade |
+|---|---|---|
+| `NO_PATH_DATA` | Não existe informação de percurso para identificar a última paragem | `skip` |
+| `NO_VEHICLE_EVENTS` | Não existem eventos de localização do veículo para verificar o término | `skip` |
+| `ENDED_AT_LAST_STOP` | Foi detetado pelo menos um evento de veículo dentro do raio definido da última paragem | `pass` |
+| `ENDED_OUTSIDE_OF_LAST_STOP` | Nenhum evento de veículo foi encontrado próximo da última paragem | `fail` |
+| *(erro inesperado)* | Erro interno ao executar a análise | `error` |
+
+---
