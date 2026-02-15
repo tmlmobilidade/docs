@@ -8,10 +8,10 @@
 	padding: 4px 10px;
 	font-size: var(--text-sm);
 	font-weight: 600;
-	text-transform: uppercase;
-	border: 2px solid transparent;
 	color: var(--color-brand-contrast);
+	text-transform: uppercase;
 	background-color: var(--color-brand-primary);
+	border: 2px solid transparent;
 	border-color: var(--color-brand-secondary);
 	border-radius: 4px;
 	box-shadow: 0 1px 3px 0 var(--color-brand-shadow);
@@ -19,4 +19,12 @@
 
 .container:active {
 	transform: translateY(2px);
+}
+
+.dark .container {
+	--color-brand-primary: #2864B9;
+	--color-brand-secondary: #1E4B96;
+	--color-brand-background: #1E283C;
+	--color-brand-contrast: #CDE1FF;
+	--color-brand-shadow: #00083D40;
 }

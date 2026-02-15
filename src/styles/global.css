@@ -5,24 +5,22 @@
 /* relative to the CSS file, make sure it's correct for your app */
 @source '../node_modules/fumadocs-ui/dist/**/*.js';
 
-/* * */
-/* FUMADOCS COLOR MODIFICATIONS */
-.light, .dark {
-
+:root {
 	--color-fd-background: var(--color-system-background-200);
 	--color-fd-foreground: var(--color-system-text-100);
-	
 	--color-fd-card: var(--color-system-background-100);
 	--color-fd-card-foreground: var(--color-system-text-100);
 	--color-fd-border: var(--color-system-border-100);
-	
 	--color-fd-muted: var(--color-brand-background);
 	--color-fd-muted-foreground: var(--color-system-text-200);
-
 	--color-fd-primary: var(--color-brand-primary);
 	--color-fd-primary-foreground: var(--color-brand-contrast);
 }
 
+:root.dark {
+	--color-fd-primary: #8CB6F1;
+	--color-fd-primary-foreground: #19202A;
+}
 
 /* * */
 /* OPTIMIZATIONS */
@@ -88,7 +86,7 @@ body {
 
 .prose p a,
 .prose li a {
-	color: var(--color-brand-primary);
+	color: var(--color-fd-primary);
 	text-decoration: underline;
 	text-underline-offset: 2px;
 	border-radius: 2px;
