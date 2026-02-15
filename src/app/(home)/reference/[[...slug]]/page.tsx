@@ -1,7 +1,6 @@
 /* * */
 
 import { sourceReference } from '@/lib/source';
-import { getGithubLastEdit } from 'fumadocs-core/content/github';
 import defaultMdxComponents from 'fumadocs-ui/mdx';
 import { DocsBody, DocsDescription, DocsPage, DocsTitle } from 'fumadocs-ui/page';
 import { notFound } from 'next/navigation';
@@ -70,8 +69,10 @@ export default async function Page(props: { params: Promise<{ slug?: string[] }>
 			}}
 			full
 		>
-			<DocsTitle>{page.data.title}</DocsTitle>
-			<DocsDescription>{page.data.description}</DocsDescription>
+			<div>
+				<DocsTitle>{page.data.title}</DocsTitle>
+				<DocsDescription className="text-md mb-4">{page.data.description}</DocsDescription>
+			</div>
 			<DocsBody>
 				<MDX components={{ ...defaultMdxComponents }} />
 			</DocsBody>
