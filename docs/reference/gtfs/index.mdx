@@ -1,63 +1,62 @@
 ---
-title: Introduction to GTFS
-description: TL;DR for what is a GTFS archive. Explore the official website to become an expert.
+title: GTFS
+description: Introdução ao GTFS extendido da TML
 ---
+## O que é um GTFS?
 
-## What is a GTFS?
+O GTFS (General Transit Feed Specification) é o standard global para as agências de transportes públicos publicarem horários para utilização em aplicações digitais, como o Google Maps.
 
-GTFS (General Transit Feed Specification) is the global standard for transit agencies to publish schedules for use in digital applications, such as Google Maps.
-Essentially, it is a .zip archive containing several files, each representing a table (similar to an Excel file) where each column is separated by a comma “,”.
+Essencialmente, trata-se de um ficheiro `.zip` contendo vários ficheiros, cada um representando uma tabela (semelhante a uma folha de Excel) onde cada coluna é separada por uma vírgula “,”.
 
-Each file has a specific name and a required set of columns that correspond to data in other files, forming a relational structure.
-While it’s not a traditional database, it functions as a tabular dataset in text form, allowing easy integration with digital platforms.
+Cada ficheiro tem um nome específico e um conjunto obrigatório de colunas que correspondem aos dados de outros ficheiros, formando uma estrutura relacional.
 
-The specification was initially launched by Google, but it is now maintained and guided by the [Mobility Data team](https://mobilitydata.org).
+Embora não seja uma base de dados tradicional, funciona como um conjunto de dados tabulares em formato de texto, permitindo uma fácil integração com plataformas digitais.
 
+A especificação foi inicialmente lançada pela Google, mas é agora mantida e orientada pela equipa da [Mobility Data](https://mobilitydata.org). Pode consultar a documentação oficial pode ser vista [aqui](https://gtfs.org/).
 
-## How can I open/read a GTFS?
+## Como posso abrir/ler um GTFS?
 
-You can unzip the archive and open each file in tools like Microsoft Excel or Google Sheets. However, some of these files can be very large, which may exceed the limits of these programs.
-In such cases, it’s best to use automated tools designed to handle GTFS data. While GTFS files are human-readable, they are ultimately intended for processing by automated systems
-to efficiently manage and manipulate the data stored in them.
+Pode descompactar o ficheiro e abrir cada ficheiro em ferramentas como o Microsoft Excel ou o Google Sheets. No entanto, alguns destes ficheiros podem ser demasiado grandes, o que pode exceder os limites destes programas.
 
+Nestes casos, é melhor utilizar ferramentas automatizadas concebidas para lidar com dados GTFS. Embora os ficheiros GTFS sejam legíveis por humanos, destinam-se ao processamento por sistemas automatizados para gerir e manipular eficientemente os dados neles armazenados.
 
-## Example GTFS archive
+## Exemplo de ficheiro GTFS
 
-Here is a simple GTFS archive for the Lisbon Metro’s Yellow line. To keep things clear and avoid unnecessary complexity, we’ve only included the required columns and 4 schedules.
-You can use this archive to explore the relationships between files and understand the underlying logic of GTFS archives.
+Aqui está um ficheiro GTFS simples para a Linha Amarela do Metro de Lisboa. Para manter a clareza e evitar complexidade desnecessária, incluímos apenas as colunas necessárias e 4 horários.
 
-This will help you get familiar with how the various files interact, such as the stops, trips, and schedules, and how they work together to form a complete transit feed.
-By examining this archive, you’ll gain a clearer understanding of the data structure and its practical use in real-world applications.
+Pode utilizar este ficheiro para explorar as relações entre os ficheiros e compreender a lógica subjacente dos ficheiros GTFS.
 
-[**Download Example GTFS**](#) // TODO
+Isto irá ajudá-lo a familiarizar-se com a interação entre os vários ficheiros, como paragens, viagens e horários, e como trabalham em conjunto para formar um feed de transporte completo.
 
+Ao examinar este ficheiro, obterá uma compreensão mais clara da estrutura de dados e da sua utilização prática em aplicações do mundo real.
 
-## GTFS Realtime
+[**Descarregar GTFS de Exemplo**](#) // TODO
 
-The GTFS standard actually consists of two parts. The **Schedule GTFS** is the .zip archive containing all the **scheduled** data for a given transit network.
-This includes information such as routes, stops, and schedules. When you have access to this scheduled data, you can layer real-time information from vehicles on top of it.
+## GTFS em Tempo Real
 
-This combination of scheduled and real-time data is what enables applications like Citymapper and others to display vehicles on a map and calculate accurate arrival estimates for your stop.
-The scheduled data provides the foundation, while real-time updates ensure users have the most current information available.
+O padrão GTFS consiste, na realidade, em duas partes. O **GTFS de Horários** é o ficheiro `.zip` que contém todos os dados **programados** para uma determinada rede de transportes públicos.
 
-The **Realtime** part of GTFS requires a deeper understanding of how data is related, as well as system knowledge to maintain a pipeline of constantly updating information.
-GTFS Realtime uses the [protobuf](https://protobuf.dev) format to exchange data, which is not human-readable. As a result, working with GTFS Realtime typically requires
-some coding expertise to process, decode, and handle the data effectively.
+Isto inclui informações como rotas, paragens e horários. Quando tem acesso a estes dados programados, pode sobrepor informações em tempo real dos veículos.
 
-The complexity of working with GTFS Realtime comes from the need to manage live updates, such as vehicle positions and trip statuses, which require ongoing updates and integration with the scheduled data.
-Understanding how these updates relate to the static GTFS schedule data is crucial for building systems that can provide real-time transit information.
+Esta combinação de dados programados e em tempo real é o que permite a aplicações como o [Citymapper](https://citymapper.com/) e outras exibir veículos num mapa e calcular estimativas precisas de chegada para a sua paragem.
 
+Os dados programados fornecem a base, enquanto as atualizações em tempo real garantem que os utilizadores têm as informações mais atuais disponíveis.
 
-## Useful tools
+A parte **em tempo real** do GTFS requer uma compreensão mais profunda de como os dados estão relacionados, bem como conhecimento do sistema para manter um fluxo de informação em constante atualização.
 
-Below is a small collection of tool we use daily to validate and inspect GTFS data.
+O GTFS em tempo real utiliza o formato [protobuf](https://protobuf.dev) para trocar dados, que não é legível por humanos. Como resultado, trabalhar com o GTFS em tempo real requer normalmente alguma experiência em programação para processar, descodificar e manipular os dados de forma eficaz.
 
-### Validate
+A complexidade de trabalhar com o GTFS Realtime decorre da necessidade de gerir atualizações em tempo real, como as posições dos veículos e o estado das viagens, que exigem atualizações contínuas e integração com os dados horários. Compreender como estas atualizações se relacionam com os dados estáticos de horários do GTFS é crucial para a construção de sistemas que possam fornecer informações de transporte público em tempo real.
 
-- [**Official GTFS Validator**](https://gtfs-validator.mobilitydata.org) — This tool checks whether the Schedule GTFS archive follows all required and recommended practices. For larger archives the [installed app](https://github.com/MobilityData/gtfs-validator?tab=readme-ov-file#using-the-desktop-app) is required.
-- [**NAP France**](https://transport.data.gouv.fr/validation) — This excellent tool validates a GTFS feed similar to the official validator, but presents errors visually on a map, making it easy to identify and understand what’s wrong. It’s particularly useful for interpreting the validation errors and warnings you might encounter, helping you quickly pinpoint and resolve issues in your data.
+## Ferramentas úteis
 
+Abaixo, uma pequena coleção de ferramentas que utilizamos diariamente para validar e inspecionar os dados do GTFS.
 
-### Inspect
+### Validação
 
-- [**Vyčius GTFS Inspector**](https://realtime.vycius.lt/) — Use this tool to inspect GTFS Realtime feeds for Service Alerts and Vehicle Positions. Try it with our endpoints!
+- [**Validador Oficial do GTFS**](https://gtfs-validator.mobilitydata.org) — Esta ferramenta verifica se o ficheiro GTFS de horários segue todas as práticas obrigatórias e recomendadas. Para ficheiros maiores, é necessário o [aplicação instalada](https://github.com/MobilityData/gtfs-validator?tab=readme-ov-file#using-the-desktop-app).
+- [**NAP France**](https://transport.data.gouv.fr/validation) — Esta excelente ferramenta valida um feed GTFS de forma semelhante ao validador oficial, mas apresenta os erros visualmente num mapa, facilitando a identificação e a compreensão dos problemas. É particularmente útil para interpretar os erros e avisos de validação que possa encontrar, ajudando a identificar e a resolver rapidamente problemas nos seus dados.
+
+### Inspecionar
+
+- [**Vyčius GTFS Inspector**](https://realtime.vycius.lt/) — Utilize esta ferramenta para inspecionar os feeds GTFS em tempo real para alertas de serviço e posições de veículos. Experimente com os nossos endpoints!
