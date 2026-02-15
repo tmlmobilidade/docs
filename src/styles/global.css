@@ -95,6 +95,10 @@ body {
 	margin-bottom: 3em;
 }
 
+.prose :where(strong) {
+	font-weight: 600;
+}
+
 /* * */
 /* THEME SWITCH */
 
