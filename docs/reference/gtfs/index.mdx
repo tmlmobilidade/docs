@@ -2,17 +2,21 @@
 title: Introdução
 description: Descobre o que é um GTFS e o que podes fazer com ele.
 ---
-## Origem
+## Resumo
 
-A sigla GTFS significa General Transit Feed Specification. É um standard internacional para as agências de transportes públicos publicarem horários para utilização em aplicações digitais, como o Google Maps.
+GTFS significa General Transit Feed Specification. É um standard internacional que define como aplicações de planeamento (ex. Google Maps, Transit, CityMapper) devem interpretar redes de transportes públicos, como horários e percursos. A especificação foi criada pelo Google, mas é agora mantida e orientada pela equipa da [Mobility Data](https://mobilitydata.org), de forma aberta e partilhada.
 
-Essencialmente, trata-se de um ficheiro `.zip` contendo vários ficheiros, cada um representando uma tabela (semelhante a uma folha de Excel) onde cada coluna é separada por uma vírgula “,”.
+O standard define dois grupos: o GTFS Schedule, onde estão mapeadas todas as paragens, percursos e horários *planeados* de uma determinada agência; e o GTFS Real Time, que funciona como uma camada no topo do GTFS Schedule para ajustar as informações à realidade do momento (ex. horários mudam pois houve um acidente na ponte).
+
+O GTFS Schedule não é mais do que uma série de trata-se de um ficheiro `.zip` contendo vários ficheiros, cada um representando uma tabela (semelhante a uma folha de Excel) onde cada coluna é separada por uma vírgula “,”.
+
+Quem produz um GTFS são as agências de transporte público, e quase todas 
 
 Cada ficheiro tem um nome específico e um conjunto obrigatório de colunas que correspondem aos dados de outros ficheiros, formando uma estrutura relacional.
 
 Embora não seja uma base de dados tradicional, funciona como um conjunto de dados tabulares em formato de texto, permitindo uma fácil integração com plataformas digitais.
 
-A especificação foi inicialmente lançada pela Google, mas é agora mantida e orientada pela equipa da [Mobility Data](https://mobilitydata.org). Pode consultar a documentação oficial pode ser vista [aqui](https://gtfs.org/).
+
 
 
 
