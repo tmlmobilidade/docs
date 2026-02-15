@@ -8,10 +8,10 @@
 	padding: 4px 10px;
 	font-size: var(--text-sm);
 	font-weight: 600;
-	color: var(--color-brand-contrast);
 	text-transform: uppercase;
-	background-color: var(--color-brand-primary);
 	border: 2px solid transparent;
+	color: var(--color-brand-contrast);
+	background-color: var(--color-brand-primary);
 	border-color: var(--color-brand-secondary);
 	border-radius: 4px;
 	box-shadow: 0 1px 3px 0 var(--color-brand-shadow);
