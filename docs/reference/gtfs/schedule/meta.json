@@ -5,6 +5,7 @@
 		"stops",
 		"trips",
 		"routes",
+		"calendar",
 		"calendar_dates",
 		"stop_times",
 		"shapes",
