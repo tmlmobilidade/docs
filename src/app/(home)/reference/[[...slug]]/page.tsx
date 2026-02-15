@@ -1,6 +1,7 @@
 /* * */
 
 import { sourceReference } from '@/lib/source';
+// import { getGithubLastEdit } from 'fumadocs-core/content/github';
 import defaultMdxComponents from 'fumadocs-ui/mdx';
 import { DocsBody, DocsDescription, DocsPage, DocsTitle } from 'fumadocs-ui/page';
 import { notFound } from 'next/navigation';
@@ -11,7 +12,6 @@ export async function generateMetadata(props: { params: Promise<{ slug?: string[
 	const params = await props.params;
 	const page = sourceReference.getPage(params.slug);
 	if (!page) notFound();
-
 	return {
 		description: page.data.description,
 		title: page.data.title,
