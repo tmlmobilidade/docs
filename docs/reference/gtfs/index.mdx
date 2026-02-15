@@ -8,7 +8,7 @@ GTFS significa General Transit Feed Specification. É um standard internacional 
 
 O standard define dois grupos: o GTFS Schedule, onde estão mapeadas todas as paragens, percursos e horários *planeados* de uma determinada agência; e o GTFS Real Time, que funciona como uma camada em cima do GTFS Schedule para ajustar as informações à realidade do momento (ex. horários mudam pois houve um acidente na ponte).
 
-O [GTFS Schedule](/reference/gtfs/schedule) não é mais do que uma série de tabelas (ex. ficheiros Excel) agrupados num arquivo `.zip` onde cada tabela é um ficheiro separado em formato CSV (comma-separated values). Cada ficheiro tem um nome específico e um conjunto obrigatório de colunas, formando uma estrutura relacional.
+O [GTFS Schedule](/reference/gtfs/schedule) não é mais do que uma série de tabelas (ex. ficheiros Excel) agrupados num arquivo `.zip`. Cada uma destas tabelas é um ficheiro separado em formato `.csv` (comma-separated values). Cada ficheiro tem um nome específico e um conjunto obrigatório de colunas, formando uma estrutura relacional.
 
 O [GTFS Real Time](/reference/gtfs/realtime) é um pouco mais complexo pois utiliza o formato Protobuf, o que exige necessariamente aplicações adicionais ou scripts de descodificação. Não deixa de ser apenas um "ficheiro" que contém alterações ou informações adicionais ao que estava descrito no GTFS planeado.
 
