@@ -1,4 +1,26 @@
 ---
 title: calendar_dates
-description: Especificação do GTFS para Operadores Externos
+description: Exceções para os serviços definidos no ficheiro calendar.txt
 ---
+**Presença**: <u>Condicionalmente Obrigatório</u>
+- <u style='color:#ff3333'>Obrigatório</u>: se `calendar.txt` for omitido. Nesse caso, `calendar_dates.txt` deve conter todas as datas de serviço.
+- <u style='color:#ffcc00'>Opcional</u>: caso contrário.
+**Chave primária**: `service_id`
+
+---
+
+A tabela `calendar_dates.txt` activa ou desactiva explicitamente o serviço por data. Pode ser usada de duas maneiras.
+
+**Recomendado**: Utilize `calendar_dates.txt` em conjunto com `calendar.txt` para definir exceções aos padrões de serviço padrão definidos em `calendar.txt`. Se o serviço for geralmente regular, com algumas alterações em datas específicas (por exemplo, para acomodar serviços de eventos especiais ou o calendário escolar), esta é uma boa abordagem. Neste caso, `calendar_dates.service_id` é um ID externo que faz referência a `calendar.service_id`.
+
+**Alternativa**: Omita `calendar.txt` e especifique cada data de serviço em `calendar_dates.txt`. Isto permite uma variação considerável no serviço e acomoda serviços sem horários semanais regulares. Neste caso, `service_id` é um ID.
+
+---
+
+### Campos GTFS Standard
+
+| Nome do Campo    | Tipo                                                       | Presença    | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| ---------------- | ---------------------------------------------------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `service_id`     | ID externo que faz referência ao calendar.service_id ou ID | Obrigatório | Identifica um conjunto de datas em que ocorre uma exceção de serviço para uma ou mais rotas. Cada par (`service_id`, `date`) só pode aparecer uma vez em `calendar_dates.txt` se `calendar.txt` e `calendar_dates.txt` forem utilizados em conjunto. Se um valor de `service_id` aparecer tanto em `calendar.txt` como em `calendar_dates.txt`, a informação em `calendar_dates.txt` modifica a informação de serviço especificada em `calendar.txt`.                                                                                                                                                                                                                                                                                                            |
+| `data`           | Data                                                       | Obrigatório | Data em que ocorre a exceção de serviço.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `exception_type` | Enum                                                       | Obrigatório | Indica se o serviço está disponível na data especificada no campo de data.<br>**Opções válidas:**<ul><li>`1` - O serviço foi adicionado para a data especificada.</li><li>`2` - O serviço foi removido para a data especificada.</li></ul>**Exemplo:** Suponha que uma rota tem um conjunto de viagens disponíveis em dias feriados e outro conjunto de viagens disponíveis em todos os outros dias. Um `service_id` pode corresponder ao horário de funcionamento regular e outro `service_id` pode corresponder ao horário de funcionamento em dias feriados. Para um feriado específico, o ficheiro `calendar_dates.txt` pode ser utilizado para adicionar o feriado ao `service_id` de feriado e para remover o feriado do horário de funcionamento regular. |
