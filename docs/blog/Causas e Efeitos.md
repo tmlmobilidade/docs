@@ -1,7 +1,7 @@
 ---
 title: Mixpanel Alternatives - 4 Best Options for Product Analytics
 description: Looking for Mixpanel alternatives? Compare pricing, features, and privacy options among the best product analytics tools including open-source solutions.
-cover: /files/CampanhaDados_BannerWeb.png
+cover: /docs/files/CampanhaDados_BannerWeb.png
 date: 2025-07-18
 tags:
   - Análise

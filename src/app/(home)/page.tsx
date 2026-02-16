@@ -1,5 +1,6 @@
 /* * */
 
+import { BlogCard } from '#/src/components/blog/blog-card';
 import { HomeHero } from '@/components/home/HomeHero';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/cn';
@@ -51,25 +52,7 @@ export default function Page() {
 
 					<div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
 						{posts.map(post => (
-							<Link
-								key={post.url}
-								className="group flex flex-col rounded-xl border border-fd-border bg-fd-card p-5 shadow-sm transition-all duration-200 hover:border-brand/40 hover:shadow-md hover:-translate-y-0.5"
-								href={post.url}
-							>
-								<p className="font-semibold text-fd-foreground group-hover:text-brand transition-colors">
-									{post.data.title}
-								</p>
-								<p className="mt-1.5 text-sm leading-relaxed text-fd-muted-foreground line-clamp-2">
-									{post.data.description}
-								</p>
-								<p className="mt-auto pt-4 text-xs font-medium text-brand/70">
-									{new Date(post.data['date'] ?? getName(post.path)).toLocaleDateString('pt-PT', {
-										day: 'numeric',
-										month: 'short',
-										year: 'numeric',
-									})}
-								</p>
-							</Link>
+							<BlogCard key={post.url} post={post} />
 						))}
 					</div>
 
