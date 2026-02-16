@@ -8,7 +8,7 @@ import { type LinkItemType } from 'fumadocs-ui/utils/link-item';
 
 export const BASE_OPTIONS = {
 
-	github_url: 'https://github.com/tmlmobilidade/docs',
+	github_url: 'https://github.com/tmlmobilidade',
 
 	go_url: 'https://go.tmlmobilidade.pt',
 

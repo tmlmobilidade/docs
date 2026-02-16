@@ -11,7 +11,7 @@ export default function Layout({ children }: PropsWithChildren) {
 		<HomeLayout
 			githubUrl={BASE_OPTIONS.github_url}
 			links={NAVBAR_LINKS}
-			nav={{ title: BASE_OPTIONS.title }}
+			nav={{ title: BASE_OPTIONS.title, url: '/' }}
 			themeSwitch={{ mode: 'light-dark-system' }}
 		>
 			{children}
