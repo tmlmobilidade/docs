@@ -16,9 +16,28 @@ Quem produz o GTFS são as agências de transporte público, e quase todas têm 
 
 ## O GTFS da TML
 
-A TML utiliza  para além de implementar o GTFS standard implementa campos e regras novas especificas à realidade da rede de transportes portuguesa.
-Essas são as regras que estão descritas aqui.
+A TML tomou a decisão de utilizar o GTFS como o formato standard para comunicar a sua operação de transportes, e por isso desenvolveu vários sistemas à sua volta que exigem informações adicionais que não estão na especificação base. Desta forma, foi criada uma extensão ao GTFS Schedule para suportar estes campos adicionais. Isto é uma prática comum na indústria. Os campos adicionais são ignorados por quem não precisar deles, como por exemplo o Google Maps.
+
+Ter tudo mapeado em GTFS permite simplificar vários processos e reduzir o custo dos desenvolvimentos, pois grande parte das ferramentas já dispõem da função de importação/exportação neste formato.
+
+Os operadores de transporte público que suportam o sistema navegante® devem produzir um ficheiro GTFS seguindo esta especificação da TML, pois é este formato que permite a configuração dos sistemas APEX. O GTFS-TML é um requisito obrigatório para a APEX.
+
 ## Ferramentas úteis
+
+<Cards>
+    <Card title="Validador Oficial do GTFS" href="https://gtfs-validator.mobilitydata.org">
+        Esta ferramenta verifica se um arquivo GTFS segue todas as práticas obrigatórias e recomendadas.
+    </Card>
+    <Card title="NAP France" href="https://transport.data.gouv.fr/validation">
+        Esta excelente ferramenta valida um arquivo GTFS de forma semelhante ao validador oficial, mas apresenta os erros num mapa, facilitando a identificação visual e a compreensão dos problemas.
+    </Card>
+    <Card title="Vyčius GTFS-RT Inspector" href="https://realtime.vycius.lt">
+         Esta ferramenta serve para inspecionar feeds GTFS Real Time, como alertas de serviço ou posições de veículos.
+    </Card>
+    <Card title="Open Source projects" href="/open-data">
+        We are committed to open-source principles, and our public repositories include projects such as our website, mobile apps, API implementations, and experimental tools. These projects are available for you to explore, use, or contribute to.
+    </Card>
+</Cards>
 
 Abaixo, uma pequena coleção de ferramentas que utilizamos diariamente para validar e inspecionar os dados do GTFS.
 
