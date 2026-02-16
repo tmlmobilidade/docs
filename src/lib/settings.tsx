@@ -10,7 +10,7 @@ export const BASE_OPTIONS = {
 
 	github_url: 'https://github.com/tmlmobilidade',
 
-	go_url: 'https://go.tmlmobilidade.pt',
+	go_url: 'https://go.tmlmobilidade.pt/auth',
 
 	title: <GoLogo />,
 
