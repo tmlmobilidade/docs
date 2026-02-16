@@ -11,10 +11,11 @@
 	--color-fd-card: var(--color-system-background-100);
 	--color-fd-card-foreground: var(--color-system-text-100);
 	--color-fd-border: var(--color-system-border-100);
-	--color-fd-muted: var(--color-brand-background);
+	--color-fd-muted: var(--color-system-background-200);
 	--color-fd-muted-foreground: var(--color-system-text-200);
 	--color-fd-primary: var(--color-brand-primary);
 	--color-fd-primary-foreground: var(--color-brand-contrast);
+	--color-fd-secondary: var(--color-system-background-100);
 }
 
 :root.dark {

@@ -8,25 +8,32 @@ GTFS significa General Transit Feed Specification. É um standard internacional 
 
 O standard define dois grupos: o GTFS Schedule, onde estão mapeadas todas as paragens, percursos e horários *planeados* de uma determinada agência; e o GTFS Real Time, que funciona como uma camada em cima do GTFS Schedule para ajustar as informações à realidade do momento (ex. horários mudam pois houve um acidente na ponte).
 
-O [GTFS Schedule](/reference/gtfs/schedule) não é mais do que uma série de tabelas (ex. ficheiros Excel) agrupados num arquivo `.zip` onde cada tabela é um ficheiro separado em formato CSV (comma-separated values). Cada ficheiro tem um nome específico e um conjunto obrigatório de colunas, formando uma estrutura relacional.
+O [GTFS Schedule](/reference/gtfs/schedule) não é mais do que uma série de tabelas (ex. ficheiros Excel) agrupados num arquivo `.zip`. Cada uma destas tabelas é um ficheiro separado em formato `.csv` (comma-separated values). Cada ficheiro tem um nome específico e um conjunto obrigatório de colunas, formando uma estrutura relacional.
 
-O [GTFS Real Time](/reference/gtfs/realtime) é um pouco mais complexo pois utiliza o formato Protobuf, o que exige necessariamente aplicações adicionais ou scripts de descodificação. Não deixa de ser apenas um "ficheiro" que contém alterações ou informações adicionais ao que estava descrito no GTFS planeado.
+O [GTFS Real Time](/reference/gtfs/realtime) é um pouco mais complexo pois utiliza o formato [Protobuf](https://protobuf.dev/overview), o que exige necessariamente aplicações adicionais ou scripts de descodificação. Não deixa de ser apenas um "ficheiro" que contém alterações ou informações adicionais ao que estava descrito no GTFS planeado.
 
-Quem produz um GTFS são as agências de transporte público, e quase todas 
+Quem produz o GTFS são as agências de transporte público, e quase todas têm pelo menos a versão planeada.
 
-## GTFS da Transportes Metropolitanos de Lisboa
+## O GTFS da TML
 
-A TML para além de implementar o GTFS standard implementa campos e regras novas especificas à realidade da rede de transportes portuguesa.
-Essas são as regras que estão descritas aqui.
+A TML tomou a decisão de utilizar o GTFS como o formato standard para comunicar a sua operação de transportes, e por isso desenvolveu vários sistemas à sua volta que exigem informações adicionais que não estão na especificação base. Desta forma, foi criada uma extensão ao GTFS Schedule para suportar estes campos adicionais. Isto é uma prática comum na indústria. Os campos adicionais são ignorados por quem não precisar deles, como por exemplo o Google Maps, mantendo o GTFS válido de acordo com o standard.
+
+Ter tudo mapeado em GTFS permite simplificar vários processos e reduzir o custo dos desenvolvimentos, pois grande parte das ferramentas já dispõem da função de importação/exportação neste formato.
+
+Os operadores de transporte público que suportam o sistema navegante® devem produzir um ficheiro GTFS seguindo esta especificação da TML, pois é este formato que permite a configuração dos sistemas APEX. **O GTFS-TML é um requisito obrigatório para a APEX.** A TML também recomenda esta especificação para todos os operadores de transporte do país.
+
 ## Ferramentas úteis
 
-Abaixo, uma pequena coleção de ferramentas que utilizamos diariamente para validar e inspecionar os dados do GTFS.
+Uma breve coleção de ferramentas que utilizamos diariamente para validar e inspecionar dados em GTFS:
 
-### Validação
-
-- [**Validador Oficial do GTFS**](https://gtfs-validator.mobilitydata.org) — Esta ferramenta verifica se o ficheiro GTFS de horários segue todas as práticas obrigatórias e recomendadas. Para ficheiros maiores, é necessário o [aplicação instalada](https://github.com/MobilityData/gtfs-validator?tab=readme-ov-file#using-the-desktop-app).
-- [**NAP France**](https://transport.data.gouv.fr/validation) — Esta excelente ferramenta valida um feed GTFS de forma semelhante ao validador oficial, mas apresenta os erros visualmente num mapa, facilitando a identificação e a compreensão dos problemas. É particularmente útil para interpretar os erros e avisos de validação que possa encontrar, ajudando a identificar e a resolver rapidamente problemas nos seus dados.
-
-### Inspecionar
-
-- [**Vyčius GTFS Inspector**](https://realtime.vycius.lt/) — Utilize esta ferramenta para inspecionar os feeds GTFS em tempo real para alertas de serviço e posições de veículos. Experimente com os nossos endpoints!
+<Cards>
+    <Card title="Validador Oficial do GTFS" href="https://gtfs-validator.mobilitydata.org">
+        Esta ferramenta verifica se um arquivo GTFS segue todas as práticas obrigatórias e recomendadas.
+    </Card>
+    <Card title="NAP France" href="https://transport.data.gouv.fr/validation">
+        Esta excelente ferramenta valida um arquivo GTFS de forma semelhante ao validador oficial, mas apresenta os erros num mapa, facilitando a identificação visual e a compreensão dos problemas.
+    </Card>
+    <Card title="Vyčius GTFS-RT Inspector" href="https://realtime.vycius.lt">
+         Esta ferramenta serve para inspecionar feeds GTFS Real Time, como alertas de serviço ou posições de veículos.
+    </Card>
+</Cards>
