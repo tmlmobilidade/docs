@@ -1,12 +1,12 @@
 {
   "pages": [
     "...(intro)",
+    "---GO---",
+    "...go",
     "---GTFS---",
     "...gtfs",
     "---APEX---",
-    "...apex",
-    "---GO---",
-    "...go"
+    "...apex"
   ],
   "root": true
 }
