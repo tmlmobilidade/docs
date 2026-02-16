@@ -1,0 +1,70 @@
+---
+title: "Autocarros Elétricos na Carris Metropolitana — A Descarbonização em Marcha"
+date: 2026-02-16
+tags:
+  - transportes
+  - sustentabilidade
+  - elétricos
+  - carris-metropolitana
+  - descarbonização
+---
+
+# Autocarros Elétricos na Carris Metropolitana — A Descarbonização em Marcha
+
+Quando a Carris Metropolitana arrancou em 2022, apresentou uma frota praticamente nova, com veículos com menos de um ano de idade. Agora, a aposta na eletrificação está a transformar essa frota jovem numa das mais sustentáveis do país.
+
+## O Estado Atual da Frota Elétrica
+
+A eletrificação tem avançado área a área, com cada operador concessionário a incorporar veículos elétricos na sua operação:
+
+### Área 4 — Margem Sul Oriental (Alsa Todi)
+A grande protagonista da eletrificação. Em janeiro de 2026, a Alsa Todi integrou **60 novos autocarros 100% elétricos**, elevando a sua frota para 291 veículos, dos quais:
+
+- **127 elétricos**
+- **35 a gás natural**
+- Restantes a gasóleo
+
+Isto coloca **55% da frota com emissões zero** — o número mais alto de todas as áreas. O investimento total foi de 24 milhões de euros, com metade financiada pelo Fundo Ambiental (400.000 € por autocarro).
+
+### Área 3 — Almada, Seixal e Sesimbra (TST)
+A Transportes Sul do Tejo integrou **43 autocarros elétricos** de última geração. Com esta adição, mais de 10% da frota de 337 veículos passou a ter emissões nulas. A TST instalou 23 carregadores duplos com capacidade para 46 veículos.
+
+### Área 1 — Amadora, Cascais, Oeiras, Sintra (Viação Alvorada)
+A Viação Alvorada incorporou **40 autocarros elétricos** (marcas Zhong Tong, Yutong e Salvador Caetano), representando cerca de 9% da frota. A empresa dispõe de 10 postos de carregamento duplos, com capacidade de carregamento completo durante o período noturno.
+
+### Área 2 — Loures, Odivelas, V.F. Xira, Mafra (Rodoviária de Lisboa)
+A Rodoviária de Lisboa opera **40 autocarros elétricos**, com 25 a terem entrado ao serviço em setembro de 2025.
+
+## Características Técnicas
+
+Os autocarros elétricos em operação na rede partilham características comuns:
+
+- **Lotação**: 93 lugares
+- **Autonomia**: até 330-370 km
+- **Operação**: dia inteiro sem necessidade de carregamento intermédio
+- **Carregamento**: noturno, nos depósitos dos operadores
+- **Marcas**: Zhong Tong, Yutong e Salvador Caetano
+
+A autonomia permite que os veículos realizem o serviço integral do dia, o que é fundamental numa rede metropolitana onde as linhas interconcelhias podem ter extensões superiores a 30 km.
+
+## Os Desafios
+
+A eletrificação não é isenta de obstáculos. Durante a apresentação da frota da Área 4, o diretor-geral da Alsa Todi apontou vários desafios operacionais:
+
+- **Infraestrutura de carregamento**: necessidade de investimento contínuo em carregadores
+- **Abrigos para passageiros**: muitas paragens ainda carecem de cobertura adequada
+- **Gare do Oriente**: terminal saturado que precisa de soluções urgentes
+- **Faixas BUS**: insuficientes para garantir a competitividade do autocarro face ao automóvel
+- **Travessias do Tejo**: apelo à isenção de portagens para autocarros elétricos na futura concessão (2029)
+
+## O Compromisso Contratual
+
+Os contratos de concessão da Carris Metropolitana definem que a frota deve integrar, no mínimo, 5% de veículos não poluentes, conforme as Diretivas Europeias 2009/33/CE e 2019/1161. Na prática, todos os operadores já superam largamente este mínimo, demonstrando que a transição energética no transporte público é não só possível como economicamente viável quando apoiada por financiamento público adequado.
+
+## Perspectiva
+
+Com a procura a crescer 54% na Área 4 entre 2023 e 2025 e recordes consecutivos de utilização ao fim-de-semana (+77% aos sábados, +87% aos domingos), a eletrificação da frota da Carris Metropolitana não é apenas uma medida ambiental — é uma resposta à procura crescente por um transporte público moderno e confortável.
+
+---
+
+> **Notícias sobre a frota**: [carrismetropolitana.pt/noticias](https://www.carrismetropolitana.pt/noticias)

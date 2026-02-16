@@ -1,0 +1,51 @@
+---
+title: "Carris Metropolitana — O Que É e Como Transformou a Mobilidade em Lisboa"
+date: 2026-02-16
+tags:
+  - transportes
+  - lisboa
+  - mobilidade
+  - carris-metropolitana
+description: "A Carris Metropolitana é a marca única dos serviços de transporte rodoviário da Área Metropolitana de Lisboa (AML), coordenada pela Transportes Metropolitanos de Lisboa (TML). Lançada a 1 de junho de 2022, veio substituir a fragmentação de operadores que existia na região, unificando o serviço de autocarro sob uma identidade e padrão de qualidade comum."
+---
+
+# Carris Metropolitana — O Que É e Como Transformou a Mobilidade em Lisboa
+
+A Carris Metropolitana é a marca única dos serviços de transporte rodoviário da Área Metropolitana de Lisboa (AML), coordenada pela Transportes Metropolitanos de Lisboa (TML). Lançada a 1 de junho de 2022, veio substituir a fragmentação de operadores que existia na região, unificando o serviço de autocarro sob uma identidade e padrão de qualidade comum.
+
+## Uma Região, Uma Marca
+
+Antes da Carris Metropolitana, a AML contava com múltiplos operadores privados, cada um com tarifários, identidades visuais e níveis de serviço distintos. Para o passageiro, isto significava navegar um labirinto de passes, bilhetes e regras diferentes conforme o município. A Carris Metropolitana eliminou esse problema ao criar uma rede integrada com um tarifário simplificado — passando de cerca de 900 tarifas distintas para apenas 5.
+
+## Como Está Organizada
+
+A operação está dividida em **4 áreas geográficas**, cada uma concessionada a um operador privado distinto, mas todas sob a marca Carris Metropolitana:
+
+- **Área 1** — Amadora, Cascais, Lisboa, Oeiras e Sintra (operada pela Viação Alvorada)
+- **Área 2** — Loures, Mafra, Odivelas e Vila Franca de Xira (operada pela Rodoviária de Lisboa)
+- **Área 3** — Almada, Seixal e Sesimbra (operada pela Transportes Sul do Tejo)
+- **Área 4** — Alcochete, Barreiro, Moita, Montijo, Palmela e Setúbal (operada pela Alsa Todi)
+
+Três municípios — Lisboa, Cascais e Barreiro — optaram por manter operações municipais próprias (Carris, MobiCascais e TCB), mas a Carris Metropolitana faz ligações a todos eles.
+
+## Números que Impressionam
+
+Em 2025, a Carris Metropolitana atingiu um recorde histórico de **194 milhões de passageiros** transportados, com 5,8 milhões de viagens realizadas e 90 milhões de quilómetros percorridos. Destacam-se:
+
+- **Sintra**: 30,4 milhões de passageiros
+- **Loures**: 23,5 milhões
+- **Lisboa**: 20,4 milhões
+- **Almada**: 19,5 milhões
+- **Seixal**: 17,3 milhões
+
+O recorde diário ficou registado a 15 de outubro de 2025, com **763 mil passageiros** num único dia útil.
+
+## Uma Mudança de Paradigma
+
+O aumento de 35% na oferta de serviço rodoviário na AML, possível graças a um investimento de cerca de 1,2 mil milhões de euros, representou uma mudança estrutural na mobilidade da região. A Carris Metropolitana não é apenas uma nova pintura nos autocarros — é uma reorganização completa das rotas, frequências e padrões de serviço, com foco na intermodalidade e na ligação entre concelhos.
+
+A articulação com a rede ferroviária tem sido um dos pilares do crescimento, com terminais como Agualva-Cacém (+36% de afluência), Portela de Sintra (+27%) e Gare do Oriente (+23%) a registar aumentos expressivos.
+
+---
+
+> **Mais informação**: [carrismetropolitana.pt](https://carrismetropolitana.pt)
