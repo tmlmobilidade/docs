@@ -15,6 +15,7 @@
 	--color-fd-muted-foreground: var(--color-system-text-200);
 	--color-fd-primary: var(--color-brand-primary);
 	--color-fd-primary-foreground: var(--color-brand-contrast);
+	--color-fd-secondary: var(--color-system-background-100);
 }
 
 :root.dark {
