@@ -1,0 +1,37 @@
+---
+title: Glossário
+description: Sample Description
+---
+## Versões
+
+O API é versionado para permitir o desenvolvimento de novas funcionalidades sem comprometer a compatibilidade com sistemas que dependem das estruturas de dados de versões anteriores.
+
+Uma vez que todas as respostas são JSON, adicionar novas propriedades aos endpoints não é considerado uma alteração significativa, pois estas propriedades podem ser ignoradas com segurança pelos consumidores. Portanto, nesses casos, a versão pode não ser alterada. Esta abordagem parece-nos equilibrada pois permite-nos introduzir melhorias mais rapidamente enquanto minimizamos o impacto nas integrações existentes.
+
+
+## Estrutura uniforme da resposta
+
+Todas as respostas do API seguem a especificação [JSend](https://github.com/omniti-labs/jsend). Esta estrutura padronizada garante a consistência em todos os endpoints e fornece uma framework para incluir informações adicionais de debugging quando necessário.
+
+Em caso de erros, o formato JSend oferece uma forma clara e estruturada de descrever o que correu mal e, quando possível, como o problema poderá ser resolvido. Esta abordagem simplifica o tratamento de erros para os consumidores do API e melhora a developer experience do programador.
+
+```json title="Success Response"
+{
+	status: "success",
+	timestamp: 1721023200,
+	data: [ ... ] or { ... } // The requested data
+}
+```
+
+```json title="Error Response"
+{
+	status: "error",
+	timestamp: 1721023200,
+	message: "Unable to communicate with database"
+}
+```
+
+
+## TypeScript
+
+A utilização de uma linguagem tipificada é fortemente recomendada. Para utilizadores de Typescript, fornecemos um [pacote no NPM](https://www.npmjs.com/package/@tmlmobilidade/types) com tipos para todas as estruturas utilizadas. Decidimos utilizar Calendar Versioning para este pacote, pelo que apenas garantimos compatibilidade com a versão mais recente do API.
