@@ -2,6 +2,8 @@
 title: "Carris Metropolitana 24h — A Rede Noturna Que Faltava a Lisboa"
 date: 2026-02-16
 description: "A partir de 1 de abril de 2025, a Carris Metropolitana passou a operar autocarros durante toda a madrugada em várias partes da Área Metropolitana de Lisboa. Não se trata de um serviço residual com uma ou duas carreiras simbólicas — é uma verdadeira rede noturna, com mais de 70 horários entre as 21h e as 6h."
+author: ISO
+cover: /docs/files/CampanhaDados_BannerWeb.png
 tags:
   - transportes
   - lisboa

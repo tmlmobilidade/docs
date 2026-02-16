@@ -1,6 +1,8 @@
 ---
 title: "Carris Metropolitana — O Que É e Como Transformou a Mobilidade em Lisboa"
 date: 2026-02-16
+author: ISO
+cover: /docs/files/CampanhaDados_BannerWeb.png
 tags:
   - transportes
   - lisboa
