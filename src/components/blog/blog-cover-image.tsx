@@ -34,7 +34,7 @@ export function BlogCoverImage({
 		<div className={`relative w-full overflow-hidden bg-fd-muted ${aspect} ${className ?? ''}`}>
 			<Image
 				alt={alt}
-				className={variant === 'card' ? 'object-cover transition-transform duration-300 group-hover:scale-105' : 'object-cover'}
+				className="object-cover"
 				priority={priority}
 				sizes={sizes}
 				src={src}

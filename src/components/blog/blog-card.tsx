@@ -20,16 +20,15 @@ export function BlogCard({ post }: BlogCardProps) {
 		<Link
 			href={post.url}
 			className={cn(
-				'group flex flex-col overflow-hidden rounded-2xl border border-fd-border bg-fd-card',
+				'group flex flex-col overflow-hidden rounded-2xl border border-(--color-system-border-100) bg-fd-card',
 				'shadow-sm transition-all duration-200',
-				'hover:border-[var(--color-brand-primary)]/40 hover:shadow-lg hover:-translate-y-0.5',
 			)}
 		>
 			{cover && <BlogCoverImage src={cover} variant="card" />}
 			<div className="flex flex-1 flex-col p-5">
 				<BlogTags badgeClassName="px-2 py-0.5 text-[10px]" className="mb-2 gap-1.5" limit={3} tags={tags} />
 
-				<h3 className="font-semibold text-fd-foreground transition-colors group-hover:text-[var(--color-brand-primary)]">
+				<h3 className="font-semibold text-fd-foreground transition-colors group-hover:text-(--color-brand-primary)">
 					{post.data.title}
 				</h3>
 
