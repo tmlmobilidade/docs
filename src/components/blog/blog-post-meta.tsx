@@ -17,7 +17,7 @@ export function BlogPostMeta({ author, className, date, variant = 'default' }: B
 			<div
 				className={`mt-4 flex items-center justify-between border-t border-fd-border pt-4 text-xs ${className ?? ''}`}
 			>
-				<time className="font-medium text-[var(--color-brand-primary)]/80" dateTime={String(date)}>
+				<time className="font-medium text-(--color-brand-primary)/80" dateTime={String(date)}>
 					{dateStr}
 				</time>
 				{author && <span className="text-fd-muted-foreground">{author}</span>}

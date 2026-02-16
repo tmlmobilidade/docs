@@ -41,7 +41,7 @@ export function BlogCoverImage({
 				fill
 			/>
 			{variant === 'hero' && (
-				<div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-fd-background/60 via-transparent to-transparent" />
+				<div className="pointer-events-none absolute inset-0 bg-linear-to-t from-fd-background/60 via-transparent to-transparent" />
 			)}
 		</div>
 	);
