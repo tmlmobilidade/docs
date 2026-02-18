@@ -29,10 +29,10 @@
   "syntax_highlighting": true,
   "syntax_highlighting_mobile": false,
   "enabled_templates_hotkeys": [
-    ""
+    "templates/sort-headings-on-save.md"
   ],
   "startup_templates": [
-    "templates/sort-headings.on-save.md"
+    "templates/sort-headings-on-save.md"
   ],
   "intellisense_render": 1
 }
