@@ -14,6 +14,15 @@ export function HomeHero() {
 		<section className={styles.container}>
 			<div className={styles.heroContainer}>
 
+				<span />
+				<span />
+				<span />
+				<span />
+				<span />
+				<span />
+				<span />
+				<span />
+
 				<div aria-hidden="true" className={styles.dotGrid} />
 
 				<h1 className={styles.title}>
