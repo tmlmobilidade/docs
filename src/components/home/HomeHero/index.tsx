@@ -1,5 +1,6 @@
 /* * */
 
+import { VehicleBackground } from '@/components/home/VehicleBackground';
 import { IconBook, IconNews } from '@tabler/icons-react';
 import Link from 'next/link';
 
@@ -12,8 +13,10 @@ export function HomeHero() {
 		<section className={styles.container}>
 			<div className={styles.heroContainer}>
 
+				<VehicleBackground />
+
 				<h1 className={styles.title}>
-					Gestão em
+					Informação em
 					{' '}<span className={styles.titleBrand}>tempo real</span>
 					{' '}para operações de transporte público mais eficientes.
 				</h1>
