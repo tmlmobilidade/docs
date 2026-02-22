@@ -4,6 +4,7 @@ import { IconBook, IconNews } from '@tabler/icons-react';
 import Link from 'next/link';
 
 import styles from './styles.module.css';
+import { VehicleGrid } from './VehicleGrid';
 
 /* * */
 
@@ -11,6 +12,7 @@ export function HomeHero() {
 	return (
 		<section className={styles.container}>
 			<div className={styles.heroContainer}>
+				<VehicleGrid />
 
 				<h1 className={styles.title}>
 					Gestão em
