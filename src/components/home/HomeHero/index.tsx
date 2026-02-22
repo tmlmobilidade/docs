@@ -1,6 +1,8 @@
 /* * */
 
-import { IconBook, IconNews } from '@tabler/icons-react';
+import { BASE_OPTIONS } from '#/src/lib/settings';
+import { VehicleBackground } from '@/components/home/VehicleBackground';
+import { IconBolt, IconBook, IconNews } from '@tabler/icons-react';
 import Link from 'next/link';
 
 import styles from './styles.module.css';
@@ -12,8 +14,10 @@ export function HomeHero() {
 		<section className={styles.container}>
 			<div className={styles.heroContainer}>
 
+				<VehicleBackground />
+
 				<h1 className={styles.title}>
-					Gestão em
+					Informação em
 					{' '}<span className={styles.titleBrand}>tempo real</span>
 					{' '}para operações de transporte público mais eficientes.
 				</h1>
@@ -23,13 +27,17 @@ export function HomeHero() {
 				</p>
 
 				<div className={styles.buttonsContainer}>
+					<Link className={styles.button} href="/blog">
+						<IconNews size={20} />
+						Novidades
+					</Link>
 					<Link className={styles.button} href="/reference">
 						<IconBook size={20} />
 						Documentação
 					</Link>
-					<Link className={styles.button} href="/blog">
-						<IconNews size={20} />
-						Novidades
+					<Link className={styles.button} href={BASE_OPTIONS.go_url}>
+						<IconBolt size={20} />
+						Login
 					</Link>
 				</div>
 
