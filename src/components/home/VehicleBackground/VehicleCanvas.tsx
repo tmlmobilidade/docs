@@ -2,7 +2,7 @@
 
 /* * */
 
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { type GridPosition } from './types';
 import { findClosestNeighbors } from './utils';
@@ -15,14 +15,22 @@ interface VehicleCanvasProps {
 	width: number
 }
 
+interface TooltipData {
+	id: string
+	timestamp: number
+	tripId?: string
+	x: number
+	y: number
+}
+
 /* * */
 
 // Animation settings
 const ANIMATION_DURATION = 1_000; // ms
 const TRIANGLE_SIZE = 4;
 const LINE_WIDTH = 1;
-const DOT_COLOR = 'rgba(120, 170, 255, 0.3)';
-const LINE_COLOR = 'rgba(120, 170, 255, 0.2)';
+const DOT_COLOR = 'rgba(120, 170, 255, 0.6)';
+const LINE_COLOR = 'rgba(120, 170, 255, 0.3)';
 
 /* * */
 
@@ -36,6 +44,8 @@ interface AnimatedPosition extends GridPosition {
 	targetY: number
 }
 
+const HIT_RADIUS = 10; // Pixels for hover detection
+
 // Easing function for smooth animation
 function easeOutCubic(t: number): number {
 	return 1 - Math.pow(1 - t, 3);
@@ -47,6 +57,8 @@ export function VehicleCanvas({ height, positions, width }: VehicleCanvasProps) 
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const animatedPositionsRef = useRef<Map<string, AnimatedPosition>>(new Map());
 	const animationFrameRef = useRef<null | number>(null);
+	const currentPositionsRef = useRef<GridPosition[]>([]);
+	const [tooltip, setTooltip] = useState<null | TooltipData>(null);
 
 	// Get device pixel ratio for high DPI rendering
 	const dpr = typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1;
@@ -84,6 +96,8 @@ export function VehicleCanvas({ height, positions, width }: VehicleCanvasProps) 
 						targetBearing: pos.bearing,
 						targetX: pos.x,
 						targetY: pos.y,
+						timestamp: pos.timestamp,
+						tripId: pos.tripId,
 						x: currentX,
 						y: currentY,
 					});
@@ -103,6 +117,8 @@ export function VehicleCanvas({ height, positions, width }: VehicleCanvasProps) 
 					targetBearing: pos.bearing,
 					targetX: pos.x,
 					targetY: pos.y,
+					timestamp: pos.timestamp,
+					tripId: pos.tripId,
 					x: pos.x,
 					y: pos.y,
 				});
@@ -145,8 +161,11 @@ export function VehicleCanvas({ height, positions, width }: VehicleCanvasProps) 
 				const y = animPos.startY + (animPos.targetY - animPos.startY) * easedProgress;
 				const bearing = animPos.startBearing + (animPos.targetBearing - animPos.startBearing) * easedProgress;
 
-				currentPositions.push({ bearing, id: animPos.id, x, y });
+				currentPositions.push({ bearing, id: animPos.id, timestamp: animPos.timestamp, tripId: animPos.tripId, x, y });
 			}
+
+			// Store current positions for mouse hit detection
+			currentPositionsRef.current = currentPositions;
 
 			// Find closest neighbors and draw lines
 			const neighbors = findClosestNeighbors(currentPositions);
@@ -203,10 +222,96 @@ export function VehicleCanvas({ height, positions, width }: VehicleCanvasProps) 
 		};
 	}, [width, height, dpr]);
 
+	// Handle mouse move for tooltip
+	const handleMouseMove = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
+		const canvas = canvasRef.current;
+		if (!canvas) return;
+
+		const rect = canvas.getBoundingClientRect();
+		const mouseX = e.clientX - rect.left;
+		const mouseY = e.clientY - rect.top;
+
+		// Find closest vehicle within hit radius
+		let closestVehicle: GridPosition | null = null;
+		let closestDistance = HIT_RADIUS;
+
+		for (const pos of currentPositionsRef.current) {
+			const dx = pos.x - mouseX;
+			const dy = pos.y - mouseY;
+			const distance = Math.sqrt(dx * dx + dy * dy);
+
+			if (distance < closestDistance) {
+				closestDistance = distance;
+				closestVehicle = pos;
+			}
+		}
+
+		if (closestVehicle) {
+			setTooltip({
+				id: closestVehicle.id,
+				timestamp: closestVehicle.timestamp,
+				tripId: closestVehicle.tripId,
+				x: e.clientX - rect.left,
+				y: e.clientY - rect.top,
+			});
+		} else {
+			setTooltip(null);
+		}
+	}, []);
+
+	const handleMouseLeave = useCallback(() => {
+		setTooltip(null);
+	}, []);
+
+	// Format timestamp as relative time
+	const formatTimestamp = (ts: number) => {
+		const now = Date.now();
+		const diffMs = now - ts * 1000;
+		const diffSeconds = Math.floor(diffMs / 1000);
+
+		if (diffSeconds < 60) {
+			return `${diffSeconds}s ago`;
+		}
+
+		const diffMinutes = Math.floor(diffSeconds / 60);
+		if (diffMinutes < 60) {
+			return `${diffMinutes}m ago`;
+		}
+
+		const diffHours = Math.floor(diffMinutes / 60);
+		return `${diffHours}h ago`;
+	};
+
 	return (
-		<canvas
-			ref={canvasRef}
-			style={{ display: 'block', height: `${height}px`, width: `${width}px` }}
-		/>
+		<div style={{ height: `${height}px`, position: 'relative', width: `${width}px` }}>
+			<canvas
+				ref={canvasRef}
+				onMouseLeave={handleMouseLeave}
+				onMouseMove={handleMouseMove}
+				style={{ display: 'block', height: `${height}px`, pointerEvents: 'auto', width: `${width}px` }}
+			/>
+			{tooltip && (
+				<div
+					style={{
+						background: 'rgba(0, 0, 0, 0.85)',
+						borderRadius: '6px',
+						color: 'white',
+						fontFamily: 'system-ui, sans-serif',
+						fontSize: '12px',
+						left: tooltip.x + 10,
+						padding: '8px 12px',
+						pointerEvents: 'none',
+						position: 'absolute',
+						top: tooltip.y + 10,
+						whiteSpace: 'nowrap',
+						zIndex: 100,
+					}}
+				>
+					<div><strong>Veículo:</strong> {tooltip.id}</div>
+					<div><strong>Ping:</strong> {formatTimestamp(tooltip.timestamp)}</div>
+					{tooltip.tripId && <div><strong>Trip:</strong> {tooltip.tripId}</div>}
+				</div>
+			)}
+		</div>
 	);
 }

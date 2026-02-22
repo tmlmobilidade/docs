@@ -49,6 +49,8 @@ export function vehiclesToGridPositions(
 	return vehicles.map((vehicle): GridPosition => ({
 		bearing: vehicle.bearing ?? 0,
 		id: vehicle.id,
+		timestamp: vehicle.timestamp,
+		tripId: vehicle.trip_id,
 		// Longitude maps to X
 		x: offsetX + (vehicle.lon - minLon) * scale,
 		// Latitude maps to Y (inverted because Y increases downward in canvas)
