@@ -3,7 +3,7 @@ title: "Autocarros Elétricos na Carris Metropolitana — A Descarbonização em
 date: 2026-02-16
 description: "Quando a Carris Metropolitana arrancou em 2022, apresentou uma frota praticamente nova, com veículos com menos de um ano de idade. Agora, a aposta na eletrificação está a transformar essa frota jovem numa das mais sustentáveis do país."
 author: ISO
-cover: /docs/files/CampanhaDados_BannerWeb.png
+cover: /files/CampanhaDados_BannerWeb.png
 tags:
   - transportes
   - sustentabilidade

@@ -3,7 +3,7 @@ title: "Tarifário da Carris Metropolitana — Guia Completo do Passe Navegante"
 description: "Uma das maiores conquistas da reestruturação dos transportes na Área Metropolitana de Lisboa foi a simplificação tarifária. O passe Navegante e o tarifário da Carris Metropolitana são, provavelmente, o maior argumento a favor do transporte público na região."
 date: 2026-02-16
 author: ISO
-cover: /docs/files/CampanhaDados_BannerWeb.png
+cover: /files/CampanhaDados_BannerWeb.png
 tags:
   - transportes
   - lisboa

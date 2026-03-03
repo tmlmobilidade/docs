@@ -3,7 +3,7 @@ title: "Dados Abertos e API da Carris Metropolitana — Um Exemplo de Transparê
 date: 2026-02-16
 description: "Num setor tradicionalmente opaco, a Carris Metropolitana destaca-se pela sua aposta nos dados abertos. A disponibilização pública de feeds GTFS, uma API REST completa e documentação para programadores coloca-a como referência nacional — e, em certos aspetos, europeia — na abertura de dados de transporte público."
 author: ISO
-cover: /docs/files/CampanhaDados_BannerWeb.png
+cover: /files/CampanhaDados_BannerWeb.png
 tags:
   - transportes
   - dados-abertos
