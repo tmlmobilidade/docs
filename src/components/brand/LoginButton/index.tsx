@@ -1,12 +1,17 @@
 /* * */
 
 import { BASE_OPTIONS } from '@/lib/settings';
+import { cookies } from 'next/headers';
 
 import styles from './styles.module.css';
 
 /* * */
 
-export function LoginButton() {
+export async function LoginButton() {
+	const cookieStore = await cookies();
+	const hasSessionToken = Boolean(cookieStore.get('session_token'));
+	const label = hasSessionToken ? 'Entrar' : 'Login';
+
 	return (
 		<a
 			className={styles.container}
@@ -14,7 +19,7 @@ export function LoginButton() {
 			rel="noopener noreferrer"
 			target="_blank"
 		>
-			Login
+			{label}
 		</a>
 	);
 }
