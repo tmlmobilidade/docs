@@ -27,11 +27,11 @@ export function HomeHero() {
 				</p>
 
 				<div className={styles.buttonsContainer}>
-					<Link className={styles.button} href="/blog">
+					<Link className={styles.button} href="/lab">
 						<IconNews size={20} />
 						Novidades
 					</Link>
-					<Link className={styles.button} href="/reference">
+					<Link className={styles.button} href="/docs">
 						<IconBook size={20} />
 						Documentação
 					</Link>
