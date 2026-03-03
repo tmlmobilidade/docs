@@ -3,4 +3,18 @@ title: Sample Title
 description: Sample Description
 ---
 
-# Index
+# # Métrica: `demand_affected_by_failed_circulations_by_day`
+
+## Descrição
+
+A métrica **`demand_affected_by_failed_circulations_by_day`** estima o número de passageiros potencialmente afetados por falhas de circulação, agregado por **área de operação** e por **dia operacional**.
+
+O cálculo é feito da seguinte forma:
+
+1. São identificadas as circulações com falha (com base nas validações internas).
+    
+2. Para cada circulação falhada (definida por `pattern_id` + hora programada), é calculada a **mediana de passageiros observados nos 30 dias anteriores**, considerando a mesma área de operação e o mesmo `patternHour`.
+    
+3. Para cada dia operacional, soma-se a mediana estimada de todas as circulações falhadas desse dia.
+    
+4. O resultado é armazenado por área de operação, contendo todos os dias no campo `data`.
