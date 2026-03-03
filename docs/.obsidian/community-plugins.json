@@ -14,5 +14,6 @@
   "obsidian-desmos",
   "obsidian-linter",
   "edit-mdx",
-  "templater-obsidian"
+  "templater-obsidian",
+  "openapi-renderer"
 ]
