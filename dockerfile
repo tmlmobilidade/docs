@@ -12,37 +12,22 @@ ENV NEXT_PUBLIC_ENVIRONMENT=${ENVIRONMENT}
 
 
 # # #
-# GLOBAL DEPENDENCIES
-
-RUN npm install -g turbo@^2
-
-
-# # #
-# PRUNER STAGE
-
-FROM base AS pruner
-WORKDIR /app
-
-# Copy everything including package-lock.json from workflow cache
-COPY . .
-
-RUN turbo prune --scope=@tmlmobilidade/docs --docker
-
-
-# # #
 # BUILDER STAGE
 
 FROM base AS builder
 
+ARG MODULE
+ARG APP
+
 WORKDIR /app
 
 # First install the dependencies (as they change less often)
-COPY --from=pruner /app/out/json/ .
+COPY package.json package-lock.json ./
 RUN npm ci
 
 # Build the app
-COPY --from=pruner /app/out/full/ .
-RUN turbo run build --filter=@tmlmobilidade/docs
+COPY . .
+RUN npm run build
 
 
 # # #
@@ -58,8 +43,7 @@ RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 USER nextjs
 
-COPY --from=pruner --chown=nextjs:nodejs /app/assets ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./modules/${MODULE}/apps/${APP}/.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-CMD node /app/server.js
+CMD node server.js
