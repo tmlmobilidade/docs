@@ -11,7 +11,7 @@ A métrica **`demand_affected_by_failed_circulations_by_day`** estima o número 
 
 O cálculo é feito da seguinte forma:
 
-1. São identificadas as circulações com falha.
+1. São identificadas as circulações com falha (analysis.SIMPLE_ONE_APEX_VALIDATION.grade = "fail" e analysis.SIMPLE_THREE_VEHICLE_EVENTS.grade = "fail")
     
 2. Para cada circulação falhada (definida por `pattern_id` + `patternHour`), é calculada a **mediana de passageiros observados nos 30 dias anteriores**.
     
@@ -47,17 +47,14 @@ Para cada dia operacional (exemplo: `"20240101"`), existe um objeto com os segui
   "metric": "demand_affected_by_failed_circulations_by_day",
   "data": {
     "2024-01-01": {
-      "day_type": "3",
-      "holiday": "1",
-      "notes": "Dia de Ano Novo",
-      "period": "2",
-      "qty": 7909
+      "estimated_affected_passengers": 1843,  
+      "failed_circulations": 12  
     },
     "2024-01-02": { ... },
     "...": { ... }
   },
   "properties": {
-    "agency_id": "44"
+    "agency_id": "42"
   }
 }
 ```
