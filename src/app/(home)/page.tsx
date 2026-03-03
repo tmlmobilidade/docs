@@ -43,7 +43,7 @@ export default function Page() {
 						</div>
 						<Link
 							className="hidden items-center gap-1 text-sm font-medium text-brand hover:text-brand-secondary md:flex"
-							href="/blog"
+							href="/lab"
 						>
 							Ver todos
 							<ArrowRight className="size-3.5" />
@@ -60,7 +60,7 @@ export default function Page() {
 					<div className="mt-6 flex justify-center md:hidden">
 						<Link
 							className={cn(buttonVariants({ variant: 'outline' }), 'gap-2 text-sm')}
-							href="/blog"
+							href="/lab"
 						>
 							Ver todos os artigos
 							<ArrowRight className="size-3.5" />

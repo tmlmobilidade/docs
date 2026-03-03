@@ -22,12 +22,12 @@ export const NAVBAR_LINKS: LinkItemType[] = [
 	{
 		active: 'nested-url',
 		text: 'Novidades',
-		url: '/blog',
+		url: '/lab',
 	},
 	{
 		active: 'nested-url',
 		text: 'Documentação',
-		url: '/reference',
+		url: '/docs',
 	},
 	{
 		children: <LoginButton />,

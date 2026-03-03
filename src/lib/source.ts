@@ -7,12 +7,12 @@ import { toFumadocsSource } from 'fumadocs-mdx/runtime/server';
 /* * */
 
 export const sourceReference = loader({
-	baseUrl: '/reference',
+	baseUrl: '/docs',
 	source: reference.toFumadocsSource(),
 });
 
 export const sourceBlog = loader({
-	baseUrl: '/blog',
+	baseUrl: '/lab',
 	source: toFumadocsSource(blog, []),
 });
 
@@ -22,7 +22,7 @@ export function getPageImage(page: InferPageType<typeof sourceReference>) {
 	const segments = [...page.slugs, 'image.png'];
 	return {
 		segments,
-		url: `/og/reference/${segments.join('/')}`,
+		url: `/og/docs/${segments.join('/')}`,
 	};
 }
 

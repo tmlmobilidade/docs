@@ -27,8 +27,8 @@ export const reference = defineDocs({
 
 /** Doc roots: [dir under docs, URL path prefix] — wikilinks under each dir become /{urlPrefix}/... */
 const DOC_ROOTS: [string, string][] = [
-	['docs/reference', 'reference'],
-	['docs/blog', 'blog'],
+	['docs/reference', 'docs'],
+	['docs/blog', 'lab'],
 ];
 
 /** Rewrites Obsidian wikilink hrefs to Fumadocs paths (no .mdx), for reference, blog, etc. */
