@@ -17,7 +17,6 @@ export async function LoginButton() {
 			className={styles.container}
 			href={BASE_OPTIONS.go_url}
 			rel="noopener noreferrer"
-			target="_blank"
 		>
 			{label}
 		</a>
