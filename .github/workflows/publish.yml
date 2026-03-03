@@ -42,6 +42,6 @@ jobs:
         with:
           push: true
           file: ./dockerfile
-          tags: ghcr.io/tmlmobilidade/docs-frontend:${{ github.ref_name }}
+          tags: ghcr.io/tmlmobilidade/go-docs:${{ github.ref_name }}
           build-args: |
             ENVIRONMENT=${{ github.ref_name }}

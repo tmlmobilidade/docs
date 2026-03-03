@@ -22,7 +22,7 @@ ARG APP
 WORKDIR /app
 
 # First install the dependencies (as they change less often)
-COPY package.json package-lock.json ./
+COPY package.json package-lock.json source.config.ts next.config.mjs ./
 RUN npm ci
 
 # Build the app
