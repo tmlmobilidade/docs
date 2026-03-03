@@ -27,5 +27,37 @@ O cálculo é feito da seguinte forma:
 | `description`          | String   | Descrição da métrica.                                              |
 | `generated_at`         | DateTime | Data e hora em que o documento foi gerado.                         |
 | `metric`               | String   | Nome da métrica (`demand_affected_by_failed_circulations_by_day`). |
-| `data`                 | Objeto   | Objeto onde cada chave é um dia operacional (AAAA-MM-DD).          |
+| `data`                 | Objeto   | Objeto onde cada chave é um dia operacional (yyyymmdd).            |
 | `properties.agency_id` | String   | Identificador da área de operação (ex: `"44"`).                    |
+## Estrutura do campo "data"
+
+Para cada dia operacional (exemplo: `"20240101"`), existe um objeto com os seguintes campos:
+
+| Campo                           | Tipo   | Descrição                                                  |
+| ------------------------------- | ------ | ---------------------------------------------------------- |
+| `estimated_affected_passengers` | Número | Estimativa de passageiros afetados pelas falhas nesse dia. |
+| `failed_circulations`           | Número | Número de circulações distintas com falha nesse dia.       |
+## Exemplo Simplificado
+
+ ```json
+{
+  "_id": "69a5fc4380896089c50e3fa9",
+  "description": "Passenger impact (estimated) for agency 42 by operational day",
+  "generated_at": "2026-03-02T21:08:19.828+00:00",
+  "metric": "demand_affected_by_failed_circulations_by_day",
+  "data": {
+    "2024-01-01": {
+      "day_type": "3",
+      "holiday": "1",
+      "notes": "Dia de Ano Novo",
+      "period": "2",
+      "qty": 7909
+    },
+    "2024-01-02": { ... },
+    "...": { ... }
+  },
+  "properties": {
+    "agency_id": "44"
+  }
+}
+```
