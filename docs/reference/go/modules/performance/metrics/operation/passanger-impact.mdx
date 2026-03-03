@@ -7,14 +7,25 @@ description: Sample Description
 
 ## Descrição
 
-A métrica **`demand_affected_by_failed_circulations_by_day`** estima o número de passageiros potencialmente afetados por falhas de circulação, agregado por **área de operação** e por **dia operacional**.
+A métrica **`demand_affected_by_failed_circulations_by_day`** estima o número de passageiros potencialmente afetados por falhas de circulação, agregado por **agency_id** e por **dia operacional**.
 
 O cálculo é feito da seguinte forma:
 
-1. São identificadas as circulações com falha (com base nas validações internas).
+1. São identificadas as circulações com falha.
     
-2. Para cada circulação falhada (definida por `pattern_id` + hora programada), é calculada a **mediana de passageiros observados nos 30 dias anteriores**, considerando a mesma área de operação e o mesmo `patternHour`.
+2. Para cada circulação falhada (definida por `pattern_id` + `patternHour`), é calculada a **mediana de passageiros observados nos 30 dias anteriores**.
     
 3. Para cada dia operacional, soma-se a mediana estimada de todas as circulações falhadas desse dia.
     
-4. O resultado é armazenado por área de operação, contendo todos os dias no campo `data`.
+4. O resultado é armazenado por agency_id, contendo todos os dias no campo `data`.
+
+## Estrutura do Documento
+
+| Campo                  | Tipo     | Descrição                                                          |
+| ---------------------- | -------- | ------------------------------------------------------------------ |
+| `_id`                  | ObjectId | Identificador único do documento.                                  |
+| `description`          | String   | Descrição da métrica.                                              |
+| `generated_at`         | DateTime | Data e hora em que o documento foi gerado.                         |
+| `metric`               | String   | Nome da métrica (`demand_affected_by_failed_circulations_by_day`). |
+| `data`                 | Objeto   | Objeto onde cada chave é um dia operacional (AAAA-MM-DD).          |
+| `properties.agency_id` | String   | Identificador da área de operação (ex: `"44"`).                    |
