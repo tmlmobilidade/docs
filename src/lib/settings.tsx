@@ -4,13 +4,15 @@ import { GoLogo } from '@/components/brand/GoLogo';
 import { LoginButton } from '@/components/brand/LoginButton';
 import { type LinkItemType } from 'fumadocs-ui/utils/link-item';
 
+import { getCurrentEnvironment } from './environment';
+
 /* * */
 
 export const BASE_OPTIONS = {
 
 	github_url: 'https://github.com/tmlmobilidade',
 
-	go_url: 'https://go.tmlmobilidade.pt/auth',
+	go_url: getCurrentEnvironment() === 'development' ? 'http://localhost:51000/auth/login' : '/auth/login',
 
 	title: <GoLogo />,
 

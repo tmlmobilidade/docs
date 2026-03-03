@@ -37,7 +37,11 @@ FROM base AS runner
 
 WORKDIR /app
 
+
+
 ENV NODE_ENV=production
+ENV NEXT_PUBLIC_ENVIRONMENT=${ENVIRONMENT}
+ENV ENVIRONMENT=${ENVIRONMENT}
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
