@@ -11,7 +11,6 @@ tags:
   - navegante
   - carris-metropolitana
 ---
-
 # Tarifário da Carris Metropolitana — Guia Completo do Passe Navegante
 
 Uma das maiores conquistas da reestruturação dos transportes na Área Metropolitana de Lisboa foi a simplificação tarifária. O passe Navegante e o tarifário da Carris Metropolitana são, provavelmente, o maior argumento a favor do transporte público na região.
