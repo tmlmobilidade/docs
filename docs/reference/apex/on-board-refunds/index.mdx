@@ -9,7 +9,35 @@ de um título de bordo de uma viagem. Esse evento é transmitido como transaçã
 
 # Estrutura
 
-Campos que caracterizam um evento do tipo APEX on-board-refund
+Campos que caracterizam um evento do tipo APEX on-board-refund:
+
+| Nome do campo         | tipo de dado | descrição                                                                                                 |
+|-----------------------|--------------|-----------------------------------------------------------------------------------------------------------|
+| _id                   | GUID         | Identificador único do evento de reembolso.                                                               |
+| agency_id             |              | Identificador único do Operador.                                                                          |
+| apex_version          |              | Versão do protocolo APEX utilizado para comunicar o evento.                                               |
+| block_id              |              |                                                                                                           |
+| card_physical_type    | ENUM         | Tipo de suporte físico do cartão do passageiro.                                                           |
+| card_serial_number    |              | Número de série identificador do cartão associado ao evento.                                              |
+| created_at            |              | UNIX Timestamp em milisegundos do momento em que o evento foi criado no equipamento local.                |
+| device_id             | GUID         | Identificador único do validador.                                                                         |
+| duty_id               |              |                                                                                                           |
+| line_id               |              | Identificador da linha em que ocorreu o evento.                                                           |
+| mac_ase_counter_value |              |                                                                                                           |
+| mac_sam_serial_number |              |                                                                                                           |
+| on_board_sale_id      |              | Identificador da venda do título de bordo a que o reembolso está associado.                               |
+| pattern_id            |              | Código de identificação do percurso de viagem associado ao reembolso.                                     |
+| payment_method        | ENUM         | Modo de pagamento do reembolso.                                                                           |
+| price                 |              | Preço em céntimos de EUR, associado ao evento. O valor é negativo devido a ser uma operação de reembolso. |
+| product_long_id       | STRING       | Identificador do produto, ou seja, do tipo de título da viagem que está a ser reembolsada.                |
+| product_quantity      | NUM          | Número de unidades vendidas/carregadas no cartão reembolsadas.                                            |
+| received_at           |              | UNIX Timestamp em milisegundos do momento em que o evento foi recebido na central de base de dados.       |
+| stop_id               |              | Identificador único da paragem.                                                                           |
+| trip_id               |              | Identificador único da trip de um determinado plano de operação de um determinado operador.               |
+| updated_at            |              | UNIX Timestamp em milisegundos da última atualização deste refund.                                        |
+| validation_id         |              | Identificador único da validação.                                                                         |
+| vehicle_id            |              | Identificador do veículo, unívoco por operador.                                                           |
+
 
 ## Exemplo
 
