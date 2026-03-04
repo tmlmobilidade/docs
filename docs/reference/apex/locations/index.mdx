@@ -4,13 +4,26 @@ description: Simplified APEX Locations
 ---
 # O que são as transações de localização ?
 
-Correspondem a um dos tipos de transações utilizadas no sistema APEX, e são geradas pelos validadores a bordo dos veículos (através de cartão SAM) sempre que muda o contexto - paragem associada - de um determinado percurso. Assim, de forma simplificada, a cada circulação devem estar associadas um número de transações de localização igual ao número de paragens do seu percurso. Estas transações permitem a monitorização da realização de todo o percurso de uma circulação, e a sua estrutura de dados simplificada encontra-se descrita nesta secção.
+Correspondem a um dos tipos de transações utilizadas no sistema APEX, e são geradas pelos equipamentos embarcados dos veículos (através de cartão SAM) sempre que muda o contexto - paragem associada - de um determinado percurso. Assim, de forma simplificada, a cada circulação devem estar associadas um número de transações de localização igual ao número de paragens do seu percurso. Estas transações permitem a monitorização da realização de todo o percurso de uma circulação, e a sua estrutura de dados simplificada encontra-se descrita nesta secção.
 
 # A estrutura
 
 Por forma a serem corretamente contabilizadas/utilizadas, são essenciais para este tipo de transações os seguintes campos:
-	identificador único da transação
-	
+
+- identificador único da transação
+- código do Operador de transporte
+- versão da APEX em utilização
+- *timestamp* (data+hora) da geração da transação
+- identificador do equipamento embarcado que gerou a transação
+- código da linha
+- código do percurso
+- código da circulação
+- código da paragem
+- identificador do veículo
+- _timestamp_ (data+hora) da integração da transação nos sistemas da TML
+- identificador do número de série do cartão SAM que gerou a transação
+- número de contador incremental associado à transação, que permite a avaliação da sequencialidade das transações geradas por aquele cartão SAM
+
 
 
 O GO está intimamente relacionado com a APEX, permitindo uma enorme agilidade no consumo de todas as informações que este sistema permite. Tendo a APEX com múltiplas utilizações, foram criadas várias estruturas de dados simplificadas, que aqui documentamos, para permitir ainda mais agilidade na disponibilização de relatórios e cálculos operacionais. Estas estruturas têm as propriedades essenciais de cada um dos tipos de transações para permitir uma rápida extração de informações sobre a procura do sistema de transportes — passageiros transportados, consolidação de valores, pressão sobre determinados percursos, e muitos outros.
