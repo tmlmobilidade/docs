@@ -1,6 +1,6 @@
 ---
 title: supply_by_agency
-description: Agrega métricas de oferta operacional por agency_id, podendo estar ao nível diário, mensal ou anual. A métrica inclui o volume de viagens, quilómetros, receita e custo estimado.
+description: Agrega métricas de oferta operacional por agency_id, diariamente, mensalmente e anualmente e inclui o volume de circulações, quilómetros, receita e custo estimado.
 ---
 ## Estrutura do Documento
 
@@ -17,14 +17,14 @@ description: Agrega métricas de oferta operacional por agency_id, podendo estar
 
 Para cada período (exemplo: `"2024-01-01"`, `"2024-01"` ou `"2024"`), existe um objeto com os seguintes campos:
 
-| Campo                | Tipo   | Descrição                                        |
-| -------------------- | ------ | ------------------------------------------------ |
-| `scheduled_rides`    | Número | Número total de circulações programadas.         |
-| `accomplished_rides` | Número | Número de circulações válidas (`grade = pass`).  |
-| `vkms_scheduled`     | Número | Soma de quilómetros programados.                 |
-| `vkms_observed`      | Número | Soma de quilómetros observados (apenas válidos). |
-| `revenue_per_trip`   | Número | Receita total agregada no período.               |
-| `cost_per_trip`      | Número | Custo total estimado no período.                 |
+| Campo                | Tipo   | Descrição                                                                             |
+| -------------------- | ------ | ------------------------------------------------------------------------------------- |
+| `scheduled_rides`    | Número | Número total de circulações programadas.                                              |
+| `accomplished_rides` | Número | Número de circulações válidas (`$analysis.SIMPLE_THREE_VEHICLE_EVENTS.grade = pass`). |
+| `vkms_scheduled`     | Número | Soma de quilómetros programados.                                                      |
+| `vkms_observed`      | Número | Soma de quilómetros observados.                                                       |
+| `revenue_per_trip`   | Número | Receita total agregada no período.                                                    |
+| `cost_per_trip`      | Número | Custo total estimado no período.                                                      |
 ## Exemplo Simplificado
 
 ```json
