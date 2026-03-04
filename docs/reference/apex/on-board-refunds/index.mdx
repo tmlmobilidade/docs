@@ -5,19 +5,15 @@ description: Descrição dos campos associados a um evento de Reembolso de bordo
 # O que é um Reembolso?
 
 Reembolso é um evento referente a uma devolução de uma compra 
-de um título de bordo de uma viagem. Esse evento é transmitido como transação APEX do tipo refund, com um conjunto de campos próprios que 
+de um título de bordo de uma viagem. Esse evento é transmitido como transação APEX do tipo refund, com um conjunto de campos próprios que caracterizam um evento desse tipo.
 
-# A bilhética no GO
+# Estrutura
 
-O GO está intimamente relacionado com a APEX, permitindo uma enorme agilidade no consumo de todas as informações que um sistema de bilhética unificado torna possível. A APEX descreve o catálogo de "produtos" disponíveis num sistema de transportes: a analogia mais simples será a de uma loja online, onde é possível adquirir um enorme número de itens, cada um com uma configuração específica. Aqui o processo é exato, mas me vez de t-shirts com múltiplas utilizações, foram criadas várias estruturas de dados simplificadas, que aqui documentamos, para permitir ainda mais agilidade na disponibilização de relatórios e cálculos operacionais. Estas estruturas têm as propriedades essenciais de cada um dos tipos de transações para permitir uma rápida extração de informações sobre a procura do sistema de transportes — passageiros transportados, consolidação de valores, pressão sobre determinados percursos, e muitos outros.
+Campos que caracterizam um evento do tipo APEX on-board-refund
 
-# Tudo são transações
+## Exemplo
 
-A APEX é uma biblioteca de software que é instalada nos softwares dos validadores. É um API local que "descodifica" as mensagens que são trocadas entre os cartões navegante® e o leitor NFC do validador. A biblioteca APEX implementa o standard internacional Calypso que define o tipo de comunicações, assim como as estruturas dos dados que ficam guardados nos cartões e são processados pelos validadores.
-
-Sempre que um cartão navegante® se encosta a um validador, é gerada uma transação. Estas transações não são mais do que ficheiros de texto que contêm todas as informações necessárias para descrever a ação que acabou de ocorrer. Por exemplo, quando um cartão navegante® toca no validador de um autocarro é gerada uma **transação de validação**, onde ficam registadas informações como o ID da Linha (ex: 1715), o ID do veículo, a data e hora, o número do cartão, o título utilizado para "validar" o acesso, e muitos outros dados essenciais para as equipas de gestão.
-
-Aqui está um exemplo de uma transação de on-board-refund APEX:
+Aqui está um exemplo de uma transação APEX de on-board-refund:
 
 ```json
 {
@@ -50,8 +46,3 @@ Aqui está um exemplo de uma transação de on-board-refund APEX:
 }
 ```
 
-Existem vários tipos de transações, onde cada uma representa um tipo de ação em particular (venda de bilhete, carregamento de zapping, etc.). Cada tipo de transação tem uma estrutura própria, e todas relacionam-se entre si através de propriedades comuns.
-
-Nesta secção vamos focar-nos nas propriedades principais dos tipos de transação principais.
-
-O GO está intimamente relacionado com a APEX, permitindo uma enorme agilidade no consumo de todas as informações que este sistema permite. Tendo a APEX com múltiplas utilizações, foram criadas várias estruturas de dados simplificadas, que aqui documentamos, para permitir ainda mais agilidade na disponibilização de relatórios e cálculos operacionais. Estas estruturas têm as propriedades essenciais de cada um dos tipos de transações para permitir uma rápida extração de informações sobre a procura do sistema de transportes — passageiros transportados, consolidação de valores, pressão sobre determinados percursos, e muitos outros.
