@@ -2,7 +2,8 @@
 
 import { sourceReference } from '@/lib/source';
 // import { getGithubLastEdit } from 'fumadocs-core/content/github';
-import defaultMdxComponents from 'fumadocs-ui/mdx';
+import { APIPage } from '@/components/api/api-page';
+import { getMDXComponents } from '@/mdx-components';
 import { DocsBody, DocsDescription, DocsPage, DocsTitle } from 'fumadocs-ui/page';
 import { notFound } from 'next/navigation';
 
@@ -53,15 +54,32 @@ export default async function Page(props: { params: Promise<{ slug?: string[] }>
 	// 	repo: 'docs',
 	// });
 
-	const MDX = page.data.body;
-
 	//
 	// C. Render components
 
+	if (page.data.type === 'openapi') {
+		return (
+			<DocsPage
+				editOnGithub={editOnGithubOptions}
+				tableOfContent={{ enabled: true, style: 'clerk' }}
+				toc={undefined}
+				full
+			>
+				<div>
+					<DocsTitle>{page.data.title}</DocsTitle>
+					<DocsDescription className="text-md mb-4">{page.data.description}</DocsDescription>
+				</div>
+				<DocsBody>
+					<APIPage {...page.data.getAPIPageProps()} />
+				</DocsBody>
+			</DocsPage>
+		);
+	}
+
+	const MDX = page.data.body;
 	return (
 		<DocsPage
 			editOnGithub={editOnGithubOptions}
-			// lastUpdate={new Date(lastUpdateOptions ?? 0)}
 			toc={page.data.toc}
 			tableOfContent={{
 				enabled: true,
@@ -74,7 +92,7 @@ export default async function Page(props: { params: Promise<{ slug?: string[] }>
 				<DocsDescription className="text-md mb-4">{page.data.description}</DocsDescription>
 			</div>
 			<DocsBody>
-				<MDX components={{ ...defaultMdxComponents }} />
+				<MDX components={getMDXComponents()} />
 			</DocsBody>
 		</DocsPage>
 	);

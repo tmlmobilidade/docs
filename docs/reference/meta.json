@@ -6,7 +6,9 @@
     "---GTFS---",
     "...gtfs",
     "---APEX---",
-    "...apex"
+    "...apex",
+    "---API---",
+    "...api"
   ],
   "root": true
 }

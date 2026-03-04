@@ -1,0 +1,246 @@
+{
+  "main": {
+    "id": "66916c1d35a574a3",
+    "type": "split",
+    "children": [
+      {
+        "id": "342e0a9cc410ae5e",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "73f70a3eef463399",
+            "type": "leaf",
+            "state": {
+              "type": "openapi-view",
+              "state": {
+                "file": "docs/reference/api/openapi-spec.yaml"
+              },
+              "icon": "circle-dot",
+              "title": "OpenAPI View: openapi-spec.yaml"
+            }
+          },
+          {
+            "id": "7a8ab176a1a91572",
+            "type": "leaf",
+            "state": {
+              "type": "openapi-view",
+              "state": {
+                "file": "docs/reference/api/openapi-spec.yaml"
+              },
+              "icon": "circle-dot",
+              "title": "OpenAPI View: openapi-spec.yaml"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "28f828326c957ee8",
+    "type": "split",
+    "children": [
+      {
+        "id": "f6de27c8666d3850",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "3ec2a7bc857849fa",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "75ca0b12a9c9f552",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "ef97dcbd59142605",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "10640eeb314522ab",
+    "type": "split",
+    "children": [
+      {
+        "id": "aaa8ac52be72b72f",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "9fbc823bc4256624",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "docs/reference/api/openapi-spec.yaml",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": true,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for openapi-spec"
+            }
+          },
+          {
+            "id": "99eb4fa837edc371",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "docs/blog/tarifario-passe-navegante.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from tarifario-passe-navegante"
+            }
+          },
+          {
+            "id": "0a92f2235265e872",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "df7de81d628ae3f4",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "3132f537b61b31c7",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "docs/blog/tarifario-passe-navegante.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of tarifario-passe-navegante"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false,
+      "openapi-renderer:Open OpenAPI Entry View": false
+    }
+  },
+  "active": "3ec2a7bc857849fa",
+  "lastOpenFiles": [
+    "src/components/api/api-page.tsx",
+    "src/components/api",
+    "node_modules/fumadocs-openapi/node_modules/lucide-react/dynamicIconImports.d.ts",
+    "node_modules/fumadocs-openapi/node_modules/lucide-react/dynamic.d.ts",
+    "node_modules/fumadocs-openapi/node_modules/lucide-react/dynamicIconImports.mjs",
+    "node_modules/fumadocs-openapi/node_modules/lucide-react/dynamic.mjs",
+    "node_modules/fumadocs-openapi/node_modules/lucide-react/README.md",
+    "node_modules/@shikijs/langs/dist/nextflow-groovy.d.mts",
+    "node_modules/@shikijs/langs/dist/just.d.mts",
+    "node_modules/@shikijs/langs/dist/bird2.d.mts",
+    "node_modules/@shikijs/langs/dist/bird.d.mts",
+    "node_modules/fumadocs-openapi/node_modules/lucide-react/package.json",
+    "node_modules/fumadocs-core/node_modules/@shikijs/engine-javascript/README.md",
+    "node_modules/fumadocs-core/node_modules/@shikijs/engine-oniguruma/README.md",
+    "node_modules/fumadocs-core/node_modules/@shikijs/langs/README.md",
+    "node_modules/fumadocs-core/node_modules/@shikijs/themes/README.md",
+    "node_modules/@scalar/openapi-types/README.md",
+    "node_modules/@scalar/openapi-types/CHANGELOG.md",
+    "node_modules/@fumari/json-schema-ts/LICENCE.md",
+    "node_modules/@scalar/helpers/CHANGELOG.md",
+    "node_modules/@scalar/openapi-upgrader/README.md",
+    "node_modules/@scalar/openapi-upgrader/CHANGELOG.md",
+    "node_modules/fumadocs-core/node_modules/shiki/README.md",
+    "node_modules/@scalar/json-magic/README.md",
+    "node_modules/@scalar/json-magic/CHANGELOG.md",
+    "node_modules/fumadocs-openapi/node_modules/ajv/README.md",
+    "node_modules/react-hook-form/README.md",
+    "node_modules/yaml/README.md",
+    "node_modules/fast-xml-parser/README.md",
+    "node_modules/fast-xml-parser/CHANGELOG.md",
+    "node_modules/esrap/README.md",
+    "node_modules/openapi-sampler/README.md",
+    "node_modules/json-pointer/Readme.md",
+    "node_modules/fast-xml-builder/README.md",
+    "node_modules/sax/README.md",
+    "node_modules/fast-xml-builder/CHANGELOG.md",
+    "node_modules/json-pointer/coverage/lcov-report/sort-arrow-sprite.png",
+    "node_modules/@tabler/icons/icons/filled/zoom.svg",
+    "node_modules/@tabler/icons/icons/filled/zoom-scan.svg",
+    "node_modules/@tabler/icons/icons/filled/zoom-question.svg",
+    "node_modules/@tabler/icons/icons/filled/zoom-out.svg",
+    "node_modules/@tabler/icons/icons/filled/zoom-pan.svg",
+    "node_modules/@tabler/icons/icons/filled/zoom-out-area.svg",
+    "node_modules/@tabler/icons/icons/filled/zoom-money.svg",
+    "node_modules/@tabler/icons/icons/filled/zoom-in.svg",
+    "node_modules/@tabler/icons/icons/filled/zoom-in-area.svg",
+    "Untitled.canvas"
+  ]
+}

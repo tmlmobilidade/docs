@@ -1,14 +1,22 @@
 /* * */
 
 import { blog, reference } from '#/.source/server';
-import { type InferPageType, loader } from 'fumadocs-core/source';
+import { type InferPageType, loader, multiple } from 'fumadocs-core/source';
 import { toFumadocsSource } from 'fumadocs-mdx/runtime/server';
+import { openapiPlugin, openapiSource } from 'fumadocs-openapi/server';
+
+import { openapi } from './openapi';
 
 /* * */
 
-export const sourceReference = loader({
+export const sourceReference = loader(multiple({
+	docs: reference.toFumadocsSource(),
+	openapi: await openapiSource(openapi, {
+		baseDir: 'openapi',
+	}),
+}), {
 	baseUrl: '/docs',
-	source: reference.toFumadocsSource(),
+	plugins: [openapiPlugin()],
 });
 
 export const sourceBlog = loader({
@@ -27,7 +35,7 @@ export function getPageImage(page: InferPageType<typeof sourceReference>) {
 }
 
 export async function getLLMText(page: InferPageType<typeof sourceReference>) {
-	const processed = await page.data.getText('processed');
+	const processed = page.data.type === 'docs' ? await page.data.getText('processed') : '';
 	return `#${page.data.title}\n\n${processed}`;
 }
 
