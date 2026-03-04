@@ -4,7 +4,9 @@ description: Simplified APEX Locations
 ---
 # O que são as transações de localização ?
 
-Correspondem a um dos tipos de transações utilizadas no sistema APEX, e são geradas pelos equipamentos embarcados dos veículos (através de cartão SAM) sempre que muda o contexto - paragem associada - de um determinado percurso. Assim, de forma simplificada, a cada circulação devem estar associadas um número de transações de localização igual ao número de paragens do seu percurso. Estas transações permitem a monitorização da realização de todo o percurso de uma circulação, e a sua estrutura de dados simplificada encontra-se descrita nesta secção.
+Correspondem a um dos tipos de transações utilizadas no sistema APEX, e são geradas pelos equipamentos embarcados dos veículos (através de cartão SAM) sempre que muda o contexto - paragem associada - de um determinado percurso. Assim, de forma simplificada, a cada circulação devem estar associadas um número de transações de localização igual ao número de paragens do seu percurso.
+
+Estas transações permitem registar e validar a posição geográfica do veículo, e a estrutura de dados simplificada utilizada no GO encontra-se descrita nesta secção.
 
 # A estrutura
 
@@ -45,4 +47,4 @@ Em seguida apresenta-se um exemplo de uma transação de localização de acordo
 }
 ```
 
-
+Estas transações permitem, entre outras operações, a monitorização da realização de todo o percurso de uma circulação ou, através da análise de sequencialidade das mesmas, a deteção de períodos de downtime dos equipamentos embarcados.
