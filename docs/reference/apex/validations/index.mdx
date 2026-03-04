@@ -6,7 +6,7 @@ description: Um poderoso e versátil sistema de bilhética.
 
 Correspondem a um dos tipos de transações utilizadas no sistema APEX, e são geradas pelos equipamentos embarcados dos veículos sempre que um passageiro efetua a validação do seu título de transporte (passe/zapping) ou compra de bilhete de bordo (quando aplicável).
 
-Estas transações permitem registar e validar cada entrada/saíde de um passageiro, e a estrutura de dados simplificada utilizada no GO encontra-se descrita nesta secção.
+Estas transações permitem registar e validar cada entrada/saída de um passageiro do sistema, e a estrutura de dados simplificada utilizada no GO encontra-se descrita nesta secção.
 
 # A estrutura
 
@@ -30,20 +30,29 @@ Em seguida apresenta-se um exemplo de uma transação de localização de acordo
 
 ```json
 {
-  "_id": "68B05DBA-0082-40AE-B930-C8256404B879",
-  "agency_id": "42",
+  "_id": "68B05E2F-0186-40AE-8130-CA2B1F00749C",
+  "agency_id": "43",
   "apex_version": "3.2.0",
-  "created_at": 1756388794000,
-  "device_id": "sibelius_35400000302",
-  "line_id": "2016",
-  "mac_ase_counter_value": 309369,
-  "mac_sam_serial_number": 0000000000,
-  "pattern_id": "2016_0_1",
-  "received_at": 1756388980213,
-  "stop_id": "070474",
-  "trip_id": "2016_0_1|140|3|1430",
-  "updated_at": 1756388980213,
-  "vehicle_id": 1186
+  "card_serial_number": "00000000C2EF2ED0",
+  "category": "subscription",
+  "created_at": 1756388910000,
+  "device_id": "berlioz_38000145",
+  "event_type": 1,
+  "is_passenger": true,
+  "line_id": "3110",
+  "mac_ase_counter_value": 29852,
+  "mac_sam_serial_number": 2932484895,
+  "on_board_refund_id": null,
+  "on_board_sale_id": null,
+  "pattern_id": "3110_0_2",
+  "product_id": "id-prod-navegante-65",
+  "received_at": 1756389000901,
+  "stop_id": "140417",
+  "trip_id": "3110_0_2_1430_1459_0_VER_DU",
+  "units_qty": null,
+  "updated_at": 1769404864734,
+  "validation_status": 0,
+  "vehicle_id": 2387
 }
 ```
 
