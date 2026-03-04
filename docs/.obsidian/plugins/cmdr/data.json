@@ -3,7 +3,26 @@
   "showAddCommand": true,
   "debug": false,
   "editorMenu": [],
-  "fileMenu": [],
+  "fileMenu": [
+    {
+      "id": "markdown:add-metadata-property",
+      "icon": "lucide-plus-circle",
+      "name": "Adicionar propriedade ao ficheiro",
+      "mode": "any"
+    },
+    {
+      "id": "markdown:add-metadata-property",
+      "icon": "lucide-plus-circle",
+      "name": "Adicionar propriedade ao ficheiro",
+      "mode": "any"
+    },
+    {
+      "id": "markdown:add-metadata-property",
+      "icon": "lucide-plus-circle",
+      "name": "Propriedades",
+      "mode": "any"
+    }
+  ],
   "leftRibbon": [],
   "rightRibbon": [],
   "titleBar": [],
