@@ -4,7 +4,7 @@ description: Um poderoso e versátil sistema de bilhética.
 ---
 # O que são as transações de validação ?
 
-Correspondem a um dos tipos de transações utilizadas no sistema APEX, e são geradas pelos equipamentos embarcados dos veículos sempre que um passageiro efetua a validação do seu título de transporte (passe/zapping) ou compra de bilhete de bordo (quando aplicável).
+Correspondem a um dos tipos de transações utilizadas no sistema APEX, e são geradas pelos equipamentos embarcados dos veículos sempre que um passageiro efetua a validação do seu título de transporte (passe/zapping) ou compra de bilhete de bordo.
 
 Estas transações permitem registar e validar cada entrada/saída de um passageiro do sistema, e a estrutura de dados simplificada utilizada no GO encontra-se descrita nesta secção.
 
@@ -18,11 +18,11 @@ Por forma a serem corretamente contabilizadas/utilizadas, são essenciais para e
 | agency_id             |              | código do Operador de transporte                                                                                                                                                    |
 | apex_version          |              | versão da APEX em utilização                                                                                                                                                        |
 | card_serial_number    |              | número de série do título de transporte do passageiro (codificado)                                                                                                                  |
-| category              |              | categoria do tipo de título de transporte utilizado:<br>ocasional a bordo - on_board_sale<br>ocasional pré-pago - prepaid<br>passe mensal - subscription                            |
+| category              |              | categoria do tipo de título de transporte utilizado:<br>ocasional a bordo -> on_board_sale<br>ocasional pré-pago -> prepaid<br>passe mensal -> subscription                         |
 | created_at            |              | _timestamp_ (data+hora) da geração da transação                                                                                                                                     |
 | device_id             |              | identificador do equipamento embarcado que gerou a transação                                                                                                                        |
-| event_type            |              | tipo de validação (entrada/saída/reentrada/entrada com recuperação)                                                                                                                 |
-| is_passenger          |              | verificação de que 1) a validação é válida e 2) não tem uma anulação associada (para aferição do número de passageiros transportados)                                               |
+| event_type            | ENUM         | tipo de validação (entrada/saída/reentrada/entrada com recuperação)                                                                                                                 |
+| is_passenger          | BOOLEAN      | verificação de que 1) a validação é válida e 2) não tem uma anulação associada (para aferição do número de passageiros transportados)                                               |
 | line_id               |              | código identifiador da linha                                                                                                                                                        |
 | pattern_id            |              | código identificador do percurso                                                                                                                                                    |
 | trip_id               |              | código identificador da circulação                                                                                                                                                  |
