@@ -1,7 +1,7 @@
 /* * */
 
-import { BASE_OPTIONS } from '@/lib/settings';
 import { VehicleBackground } from '@/components/home/VehicleBackground';
+import { BASE_OPTIONS } from '@/lib/settings';
 import { IconBolt, IconBook, IconNews } from '@tabler/icons-react';
 import Link from 'next/link';
 

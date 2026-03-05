@@ -1,7 +1,6 @@
 /* * */
 
 import { IconArrowRight } from '@tabler/icons-react';
-import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
 import styles from './styles.module.css';
@@ -14,7 +13,7 @@ interface LabHeaderProps {
 
 /* * */
 
-export function LabListHeader({ withViewAllLink = true }: LabHeaderProps) {
+export function LabListHeader({ withViewAllLink }: LabHeaderProps) {
 	return (
 		<div className={styles.container}>
 

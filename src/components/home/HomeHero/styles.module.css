@@ -3,6 +3,7 @@
 
 .container {
 	position: relative;
+	width: 100%;
 	max-width: 1400px;
 	padding-right: 1rem;
 	padding-left: 1rem;
