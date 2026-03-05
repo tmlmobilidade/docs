@@ -2,6 +2,7 @@
   "pages": [
     "index",
     "modules",
-    "tools"
+    "tools",
+    "infra"
   ]
 }
