@@ -27,7 +27,7 @@ export const reference = defineDocs({
 
 /** Doc roots: [dir under docs, URL path prefix] — wikilinks under each dir become /{urlPrefix}/... */
 const DOC_ROOTS: [string, string][] = [
-	['docs/reference', 'docs'],
+	['docs/reference', 'reference'],
 	['docs/lab', 'lab'],
 ];
 
@@ -83,6 +83,7 @@ export const lab = defineCollections({
 		author: z.string(),
 		cover: z.string(),
 		date: z.iso.date().or(z.date()),
+		published: z.boolean().default(false),
 		tags: z.array(z.string()),
 	}),
 	type: 'doc',

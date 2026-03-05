@@ -23,13 +23,13 @@ export const BASE_OPTIONS = {
 export const NAVBAR_LINKS: LinkItemType[] = [
 	{
 		active: 'nested-url',
-		text: 'Novidades',
+		text: 'Laboratório',
 		url: '/lab',
 	},
 	{
 		active: 'nested-url',
 		text: 'Documentação',
-		url: '/docs',
+		url: '/reference',
 	},
 	{
 		children: <LoginButton />,
