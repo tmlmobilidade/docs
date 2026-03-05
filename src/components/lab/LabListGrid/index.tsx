@@ -6,13 +6,13 @@ import { sourceLab } from '@/lib/source';
 
 /* * */
 
-interface LabArticlesGridProps {
+interface LabListGridProps {
 	limit?: number
 }
 
 /* * */
 
-export function LabArticlesGrid({ limit }: LabArticlesGridProps) {
+export function LabListGrid({ limit }: LabListGridProps) {
 	//
 
 	//

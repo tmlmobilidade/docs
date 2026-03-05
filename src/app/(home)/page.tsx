@@ -1,7 +1,7 @@
 /* * */
 
 import { HomeHero } from '@/components/home/HomeHero';
-import { LabArticlesGrid } from '@/components/lab/LabArticlesGrid';
+import { LabListGrid } from '@/components/lab/LabListGrid';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/cn';
 import { BASE_OPTIONS, NAVBAR_LINKS } from '@/lib/settings';
@@ -42,7 +42,7 @@ export default function Page() {
 						</Link>
 					</div>
 
-					<LabArticlesGrid limit={4} />
+					<LabListGrid limit={4} />
 
 					{/* Mobile "ver todos" link */}
 					<div className="mt-6 flex justify-center md:hidden">
