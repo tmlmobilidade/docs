@@ -12,38 +12,22 @@ Estas transações permitem registar e validar a posição geográfica do veícu
 
 Por forma a serem corretamente contabilizadas/utilizadas, são essenciais para este tipo de transações os seguintes campos:
 
-- 
-- 
-- 
-- 
-- 
-- 
-- 
-- 
-- 
-- identificador do veículo
-- _timestamp_ (data+hora) da integração da transação nos sistemas da TML
-- identificador do número de série do cartão SAM que gerou a transação
-- número de contador incremental associado à transação, que permite a avaliação da sequencialidade das transações geradas por aquele cartão SAM
+| Nome do Campo         | Tipo de dado | Descrição                                                                                                                                                                           |
+| --------------------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| id                    |              | identificador único da transação                                                                                                                                                    |
+| agency_id             |              | código do Operador de transporte                                                                                                                                                    |
+| apex_version          |              | versão da APEX em utilização                                                                                                                                                        |
+| created_at            |              | _timestamp_ (data+hora) da geração da transação                                                                                                                                     |
+| device_id             |              | identificador do equipamento embarcado que gerou a transação                                                                                                                        |
+| line_id               |              | código identificador da linha                                                                                                                                                       |
+| pattern_id            |              | código identificador do percurso                                                                                                                                                    |
+| trip_id               |              | código identificador da circulação                                                                                                                                                  |
+| stop_id               |              | código identificador da paragem                                                                                                                                                     |
+| vehicle_id            |              | identificador do veículo                                                                                                                                                            |
+| updated_at            |              | _timestamp_ (data+hora) da integração da transação nos sistemas da TML                                                                                                              |
+| mac_sam_serial_number |              | identificador do número de série do cartão SAM que gerou a transação                                                                                                                |
+| mac_ase_counter_value |              | número de contador incremental associado à transação, atribuído pelo equipamento embarcado, que permite a avaliação da sequencialidade das transações geradas por aquele cartão SAM |
 
-
-
-| Nome do Campo | Tipo de dado | Descrição                                                    |
-| ------------- | ------------ | ------------------------------------------------------------ |
-|               |              | identificador único da transação                             |
-|               |              | código do Operador de transporte                             |
-|               |              | versão da APEX em utilização                                 |
-|               |              | _timestamp_ (data+hora) da geração da transação              |
-|               |              | identificador do equipamento embarcado que gerou a transação |
-|               |              | código da linha                                              |
-|               |              | código do percurso                                           |
-|               |              | código da circulação                                         |
-|               |              | código da paragem                                            |
-|               |              |                                                              |
-|               |              |                                                              |
-|               |              |                                                              |
-|               |              |                                                              |
-|               |              |                                                              |
 
 
 
@@ -69,4 +53,4 @@ Em seguida apresenta-se um exemplo de uma transação de localização de acordo
 }
 ```
 
-Estas transações permitem, entre outras operações, a monitorização da realização de todo o percurso de uma circulação ou, através da análise de sequencialidade das mesmas com os restantes tipos de transações, a deteção de períodos de downtime dos equipamentos embarcados.
+Estas transações permitem, entre outras operações, a monitorização da realização de todo o percurso de uma circulação ou, através da análise de sequencialidade das mesmas em conjunto com os restantes tipos de transações, a deteção de períodos de downtime dos equipamentos embarcados.
