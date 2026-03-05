@@ -1,13 +1,13 @@
 {
-  "$schema": "node_modules/@fumadocs/cli/dist/schema/src.json",
-  "aliases": {
-    "blockDir": "./components",
-    "componentsDir": "./components",
-    "cssDir": "./styles",
-    "libDir": "./lib",
-    "uiDir": "./components/ui"
-  },
-  "baseDir": "src",
-  "commands": {},
-  "uiLibrary": "radix-ui"
+	"$schema": "node_modules/@fumadocs/cli/dist/schema/src.json",
+	"aliases": {
+		"blockDir": "./components",
+		"componentsDir": "./components",
+		"cssDir": "./styles",
+		"libDir": "./lib",
+		"uiDir": "./components/ui"
+	},
+	"baseDir": "src",
+	"commands": {},
+	"uiLibrary": "radix-ui"
 }

@@ -29,9 +29,9 @@ export function HomeHero() {
 				<div className={styles.buttonsContainer}>
 					<Link className={styles.button} href="/lab">
 						<IconNews size={20} />
-						Novidades
+						Laboratório
 					</Link>
-					<Link className={styles.button} href="/docs">
+					<Link className={styles.button} href="/reference">
 						<IconBook size={20} />
 						Documentação
 					</Link>

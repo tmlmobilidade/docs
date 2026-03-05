@@ -1,23 +1,22 @@
 /* * */
 
-import { next } from '@carrismetropolitana/eslint'
+import { next } from '@tmlmobilidade/eslint';
 
 /* * */
 
 export default [
-  { ignores: ['*.mjs'] },
-  ...next,
-  {
-    rules: {
-      '@typescript-eslint/naming-convention': [
-        'error',
-        {
-          format: ['camelCase', 'PascalCase'],
-          leadingUnderscore: 'require',
-          modifiers: ['private'],
-          selector: 'memberLike',
-        },
-      ],
-    },
-  },
-]
+	...next,
+//   {
+//     rules: {
+//       '@typescript-eslint/naming-convention': [
+//         'error',
+//         {
+//           format: ['camelCase', 'PascalCase'],
+//           leadingUnderscore: 'require',
+//           modifiers: ['private'],
+//           selector: 'memberLike',
+//         },
+//       ],
+//     },
+//   },
+];
