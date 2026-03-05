@@ -5,12 +5,12 @@ description: Arquitectura do cluster Kubernetes do projecto GO, alojado no Oracl
 
 ## Visão Geral
 
-O cluster Kubernetes do GO corre no **Oracle Kubernetes Engine (OKE)**, com plano de controlo gerido pela Oracle Cloud Infrastructure (OCI) na região de Frankfurt (`eu-frankfurt-1`). A rede (VCN, subnets, gateways) é gerida por uma equipa separada e deve existir previamente à criação do cluster.
+O cluster Kubernetes do GO corre no **Oracle Kubernetes Engine (OKE)**.
 
 A infraestrutura é declarada em Terraform e organizada em dois módulos principais:
 
-- **`oke`** — Cluster OKE com plano de controlo gerido
-- **`node_pool`** — Pool de nós de trabalho (workers)
+- **`oke`** — Cluster OKE
+- **`node_pool`** — Pool de workers
 
 ---
 
