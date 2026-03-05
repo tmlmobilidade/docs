@@ -28,10 +28,10 @@ export const reference = defineDocs({
 /** Doc roots: [dir under docs, URL path prefix] — wikilinks under each dir become /{urlPrefix}/... */
 const DOC_ROOTS: [string, string][] = [
 	['docs/reference', 'docs'],
-	['docs/blog', 'lab'],
+	['docs/lab', 'lab'],
 ];
 
-/** Rewrites Obsidian wikilink hrefs to Fumadocs paths (no .mdx), for reference, blog, etc. */
+/** Rewrites Obsidian wikilink hrefs to Fumadocs paths (no .mdx), for reference, lab, etc. */
 function remarkRewriteWikilinkUrls() {
 	return (tree: import('mdast').Root, file: { path?: string }) => {
 		if (!file.path) return;
@@ -76,9 +76,9 @@ export default defineConfig({
 	},
 });
 
-export const blog = defineCollections({
+export const lab = defineCollections({
 	async: true,
-	dir: 'docs/blog',
+	dir: 'docs/lab',
 	schema: frontmatterSchema.extend({
 		author: z.string(),
 		cover: z.string(),

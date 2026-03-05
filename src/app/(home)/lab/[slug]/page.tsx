@@ -1,13 +1,13 @@
 import type { TOCItemType } from 'fumadocs-core/toc';
 
 import { BlogArticle, BlogArticleLayout, BlogHeader } from '@/components/blog';
-import { sourceBlog } from '@/lib/source';
+import { sourceLab } from '@/lib/source';
 import { getMDXComponents } from '@/mdx-components';
 import { notFound } from 'next/navigation';
 
 export async function generateMetadata(props: { params: Promise<{ slug: string }> }) {
 	const params = await props.params;
-	const page = sourceBlog.getPage(params.slug ? [params.slug] : undefined);
+	const page = sourceLab.getPage(params.slug ? [params.slug] : undefined);
 	if (!page) notFound();
 
 	return {
@@ -17,14 +17,14 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
 }
 
 export async function generateStaticParams() {
-	return sourceBlog.generateParams('slug').map(p => ({
+	return sourceLab.generateParams('slug').map(p => ({
 		slug: (p.slug ?? []).join('/'),
 	}));
 }
 
 export default async function Page(props: { params: Promise<{ slug: string }> }) {
 	const params = await props.params;
-	const page = sourceBlog.getPage(params.slug ? [params.slug] : undefined);
+	const page = sourceLab.getPage(params.slug ? [params.slug] : undefined);
 	if (!page) notFound();
 
 	const data = 'load' in page.data ? await page.data.load() : page.data;

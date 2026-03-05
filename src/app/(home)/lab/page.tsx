@@ -1,9 +1,9 @@
 import { BlogListing, BlogPageHeader } from '@/components/blog';
 import { getName } from '@/lib/getName';
-import { sourceBlog } from '@/lib/source';
+import { sourceLab } from '@/lib/source';
 
 export default function Page() {
-	const posts = [...sourceBlog.getPages()].sort(
+	const posts = [...sourceLab.getPages()].sort(
 		(a, b) => new Date(b.data.date ?? getName(b.path)).getTime() - new Date(a.data.date ?? getName(a.path)).getTime(),
 	);
 

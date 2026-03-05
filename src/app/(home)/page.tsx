@@ -6,7 +6,7 @@ import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/cn';
 import { getName } from '@/lib/getName';
 import { BASE_OPTIONS, NAVBAR_LINKS } from '@/lib/settings';
-import { sourceBlog } from '@/lib/source';
+import { sourceLab } from '@/lib/source';
 import { HomeLayout } from 'fumadocs-ui/layouts/home';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
@@ -14,9 +14,18 @@ import Link from 'next/link';
 /* * */
 
 export default function Page() {
-	const posts = [...sourceBlog.getPages()]
+	//
+
+	//
+	// A. Transform data
+
+	const sortedLabArticles = sourceLab.getPages()
+	// .filter(page => page.data.)
 		.sort((a, b) => new Date(b.data['date'] ?? getName(b.path)).getTime() - new Date(a.data['date'] ?? getName(a.path)).getTime())
 		.slice(0, 4);
+
+	//
+	// B. Render components
 
 	return (
 		<HomeLayout
@@ -25,12 +34,10 @@ export default function Page() {
 			nav={{ title: BASE_OPTIONS.title, url: '/' }}
 			themeSwitch={{ mode: 'light-dark-system' }}
 		>
-
 			<main className="text-landing-foreground pt-6 pb-8 md:pb-16">
 
 				<HomeHero />
 
-				{/* ── Blog Posts Section ───────────────────────────── */}
 				<section className="mx-auto mt-16 w-full max-w-[1400px] px-4 md:px-6">
 					<div className="mb-8 flex items-end justify-between">
 						<div>
@@ -51,7 +58,7 @@ export default function Page() {
 					</div>
 
 					<div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-						{posts.map(post => (
+						{sortedLabArticles.map(post => (
 							<BlogCard key={post.url} post={post} />
 						))}
 					</div>
