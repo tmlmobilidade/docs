@@ -1,7 +1,7 @@
 /* * */
 
 import { cn } from '@/lib/cn';
-import { BlogPost } from '@/types/BlogPost';
+import { BlogPost } from '@/types/lab-article';
 
 import { BlogCard } from './blog-card';
 

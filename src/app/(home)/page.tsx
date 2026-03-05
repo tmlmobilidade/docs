@@ -1,12 +1,10 @@
 /* * */
 
-import { BlogCard } from '#/src/components/blog/blog-card';
 import { HomeHero } from '@/components/home/HomeHero';
+import { LabArticlesGrid } from '@/components/lab/LabArticlesGrid';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/cn';
-import { getName } from '@/lib/getName';
 import { BASE_OPTIONS, NAVBAR_LINKS } from '@/lib/settings';
-import { sourceLab } from '@/lib/source';
 import { HomeLayout } from 'fumadocs-ui/layouts/home';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
@@ -14,19 +12,6 @@ import Link from 'next/link';
 /* * */
 
 export default function Page() {
-	//
-
-	//
-	// A. Transform data
-
-	const sortedLabArticles = sourceLab.getPages()
-	// .filter(page => page.data.)
-		.sort((a, b) => new Date(b.data['date'] ?? getName(b.path)).getTime() - new Date(a.data['date'] ?? getName(a.path)).getTime())
-		.slice(0, 4);
-
-	//
-	// B. Render components
-
 	return (
 		<HomeLayout
 			githubUrl={BASE_OPTIONS.github_url}
@@ -57,11 +42,7 @@ export default function Page() {
 						</Link>
 					</div>
 
-					<div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-						{sortedLabArticles.map(post => (
-							<BlogCard key={post.url} post={post} />
-						))}
-					</div>
+					<LabArticlesGrid limit={4} />
 
 					{/* Mobile "ver todos" link */}
 					<div className="mt-6 flex justify-center md:hidden">
