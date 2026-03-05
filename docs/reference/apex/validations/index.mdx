@@ -8,6 +8,7 @@ Correspondem a um dos tipos de transações utilizadas no sistema APEX, e são g
 
 Estas transações permitem registar e validar cada entrada/saída de um passageiro do sistema, e a estrutura de dados simplificada utilizada no GO encontra-se descrita nesta secção.
 
+Estas transações permitem, entre outras operações, a contabilização do número de passageiros transportados ou, através da análise de sequencialidade das mesmas em conjunto com os restantes tipos de transações, a deteção de períodos de downtime dos equipamentos embarcados que as enviam.
 # A estrutura
 
 Por forma a serem corretamente contabilizadas/utilizadas, são essenciais para este tipo de transações os seguintes campos:
@@ -67,5 +68,3 @@ Em seguida apresenta-se um exemplo de uma transação de validação de acordo c
   "vehicle_id": 2387
 }
 ```
-
-Estas transações permitem, entre outras operações, a contabilização do número de passageiros transportados ou, através da análise de sequencialidade das mesmas em conjunto com os restantes tipos de transações, a deteção de períodos de downtime dos equipamentos embarcados que as enviam.

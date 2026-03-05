@@ -8,6 +8,8 @@ Correspondem a um dos tipos de transações utilizadas no sistema APEX, e são g
 
 Estas transações permitem registar e validar a posição geográfica do veículo, e a estrutura de dados simplificada utilizada no GO encontra-se descrita nesta secção.
 
+Estas transações permitem, entre outras operações, a monitorização da realização de todo o percurso de uma circulação ou, através da análise de sequencialidade das mesmas em conjunto com os restantes tipos de transações, a deteção de períodos de downtime dos equipamentos embarcados que as enviam.
+
 # A estrutura
 
 Por forma a serem corretamente contabilizadas/utilizadas, são essenciais para este tipo de transações os seguintes campos:
@@ -49,5 +51,3 @@ Em seguida apresenta-se um exemplo de uma transação de localização de acordo
   "vehicle_id": 1186
 }
 ```
-
-Estas transações permitem, entre outras operações, a monitorização da realização de todo o percurso de uma circulação ou, através da análise de sequencialidade das mesmas em conjunto com os restantes tipos de transações, a deteção de períodos de downtime dos equipamentos embarcados que as enviam.
