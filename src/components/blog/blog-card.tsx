@@ -1,6 +1,6 @@
 import { cn } from '@/lib/cn';
 import { getName } from '@/lib/getName';
-import { BlogPost } from '@/types/lab-article';
+import { LabArticle } from '@/types/lab-article';
 import { Link } from 'fumadocs-core/framework';
 
 import { BlogCoverImage } from './blog-cover-image';
@@ -8,7 +8,7 @@ import { BlogPostMeta } from './blog-post-meta';
 import { BlogTags } from './blog-tags';
 
 interface BlogCardProps {
-	post: BlogPost
+	post: LabArticle
 }
 
 export function BlogCard({ post }: BlogCardProps) {
