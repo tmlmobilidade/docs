@@ -21,11 +21,11 @@ export const BASE_OPTIONS = {
 /* * */
 
 export const NAVBAR_LINKS: LinkItemType[] = [
-	{
-		active: 'nested-url',
-		text: 'Laboratório',
-		url: '/lab',
-	},
+	// {
+	// 	active: 'nested-url',
+	// 	text: 'Laboratório',
+	// 	url: '/lab',
+	// },
 	{
 		active: 'nested-url',
 		text: 'Documentação',
