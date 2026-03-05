@@ -12,7 +12,6 @@ Estas transações permitem registar e validar cada entrada/saída de um passage
 
 Por forma a serem corretamente contabilizadas/utilizadas, são essenciais para este tipo de transações os seguintes campos:
 
-
 | Nome do Campo         | Tipo de dado | Descrição                                                                                                                                                                           |
 | --------------------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | id                    |              | identificador único da transação                                                                                                                                                    |
@@ -36,7 +35,7 @@ Por forma a serem corretamente contabilizadas/utilizadas, são essenciais para e
 | on_board_sale_id      |              | identificador único da venda do título de bordo a que a validação está associada, quando aplicável                                                                                  |
 | product_id            |              | identificador do tipo de título utilizado                                                                                                                                           |
 | units_qty             |              | valor descontado do cartão (apenas aplicável quando o título utilizado é ocasional pré-pago)                                                                                        |
-| validation_status     |              |                                                                                                                                                                                     |
+| validation_status     | ENUM         | resultado da validação                                                                                                                                                              |
 
 
 Em seguida apresenta-se um exemplo de uma transação de validação de acordo com a estrutura de dados simplificada:
