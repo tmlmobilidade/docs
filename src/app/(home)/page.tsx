@@ -2,6 +2,7 @@
 
 import { HomeHero } from '@/components/home/HomeHero';
 import { LabListGrid } from '@/components/lab/LabListGrid';
+import { LabListHeader } from '@/components/lab/LabListHeader';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/cn';
 import { BASE_OPTIONS, NAVBAR_LINKS } from '@/lib/settings';
@@ -24,24 +25,7 @@ export default function Page() {
 				<HomeHero />
 
 				<section className="mx-auto mt-16 w-full max-w-[1400px] px-4 md:px-6">
-					<div className="mb-8 flex items-end justify-between">
-						<div>
-							<h2 className="text-2xl font-semibold tracking-tight md:text-3xl">
-								Últimos artigos
-							</h2>
-							<p className="mt-1 text-fd-muted-foreground">
-								Novidades e atualizações sobre a TML Mobilidade.
-							</p>
-						</div>
-						<Link
-							className="hidden items-center gap-1 text-sm font-medium text-brand hover:text-brand-secondary md:flex"
-							href="/lab"
-						>
-							Ver todos
-							<ArrowRight className="size-3.5" />
-						</Link>
-					</div>
-
+					<LabListHeader />
 					<LabListGrid limit={4} />
 
 					{/* Mobile "ver todos" link */}

@@ -1,0 +1,45 @@
+/* * */
+/* CONTAINER */
+
+.container {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+/* * */
+/* TITLE */
+
+.title {
+	font-size: 2rem;
+	font-weight: 600;
+	line-height: 1.2;
+}
+
+/* * */
+/* DESCRIPTION */
+
+.description {
+	max-width: 700px;
+	font-size: 1rem;
+	color: var(--color-fd-muted-foreground);
+}
+
+/* * */
+/* LINK */
+
+.link {
+	display: flex;
+	gap: 0.25rem;
+	align-items: center;
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--color-brand-primary);
+	text-transform: uppercase;
+	text-decoration: none;
+}
+
+.link:hover {
+	color: var(--color-brand-secondary);
+	text-decoration: underline;
+}

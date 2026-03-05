@@ -1,14 +1,38 @@
 /* * */
 
-export function LabListHeader() {
+import { IconArrowRight } from '@tabler/icons-react';
+import { ArrowRight } from 'lucide-react';
+import Link from 'next/link';
+
+import styles from './styles.module.css';
+
+/* * */
+
+interface LabHeaderProps {
+	withViewAllLink?: boolean
+}
+
+/* * */
+
+export function LabListHeader({ withViewAllLink = true }: LabHeaderProps) {
 	return (
-		<div className="w-full flex flex-col mb-10 p-10 rounded-2xl border-(--color-system-border-100) bg-(--color-brand-primary) dark:bg-(--color-brand-secondary) relative">
-			<div
-				aria-hidden="true"
-				className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle,var(--color-brand-contrast)_1px,transparent_1px)] bg-size-[24px_24px] opacity-30"
-			/>
-			<h1 className="text-3xl font-bold tracking-tight text-(--color-system-background-100) dark:text-(--color-system-text-100) md:text-4xl">Laboratório</h1>
-			<p className="text-lg text-(--color-brand-contrast)/90">Aqui encontras informação sobre melhorias e novas funcionalidades do GO, e por vezes explorações interessantes sobre o mundo dos transportes.</p>
+		<div className={styles.container}>
+
+			<h2 className={styles.title}>
+				Laboratório
+			</h2>
+
+			<p className={styles.description}>
+				Aqui encontras informação sobre melhorias e novas funcionalidades do GO, e por vezes explorações interessantes sobre o mundo dos transportes.
+			</p>
+
+			{withViewAllLink &&	(
+				<Link className={styles.link} href="/lab">
+					Ver tudo
+					<IconArrowRight size={14} />
+				</Link>
+			)}
+
 		</div>
 	);
 }
