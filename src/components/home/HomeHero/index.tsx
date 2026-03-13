@@ -2,7 +2,7 @@
 
 import { VehicleBackground } from '@/components/home/VehicleBackground';
 import { BASE_OPTIONS } from '@/lib/settings';
-import { IconBolt, IconBook, IconNews } from '@tabler/icons-react';
+import { IconBolt, IconBook } from '@tabler/icons-react';
 import Link from 'next/link';
 
 import styles from './styles.module.css';
@@ -40,6 +40,10 @@ export function HomeHero() {
 						Login
 					</Link>
 				</div>
+
+				<Link className={styles.gforms} href={BASE_OPTIONS.gforms_url} target="_blank">
+					Receber atualizações por email
+				</Link>
 
 			</div>
 		</section>
