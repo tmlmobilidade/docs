@@ -10,6 +10,8 @@ import { getCurrentEnvironment } from './environment';
 
 export const BASE_OPTIONS = {
 
+	gforms_url: 'https://docs.google.com/forms/d/e/1FAIpQLSdYVBZ3p0tRwbtle9BeWnKw0ofs7eDC3RoYXKOJd02UEoXZgw/viewform',
+
 	github_url: 'https://github.com/tmlmobilidade',
 
 	go_url: getCurrentEnvironment() === 'development' ? 'http://localhost:51000/auth/login' : '/auth/login',
