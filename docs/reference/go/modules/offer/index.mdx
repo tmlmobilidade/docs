@@ -1,6 +1,188 @@
 ---
 title: Oferta
-description: Sample Description
+description: O que é o módulo da oferta e para que serve.
+---
+## O que é o módulo de Oferta e para que serve
+
+O **módulo de Oferta** é a área do GO onde se define o que é disponibilizado ao público em termos de serviço de transporte.
+
+Em resumo, este módulo permite:
+
+- **Definir** como uma linha opera ao longo do seu percurso.
+- **Configurar** tempos de paragem e velocidades entre paragens.
+- **Organizar** horários através de regras flexíveis e agregadas.
+- **Validar** o resultado final da oferta antes de exportação (ex: GTFS).
+
 ---
 
-# Index
+## Estrutura da oferta
+
+A oferta está organizada de forma hierárquica:
+
+### Linha
+
+A **linha** representa o serviço comercial visível ao passageiro.
+
+Exemplo:
+- 1001 — Alfragide (Estr Seminario) - Reboleira (Estação)
+
+Contém:
+- Identificação da linha
+- Informação geral
+- Tipologias e tarifas
+- Especificações da linha
+
+---
+
+### Rota
+
+A **rota** representa uma direção ou variante base da linha.
+
+Exemplo:
+- Alfragide → Reboleira
+- Reboleira → Alfragide
+
+Cada linha pode ter **uma ou mais rotas**.
+
+---
+
+### Pattern
+
+O **pattern** é a unidade central da configuração da oferta.
+
+Define uma **variante concreta de operação**, incluindo:
+
+- Shape
+- Sequência de paragens
+- Regras de funcionamento (horários)
+
+É ao nível do pattern que a operação é realmente configurada.
+
+---
+
+## Pattern em detalhe
+
+Um pattern é composto por três blocos principais:
+
+---
+
+### 1. Sequência de paragens
+
+Define:
+
+- Ordem das paragens
+- Distâncias entre paragens
+- Estrutura base do percurso
+
+---
+
+### 2. Parâmetros operacionais
+
+Definem como a operação se comporta ao longo do percurso.
+
+Incluem:
+
+- **Tempo médio de paragem** em cada paragem
+- **Velocidade média** entre paragens
+
+#### Configuração base
+
+Existe sempre uma **configuração padrão**, aplicada a toda a operação.
+
+---
+
+#### Exceções
+
+Podem ser definidas exceções com base em:
+
+- Período do dia (ex: ponta da manhã)
+- Período do ano (ex: escolar, verão)
+- Dia da semana
+
+Exemplo:
+
+> A linha X, em dias úteis, durante a ponta da manhã e no período escolar, é mais lenta que o normal.
+
+Estas variações permitem ajustar a operação de forma mais realista.
+
+---
+
+### 3. Regras de funcionamento (horários)
+
+As **regras de funcionamento** determinam:
+
+- Que horários existem
+- Quando esses horários operam
+
+---
+
+#### Tipos de regras
+
+Existem dois tipos:
+
+- **Adicionar horários**
+- **Remover horários** de regras existentes
+
+---
+
+#### Definição de uma regra
+
+Cada regra inclui:
+
+- Lista de horários (ex: 08:00, 09:00)
+- Condições de operação:
+  - Períodos
+  - Dias da semana
+
+
+## Validação da oferta
+
+Depois de definidas as regras, é possível validar o resultado através de duas formas principais:
+
+---
+
+### Vista de horários
+
+Mostra:
+
+- O resultado do **merge das regras**
+- Ordenado por hora do dia
+
+Permite perceber:
+
+- Que horários estão ativos
+- Que regras os originam
+
+---
+
+### Previsão por dia
+
+Permite:
+
+1. Escolher um dia específico
+2. Ver:
+   - Que horários estão ativos nesse dia
+   - Que regras estão a ser aplicadas
+
+## Próximos módulos
+
+Outros componentes do módulo de Oferta serão documentados separadamente:
+
+- Períodos
+- Feriados
+- Eventos
+- Calendário
+
+Estes módulos introduzem o **contexto temporal** que influencia as regras aqui definidas.
+
+
+## Resumo
+
+O módulo de Oferta permite:
+
+- Modelar a operação através de **patterns**
+- Ajustar comportamento com **parâmetros operacionais**
+- Definir horários com **regras flexíveis**
+- Validar o resultado final antes de publicação
+
+É a base da construção da oferta operacional no GO.
