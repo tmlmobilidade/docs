@@ -1,0 +1,214 @@
+{
+  "main": {
+    "id": "e77c1b7514b60706",
+    "type": "split",
+    "children": [
+      {
+        "id": "ea6b6c602765ca5d",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "7883e1d8ba4cc9e6",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "README.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "README"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "cbda2df847e82185",
+    "type": "split",
+    "children": [
+      {
+        "id": "c1b5c5b352876181",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "cc8f1636e06f8372",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "0bb373fadd324f51",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "c94ca9ceace73396",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "30b887fb2406f926",
+    "type": "split",
+    "children": [
+      {
+        "id": "6c003a81d2f17cc6",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "a570351721ecd41d",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "README.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for README"
+            }
+          },
+          {
+            "id": "9a3b00c5764a00bc",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "README.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from README"
+            }
+          },
+          {
+            "id": "c6d8f49d009f9069",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "27c1321a6c9a97f7",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "834ca25214371963",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "README.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of README"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "7883e1d8ba4cc9e6",
+  "lastOpenFiles": [
+    "tsconfig.json",
+    "stylelint.config.mjs",
+    "src/app/(home)/reference/[[...slug]]/page.tsx",
+    "src/app/(home)/lab/[slug]/page.tsx",
+    "src/components/layout/Section/styles.module.css",
+    "src/components/layout/Section/index.tsx",
+    "src/components/lab/LabListHeader/styles.module.css",
+    "src/components/lab/LabListHeader/index.tsx",
+    "src/components/lab/LabListGrid/index.tsx",
+    "src/components/lab/LabList/styles.module.css",
+    "src/components/lab/LabList/index.tsx",
+    "src/app/icon.png",
+    "public/files/Pasted image 20260213231019.png",
+    "public/files/Pasted image 20260213204111.png",
+    "public/files/Pasted image 20260213201145.png",
+    "public/files/Pasted image 20260213200631.png",
+    "public/files/CampanhaDados_BannerWeb.png",
+    "public/brand/tmlmobilidade.svg",
+    "public/brand/tmlmobilidade-icon.jpg",
+    "public/brand/go-light.svg",
+    "public/brand/go-dark.svg",
+    "docs/reference/go/modules/performance/metrics/supply/supply_by_agency.md",
+    "docs/lab/002.md",
+    "docs/lab/001.md",
+    "README.md"
+  ]
+}
