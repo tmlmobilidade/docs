@@ -19,11 +19,11 @@ Validações que verificam se os campos correspondem entre si ou são idênticos
 
 Validações que limita as presenças de um campo em um ou mais ficheiros
 
-| ID da Regra                     | Título                                           | Descrição                                                                        | GTFS Standard | GTFS TML    |
-| ------------------------------- | ------------------------------------------------ | -------------------------------------------------------------------------------- | ------------- | ----------- |
-| `route_id_group_validation`     | O `pattern_id` utiliza diferentes `route_id`     | Valida se no mesmo `pattern_id` existe a utilização de diferentes `route_id`     | -             | Obrigatório |
-| `direction_id_group_validation` | O `pattern_id` utiliza diferentes `direction_id` | Valida se no mesmo `pattern_id` existe a utilização de diferentes `direction_id` | -             | Obrigatório |
-| `shape_id_group_validation`     | O `pattern_id` utiliza diferentes `shape_id`     | Valida se no mesmo `pattern_id` existe a utilização de diferentes `shape_id`     | -             | Obrigatório |
+| ID da Regra                     | Título                                           | Descrição                                                                         | GTFS Standard | GTFS TML    |
+| ------------------------------- | ------------------------------------------------ | --------------------------------------------------------------------------------- | ------------- | ----------- |
+| `route_id_group_validation`     | O `pattern_id` utiliza diferentes `route_id`     | Valida se no mesmo `pattern_id` existe a utilização de diferentes `route_id`.     | -             | Obrigatório |
+| `direction_id_group_validation` | O `pattern_id` utiliza diferentes `direction_id` | Valida se no mesmo `pattern_id` existe a utilização de diferentes `direction_id`. | -             | Obrigatório |
+| `shape_id_group_validation`     | O `pattern_id` utiliza diferentes `shape_id`     | Valida se no mesmo `pattern_id` existe a utilização de diferentes `shape_id`.     | -             | Obrigatório |
 
 
 ### Validações de caracteres
@@ -33,6 +33,14 @@ Validações que limita a quantidade de caracteres
 
 | ID da Regra                           | Título               | Descrição                                           | GTFS Standard | GTFS TML    |
 | ------------------------------------- | -------------------- | --------------------------------------------------- | ------------- | ----------- |
-| `trip_id_limit_characters_validation` | Limite de caracteres | Limita o `trip_id` que ultrapasse de 36 caracteres  | -             | Obrigatório |
+| `trip_id_limit_characters_validation` | Limite de caracteres | Limita o `trip_id` que ultrapasse de 36 caracteres. | -             | Obrigatório |
 
 
+### Validações de formatos
+
+Validações que limita o formato dos valores
+
+| ID da Regra         | Título                                             | Descrição                                                                                                                                     | GTFS Standard | GTFS TML    |
+| ------------------- | -------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | ----------- |
+| `pattern_id_format` | O `pattern_id` não corresponde a um formato valido | Valida se o `pattern_id` corresponde a um formato valido, por defeito é XXXX_X_X mas existe algumas exceções que podem conter outros formatos | -             | Obrigatório |
+| `License_plate`     |                                                    |                                                                                                                                               |               |             |
