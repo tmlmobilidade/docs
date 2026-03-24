@@ -4,8 +4,9 @@ description: Veículo utilzados
 ---
 
 Este ficheiro vehicles.txt não existe no GTFS standart mas nós TML utilizamos e precisamos
-**Presença**: Opcional<br/>
-**Chave primária**: não há
+
+**Presença**: Obrigatório<br/>
+**Chave primária**: `vehicle_id`
 ### Campos GTFS TML
 
 | Nome do Campo        | Tipo                                         | Presença    | Descrição                      |
@@ -13,26 +14,26 @@ Este ficheiro vehicles.txt não existe no GTFS standart mas nós TML utilizamos 
 | `vehicle_id`         | ID único                                     | obrigatório | ID de identificação do veículo |
 | `agency_id`          | ID externo que faz referência a `agency.txt` | obrigatório |                                |
 | `license_plate`      | ID único                                     | obrigatório |                                |
-| `make`               |                                              | obrigatório |                                |
-| `model`              |                                              | obrigatório |                                |
-| `owner`              |                                              | obrigatório |                                |
-| `registration_date`  |                                              | obrigatório |                                |
-| `available_seats`    |                                              | obrigatório |                                |
-| `available_standing` |                                              | obrigatório |                                |
-| `typology`           |                                              | obrigatório |                                |
-| `propulsion`         |                                              | obrigatório |                                |
-| `emission`           |                                              | obrigatório |                                |
-| `climatization`      |                                              | obrigatório |                                |
-| `wheelchair`         |                                              | obrigatório |                                |
-| `lowered_floor`      |                                              | obrigatório |                                |
-| `ramp`               |                                              | obrigatório |                                |
-| `kneeling`           |                                              | obrigatório |                                |
-| `static_information` |                                              | obrigatório |                                |
-| `onboard_monitor`    |                                              | obrigatório |                                |
-| `front_display`      |                                              | obrigatório |                                |
-| `rear_display`       |                                              | obrigatório |                                |
-| `side_display`       |                                              | obrigatório |                                |
-| `external_sound`     |                                              | obrigatório |                                |
-| `consumption_meter`  |                                              | obrigatório |                                |
-| `bicycles`           |                                              | obrigatório |                                |
-| `passenger_counting` |                                              | obrigatório |                                |
+| `make`               | Texto                                        | obrigatório |                                |
+| `model`              | Texto                                        | obrigatório |                                |
+| `owner`              | Texto                                        | obrigatório |                                |
+| `registration_date`  | Data                                         | obrigatório |                                |
+| `available_seats`    | Número inteiro                               | obrigatório |                                |
+| `available_standing` | Número inteiro                               | obrigatório |                                |
+| `typology`           | Enum                                         | obrigatório |                                |
+| `propulsion`         | Enum                                         | obrigatório |                                |
+| `emission`           | Enum                                         | obrigatório |                                |
+| `climatization`      | Enum                                         | obrigatório |                                |
+| `wheelchair`         | Enum                                         | obrigatório |                                |
+| `lowered_floor`      | Enum                                         | obrigatório |                                |
+| `ramp`               | Enum                                         | obrigatório |                                |
+| `kneeling`           | Enum                                         | obrigatório |                                |
+| `static_information` | Enum                                         | obrigatório |                                |
+| `onboard_monitor`    | Enum                                         | obrigatório |                                |
+| `front_display`      | Enum                                         | obrigatório |                                |
+| `rear_display`       | Enum                                         | obrigatório |                                |
+| `side_display`       | Enum                                         | obrigatório |                                |
+| `external_sound`     | Enum                                         | obrigatório |                                |
+| `consumption_meter`  | Enum                                         | obrigatório |                                |
+| `bicycles`           | Enum                                         | obrigatório |                                |
+| `passenger_counting` | Enum                                         | obrigatório |                                |
