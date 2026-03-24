@@ -3,13 +3,36 @@ title: veículo
 description: Veículo utilzados
 ---
 
+Este ficheiro vehicles.txt não existe no GTFS standart mas nós TML utilizamos e precisamos
+**Presença**: Opcional<br/>
+**Chave primária**: não há
 ### Campos GTFS TML
 
-Este ficheiro vehicles.txt não existe no GTFS standart mas nós TML utilizamos e precisamos
-
-| Nome do Campo   | Tipo     | Presença    | Descrição                      |
-| --------------- | -------- | ----------- | ------------------------------ |
-| `vehicle_id`    | ID único | obrigatório | ID de identificação do veículo |
-| `agency_id`     |          |             |                                |
-| `license_plate` |          |             |                                |
-|                 |          |             |                                |
+| Nome do Campo        | Tipo                                         | Presença    | Descrição                      |
+| -------------------- | -------------------------------------------- | ----------- | ------------------------------ |
+| `vehicle_id`         | ID único                                     | obrigatório | ID de identificação do veículo |
+| `agency_id`          | ID externo que faz referência a `agency.txt` | obrigatório |                                |
+| `license_plate`      | ID único                                     | obrigatório |                                |
+| `make`               |                                              | obrigatório |                                |
+| `model`              |                                              | obrigatório |                                |
+| `owner`              |                                              | obrigatório |                                |
+| `registration_date`  |                                              | obrigatório |                                |
+| `available_seats`    |                                              | obrigatório |                                |
+| `available_standing` |                                              | obrigatório |                                |
+| `typology`           |                                              | obrigatório |                                |
+| `propulsion`         |                                              | obrigatório |                                |
+| `emission`           |                                              | obrigatório |                                |
+| `climatization`      |                                              | obrigatório |                                |
+| `wheelchair`         |                                              | obrigatório |                                |
+| `lowered_floor`      |                                              | obrigatório |                                |
+| `ramp`               |                                              | obrigatório |                                |
+| `kneeling`           |                                              | obrigatório |                                |
+| `static_information` |                                              | obrigatório |                                |
+| `onboard_monitor`    |                                              | obrigatório |                                |
+| `front_display`      |                                              | obrigatório |                                |
+| `rear_display`       |                                              | obrigatório |                                |
+| `side_display`       |                                              | obrigatório |                                |
+| `external_sound`     |                                              | obrigatório |                                |
+| `consumption_meter`  |                                              | obrigatório |                                |
+| `bicycles`           |                                              | obrigatório |                                |
+| `passenger_counting` |                                              | obrigatório |                                |
