@@ -1,0 +1,14 @@
+---
+title: agency
+description: Agências de transporte com serviços representados neste conjunto de dados.
+---
+## Regras de Validação
+
+
+### Validações Geográficas
+
+| ID da Regra                 | Título                              | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | GTFS Standard | GTFS TML    |
+| --------------------------- | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | ----------- |
+| shape_id_matches_pattern_id | O ID da Shape é igual ao Pattern ID | Identifica uma marca de transporte, que é geralmente sinónimo de agência de transporte. Note que, em alguns casos, como quando uma única agência opera vários serviços separados, as agências e as marcas são distintas. Este documento utiliza o termo "agência" em vez de "marca". Um conjunto de dados pode conter dados de várias agências. Condicionalmente obrigatório: - Obrigatório quando o conjunto de dados contém dados para várias agências de transporte. - Recomendado caso contrário. | -             | Obrigatório |
+| uydfguy                     |                                     |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | Opcional      | Obrigatório |
+
