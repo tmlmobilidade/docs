@@ -10,6 +10,7 @@
 		"stop_times",
 		"shapes",
 		"fare_attributes",
-		"fare_rules"
+		"fare_rules",
+		"vehicle"
 	]
 }
