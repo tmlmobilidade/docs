@@ -1,0 +1,14 @@
+---
+title: veículo
+description:
+---
+**Presença**: Obrigatório<br/>
+**Chave primária**: `vehicle_id`
+### Campos GTFS TML
+
+Este campo não existe no GTFS standart mas nos TML exigimos este ficheiro nos GTFS
+
+| Nome do Campo | Tipo                                         | Presença    | Descrição                         |
+| ------------- | -------------------------------------------- | ----------- | --------------------------------- |
+| `vehicle_id`  | ID único                                     | Obrigatório | Identifica o veículo              |
+| `agency_id`   | ID externo que faz referência a `agency.txt` | obrigatório | Agência da qual utiliza o veículo |
