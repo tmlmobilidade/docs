@@ -8,8 +8,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - production
-      - staging
+        - publish
 
 # # #
 
@@ -42,6 +41,6 @@ jobs:
         with:
           push: true
           file: ./dockerfile
-          tags: ghcr.io/tmlmobilidade/go-docs:${{ github.ref_name }}
+          tags: ghcr.io/tmlmobilidade/go-docs:production
           build-args: |
-            ENVIRONMENT=${{ github.ref_name }}
+            ENVIRONMENT=production
