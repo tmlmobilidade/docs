@@ -1,0 +1,25 @@
+/* * */
+/* CONTAINER */
+
+.container {
+	display: flex;
+	flex-direction: column;
+}
+
+/* * */
+/* TITLE */
+
+.title {
+	font-size: 2rem;
+	font-weight: 600;
+	line-height: 1.2;
+}
+
+/* * */
+/* DESCRIPTION */
+
+.description {
+	max-width: 700px;
+	font-size: 1rem;
+	color: var(--color-fd-muted-foreground);
+}

@@ -1,5 +1,8 @@
 /* * */
 
+import { VehiclesMap } from '#/src/components/home/VehiclesMap';
+import { Section } from '#/src/components/layout/Section';
+import { MapOverlayVehicles, MapView } from '#/src/components/map';
 import { HomeHero } from '@/components/home/HomeHero';
 // import { LabList } from '@/components/lab/LabList';
 import { BASE_OPTIONS, NAVBAR_LINKS } from '@/lib/settings';
@@ -18,6 +21,7 @@ export default function Page() {
 			<main className="text-landing-foreground pt-6 pb-8 md:pb-16 flex flex-col gap-16">
 				<HomeHero />
 				{/* <LabList limit={4} withViewAllLink /> */}
+				<VehiclesMap />
 			</main>
 		</HomeLayout>
 	);

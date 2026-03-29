@@ -9,6 +9,8 @@ import '@/styles/global.css';
 import { RootProvider } from 'fumadocs-ui/provider/next';
 import { type PropsWithChildren } from 'react';
 
+import { VehiclePositionContextProvider } from './contexts/VehiclePosition.context';
+
 /* * */
 
 export const metadata = {
@@ -22,7 +24,11 @@ export default function Layout({ children }: PropsWithChildren) {
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<body className="flex flex-col min-h-screen">
-				<RootProvider>{children}</RootProvider>
+				<RootProvider>
+					<VehiclePositionContextProvider>
+						{children}
+					</VehiclePositionContextProvider>
+				</RootProvider>
 			</body>
 		</html>
 	);
