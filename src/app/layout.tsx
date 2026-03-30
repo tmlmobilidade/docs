@@ -6,10 +6,9 @@ import '@/styles/global.css';
 
 /* * */
 
+import { BaseProvider } from '@/providers/BaseProvider';
 import { RootProvider } from 'fumadocs-ui/provider/next';
 import { type PropsWithChildren } from 'react';
-
-import { VehiclePositionContextProvider } from './contexts/VehiclePosition.context';
 
 /* * */
 
@@ -25,9 +24,9 @@ export default function Layout({ children }: PropsWithChildren) {
 		<html lang="en" suppressHydrationWarning>
 			<body className="flex flex-col min-h-screen">
 				<RootProvider>
-					<VehiclePositionContextProvider>
+					<BaseProvider>
 						{children}
-					</VehiclePositionContextProvider>
+					</BaseProvider>
 				</RootProvider>
 			</body>
 		</html>

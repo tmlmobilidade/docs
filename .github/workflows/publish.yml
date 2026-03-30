@@ -6,9 +6,9 @@ name: 'Docs | Build & Push'
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-        - publish
+  # push:
+  #   branches:
+  #       - production
 
 # # #
 

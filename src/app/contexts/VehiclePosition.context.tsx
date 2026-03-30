@@ -5,8 +5,8 @@
 import { getBaseGeoJsonFeatureCollection } from '@tmlmobilidade/geo';
 import { createContext, PropsWithChildren, useContext, useMemo } from 'react';
 // import { API_ROUTES } from '@tmlmobilidade/consts';
-// import useSWR from 'swr';
-import { mockVehiclePositions } from './mock-vehicle-positions';
+import useSWR from 'swr';
+// import { mockVehiclePositions } from './mock-vehicle-positions';
 
 /* * */
 
@@ -46,10 +46,10 @@ export function useVehiclePositionContext() {
 /* * */
 
 export const VehiclePositionContextProvider = ({ children }: PropsWithChildren) => {
-	// const { data: fetchedVehiclePositionData, error, isLoading } = useSWR<VehiclePositionData[], Error>(API_ROUTES.controller.VEHICLES_POSITIONS, { refreshInterval: 5000 });
-	const fetchedVehiclePositionData = mockVehiclePositions;
-	const error = undefined;
-	const isLoading = false;
+	const { data: fetchedVehiclePositionData, error, isLoading } = useSWR<VehiclePositionData[], Error>('https://go-stg.tmlmobilidade.pt/controller/api/vehicles/positions', { refreshInterval: 5000 });
+	// const fetchedVehiclePositionData = mockVehiclePositions;
+	// const error = undefined;
+	// const isLoading = false;
 
 	const vehiclesGeoJsonFeatureCollection: GeoJSON.FeatureCollection<GeoJSON.Point, GeoJSON.GeoJsonProperties> | undefined = useMemo(() => {
 		const collection = getBaseGeoJsonFeatureCollection<GeoJSON.Point, GeoJSON.GeoJsonProperties>();

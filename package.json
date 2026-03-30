@@ -19,6 +19,7 @@
 		"@tabler/icons-react": "3.38.0",
 		"@tmlmobilidade/consts": "^20260329.1522.22",
 		"@tmlmobilidade/geo": "^20260329.1522.22",
+		"@tmlmobilidade/utils": "^20260329.1522.22",
 		"@turf/turf": "^7.3.4",
 		"@vis.gl/react-maplibre": "^8.1.0",
 		"class-variance-authority": "0.7.1",
