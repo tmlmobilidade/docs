@@ -203,6 +203,8 @@ export function MapOverlayVehicles({ presentBeforeId, showCounter, vehiclesData 
 							['to-string', ['get', 'agency_id']],
 							'4',
 							'ttsl-boat-regular',
+							'1',
+							'carris-bus-regular',
 							'cmet-bus-regular',
 						],
 						'icon-offset': [0, 0],

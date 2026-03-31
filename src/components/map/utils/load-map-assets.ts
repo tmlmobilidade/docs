@@ -16,6 +16,8 @@ const MAP_LOAD_ASSETS = [
 	{ name: 'cmet-bus-error', sdf: false, url: `/map/bus-error.png` },
 	/* * */
 	{ name: 'ttsl-boat-regular', sdf: false, url: `/map/boat-regular.png` },
+	/* * */
+	{ name: 'carris-bus-regular', sdf: false, url: `/map/bus-carris.png` },
 ];
 
 /**
