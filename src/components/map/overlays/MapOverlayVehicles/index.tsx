@@ -39,6 +39,20 @@ function interpolateCoords(start: number[], end: number[], t: number): number[] 
 	];
 }
 
+function calculateBearing(start: number[], end: number[]): number {
+	// Coordinates are [longitude, latitude].
+	const startLng = start[0] * (Math.PI / 180);
+	const startLat = start[1] * (Math.PI / 180);
+	const endLng = end[0] * (Math.PI / 180);
+	const endLat = end[1] * (Math.PI / 180);
+
+	const y = Math.sin(endLng - startLng) * Math.cos(endLat);
+	const x = Math.cos(startLat) * Math.sin(endLat) - Math.sin(startLat) * Math.cos(endLat) * Math.cos(endLng - startLng);
+
+	const bearing = Math.atan2(y, x) * (180 / Math.PI);
+	return (bearing + 360) % 360;
+}
+
 function interpolateAngle(start: number, end: number, t: number): number {
 	const delta = ((((end - start) % 360) + 540) % 360) - 180;
 	return start + delta * t;
@@ -53,7 +67,9 @@ function interpolateProps(startFeature: GeoJSON.Feature<GeoJSON.Point> | undefin
 
 	const interpolatedCoords = interpolateCoords(startCoords, endCoords, t);
 
-	const endBearing = endFeature.properties?.bearing ?? 0;
+	const hasMovement = startCoords[0] !== endCoords[0] || startCoords[1] !== endCoords[1];
+	const computedBearing = hasMovement ? calculateBearing(startCoords, endCoords) : undefined;
+	const endBearing = endFeature.properties?.bearing ?? computedBearing ?? 0;
 	const startBearing = startFeature?.properties?.bearing ?? endBearing;
 	const interpolatedBearing = interpolateAngle(startBearing, endBearing, t);
 
