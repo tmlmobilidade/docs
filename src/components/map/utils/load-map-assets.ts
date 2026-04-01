@@ -18,6 +18,8 @@ const MAP_LOAD_ASSETS = [
 	{ name: 'ttsl-boat-regular', sdf: false, url: `/map/boat-regular.png` },
 	/* * */
 	{ name: 'carris-bus-regular', sdf: false, url: `/map/bus-carris.png` },
+	/* * */
+	{ name: 'mobi-bus-regular', sdf: false, url: `/map/bus-mobi.png` },
 ];
 
 /**

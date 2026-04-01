@@ -69,6 +69,7 @@ function getDeterministicBearing(feature: GeoJSON.Feature<GeoJSON.Point>): numbe
 
 function interpolateProps(startFeature: GeoJSON.Feature<GeoJSON.Point> | undefined, endFeature: GeoJSON.Feature<GeoJSON.Point>, t: number): GeoJSON.Feature {
 	const endCoords = endFeature.geometry.coordinates;
+	const featureId = endFeature.id != null ? String(endFeature.id) : '';
 
 	const startCoords = startFeature
 		? (startFeature.geometry as GeoJSON.Point).coordinates
@@ -101,6 +102,7 @@ function interpolateProps(startFeature: GeoJSON.Feature<GeoJSON.Point> | undefin
 			...endFeature.properties,
 			bearing: interpolatedBearing,
 			delay: interpolatedDelay,
+			feature_id: featureId,
 			opacity: interpolatedOpacity,
 		},
 	};
@@ -177,7 +179,7 @@ export function MapOverlayVehicles({ presentBeforeId, showCounter, vehiclesData 
 	return (
 		<>
 
-			<Source data={animatedData} generateId={true} id="default-source-vehicles" type="geojson">
+			<Source data={animatedData} id="default-source-vehicles" type="geojson">
 
 				<Layer
 					beforeId={presentBeforeId}
@@ -233,7 +235,7 @@ export function MapOverlayVehicles({ presentBeforeId, showCounter, vehiclesData 
 							'1',
 							'carris-bus-regular',
 							'21',
-							'carris-bus-regular',
+							'mobi-bus-regular',
 							'cmet-bus-regular',
 						],
 						'icon-offset': [0, 0],
@@ -267,7 +269,6 @@ export function MapOverlayVehicles({ presentBeforeId, showCounter, vehiclesData 
 						'icon-opacity': ['get', 'opacity'],
 					}}
 				/>
-
 			</Source>
 
 			{showCounter === 'always' && (

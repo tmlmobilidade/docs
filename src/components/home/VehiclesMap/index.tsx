@@ -14,7 +14,7 @@ import { VehiclesMapHeader } from '../VehiclesMapHeader';
 export function VehiclesMap() {
 	//
 	// A. Setup variables
-	const { data: vehiclePositionData } = useVehiclePositionContext();
+	const { data: { vehiclePositionGeoJson } } = useVehiclePositionContext();
 
 	//
 	// B. Render
@@ -26,7 +26,7 @@ export function VehiclesMap() {
 				<div className="relative h-[clamp(300px,80vh,800px)] w-full">
 
 					<MapView id="vehicles-map">
-						<MapOverlayVehicles showCounter="always" vehiclesData={vehiclePositionData.vehiclePositionGeoJson} />
+						<MapOverlayVehicles showCounter="always" vehiclesData={vehiclePositionGeoJson} />
 					</MapView>
 				</div>
 			</div>

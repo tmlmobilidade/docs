@@ -2,27 +2,13 @@
 
 /* * */
 
-import { getBaseGeoJsonFeatureCollection } from '@tmlmobilidade/geo';
+import { getBaseGeoJsonFeatureCollection, transformVehicleDataIntoGeoJsonFeature } from '@tmlmobilidade/geo';
+import { SimplifiedVehicleEvent, Vehicle } from '@tmlmobilidade/types';
 import { createContext, PropsWithChildren, useContext, useMemo } from 'react';
-// import { API_ROUTES } from '@tmlmobilidade/consts';
 import useSWR from 'swr';
-// import { mockVehiclePositions } from './mock-vehicle-positions';
-
-/* * */
-
-interface VehiclePositionData {
-	agency_id: string
-	bearing: number
-	created_at: number
-	latitude: number
-	longitude: number
-	trip_id: string
-	vehicle_id: string
-}
 
 interface VehiclePositionContextState {
 	data: {
-		vehiclePosition: VehiclePositionData[]
 		vehiclePositionGeoJson: GeoJSON.FeatureCollection<GeoJSON.Point> | undefined
 	}
 	flags: {
@@ -46,21 +32,32 @@ export function useVehiclePositionContext() {
 /* * */
 
 export const VehiclePositionContextProvider = ({ children }: PropsWithChildren) => {
-	const { data: fetchedVehiclePositionData, error, isLoading } = useSWR<VehiclePositionData[], Error>('https://go-stg.tmlmobilidade.pt/controller/api/vehicles/positions', { refreshInterval: 5000 });
-	// const fetchedVehiclePositionData = mockVehiclePositions;
-	// const error = undefined;
-	// const isLoading = false;
+	const { data: vehicleData } = useSWR<Vehicle[], Error>('https://go.tmlmobilidade.pt/fleet/api/vehicles', { refreshInterval: 5000 });
+	const { data: fetchedVehiclePositionData, error, isLoading } = useSWR<SimplifiedVehicleEvent[], Error>('https://go.tmlmobilidade.pt/fleet/api/vehicles/positions', { refreshInterval: 5000 });
 
 	const vehiclesGeoJsonFeatureCollection: GeoJSON.FeatureCollection<GeoJSON.Point, GeoJSON.GeoJsonProperties> | undefined = useMemo(() => {
+		//
+		// Initialize the GeoJSON feature collection
 		const collection = getBaseGeoJsonFeatureCollection<GeoJSON.Point, GeoJSON.GeoJsonProperties>();
-		fetchedVehiclePositionData?.forEach(vehicle => collection.features.push(TransformVehicleDataIntoGeoJsonFeature(vehicle)));
+
+		//
+		// Transform vehicle position data into GeoJSON feature collection
+		fetchedVehiclePositionData?.forEach(vehicle =>
+			collection.features.push(
+				transformVehicleDataIntoGeoJsonFeature(
+					vehicle,
+					vehicleData?.find(v => v._id === vehicle.vehicle_id && v.agency_id === vehicle.agency_id),
+				),
+			),
+		);
+
+		// Return the GeoJSON feature collection
 		return collection;
-	}, [fetchedVehiclePositionData]);
+	}, [fetchedVehiclePositionData, vehicleData]);
 
 	const contextValue: VehiclePositionContextState = useMemo(() => {
 		return {
 			data: {
-				vehiclePosition: fetchedVehiclePositionData,
 				vehiclePositionGeoJson: vehiclesGeoJsonFeatureCollection,
 			},
 			flags: {
@@ -68,7 +65,7 @@ export const VehiclePositionContextProvider = ({ children }: PropsWithChildren) 
 				loading: isLoading,
 			},
 		};
-	}, [fetchedVehiclePositionData, vehiclesGeoJsonFeatureCollection, error, isLoading]);
+	}, [vehiclesGeoJsonFeatureCollection, error, isLoading]);
 
 	return (
 		<VehiclePositionContext.Provider value={contextValue}>
@@ -76,24 +73,3 @@ export const VehiclePositionContextProvider = ({ children }: PropsWithChildren) 
 		</VehiclePositionContext.Provider>
 	);
 };
-
-/* * */
-
-export function TransformVehicleDataIntoGeoJsonFeature(vehiclePositionData: VehiclePositionData): GeoJSON.Feature<GeoJSON.Point> {
-	return {
-		geometry: {
-			coordinates: [vehiclePositionData.longitude, vehiclePositionData.latitude],
-			type: 'Point',
-		},
-		id: vehiclePositionData.vehicle_id,
-		properties: {
-			agency_id: vehiclePositionData.agency_id,
-			bearing: vehiclePositionData.bearing,
-			id: vehiclePositionData.vehicle_id,
-			lat: vehiclePositionData.latitude,
-			lon: vehiclePositionData.longitude,
-			trip_id: vehiclePositionData.trip_id,
-		},
-		type: 'Feature',
-	};
-}
