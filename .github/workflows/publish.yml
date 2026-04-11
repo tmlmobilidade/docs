@@ -6,9 +6,6 @@ name: 'Docs | Build & Push'
 
 on:
   workflow_dispatch:
-  # push:
-  #   branches:
-  #       - production
 
 # # #
 
@@ -19,7 +16,7 @@ jobs:
 
   frontend:
     name: frontend (NextJS)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     permissions:
       contents: read
       packages: write
