@@ -185,6 +185,8 @@
   },
   "active": "7883e1d8ba4cc9e6",
   "lastOpenFiles": [
+    "Untitled.md",
+    "README.md",
     "tsconfig.json",
     "stylelint.config.mjs",
     "src/app/(home)/reference/[[...slug]]/page.tsx",
@@ -195,7 +197,6 @@
     "src/components/lab/LabListHeader/index.tsx",
     "src/components/lab/LabListGrid/index.tsx",
     "src/components/lab/LabList/styles.module.css",
-    "src/components/lab/LabList/index.tsx",
     "src/app/icon.png",
     "public/files/Pasted image 20260213231019.png",
     "public/files/Pasted image 20260213204111.png",
@@ -208,7 +209,6 @@
     "public/brand/go-dark.svg",
     "docs/reference/go/modules/performance/metrics/supply/supply_by_agency.md",
     "docs/lab/002.md",
-    "docs/lab/001.md",
-    "README.md"
+    "docs/lab/001.md"
   ]
 }
