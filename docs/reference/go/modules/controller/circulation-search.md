@@ -23,4 +23,8 @@ Quando um termo não corresponde diretamente a um filtro conhecido, o sistema ut
 
 #### Identificador da circulação
 
-A pesquisa pelo `id` da circulação é a forma mais direta de chegar a uma circulação específica. Os identificadores são ún
+A pesquisa pelo `id` da circulação é a forma mais direta de chegar a uma circulação específica. Os identificadores são únicos.
+
+As circulações são identificadas com o seguinte formato `[plan_]`
+
+O9AXB-41-20260302-1633_1_2_0700_0729_0_1
