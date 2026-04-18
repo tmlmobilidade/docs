@@ -63,51 +63,16 @@ Isto permite refinar significativamente os resultados.
 - `v:120`
 - `v:120,121,122`
 
-Neste modo, serão apresentadas circulações associadas aos veículos indicados.
-
-Também é possível combinar com texto livre:
-
-- `v:120 atraso`
-- `v:121 linha azul`
-
 ---
 
 ## **Pesquisa por Motorista**
 
-É igualmente possível filtrar por motorista através do prefixo:
-
-```text
-d:
-```
+É igualmente possível filtrar por motorista através do prefixo: `d:`
 
 **Exemplos:**
 
 - `d:4501`
 - `d:4501,4502`
-
-Serão apresentadas circulações associadas aos motoristas indicados.
-
-Também pode ser combinado com outros critérios:
-
-- `d:4501 manhã`
-- `d:4502 v:120`
-
----
-
-## **Combinação de Filtros**
-
-Os filtros podem ser utilizados em simultâneo para pesquisas mais específicas.
-
-**Exemplos:**
-
-- `v:120 d:4501`
-- `v:120,121 d:4501 atraso`
-- `d:4502 linha12`
-
-Nestes casos, apenas serão devolvidos resultados que cumpram todos os critérios indicados.
-
----
-
 ## **Boas Práticas**
 
 Para melhores resultados:
