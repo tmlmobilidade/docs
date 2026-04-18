@@ -37,6 +37,10 @@ Os códigos operacionais podem ser separados em:
 
 Estes permitem-nos especificar se queremos filtrar as circulações por linha, rota ou direção da rota.
 
+#### Horário da circulação
+
+Podemos filtar as circulações por hora de partida ou hora de fim
+
 #### Veículo associado
 
 É possível filtrar diretamente por identificador de veículo através do prefixo `v:{vehicle_id}`
@@ -53,4 +57,3 @@ Como por exemplo `d:1234`
 É possivel ainda pesquisar por múltiplos motoristas de uma só vez, separando os valores por virgulas
 Como por exemplo `v:1234,5678`
 
-#Horário da circulação
