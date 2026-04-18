@@ -39,7 +39,7 @@ Estes permitem-nos especificar se queremos filtrar as circulações por linha, r
 
 #### Horário da circulação
 
-Podemos filtar as circulações por hora de partida ou hora de fim
+Podemos filtar as circulações por **hora de partida** ou **hora de chegada** como identificadas no 
 
 #### Veículo associado
 
