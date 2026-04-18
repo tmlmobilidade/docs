@@ -12,7 +12,7 @@ A pesquisa pode ser utilizada tanto para consultas simples como para combinaçõ
 Ao introduzir texto no campo de pesquisa, o sistema analisa cada termo individualmente e tenta associá-lo ao tipo de informação mais relevante, como por exemplo:
 
 - Identificador da circulação
-- Códigos ou referências operacionais
+- Códigos operacionais
 - Veículo associado
 - Motorista associado
 - Horário da circulação
@@ -28,7 +28,7 @@ A pesquisa pelo `id` da circulação é a forma mais direta de chegar a uma circ
 As circulações são identificadas com o seguinte formato `[plan_id]-[agency_id]-[operational_day]-[trip_id]`
 Um exemplo de um `id` de uma circulação é `O9AXB-41-20260302-1001_0_1_0700_0729_0_1`.
 
-**Códigos ou referências operacionais**
+**Códigos operacionais**
 
 Os códigos operacionais podem ser separados em:
 - `line_id` - `1001`
@@ -39,7 +39,8 @@ Estes permitem-nos especificar se queremos filtrar as circulações por linha, r
 
 #### Horário da circulação
 
-Podemos filtar as circulações por **hora de partida** ou **hora de chegada** como identificadas no 
+Podemos filtrar as circulações por **hora de partida** (ex.: 0700) ou **hora de chegada** (0729) como identificadas no `id`
+Nota: Apenas é possível utilizar este filtro após inserido um código operacional
 
 #### Veículo associado
 
