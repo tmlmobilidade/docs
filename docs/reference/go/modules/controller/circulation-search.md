@@ -31,4 +31,6 @@ Um exemplo de um `id` de uma circulação é `O9AXB-41-20260302-1001_0_1_0700_07
 **Códigos ou referências operacionais**
 
 Os códigos operacionais podem ser separados em:
-- `line_id` - 
+- `line_id` - `1001`
+- `route_id` - `1001_0`
+- `pattern_id ` - `1001_0_1`
