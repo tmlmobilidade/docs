@@ -11,10 +11,10 @@ A pesquisa pode ser utilizada tanto para consultas simples como para combinaçõ
 
 Ao introduzir texto no campo de pesquisa, o sistema analisa cada termo individualmente e tenta associá-lo ao tipo de informação mais relevante, como por exemplo:
 
-- Identificador da circulação;
-- Códigos ou referências operacionais;
-- Veículo associado;
-- Motorista associado;
+- Identificador da circulação
+- Códigos ou referências operacionais
+- Veículo associado
+- Motorista associado
 - Horário da circulação
 
 Sempre que possível, os termos são encaminhados para filtros específicos, tornando a pesquisa mais precisa e eficiente.
@@ -22,8 +22,9 @@ Sempre que possível, os termos são encaminhados para filtros específicos, tor
 Quando um termo não corresponde diretamente a um filtro conhecido, o sistema utiliza-o como pesquisa genérica, procurando correspondências no identificador da circulação.
 
 #### Identificador da circulação
-
 A pesquisa pelo `id` da circulação é a forma mais direta de chegar a uma circulação específica. Os identificadores são únicos.
 
 As circulações são identificadas com o seguinte formato `[plan_id]-[agency_id]-[operational_day]-[trip_id]`
-Um exemplo de um `id` de uma circulação é `O9AXB-41-20260302-1633_1_2_0700_0729_0_1
+Um exemplo de um `id` de uma circulação é `O9AXB-41-20260302-1633_1_2_0700_0729_0_1`.
+
+**Códigos ou referências operacionais**
