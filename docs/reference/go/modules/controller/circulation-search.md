@@ -42,11 +42,15 @@ Estes permitem-nos especificar se queremos filtrar as circulações por linha, r
 É possível filtrar diretamente por identificador de veículo através do prefixo `v:{vehicle_id}`
 Como por exemplo `v:1603`
 
-É possivel ainda pesquisar por multiplos veículos de uma só vez, separando os valores por virgulas
+É possível ainda pesquisar por múltiplos veículos de uma só vez, separando os valores por virgulas
 Como por exemplo `v:1603,2000`
 
 #### Motorista associado
 
 É possível filtrar diretamente por identificador de motorista através do prefixo `d:{driver_id}`
-Como por exemplo `d:1603`
+Como por exemplo `d:1234`
 
+É possivel ainda pesquisar por múltiplos motoristas de uma só vez, separando os valores por virgulas
+Como por exemplo `v:1234,5678`
+
+#Horário da circulação
