@@ -23,3 +23,4 @@ Quando um termo não corresponde diretamente a um filtro conhecido, o sistema ut
 
 #### Identificador da circulação
 
+A pesquisa pelo `id` da circulação é a forma mais direta de chegar a uma circulação específica. Os identificadores são ún
