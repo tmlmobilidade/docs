@@ -40,9 +40,12 @@ Estes permitem-nos especificar se queremos filtrar as circulações por linha, r
 #### Veículo associado
 
 É possível filtrar diretamente por identificador de veículo através do prefixo `v:{vehicle_id}`
-Como por exemplo `v:1234`
+Como por exemplo `v:2000`
+
+É possivel ainda pes
 
 #### Motorista associado
 
-É possível filtrar diretamente por identificador de veículo através do prefixo `v:{vehicle_id}`
-Como por exemplo `v:1234`
+É possível filtrar diretamente por identificador de motorista através do prefixo `d:{driver_id}`
+Como por exemplo `d:1603`
+
