@@ -39,4 +39,4 @@ Estes permitem-nos especificar se queremos filtrar as circulações por linha, r
 
 #### Veículo associado
 
-P
+É possível filtrar diretamente por identificador de veículo através do prefixo 
