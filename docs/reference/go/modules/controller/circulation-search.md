@@ -34,3 +34,5 @@ Os códigos operacionais podem ser separados em:
 - `line_id` - `1001`
 - `route_id` - `1001_0`
 - `pattern_id ` - `1001_0_1`
+
+Estes permitem-nos especificar se queremos filtrar as circu
