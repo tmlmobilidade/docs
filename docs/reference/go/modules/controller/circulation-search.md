@@ -25,6 +25,5 @@ Quando um termo não corresponde diretamente a um filtro conhecido, o sistema ut
 
 A pesquisa pelo `id` da circulação é a forma mais direta de chegar a uma circulação específica. Os identificadores são únicos.
 
-As circulações são identificadas com o seguinte formato `[plan_]`
-
-O9AXB-41-20260302-1633_1_2_0700_0729_0_1
+As circulações são identificadas com o seguinte formato `[plan_id]-[agency_id]-[operational_day]-[trip_id]`
+Um exemplo de um `id` de uma circulação é `O9AXB-41-20260302-1633_1_2_0700_0729_0_1
