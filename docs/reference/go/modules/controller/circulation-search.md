@@ -35,4 +35,8 @@ Os códigos operacionais podem ser separados em:
 - `route_id` - `1001_0`
 - `pattern_id ` - `1001_0_1`
 
-Estes permitem-nos especificar se queremos filtrar as circu
+Estes permitem-nos especificar se queremos filtrar as circulações por linha, rota ou direção da rota.
+
+#### Veículo associado
+
+P
