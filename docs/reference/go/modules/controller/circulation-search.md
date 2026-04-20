@@ -4,13 +4,42 @@ description: "-"
 ---
 Devido ao enorme volume de dados, é necessário necessário a aplicação de filtros na pesquisa circulações por sendo que o único filtro obrigatório é o "Intervalo de datas".
 
+---
 ## Barra de Filtros
 
 Na parte superidor da nossa lista encontramos uma lista de vários menus que nos permitem filtara. informação por o filtro correspondente ao título desse botão.
 
 Os filtros disponíveis são:
-- 
+- Intervalo de datas
+- Operador
+- Estado
+- Atraso
+- Aceitação
+- 3 Momentos
+- Fim na Última Paragem
+- Intervalo Validações
+- Sequencialidade APEX
 
+### Intervalo de datas
+
+O filtro por i**ntervalo de datas** é o único que é obrigatório devido ao elevado volume de dados. Este permite-nos filtar as circulações por um intervalo entre o *inicio de hora planeada* (`start_time_scheduled`) e *fim de hora planeada* (`end_time_scheduled`).
+
+### Operador
+
+O filtro por **operador** (`agency_id`) permite-nos apenas visualizar circulações realizadas por os operadores selecionados.
+Por defeito todos os operadores estão selecionados.
+
+### Atraso
+
+O filtro por **atraso** permite-nos filtrar circulações pelo teste de atraso que compara o `start_time_scheduled` com o `start_time_observed`.
+
+As opções disponíveis são:
+- A Horas
+- Atrasada
+- Adiantada
+- (Sem valor) - Quando o teste ainda não foi realizado
+
+---
 ## Pesquisa por Texto
 
 A funcionalidade de pesquisa por texto permite localizar circulações de forma rápida e flexível através da introdução de palavras-chave, identificadores ou filtros diretos. O sistema interpreta automaticamente o conteúdo pesquisado e aplica os critérios mais adequados para encontrar os resultados pretendidos.
