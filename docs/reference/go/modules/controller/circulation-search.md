@@ -2,6 +2,15 @@
 title: Procura de circulações
 description: "-"
 ---
+Devido ao enorme volume de dados, é necessário necessário a aplicação de filtros na pesquisa circulações por sendo que o único filtro obrigatório é o "Intervalo de datas".
+
+## Barra de Filtros
+
+Na parte superidor da nossa lista encontramos uma lista de vários menus que nos permitem filtara. informação por o filtro correspondente ao título desse botão.
+
+Os filtros disponíveis são:
+- 
+
 ## Pesquisa por Texto
 
 A funcionalidade de pesquisa por texto permite localizar circulações de forma rápida e flexível através da introdução de palavras-chave, identificadores ou filtros diretos. O sistema interpreta automaticamente o conteúdo pesquisado e aplica os critérios mais adequados para encontrar os resultados pretendidos.
