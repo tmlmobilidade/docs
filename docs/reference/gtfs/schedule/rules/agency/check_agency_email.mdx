@@ -8,9 +8,9 @@ description: Regras especificas utilizadas pela TML para a validação do agency
 | -------------- | ------ | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `agency_email` | E-mail | Opcional | Endereço de e-mail monitorizado ativamente pelo departamento de apoio ao cliente da agência. Este endereço de e-mail deve ser um ponto de contacto direto onde os utilizadores dos transportes públicos podem contactar um representante do serviço de apoio ao cliente da agência. |
 
-### Validação da integridade do campo
+### Validação quando o campo está vazio
 
-Como o campo `agency_email` é opcional não irá aparecer error ou aviso se não for preenchido.
+No GTFS o campo `agency_email` é opcional. Ainda assim, consoante as regras configuradas, um valor em falta pode ser reportado como aviso (ou erro, se a severidade assim o exigir). Se a validação estiver com severidade a ignorar o campo, não é emitida mensagem por motivo de ausência.
 
 
 ### Validação de email
