@@ -15,7 +15,7 @@ description: Regra utilizada para a consistência da circulação
 
 ### O que esta validação faz (agrupado por pattern_id)
 
-Garante consistência entre `pattern_id` e `direction_id` nas viagens: para um mesmo `pattern_id`, todas as viagens com `direction_id` preenchido devem ter o mesmo sentido de marcha (o mesmo `direction_id`). Em termos de dados: 1 `pattern_id` → no máximo 1 `direction_id` distinto (contando só viagens com `direction_id` definido).
+Garante consistência de `trip_headsign` por `pattern_id`: para um mesmo `pattern_id`, todas as viagens devem partilhar o mesmo texto de destino exibido no veículo. Aqui a regra inclui “presença”: ausência (campo nulo) e cadeia vazia contam como o mesmo valor lógico (`""`), mas misturar “vazio” com um texto concreto não — isso produz dois valores distintos e falha.
 
 
 **Comportamento**
