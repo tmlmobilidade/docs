@@ -1,5 +1,5 @@
 ---
-title: Regra do Route_id (agrupada por pattern_id)
+title: Regra do route_id (agrupada por pattern_id)
 description: Regra utilizada para a consistência da circulação
 ---
 ## Regras de validação do campo route_id
@@ -13,7 +13,7 @@ description: Regra utilizada para a consistência da circulação
 | `pattern_id`  | ID                                                | Obrigatório | O `pattern_id` identifica a variante de serviço em que a viagem opera na linha. <br/><br/>Não faz parte do GTFS standart, mas é obrigatório para nós TML. |
 
 
-### O que esta validação faz (agrupado por `pattern_id`)
+### O que esta validação faz (agrupado por `pattern_id)
 
 Garante consistência entre `pattern_id` e `route_id` nas viagens: para um mesmo `pattern_id`, todas as viagens com `route_id` preenchido devem referir a mesma rota (o mesmo `route_id`). Em termos de dados: 1 `pattern_id` → no máximo 1 `route_id` distinto (entre viagens com `route_id` definido).
 
