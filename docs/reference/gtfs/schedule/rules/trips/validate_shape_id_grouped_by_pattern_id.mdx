@@ -8,6 +8,11 @@ description: Regra utilizada para a consistência da circulação
 | ------------- | ------------------------------------------- | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `shape_id`    | ID externo que referencia `shapes.shape_id` | Condicionalmente obrigatório | Identifica uma forma geoespacial que descreve o trajeto do veículo para uma viagem. <br/><br/>**Condicionalmente obrigatório**:<ul><li>Obrigatório se a viagem tiver um comportamento contínuo de embarque ou desembarque definido em `routes.txt` ou em `stop_times.txt`.</li><li>Opcional caso contrário.</li></ul> |
 
-O objetivo desta regra é a consistência da `shape_id` para isso se agrupa pelo `pattern_id` para realizar uma verificação a todos os `pattern_id` para que impeça a reutilização da mesma `shape_id` em diferentes `pattern_id` 
+
+### Consistência `pattern_id` ↔ `shape_id` (`shape_id_group_validation`)
+
+Esta validação garante que, em `trips.txt`, a relação entre `pattern_id` e `shape_id` (geometria em `shapes.txt`) é coerente em todo o feed. Objetivo: evitar feeds em que o mesmo padrão “aponta” para geometrias diferentes, ou em que a mesma geometria está ligada a padrões que deveriam ser distintos — situações que confundem consumidores (planeamento, mapas, correspondência trip–shape) e dificultam manutenção dos dados.
+
+A verificação faz-se em dois passos (dois `rule_id`), com deduplicação: quando um problema já foi explicado no passo 1, o passo 2 pode deixar de reportar o mesmo caso sob outra forma, para não duplicar erros.
 
 
