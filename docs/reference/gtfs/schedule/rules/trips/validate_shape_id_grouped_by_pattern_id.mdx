@@ -14,12 +14,9 @@ description: Regra utilizada para a consistência da circulação
 Garante que `pattern_id` e `shape_id` andam aos pares de forma estável:  
 Para cada `pattern_id` → uma `shape_id`; 
 
-O que esta regra faz para a validação acontença corretamente é 
-
-“Para cada `pattern_id`, todas as viagens com esse padrão usam o mesmo `shape_id`?”
-
+O que esta regra faz para a validação acontença corretamente: 
+- Passa se: 
 - Falha se: no mesmo `pattern_id` aparecem dois ou mais `shape_id` diferentes (entre viagens que têm `shape_id` preenchido).
-- Passa se: só existe no máximo um `shape_id` distinto nesse grupo, ou ninguém tem `shape_id` (só contam viagens com `shape_id` definido).
 
 Exemplo intuitivo:  
 Padrão A não pode ter uma trip com shape S1 e outra com shape S2. Ou é S1 para todas (com `shape_id`), ou há mistura só com trips sem shape — aí a contagem de shapes distintas pode continuar ≤ 1.
