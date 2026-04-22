@@ -13,7 +13,8 @@ description: Regra utilizada para a consistência da circulação
 
 Garante que, para um dado `shape_id`, todas as viagens com `pattern_id` preenchido referem o mesmo padrão: no máximo um `pattern_id` distinto nesse conjunto. Viagens com `pattern_id` vazio não entram nesse cálculo.
 
-comportamento
+comportamento:
+
 - Válido: zero ou um `pattern_id` distinto entre as que têm o campo definido.
 - Inválido: dois ou mais `pattern_id` diferentes para o mesmo `shape_id` (mensagem alinhada com o i18n: o `shape_id` é usado em múltiplos `pattern_ids`).
 
