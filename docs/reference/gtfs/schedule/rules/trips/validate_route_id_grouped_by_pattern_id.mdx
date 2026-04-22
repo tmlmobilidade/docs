@@ -13,15 +13,17 @@ description: Regra utilizada para a consistência da circulação
 | `pattern_id`  | ID                                                | Obrigatório | O `pattern_id` identifica a variante de serviço em que a viagem opera na linha. <br/><br/>Não faz parte do GTFS standart, mas é obrigatório para nós TML. |
 
 
-### O que esta validação faz (agrupado por pattern_id)
+### O que esta validação faz (agrupado por `pattern_id`)
 
-Garante consistência entre `pattern_id` e `shape_id` nas viagens: para um mesmo `pattern_id`, todas as viagens com `shape_id` preenchido devem referir a mesma geometria (o mesmo `shape_id`). Em termos de dados: 1 `pattern_id` → no máximo 1 `shape_id` distinto.
+Garante consistência entre `pattern_id` e `route_id` nas viagens: para um mesmo `pattern_id`, todas as viagens com `route_id` preenchido devem referir a mesma rota (o mesmo `route_id`). Em termos de dados: 1 `pattern_id` → no máximo 1 `route_id` distinto (entre viagens com `route_id` definido).
 
-Comportamento:
 
-- Passa se, entre as viagens desse `pattern_id`, existir no máximo um `shape_id` diferente a considerar — ou seja, zero ou um valor distinto de `shape_id` vindo só das viagens em que o campo não é nulo (viagens com `shape_id` vazio não entram nesse conjunto e não “criam” variedade).
-- Falha se existirem dois ou mais `shape_id` distintos entre as viagens com `shape_id` definido, para o mesmo `pattern_id`.
+**Comportamento:
 
+- **Passa** se, entre as viagens desse `pattern_id`, existir **no máximo um** `route_id` distinto a considerar — isto é, zero ou um valor de `route_id` vindo **só** das viagens em que o campo **não é nulo** (viagens com `route_id` vazio/nulo não entram nesse conjunto e não “criam” variedade).
+- **Falha** se existirem **dois ou mais** `route_id` distintos entre as viagens com `route_id` definido, para o **mesmo** `pattern_id` (a mensagem inclui o `pattern_id` e a lista de `route_id` em conflito, ordenada).
+
+Em resumo: é o análogo da validação “1 `pattern_id` → 1 `shape_id`”, mas para **`route_id`**, sempre **agrupado por `pattern_id`**, como o comentário do próprio ficheiro indica: *“All trips with the same pattern_id must have the same route_id.”*
 
 
 
