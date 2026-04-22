@@ -15,7 +15,8 @@ Garante que `pattern_id` e `shape_id` andam aos pares de forma estável:
 Para cada `pattern_id` → uma `shape_id`; 
 
 O que esta regra faz para a validação acontença corretamente: 
-- Passa se: 
+
+- Passa se: só existe no máximo um `shape_id` distinto nesse grupo, ou ninguém tem `shape_id` (só contam viagens com `shape_id` definido).
 - Falha se: no mesmo `pattern_id` aparecem dois ou mais `shape_id` diferentes (entre viagens que têm `shape_id` preenchido).
 
 Exemplo intuitivo:  
