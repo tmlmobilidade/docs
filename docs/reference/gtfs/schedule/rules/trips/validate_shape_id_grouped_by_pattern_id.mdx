@@ -19,9 +19,7 @@ O que esta regra faz para a validação acontença corretamente:
 - Passa se: só existe no máximo um `shape_id` distinto nesse grupo, ou ninguém tem `shape_id` (só contam viagens com `shape_id` definido).
 - Falha se: no mesmo `pattern_id` aparecem dois ou mais `shape_id` diferentes (entre viagens que têm `shape_id` preenchido).
 
-Exemplo intuitivo:  
-Padrão A não pode ter uma trip com shape S1 e outra com shape S2. Ou é S1 para todas (com `shape_id`), ou há mistura só com trips sem shape — aí a contagem de shapes distintas pode continuar ≤ 1.
 
-Mensagem: indica o `pattern_id` problemático (`shape_id_group_validation.different_shape_id`).
+
 
 
