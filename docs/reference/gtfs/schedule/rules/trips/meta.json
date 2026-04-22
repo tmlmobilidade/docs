@@ -3,6 +3,7 @@
 		"validate_direction_id_grouped_by_pattern_id",
 		"validate_route_id_grouped_by_pattern_id",
 		"validate_shape_id_grouped_by_pattern_id",
-		"validate_shape_id_grouped_by_shape_id"
+		"validate_shape_id_grouped_by_shape_id",
+		"validate_trip_headsign_grouped_by_pattern_id"
 	]
 }
