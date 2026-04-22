@@ -16,11 +16,11 @@ description: Regra utilizada para a consistência do pattern_id
 
 Valida o formato do `pattern_id` em cada linha de `trips.txt` em que o campo vem preenchido: o valor tem de respeitar um padrão fixo de segmentos separados por `_` (não é validação de existência em `patterns` aqui, só o “shape” do texto — o ficheiro descreve o tipo como chave para `patterns.pattern_id`).
 
-- Primeiro segmento: 1 a 4 carateres, nenhum deles pode ser `_`.
-- Segundo segmento:  exatamente 1 carater que não seja `_`.
-- Terceiro segmento: exatamente 1 carater que não seja `_`.
+- Primeiro segmento: 1 a 4 caracteres, nenhum deles pode ser `_`.
+- Segundo segmento:  exatamente 1 caracter que não seja `_`.
+- Terceiro segmento: exatamente 1 caracter que não seja `_`.
 
-Cada segmento deve ser separado por `_` por isso que não é permitido que algum dos segmentos contenha `_` como caratere
+Cada segmento deve ser separado por `_` por isso que não é permitido que algum dos segmentos contenha `_` como caratere.
 
 O comentário do ficheiro fala de algo na linha de `"X" … "XXXX_X_X"`: o segmento inicial corresponde a 1–4 “letras/identificadores” sem `_`, seguido de `_<um carater>_<um carater>` (ex.: `a_b_c`, `L12_0_1`).
 
