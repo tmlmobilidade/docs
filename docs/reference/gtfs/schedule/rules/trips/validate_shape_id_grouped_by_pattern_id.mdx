@@ -18,7 +18,6 @@ Comportamento:
 - Passa se, entre as viagens desse `pattern_id`, existir no máximo um `shape_id` diferente a considerar — ou seja, zero ou um valor distinto de `shape_id` vindo só das viagens em que o campo não é nulo (viagens com `shape_id` vazio não entram nesse conjunto e não “criam” variedade).
 - Falha se existirem dois ou mais `shape_id` distintos entre as viagens com `shape_id` definido, para o mesmo `pattern_id`.
 
-Nota: Isto não exige que todas as viagens tenham `shape_id`; basta que, entre as que têm, não haja conflito (por exemplo, algumas a `NULL` e outras com o mesmo `shape_id` ainda passa).
 
 
 
