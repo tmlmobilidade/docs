@@ -9,13 +9,5 @@ description: Regra utilizada para a consistência da circulação
 | `shape_id`    | ID externo que referencia `shapes.shape_id` | Condicionalmente obrigatório | Identifica uma forma geoespacial que descreve o trajeto do veículo para uma viagem. <br/><br/>**Condicionalmente obrigatório**:<ul><li>Obrigatório se a viagem tiver um comportamento contínuo de embarque ou desembarque definido em `routes.txt` ou em `stop_times.txt`.</li><li>Opcional caso contrário.</li></ul> |
 
 
-### Validação quando o campo está vazio
-
-No GTFS o campo `agency_email` é opcional. Ainda assim, consoante as regras configuradas, um valor em falta pode ser reportado como recomendação (ou erro, se a severidade assim o exigir). Se a validação estiver com severidade a ignorar o campo, não é emitida mensagem por motivo de ausência.
-
-
-### Validação de formato (e-mail)
-
-Se o campo estiver preenchido, o valor é validado quanto a formato de endereço de e-mail. Valores inválidos são reportados caso passem na validação onde devolve erro caso não um formato de email por exemplo `bg.exemplo.com`.
 
 
