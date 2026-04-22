@@ -2,26 +2,34 @@
 title: Regra do formato do pattern_id
 description: Regra utilizada para a consistência do pattern_id
 ---
-## Regras de validação do campo trip_headsign
+## Regras de validação do campo pattern_id
 
 
 ### Campos que serão utilizados nesta regra
 
-| Nome do Campo   | Tipo  | Presença    | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| --------------- | ----- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `pattern_id`    | ID    | Obrigatório | O `pattern_id` identifica a variante de serviço em que a viagem opera na linha. <br/><br/>Não faz parte do GTFS standart, mas é obrigatório para nós TML.                                                                                                                                                                                                                                                                                                              |
+| Nome do Campo | Tipo | Presença    | Descrição                                                                                                                                                 |
+| ------------- | ---- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pattern_id`  | ID   | Obrigatório | O `pattern_id` identifica a variante de serviço em que a viagem opera na linha. <br/><br/>Não faz parte do GTFS standart, mas é obrigatório para nós TML. |
 
 
-### O que esta validação faz (agrupado por pattern_id)
+### Que formato é validado
 
-Garante consistência de `trip_headsign` por `pattern_id`: para um mesmo `pattern_id`, todas as viagens devem partilhar o mesmo texto de destino exibido no veículo. Aqui a regra inclui “presença”: ausência (campo nulo) e cadeia vazia contam como o mesmo valor lógico (`""`), mas misturar “vazio” com um texto concreto não — isso produz dois valores distintos e falha.
+Valida o formato do `pattern_id` em cada linha de `trips.txt` em que o campo vem preenchido: o valor tem de respeitar um padrão fixo de segmentos separados por `_` (não é validação de existência em `patterns` aqui, só o “shape” do texto — o ficheiro descreve o tipo como chave para `patterns.pattern_id`).
 
+- Primeiro segmento: 1 a 4 carateres, nenhum deles pode ser `_`.
+- Segundo segmento:  exatamente 1 carater que não seja `_`.
+- Terceiro segmento: exatamente 1 carater que não seja `_`.
+
+Cada segmento deve ser separado por `_` por isso que não é permitido que algum dos segmentos contenha `_` como caratere
+
+O comentário do ficheiro fala de algo na linha de `"X" … "XXXX_X_X"`: o segmento inicial corresponde a 1–4 “letras/identificadores” sem `_`, seguido de `_<um carater>_<um carater>` (ex.: `a_b_c`, `L12_0_1`).
 
 Comportamento
 
-- Passa se, para esse `pattern_id`, existir no máximo um `trip_headsign` “efetivo” distinto, isto é: zero ou um valor entre: ausência, string vazia (ambos `""`) e, no máximo, uma cadeia não vazia partilhada por todas as viagens. Na prática: ou todas têm o mesmo texto, ou todas estão vazias/ausentes (só a chave `""`).
-- Falha se existirem dois ou mais valores distintos: por exemplo, uma viagem com headsign e outra sem, ou duas cadeias não vazias diferentes.
+- Passa (sem fazer nada) se `pattern_id` for nulo — o campo continua opcional a nível de presença.
+- Passa se o valor, quando existe, corresponde à expressão regular acima.
+- Falha se `pattern_id` estiver preenchido mas não corresponder ao formato (a mensagem inclui o valor inválido, chave `pattern_id_format_validation.invalid`).
 
-Diferença em relação a `route_id` / `shape_id` / `direction_id` (agrupados): nesses, viagens com o campo não preenchido em geral não entram no conjunto de “variedade”. Aqui, cada viagem contribui: ausência/empty é um valor, por isso “metade vazio e metade preenchido” no mesmo `pattern_id` falha.
+Resumo: é uma validação por viagem/linha, não por grupo; exige, quando o ID está presente, o formato canónico com dois separadores e comprimento do primeiro bloco entre 1 e 4 carateres sem `_`.
 
 

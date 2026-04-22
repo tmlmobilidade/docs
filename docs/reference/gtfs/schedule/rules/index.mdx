@@ -16,19 +16,6 @@ Validações que confirmam a correspondência ou igualdade entre campos.
 
 
 
-### Validações de presenças
-
-Validações que garantem que um campo aparece corretamente ao longo das diferentes linhas do ficheiro.
-
-| ID da Regra                      | Título                                             | Descrição                                                                          | GTFS Standard | GTFS TML    |
-| -------------------------------- | -------------------------------------------------- | ---------------------------------------------------------------------------------- | ------------- | ----------- |
-| `route_id_group_validation`      | O `pattern_id` utiliza diferentes `route_id`.      | Valida se no mesmo `pattern_id` existe a utilização de diferentes `route_id`.      | -             | Obrigatório |
-| `direction_id_group_validation`  | O `pattern_id` utiliza diferentes `direction_id`.  | Valida se no mesmo `pattern_id` existe a utilização de diferentes `direction_id`.  | -             | Obrigatório |
-| `shape_id_group_validation`      | O `pattern_id` utiliza diferentes `shape_id`.      | Valida se no mesmo `pattern_id` existe a utilização de diferentes `shape_id`.      | -             | Obrigatório |
-| `trip_headsign_group_validation` | O `pattern_id` utiliza diferentes `trip_headsign`. | Valida se no mesmo `pattern_id` existe a utilização de diferentes `trip_headsign`. | -             | Obrigatório |
-
-
-
 ### Validações de caracteres
 
 Validações que garantem um número máximo de caracteres.
@@ -44,10 +31,9 @@ Validações que garantem um número máximo de caracteres.
 
 Validações que garantem que os valores seguem um formato específico
 
-| ID da Regra         | Título                                                              | Descrição                                                                                                                                                | GTFS Standard | GTFS TML    |
-| ------------------- | ------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | ----------- |
-| `pattern_id_format` | O `pattern_id` não corresponde a um formato valido.                 | Valida se o `pattern_id` corresponde a um formato valido, por defeito é X_X_X até XXXX_X_X mas existe algumas exceções que podem conter outros formatos  | -             | Obrigatório |
-| `License_plate`     | A `License_plate` não corresponde a um formato devidamente correto. | Valida se a `License_plate` corresponde ao formato devidamente correto <br/><br/>Pode aparecer aviso se não for introduzido sem "-" por exemplo AA-00-AA | -             | Obrigatório |
+| ID da Regra     | Título                                                              | Descrição                                                                                                                                                | GTFS Standard | GTFS TML    |
+| --------------- | ------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | ----------- |
+| `License_plate` | A `License_plate` não corresponde a um formato devidamente correto. | Valida se a `License_plate` corresponde ao formato devidamente correto <br/><br/>Pode aparecer aviso se não for introduzido sem "-" por exemplo AA-00-AA | -             | Obrigatório |
 
 
 
