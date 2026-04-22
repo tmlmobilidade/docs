@@ -12,11 +12,10 @@ description: Regra utilizada para a consistência da circulação
 ### O que esta validação faz
 
 Garante que `pattern_id` e `shape_id` andam aos pares de forma estável:  
-(1) patter  → uma geometria; (2) uma geometria → um padrão (no sentido em que o código verifica — ver abaixo).
+Para cada `pattern_id` → uma `shape_id`; 
 
-Há duas verificações no mesmo ficheiro; a segunda evita repetir o mesmo problema se a primeira já o explicou.
+O que esta regra faz para a validação acontença corretamente é 
 
-Pergunta que o código faz:  
 “Para cada `pattern_id`, todas as viagens com esse padrão usam o mesmo `shape_id`?”
 
 - Falha se: no mesmo `pattern_id` aparecem dois ou mais `shape_id` diferentes (entre viagens que têm `shape_id` preenchido).
