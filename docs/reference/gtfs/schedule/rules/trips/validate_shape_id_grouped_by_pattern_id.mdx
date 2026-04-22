@@ -11,12 +11,12 @@ description: Regra utilizada para a consistência da circulação
 
 ### O que esta validação faz (agrupado por `pattern_id`)
 
-Garante que, para um dado `shape_id`, todas as viagens com `pattern_id` preenchido referem o mesmo padrão: no máximo um `pattern_id` distinto nesse conjunto. Viagens com `pattern_id` vazio não entram nesse cálculo.
+Garante consistência entre `pattern_id` e `shape_id` nas viagens: para um mesmo `pattern_id`, todas as viagens com `shape_id` preenchido devem referir a mesma geometria (o mesmo `shape_id`). Em termos de dados: 1 `pattern_id` → no máximo 1 `shape_id` distinto.
 
-comportamento:
+Comportamento:
 
-- Válido: zero ou um `pattern_id` distinto entre as que têm o campo definido.
-- Inválido: dois ou mais `pattern_id` diferentes para o mesmo `shape_id` (mensagem alinhada com o i18n: o `shape_id` é usado em múltiplos `pattern_ids`).
+- Passa se, entre as viagens desse `pattern_id`, existir no máximo um `shape_id` diferente a considerar — ou seja, zero ou um valor distinto de `shape_id` vindo só das viagens em que o campo não é nulo (viagens com `shape_id` vazio não entram nesse conjunto e não “criam” variedade).
+- Falha se existirem dois ou mais `shape_id` distintos entre as viagens com `shape_id` definido, para o mesmo `pattern_id`.
 
 Nota: Isto não exige que todas as viagens tenham `shape_id`; basta que, entre as que têm, não haja conflito (por exemplo, algumas a `NULL` e outras com o mesmo `shape_id` ainda passa).
 
