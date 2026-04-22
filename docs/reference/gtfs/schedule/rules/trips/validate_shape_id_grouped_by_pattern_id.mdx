@@ -9,7 +9,7 @@ description: Regra utilizada para a consistência da circulação
 | `shape_id`    | ID externo que referencia `shapes.shape_id` | Condicionalmente obrigatório | Identifica uma forma geoespacial que descreve o trajeto do veículo para uma viagem. <br/><br/>**Condicionalmente obrigatório**:<ul><li>Obrigatório se a viagem tiver um comportamento contínuo de embarque ou desembarque definido em `routes.txt` ou em `stop_times.txt`.</li><li>Opcional caso contrário.</li></ul> |
 
 
-### O que esta validação faz (agrupado por `pattern_`)
+### O que esta validação faz (agrupado por `pattern_id`)
 
 Garante consistência entre `pattern_id` e `shape_id` nas viagens: para um mesmo `pattern_id`, todas as viagens com `shape_id` preenchido devem referir a mesma geometria (o mesmo `shape_id`). Em termos de dados: 1 padrão → no máximo 1 `shape_id` distinto.
 
