@@ -9,10 +9,22 @@ description: Regra utilizada para a consistência da circulação
 | `shape_id`    | ID externo que referencia `shapes.shape_id` | Condicionalmente obrigatório | Identifica uma forma geoespacial que descreve o trajeto do veículo para uma viagem. <br/><br/>**Condicionalmente obrigatório**:<ul><li>Obrigatório se a viagem tiver um comportamento contínuo de embarque ou desembarque definido em `routes.txt` ou em `stop_times.txt`.</li><li>Opcional caso contrário.</li></ul> |
 
 
-### Consistência `pattern_id` ↔ `shape_id` (`shape_id_group_validation`)
+### O que esta validação faz
 
-Esta validação garante que, em `trips.txt`, a relação entre `pattern_id` e `shape_id` (geometria em `shapes.txt`) é coerente em todo o feed. Objetivo: evitar feeds em que o mesmo padrão “aponta” para geometrias diferentes, ou em que a mesma geometria está ligada a padrões que deveriam ser distintos — situações que confundem consumidores (planeamento, mapas, correspondência trip–shape) e dificultam manutenção dos dados.
+Garante que `pattern_id` e `shape_id` andam aos pares de forma estável:  
+(1) patter  → uma geometria; (2) uma geometria → um padrão (no sentido em que o código verifica — ver abaixo).
 
-A verificação faz-se em dois passos (dois `rule_id`), com deduplicação: quando um problema já foi explicado no passo 1, o passo 2 pode deixar de reportar o mesmo caso sob outra forma, para não duplicar erros.
+Há duas verificações no mesmo ficheiro; a segunda evita repetir o mesmo problema se a primeira já o explicou.
+
+Pergunta que o código faz:  
+“Para cada `pattern_id`, todas as viagens com esse padrão usam o mesmo `shape_id`?”
+
+- Falha se: no mesmo `pattern_id` aparecem dois ou mais `shape_id` diferentes (entre viagens que têm `shape_id` preenchido).
+- Passa se: só existe no máximo um `shape_id` distinto nesse grupo, ou ninguém tem `shape_id` (só contam viagens com `shape_id` definido).
+
+Exemplo intuitivo:  
+Padrão A não pode ter uma trip com shape S1 e outra com shape S2. Ou é S1 para todas (com `shape_id`), ou há mistura só com trips sem shape — aí a contagem de shapes distintas pode continuar ≤ 1.
+
+Mensagem: indica o `pattern_id` problemático (`shape_id_group_validation.different_shape_id`).
 
 
