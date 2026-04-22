@@ -1,0 +1,26 @@
+---
+title: Regra especifica sobre o shape_id
+description: Regra utilizada para a consistência da circulação
+---
+## Regras de validação do campo shape_id
+
+| Nome do Campo | Tipo                                        | Presença                     | Descrição                                                                                                                                                                                                                                                                                                             |
+| ------------- | ------------------------------------------- | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `shape_id`    | ID externo que referencia `shapes.shape_id` | Condicionalmente obrigatório | Identifica uma forma geoespacial que descreve o trajeto do veículo para uma viagem. <br/><br/>**Condicionalmente obrigatório**:<ul><li>Obrigatório se a viagem tiver um comportamento contínuo de embarque ou desembarque definido em `routes.txt` ou em `stop_times.txt`.</li><li>Opcional caso contrário.</li></ul> |
+
+
+### O que esta validação faz ( agrupado por `shape_id`)
+
+Garante a relação inversa à do 1.º passo: para um mesmo `shape_id`, as viagens com `pattern_id` preenchido não devem misturar vários padrões distintos. Em termos de dados: 1 forma geométrica → no máximo 1 `pattern_id` distinto (entre as viagens em que o padrão está definido).
+
+Comportamento (linhas 49–82):
+
+- Passa se, nesse `shape_id`, existir no máximo um `pattern_id` diferente a considerar — ou seja, zero ou um valor distinto de `pattern_id` contando só as viagens em que o campo não é nulo (viagens com `pattern_id` vazio não “criam” conflito entre padrões).
+- Falha se aparecerem dois ou mais `pattern_id` distintos entre as viagens com `pattern_id` definido, para o mesmo `shape_id` — e o aviso exibido é o que está em i18n: _o `shape_id` dado é utilizado em múltiplos `pattern_ids`._
+
+Deduplicação: Se o 1.º passo já tiver sinalizado o mesmo conflito (o par `(pattern_id, shape_id)` está em `reportedPairs`), este 2.º passo não volta a emitir o erro, para evitar mensagens duplicadas para o mesmo problema lógico.
+
+Nota: O identificador da chave de tradução (`multiple_shape_id_in_unique_pattern_id`) fala de “`shape_id`” em padrão único; na prática o texto em português descreve corretamente: em mais do que um `pattern_id` para aquele `shape_id`. Podes documentar a regra pelo texto da aplicação, não pelo nome da chave.
+
+
+
