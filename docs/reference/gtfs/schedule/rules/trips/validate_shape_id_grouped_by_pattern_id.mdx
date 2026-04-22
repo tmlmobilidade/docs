@@ -9,16 +9,16 @@ description: Regra utilizada para a consistência da circulação
 | `shape_id`    | ID externo que referencia `shapes.shape_id` | Condicionalmente obrigatório | Identifica uma forma geoespacial que descreve o trajeto do veículo para uma viagem. <br/><br/>**Condicionalmente obrigatório**:<ul><li>Obrigatório se a viagem tiver um comportamento contínuo de embarque ou desembarque definido em `routes.txt` ou em `stop_times.txt`.</li><li>Opcional caso contrário.</li></ul> |
 
 
-### O que esta validação faz
+### O que esta validação faz (agrupado por `pattern_`)
 
-Garante que `pattern_id` e `shape_id` andam aos pares de forma estável:  
-Para cada `pattern_id` → uma `shape_id`; 
+Garante consistência entre `pattern_id` e `shape_id` nas viagens: para um mesmo `pattern_id`, todas as viagens com `shape_id` preenchido devem referir a mesma geometria (o mesmo `shape_id`). Em termos de dados: 1 padrão → no máximo 1 `shape_id` distinto.
 
-O que esta regra faz para a validação acontença corretamente: 
+Comportamento (só o trecho 19–46):
 
-- Passa se: só existe no máximo um `shape_id` distinto nesse grupo, ou ninguém tem `shape_id` (só contam viagens com `shape_id` definido).
-- Falha se: no mesmo `pattern_id` aparecem dois ou mais `shape_id` diferentes (entre viagens que têm `shape_id` preenchido).
+- Passa se, entre as viagens desse `pattern_id`, existir no máximo um `shape_id` diferente a considerar — ou seja, zero ou um valor distinto de `shape_id` vindo só das viagens em que o campo não é nulo (viagens com `shape_id` vazio não entram nesse conjunto e não “criam” variedade).
+- Falha se existirem dois ou mais `shape_id` distintos entre as viagens com `shape_id` definido, para o mesmo `pattern_id`.
 
+Nota: Isto não exige que todas as viagens tenham `shape_id`; basta que, entre as que têm, não haja conflito (por exemplo, algumas a `NULL` e outras com o mesmo `shape_id` ainda passa).
 
 
 
