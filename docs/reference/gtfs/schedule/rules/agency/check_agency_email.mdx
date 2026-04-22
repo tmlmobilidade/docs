@@ -13,7 +13,7 @@ description: Regras especificas utilizadas pela TML para a validação do agency
 No GTFS o campo `agency_email` é opcional. Ainda assim, consoante as regras configuradas, um valor em falta pode ser reportado como recomendação (ou erro, se a severidade assim o exigir). Se a validação estiver com severidade a ignorar o campo, não é emitida mensagem por motivo de ausência.
 
 
-### Validação de email
+### Validação de formato (e-mail)
 
-Caso seja preenchido o vai ser verificado se o texto introduzido é realmente um email ou não.
+Se o campo estiver preenchido, o valor é validado quanto a formato de endereço de e-mail. Valores inválidos são reportados como erro.
 
