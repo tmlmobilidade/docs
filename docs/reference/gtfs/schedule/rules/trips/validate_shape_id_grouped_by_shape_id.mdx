@@ -13,7 +13,7 @@ description: Regra utilizada para a consistência da circulação
 | `pattern_id`  | ID                                          | Obrigatório                  | O `pattern_id` identifica a variante de serviço em que a viagem opera na linha. <br/><br/>Não faz parte do GTFS standart, mas é obrigatório para nós TML.                                                                                                                                                               |
 
 
-### O que esta validação faz (agrupado por `shape_id)
+### O que esta validação faz (agrupado por shape_id)
 
 Garante que, para um dado `shape_id`, todas as viagens com `pattern_id` preenchido referem o mesmo padrão: no máximo um `pattern_id` distinto nesse conjunto. Viagens com `pattern_id` vazio não entram nesse cálculo.
 
