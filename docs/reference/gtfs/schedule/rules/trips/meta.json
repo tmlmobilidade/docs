@@ -1,0 +1,6 @@
+{
+	"pages": [
+		"validate_shape_id_grouped_by_pattern_id",
+		"validate_shape_id_grouped_by_shape_id"
+	]
+}
