@@ -1,5 +1,6 @@
 {
-  "pages": [
-    "files"
-  ]
+	"pages": [
+		"files",
+		"rules"
+	]
 }
