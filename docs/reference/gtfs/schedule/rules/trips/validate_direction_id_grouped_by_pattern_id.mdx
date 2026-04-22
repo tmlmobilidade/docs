@@ -13,17 +13,17 @@ description: Regra utilizada para a consistência da circulação
 | `pattern_id`   | ID   | Obrigatório | O `pattern_id` identifica a variante de serviço em que a viagem opera na linha. <br/><br/>Não faz parte do GTFS standart, mas é obrigatório para nós TML.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 
 
-### O que esta validação faz (agrupado por pattern_id)
+### O que esta validação faz (agrupado por `pattern_id)
 
-Garante consistência entre `pattern_id` e `route_id` nas viagens: para um mesmo `pattern_id`, todas as viagens com `route_id` preenchido devem referir a mesma rota (o mesmo `route_id`). Em termos de dados: 1 `pattern_id` → no máximo 1 `route_id` distinto (entre viagens com `route_id` definido).
+Garante consistência entre `pattern_id` e `direction_id` nas viagens: para um mesmo `pattern_id`, todas as viagens com `direction_id` preenchido devem ter o mesmo sentido de marcha (o mesmo `direction_id`). Em termos de dados: 1 `pattern_id` → no máximo 1 `direction_id` distinto (contando só viagens com `direction_id` definido).
 
-Comportamento:
 
-- **Passa** se, entre as viagens desse `pattern_id`, existir **no máximo um** `route_id` distinto a considerar — isto é, zero ou um valor de `route_id` vindo **só** das viagens em que o campo **não é nulo** (viagens com `route_id` vazio/nulo não entram nesse conjunto e não “criam” variedade).
-- **Falha** se existirem **dois ou mais** `route_id` distintos entre as viagens com `route_id` definido, para o **mesmo** `pattern_id` (a mensagem inclui o `pattern_id` e a lista de `route_id` em conflito, ordenada).
+**Comportamento**
 
-Em resumo: é o análogo da validação “1 `pattern_id` → 1 `shape_id`”, mas para **`route_id`**, sempre **agrupado por `pattern_id`**.
+- **Passa** se, para esse `pattern_id`, existir **no máximo um** `direction_id` distinto entre as viagens em que o campo **não é nulo** (viagens com `direction_id` vazio/nulo **não** entram no conjunto e não “criam” variedade).
+- **Falha** se existirem **dois ou mais** `direction_id` distintos entre as viagens com `direction_id` definido, para o **mesmo** `pattern_id` (a mensagem inclui o `pattern_id` e os valores em conflito, ordenados e formatados como inteiros).
 
+Resumo: é o mesmo desenho que `route_id` e `shape_id` a nível de `pattern_id`, mas aplicado ao **enum** `direction_id` de `trips.txt`, conforme o comentário: *“All trips with the same pattern_id must have the same direction_id.”*
 
 
 
