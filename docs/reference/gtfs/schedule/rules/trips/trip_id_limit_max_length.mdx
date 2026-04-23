@@ -1,5 +1,5 @@
 ---
-title: Regra do pattern_id (validação)
+title: Regra de limitação do pattern_id
 description: Regra utilizada para a consistência do pattern_id
 ---
 ## Regras de validação do campo pattern_id
@@ -14,14 +14,13 @@ description: Regra utilizada para a consistência do pattern_id
 
 ### O que esta validação faz
 
-Garante que todas as viagens com o mesmo `pattern_id` partilham uma única “assinatura” de sequência de paragens (a mesma cadeia de paragens, na mesma ordem e com os mesmos dados usados para construir o hash). O relatório usa a linha da primeira viagem do grupo (`group.Trips[0].Row`) e a mensagem `pattern_id_validation.multiple_stop_sequence_variations` com o `pattern_id`.
+egra por linha de `trips.txt`: limita o comprimento do `trip_id` (regra TML / perfil do projeto). Mensagem típica: `trip_id_limit_characters_validation.too_long`.
 
 #### Passa
 
-- Se, entre as viagens desse `pattern_id`, existe no máximo um hash de sequência distinto — ou seja, zero ou uma variação de sequência no conjunto `Hash` (na prática, com viagens no grupo, costuma ser uma assinatura comum a todas). Porquê: o mesmo identificador de padrão deve corresponder ao mesmo percurso/sequência em todas as viagens onde aparece.
+- Se `trip_id` for nulo — a função sai sem erro (não aplica o limite de comprimento neste passo; a obrigatoriedade do campo é outra validação). Porquê: só há verificação de tamanho quando existe valor para medir.
+- Se o `trip_id` tiver 36 carateres ou menos. Porquê: cumpre o limite máximo imposto pelo validador.
 
-#### Falha
+### Falha
 
-- Se existem dois ou mais hashes distintos (`len(group.Hash) > 1`) para o mesmo `pattern_id`. Porquê: há viagens etiquetadas com o mesmo padrão mas com sequências de `stop_times` diferentes (paragens, ordem ou dados que entram no hash não coincidem), o que contradiz a ideia de um único padrão geométrico/operacional por `pattern_id`.
-
-Nota: Isto é ao nível do grupo, não linha a linha como a regra dos campos obrigatórios; a comparação é feita depois da verificação de `route_id` / `shape_id` / `direction_id` / `trip_headsign` nesse mesmo ficheiro. Viagens sem `pattern_id` no agrupamento não entram nesta regra.
+- Se o `trip_id` tiver mais de 36 carateres. Porquê: identificadores demasiado longos fogem ao limite acordado para integrações, chaves ou armazenamento.
