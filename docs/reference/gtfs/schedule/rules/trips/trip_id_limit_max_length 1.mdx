@@ -1,0 +1,26 @@
+---
+title: Regra de limitação do pattern_id
+description: Regra utilizada para a consistência do pattern_id
+---
+## Regras de validação do campo pattern_id
+
+
+### Campos que serão utilizados nesta regra
+
+| Nome do Campo | Tipo | Presença    | Descrição                                                                                                                                                 |
+| ------------- | ---- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pattern_id`  | ID   | Obrigatório | O `pattern_id` identifica a variante de serviço em que a viagem opera na linha. <br/><br/>Não faz parte do GTFS standart, mas é obrigatório para nós TML. |
+
+
+### O que esta validação faz
+
+egra por linha de `trips.txt`: limita o comprimento do `trip_id` (regra TML)
+
+#### Passa
+
+- Se `trip_id` for nulo — a função sai sem erro (não aplica o limite de comprimento neste passo; a obrigatoriedade do campo é outra validação). Porquê: só há verificação de tamanho quando existe valor para medir.
+- Se o `trip_id` tiver 36 caracteres ou menos. Porquê: cumpre o limite máximo imposto pelo validador.
+
+#### Falha
+
+- Se o `trip_id` tiver mais de 36 caracteres. Porquê: identificadores demasiado longos fogem ao limite acordado para integrações, chaves ou armazenamento.
