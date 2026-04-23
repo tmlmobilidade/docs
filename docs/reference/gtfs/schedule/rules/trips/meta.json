@@ -4,6 +4,7 @@
 		"route_id_consistent_for_all_patterns_in_trips",
 		"one_shape_id_per_pattern_id_group",
 		"one_trip_headsign_per_pattern_id_group",
-		"trip_headsign_consistent_for_all_patterns_in_trips"
+		"trip_headsign_consistent_for_all_patterns_in_trips",
+		"pattern_id_matches_feed_pattern_id_syntax"
 	]
 }
