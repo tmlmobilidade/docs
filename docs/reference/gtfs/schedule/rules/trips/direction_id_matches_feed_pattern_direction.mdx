@@ -19,7 +19,7 @@ Regra por linha em `trips.txt`: o `direction_id` da viagem tem de coincidi
 
 Convenção: o `pattern_id` deve ter exatamente três segmentos ao fazer `split` por `_` (ex.: `1001_0_1` → rota `1001`, direção `0`, variante `1`). O segundo segmento é interpretado como inteiro e só é aceite se for `0` ou `1`; esse valor tem de ser igual ao `direction_id` da mesma linha.
 
-### Passa
+#### Passa
 
 - Se `pattern_id` tem três partes, o segundo segmento é um inteiro 0 ou 1, e `direction_id` da viagem é exatamente esse valor. Porquê: a direção declarada na viagem está alinhada com a direção embutida no identificador do padrão.
 
