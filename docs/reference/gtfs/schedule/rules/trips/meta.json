@@ -10,6 +10,7 @@
 		"pattern_id_single_trip_signature_per_pattern",
 		"trip_id_limit_max_length",
 		"shape_id_needs_to_be_the_same_as_pattern_id",
-		"direction_id_matches_feed_pattern_direction"
+		"direction_id_matches_feed_pattern_direction",
+		"trip_path_stop_coordinates_referenced_from_stops"
 	]
 }
