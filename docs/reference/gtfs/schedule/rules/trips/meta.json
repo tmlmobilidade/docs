@@ -1,6 +1,6 @@
 {
 	"pages": [
-		"validate_direction_id_grouped_by_pattern_id",
+		"direction_id_consistent_for_all_patterns_in_trips§",
 		"route_id_shared_across_trips_of_same_pattern",
 		"one_shape_id_per_pattern_id_group",
 		"one_trip_headsign_per_pattern_id_group",
