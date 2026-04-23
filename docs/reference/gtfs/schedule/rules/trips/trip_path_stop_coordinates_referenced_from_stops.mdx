@@ -13,7 +13,21 @@ description: Regra
 
 ### O que esta validação faz
 
- O objetivo é alinhar as coordenadas das paragens usadas na viagem com a geometria da shape dessa viagem usando coordenadas vindas de `stops` (cache `stopsCache`) e um cache pré-calculado `stopClosestShapePointsCache` que já marca pares paragem + shape onde a distância à polyline é inválida.
+Partida: cada viagem em `trips.txt` tem um `trip_id`, um `shape_id` (nesta regra só interessa quando a viagem tem shape) e, em `stop_times.txt`, a lista de paragens por onde essa viagem passa.
+
+Passo 1 — Quais paragens?  
+Para essa viagem, o validador percorre os `stop_times` e recolhe os `stop_id` que aparecem no percurso (cada paragem só conta uma vez, mesmo que apareça em vários horários).
+
+Passo 2 — Onde estão as coordenadas?  
+Cada `stop_id` liga-se a um registo em `stops.txt`, onde estão `stop_lat` e `stop_lon`. É a posição da paragem que se usa como referência.
+
+Passo 3 — Qual geometria?  
+O `shape_id` da viagem identifica a polyline (a “linha” do percurso desenhada em `shapes.txt`). A pergunta é: essa linha passa “perto” de cada paragem do percurso?
+
+Passo 4 — Margem de erro (tolerância)  
+Não basta “estar na mesma rua”: há uma distância máxima aceitável entre o ponto da paragem e o ponto mais próximo na shape (em metros). Se a distância ultrapassa essa margem, o par paragem + shape é considerado inválido.
+
+No código que viste, esse cálculo não é feito linha a linha dentro deste ficheiro: os casos já violados vêm num cache pré-calculado (`stopClosestShapePointsCache`, chave tipo `stop_id` + `shape_id`). Esta validação só consulta esse cache e, quando há entrada, reporta na linha da viagem em `trips.txt` a mensagem `coordinates_validation.invalid_distance_to_shape` (com coordenadas da paragem, ponto mais próximo na shape e metros).
 
 Fluxo resumido:
 
