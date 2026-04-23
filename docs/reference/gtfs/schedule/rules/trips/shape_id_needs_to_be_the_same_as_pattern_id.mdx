@@ -14,13 +14,16 @@ description: Regra utilizada para a consistência do pattern_id
 
 ### O que esta validação faz
 
-egra por linha de `trips.txt`: limita o comprimento do `trip_id` (regra TML)
+Regra por linha em `trips.txt`: quando `shape_id` e `pattern_id` vêm ambos preenchidos, o valor de `shape_id` tem de ser igual ao de `pattern_id` (comparação de strings, carácter a carácter). Chave de regra: `shape_id_needs_to_be_the_same_as_pattern_id`; mensagem: `shape_id_same_pattern_id.not_matching`.
 
-#### Passa
+### Passa
 
-- Se `trip_id` for nulo — a função sai sem erro (não aplica o limite de comprimento neste passo; a obrigatoriedade do campo é outra validação). Porquê: só há verificação de tamanho quando existe valor para medir.
-- Se o `trip_id` tiver 36 caracteres ou menos. Porquê: cumpre o limite máximo imposto pelo validador.
+- Se a regra estiver desativada / ignorada pelo `ShouldSkip()`. Porquê: não se aplica a validação neste feed ou neste contexto.
+- Se `shape_id` ou `pattern_id` for nulo (qualquer um em falta). Porquê: a regra só impõe igualdade quando os dois existem; não força preenchimento do outro campo aqui.
+- Se os dois existem e `*shape_id == *pattern_id`. Porquê: cumpre a convenção TML de alinhar o identificador da geometria com o do padrão.
 
-#### Falha
+### Falha
 
-- Se o `trip_id` tiver mais de 36 caracteres. Porquê: identificadores demasiado longos fogem ao limite acordado para integrações, chaves ou armazenamento.
+- Se os dois campos estão preenchidos e os textos diferem. Porquê: no perfil do projeto, o mesmo identificador deve servir de chave coerente para o padrão e para a shape; valores diferentes indicam inconsistência entre `trips.shape_id` e `trips.pattern_id`.
+
+Nota: Isto não verifica se o `shape_id` existe em `shapes.txt` nem se o `pattern_id` existe em `patterns.txt` — só a igualdade literal entre os dois campos da mesma linha de viagem.
