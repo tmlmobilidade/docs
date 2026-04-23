@@ -20,7 +20,7 @@ Garante que todas as viagens com o mesmo `pattern_id` partilham uma única �
 
 - Se, entre as viagens desse `pattern_id`, existe no máximo um hash de sequência distinto — ou seja, zero ou uma variação de sequência no conjunto `Hash` (na prática, com viagens no grupo, costuma ser uma assinatura comum a todas). Porquê: o mesmo identificador de padrão deve corresponder ao mesmo percurso/sequência em todas as viagens onde aparece.
 
-### Falha
+#### Falha
 
 - Se existem dois ou mais hashes distintos (`len(group.Hash) > 1`) para o mesmo `pattern_id`. Porquê: há viagens etiquetadas com o mesmo padrão mas com sequências de `stop_times` diferentes (paragens, ordem ou dados que entram no hash não coincidem), o que contradiz a ideia de um único padrão geométrico/operacional por `pattern_id`.
 
