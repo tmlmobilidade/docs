@@ -20,7 +20,6 @@ Regra por linha em `trips.txt`: quando `shape_id` e `pattern_id` vêm am
 
 - Se a regra estiver desativada / ignorada pelo `ShouldSkip()`. Porquê: não se aplica a validação neste feed ou neste contexto.
 - Se `shape_id` ou `pattern_id` for nulo (qualquer um em falta). Porquê: a regra só impõe igualdade quando os dois existem; não força preenchimento do outro campo aqui.
-- Se os dois existem e `*shape_id == *pattern_id`. Porquê: cumpre a convenção TML de alinhar o identificador da geometria com o do padrão.
 
 ### Falha
 
