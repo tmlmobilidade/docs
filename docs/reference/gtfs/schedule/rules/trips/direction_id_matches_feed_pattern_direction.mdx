@@ -23,7 +23,7 @@ Convenção: o `pattern_id` deve ter exatamente três segmentos ao fazer `s
 
 - Se `pattern_id` tem três partes, o segundo segmento é um inteiro 0 ou 1, e `direction_id` da viagem é exatamente esse valor. Porquê: a direção declarada na viagem está alinhada com a direção embutida no identificador do padrão.
 
-### Falha
+#### Falha
 
 - `direction_pattern_id_match.required` — `pattern_id` ou `direction_id` em falta. Porquê: sem os dois campos não dá para verificar a correspondência.
 - `direction_pattern_id_match.invalid_pattern_id` — o `pattern_id` não se divide em três partes por `_`. Porquê: o formato não segue o esquema `X_Y_Z` esperado para extrair a direção.
