@@ -31,23 +31,11 @@ Passo 4 — Margem de erro (tolerância)
 Não basta “estar na mesma rua”: há uma distância máxima aceitável entre o ponto da paragem e o ponto mais próximo na shape (em metros). Se a distância ultrapassa essa margem, o par paragem + shape é considerado inválido.
 
 
-Fluxo resumido:
-
-1. Obtém os `stop_times` da viagem (cache `tripStopTimesCache` ou leitura ao `gtfs`).
-2. Se a regra está em `ShouldSkip()`, não faz nada e devolve lista vazia.
-3. Se `shape_id` está ausente ou vazio, não valida distância à shape (sai com lista vazia).
-4. Percorre os `stop_times`, deduplica por `stop_id`, e para cada paragem com entrada em `stopsCache` junta as coordenadas conhecidas (`stop_lat` / `stop_lon` em texto).
-5. Para cada paragem assim obtida, monta a chave `stop_id|shape_id` (via `StopShapeCacheKey`) e consulta `stopClosestShapePointsCache`. Se existir entrada, trata-se de violação pré-computada: emite `coordinates_validation.invalid_distance_to_shape` com coordenadas da paragem, identificador da shape, ponto mais próximo na shape (sequência, lat, lon) e distância em metros.
-
-Ou seja: não recalcula geometria aqui; confirma violações já calculadas noutro sítio e reporta na linha da viagem (`trips.txt`), embora os dados de coordenadas venham das paragens referenciadas no percurso.
-
 ---
 
 ### Passa (sem erro desta regra nesta viagem)
 
-- Regra ignorada (`ShouldSkip()`). Porquê: não se aplica neste feed/configuração.
 - Sem `shape_id` (nulo ou string vazia). Porquê: não há linha de shape à qual comparar paragens neste passo.
-- Paragens da viagem que não estão no `stopsCache` são saltadas (não geram mensagem aqui). Porquê: sem dados de `stops` não há o que validar neste fluxo.
 - Para cada paragem considerada, não há entrada de violação em `stopClosestShapePointsCache` para o par `stop_id` + `shape_id` da viagem. Porquê: o pré-cálculo não marcou essa paragem como demasiado afastada da shape.
 
 ---
