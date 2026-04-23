@@ -1,5 +1,5 @@
 ---
-title: Regra do direction_id (agrupada por pattern_id)
+title: Regra do direction_id
 description: Regra utilizada para a consistência da circulação
 ---
 ## Regras de validação do campo direction_id
@@ -15,15 +15,20 @@ description: Regra utilizada para a consistência da circulação
 
 ### O que esta validação faz (agrupado por pattern_id)
 
-Garante consistência entre `pattern_id` e `direction_id` nas viagens: para um mesmo `pattern_id`, todas as viagens com `direction_id` preenchido devem ter o mesmo sentido de marcha (o mesmo `direction_id`). Em termos de dados: 1 `pattern_id` → no máximo 1 `direction_id` distinto (contando só viagens com `direction_id` definido).
+Regra por linha em `trips.txt`: o `direction_id` da viagem tem de coincidir com o segmento de direção codificado no `pattern_id`, no formato esperado pelo perfil do feed (`route_direção_variante` em três partes separadas por `_`). Chave lógica: `direction_id_matches_feed_pattern_direction`.
 
+Convenção: o `pattern_id` deve ter exatamente três segmentos ao fazer `split` por `_` (ex.: `1001_0_1` → rota `1001`, direção `0`, variante `1`). O segundo segmento é interpretado como inteiro e só é aceite se for `0` ou `1`; esse valor tem de ser igual ao `direction_id` da mesma linha.
 
-**Comportamento**
+### Passa
 
-- **Passa** se, para esse `pattern_id`, existir **no máximo um** `direction_id` distinto entre as viagens em que o campo **não é nulo** (viagens com `direction_id` vazio/nulo **não** entram no conjunto e não “criam” variedade).
-- **Falha** se existirem **dois ou mais** `direction_id` distintos entre as viagens com `direction_id` definido, para o **mesmo** `pattern_id` (a mensagem inclui o `pattern_id` e os valores em conflito, ordenados e formatados como inteiros).
+- Se a regra estiver ignorada (`ShouldSkip()`). Porquê: não se aplica neste contexto.
+- Se `pattern_id` tem três partes, o segundo segmento é um inteiro 0 ou 1, e `direction_id` da viagem é exatamente esse valor. Porquê: a direção declarada na viagem está alinhada com a direção embutida no identificador do padrão.
 
-Resumo: é o mesmo desenho que `route_id` e `shape_id` a nível de `pattern_id`, mas aplicado ao **enum** `direction_id` de `trips.txt`
+### Falha
 
+- `direction_pattern_id_match.required` — `pattern_id` ou `direction_id` em falta. Porquê: sem os dois campos não dá para verificar a correspondência.
+- `direction_pattern_id_match.invalid_pattern_id` — o `pattern_id` não se divide em três partes por `_`. Porquê: o formato não segue o esquema `X_Y_Z` esperado para extrair a direção.
+- `direction_pattern_id_match.invalid_direction_id` — o segundo segmento não é um inteiro válido ou está fora do intervalo 0–1. Porquê: só `0` e `1` são direções válidas nesta convenção.
+- `direction_pattern_id_match.not_matching` — o `direction_id` da viagem diferente do número obtido do `pattern_id`. Porquê: a viagem diz uma direção e o `pattern_id` codifica outra.
 
-
+Nota: Isto não valida o formato completo do `pattern_id` (ex. comprimento do primeiro segmento); outras regras podem tratar disso. Aqui só importa três partes, segundo segmento 0 ou 1, e igualdade com `direction_id`.
