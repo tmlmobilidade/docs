@@ -1,5 +1,5 @@
 ---
-title: Regra de stop
+title: Regra de validação do percurso
 description: Regra
 ---
 ## Regras de validação do campo trips
@@ -13,7 +13,7 @@ description: Regra
 
 ### O que esta validação faz
 
- A validação `StopCoordinatesByTripIdValidation`: corre por viagem (linha de `trips.txt` em `row`), com contexto `coordinates_validation` e identificador lógico `trip_path_stop_coordinates_referenced_from_stops`. O objetivo é alinhar as coordenadas das paragens usadas na viagem com a geometria da shape dessa viagem: usa coordenadas vindas de `stops` (cache `stopsCache`) e um cache pré-calculado `stopClosestShapePointsCache` que já marca pares paragem + shape onde a distância à polyline é inválida.
+ O objetivo é alinhar as coordenadas das paragens usadas na viagem com a geometria da shape dessa viagem usando coordenadas vindas de `stops` (cache `stopsCache`) e um cache pré-calculado `stopClosestShapePointsCache` que já marca pares paragem + shape onde a distância à polyline é inválida.
 
 Fluxo resumido:
 
