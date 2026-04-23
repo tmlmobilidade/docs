@@ -33,16 +33,16 @@ Não basta “estar na mesma rua”: há uma distância máxima aceitável ent
 
 ---
 
-### Passa (sem erro desta regra nesta viagem)
+#### Passa (sem erro desta regra nesta viagem)
 
-- Sem `shape_id` (nulo ou string vazia). Porquê: não há linha de shape à qual comparar paragens neste passo.
-- Para cada paragem considerada, não há entrada de violação em `stopClosestShapePointsCache` para o par `stop_id` + `shape_id` da viagem. Porquê: o pré-cálculo não marcou essa paragem como demasiado afastada da shape.
+- A viagem não tem geometria associada (sem identificador de shape ou com o campo vazio). Porquê: sem linha de percurso desenhada não faz sentido exigir proximidade entre paragens e essa linha.
+- Para cada paragem do percurso da viagem, a distância entre o ponto da paragem (coordenadas oficiais da paragem no feed) e o troço da linha do percurso mais próximo fica dentro da margem definida para o projeto. Porquê: a paragem está alinhada com a geometria que a viagem declara usar.
 
 ---
 
 ### Falha
 
-- Para alguma paragem do percurso (única por `stop_id`), existe registo no cache para `stop_id` + `shape_id` da viagem, indicando distância inválida entre o ponto da paragem (coordenadas em `stops`) e a shape. Porquê: o percurso da viagem referencia paragens que, em relação à geometria associada, estão fora da tolerância esperada (detalhes na mensagem: ponto na shape mais próximo e metros).
+- Pelo menos uma paragem utilizada nos horários dessa viagem fica demasiado afastada da linha do percurso: a distância ao ponto mais próximo na geometria ultrapassa a tolerância acordada. Porquê: ou a shape não corresponde ao traçado real das paragens, ou há erro de coordenadas, identificadores trocados, ou geometria desatualizada — o feed fica inconsistente entre “por onde o veículo desenha o percurso” e “onde as paragens estão no mapa”. A mensagem de erro costuma indicar quantos metros faltam ou sobram e onde na linha fica o ponto mais próximo, para facilitar a correção.
 
 ---
 
