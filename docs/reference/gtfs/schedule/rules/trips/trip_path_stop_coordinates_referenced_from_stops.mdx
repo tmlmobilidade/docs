@@ -1,9 +1,8 @@
 ---
 title: Regra de stop
-description: Regra utilizada para a consistência do pattern_id
+description: Regra
 ---
-## Regras de validação do campo pattern_id
-
+## Regras de validação do campo trips
 
 ### Campos que serão utilizados nesta regra
 
@@ -14,16 +13,36 @@ description: Regra utilizada para a consistência do pattern_id
 
 ### O que esta validação faz
 
-Regra por linha de `trips.txt`: limita o comprimento do `trip_id` (regra TML)
+ A validação `StopCoordinatesByTripIdValidation`: corre por viagem (linha de `trips.txt` em `row`), com contexto `coordinates_validation` e identificador lógico `trip_path_stop_coordinates_referenced_from_stops`. O objetivo é alinhar as coordenadas das paragens usadas na viagem com a geometria da shape dessa viagem: usa coordenadas vindas de `stops` (cache `stopsCache`) e um cache pré-calculado `stopClosestShapePointsCache` que já marca pares paragem + shape onde a distância à polyline é inválida.
 
-#### Passa
+Fluxo resumido:
 
-- Se o `trip_id` tiver 36 caracteres ou menos. Porquê: cumpre o limite máximo imposto pelo validador.
+1. Obtém os `stop_times` da viagem (cache `tripStopTimesCache` ou leitura ao `gtfs`).
+2. Se a regra está em `ShouldSkip()`, não faz nada e devolve lista vazia.
+3. Se `shape_id` está ausente ou vazio, não valida distância à shape (sai com lista vazia).
+4. Percorre os `stop_times`, deduplica por `stop_id`, e para cada paragem com entrada em `stopsCache` junta as coordenadas conhecidas (`stop_lat` / `stop_lon` em texto).
+5. Para cada paragem assim obtida, monta a chave `stop_id|shape_id` (via `StopShapeCacheKey`) e consulta `stopClosestShapePointsCache`. Se existir entrada, trata-se de violação pré-computada: emite `coordinates_validation.invalid_distance_to_shape` com coordenadas da paragem, identificador da shape, ponto mais próximo na shape (sequência, lat, lon) e distância em metros.
 
-#### Falha
+Ou seja: não recalcula geometria aqui; confirma violações já calculadas noutro sítio e reporta na linha da viagem (`trips.txt`), embora os dados de coordenadas venham das paragens referenciadas no percurso.
 
-- Se o `trip_id` tiver mais de 36 caracteres. Porquê: identificadores demasiado longos fogem ao limite acordado para integrações, chaves ou armazenamento.
+---
 
-#### Não realizada
+### Passa (sem erro desta regra nesta viagem)
 
--  Se `trip_id` for nulo — a função sai sem erro (não aplica o limite de comprimento neste passo; a obrigatoriedade do campo é outra validação). Porquê: só há verificação de tamanho quando existe valor para medir.
+- Regra ignorada (`ShouldSkip()`). Porquê: não se aplica neste feed/configuração.
+- Sem `shape_id` (nulo ou string vazia). Porquê: não há linha de shape à qual comparar paragens neste passo.
+- Paragens da viagem que não estão no `stopsCache` são saltadas (não geram mensagem aqui). Porquê: sem dados de `stops` não há o que validar neste fluxo.
+- Para cada paragem considerada, não há entrada de violação em `stopClosestShapePointsCache` para o par `stop_id` + `shape_id` da viagem. Porquê: o pré-cálculo não marcou essa paragem como demasiado afastada da shape.
+
+---
+
+### Falha
+
+- Para alguma paragem do percurso (única por `stop_id`), existe registo no cache para `stop_id` + `shape_id` da viagem, indicando distância inválida entre o ponto da paragem (coordenadas em `stops`) e a shape. Porquê: o percurso da viagem referencia paragens que, em relação à geometria associada, estão fora da tolerância esperada (detalhes na mensagem: ponto na shape mais próximo e metros).
+
+---
+
+### Notas úteis para documentação
+
+- O comentário no topo do ficheiro (“validar se stop_lat e stop_lon são válidos”) é genérico; o comportamento concreto é “distância paragem ↔ shape da viagem” usando caches, não um validador isolado de intervalo lat/lon neste ficheiro.
+- A função devolve a lista de `StopCoordinatesValidation` agregada para a viagem (para outros consumidores); as mensagens ligam-se ao `row` da viagem em `trips.txt`.
