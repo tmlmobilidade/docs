@@ -1,7 +1,7 @@
 {
 	"pages": [
 		"direction_id_consistent_for_all_patterns_in_trips",
-		"route_id_shared_across_trips_of_same_pattern",
+		"route_id_consistent_for_all_patterns_in_trips",
 		"one_shape_id_per_pattern_id_group",
 		"one_trip_headsign_per_pattern_id_group",
 		"trip_headsign_consistent_for_all_patterns_in_trips"
