@@ -1,0 +1,25 @@
+---
+title: Regra do pattern_id
+description: Regra utilizada para a consistência do pattern_id
+---
+## Regras de validação do campo pattern_id
+
+
+### Campos que serão utilizados nesta regra
+
+| Nome do Campo | Tipo | Presença    | Descrição                                                                                                                                                 |
+| ------------- | ---- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pattern_id`  | ID   | Obrigatório | O `pattern_id` identifica a variante de serviço em que a viagem opera na linha. <br/><br/>Não faz parte do GTFS standart, mas é obrigatório para nós TML. |
+
+
+### O que esta validação faz
+
+Para cada viagem dentro de cada grupo com o mesmo `pattern_id`, garantir que existem os campos necessários para o validador poder comparar viagens do mesmo padrão: `route_id`, `shape_id`, `direction_id` e `trip_headsign`. Sem isto, não faz sentido exigir que todas as viagens do mesmo `pattern_id` partilhem a mesma “assinatura” (rota, direção, headsign, shape e sequência de paragens), como está descrito no comentário do ficheiro.
+
+Comportamento (por linha de `trips.txt`, dentro de cada grupo):
+
+- Falha (mensagem específica) se algum destes estiver em falta: `shape_id`, `route_id`, `direction_id`, `trip_headsign` (chaves de tradução do tipo `pattern_id_validation.*_not_found`).
+- Não aplica a viagens sem `pattern_id` — essas nem entram em `tripsGroupedByPattern` (ver `main.go` ~87–97).
+
+Nota: Isto não valida formato do texto do `pattern_id` nem existência em `patterns.txt`; isso é coberto por outras regras (`pattern_id_format`, etc.). Depois deste loop, o mesmo ficheiro ainda verifica `len(group.Hash) > 1` e dispara `pattern_id_single_trip_signature_per_pattern` / `multiple_stop_sequence_variations` quando o mesmo `pattern_id` tem mais do que uma variação de sequência de paragens.
+
