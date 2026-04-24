@@ -14,22 +14,34 @@ description: Regra utilizada para a precaução de duplicação de dados
 
 
 
-### O que esta validação faz 
+### O que esta validação faz
 
-Com base das coordenadas (`shape_pt_lat` e `shape_pt_lon`) entre duas `shape_id` vai calcular a distancia entre os dois pontos, com o valor da distancia entre esses dois pontos vai comparar se o `shape_dist_traveled` tem a mesma distancia. tendo em conta de uma margem de erro por ser calculado por diferentes programas.
+Para cada percurso geométrico (conjunto de pontos com o mesmo `shape_id`), os pontos são considerados por ordem (`shape_pt_sequence`).
 
+Entre cada par de pontos consecutivos dessa ordem, o validador:
+
+1. Calcula a distância real no terreno (aproximação de geodesia, como num mapa) a partir da latitude e longitude de cada ponto, expressa em metros.
+2. Calcula, a partir de `shape_dist_traveled`, a diferença entre o valor acumulado no ponto atual e o do ponto anterior — ou seja, o troço que a publicação de dados declara ter sido percorrido entre esses dois pontos, também em metros (o sistema de importação ajusta se os valores no ficheiro forem em quilómetros ou em metros, com base no contexto de toda a forma).
+
+A validação verifica se essas duas grandezas — distância medida pelas coordenadas e o incremento de `shape_dist_traveled` — estão coerentes entre si, permitindo uma tolerância (padrão em metros) porque fontes e ferramentas de publicação raramente coincidem ao milímetro.
+
+Se um dos pontos do par não tiver `shape_dist_traveled`, ou se os valores forem 0 nesse cálculo (início de forma ou “reinício” do percorrido), esse par não é usado nesta regra, para evitar falsos problemas nesses casos.
 
 ---
 
 #### Passa
 
-- Se o valor entre os dois pontos (shapes) corresponde ao valor previsto `shape_dist_traveled`.
+- Quando a diferença entre a distância geográfica e o incremento de `shape_dist_traveled` (em metros) não excede a margem de tolerância definida.
 
 ---
 
 #### Falha
 
-- Se as distancias não corresponderem ultrapassando ate a margem de erro.
+- Quando, para um par de pontos consecutivos válidos, a diferença entre a distância calculada a partir das coordenadas e o incremento de `shape_dist_traveled` ultrapassa a tolerância (e o incremento de `shape_dist_traveled` neste passo é significativo o suficiente para ser considerado).
+- Há ainda um modo resumido quando existem muitas incoerências: em vez de listar dezenas/centenas de ocorrências, o relatório indica o problema de forma agregada.
+
+---
+
 
 
 
