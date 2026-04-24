@@ -19,6 +19,7 @@
 		"rear_display_valid_enum",
 		"registration_date_valid_day_granularity",
 		"side_display_valid_enum",
+		"static_information_valid_enum",
 		"vehicle_agency_id_references_agency_table",
 		"vehicle_make_required",
 		"vehicle_model_required",
