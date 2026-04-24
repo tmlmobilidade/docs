@@ -1,5 +1,5 @@
 ---
-title: Regra do
+title: Regra de existência de monitor a bordo
 description: Regra
 ---
 ## Regras de validação do campo onboard_monitor
@@ -15,21 +15,22 @@ description: Regra
 
 ### O que esta validação faz 
 
+O campo indica, para cada veículo, a existência de monitor a bordo (ecrã informativo para passageiros, por exemplo de próxima paragem ou anúncios), na convenção: não (0) e sim (1).
 
-
+A validação exige o valor preenchido e contido nesse par de opções. Se o projecto definir regras com uma lista de opções permitidas, o registo de cada veículo tem de caber nessa lista; quando a configuração aceita todas as opções válidas, 0 e 1 
 
 ---
 
 #### Passa
 
-
+- Campo preenchido, valor 0 ou 1 e, havendo lista restritiva, opção autorizada pelas regras (ou regras que abrangem todas as opções válidas).
 
 ---
 
 #### Falha
 
-
-
-
+- Campo em falta – não se declara se o veículo tem ou não monitor a bordo.
+- Valor inválido – não é 0 nem 1.
+- Incoerência com as regras do projecto – a opção escolhida não é permitida na lista das regras, quando essa restrição está activa.
 
 
