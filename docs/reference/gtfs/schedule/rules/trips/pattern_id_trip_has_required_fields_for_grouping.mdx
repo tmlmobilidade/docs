@@ -18,7 +18,7 @@ Garante que, em cada viagem que participa num grupo por `pattern_id`, `route_i
 
 #### Passa
 
-- Se a viagem não entra no agrupamento por `pattern_id`** — não há exigência destes campos só por causa desta regra (o validador só aplica isto a viagens que já têm `pattern_id` e foram colocadas no grupo).
+- Se a viagem não entra no agrupamento por `pattern_id` — não há exigência destes campos só por causa desta regra (o validador só aplica isto a viagens que já têm `pattern_id` e foram colocadas no grupo).
 - Se a viagem está nesse grupo e `route_id`, `shape_id`, `direction_id` e `trip_headsign` estão todos definidos (não nulos). Porquê: sem estes quatro valores não dá para tratar todas as viagens do mesmo `pattern_id` de forma comparável com o resto das validações de consistência do padrão; a regra só “deixa passar” quando nada falta.
 
 #### Falha
