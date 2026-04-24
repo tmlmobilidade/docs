@@ -1,5 +1,5 @@
 ---
-title: Regra do
+title: Regra de existência de piso rebaixado
 description: Regra
 ---
 ## Regras de validação do campo lowered_floor
@@ -15,21 +15,20 @@ description: Regra
 
 ### O que esta validação faz 
 
+O campo indica, para cada veículo, se existe piso rebaixado (_lowered floor_) em relação ao solo, facilitando a entrada sem degraus elevados (relevante para acessibilidade). A convenção do feed tem três opções: não (0), sim (1) e não aplicável (2) — por exemplo, quando a classificação do veículo ou o contexto do dado torna a pergunta irrelevante.
 
-
+A validação exige o valor preenchido e que o número seja 0, 1 ou 2. Se o projecto definir regras com uma lista de opções permitidas, cada registo tem de caber nessa lista; quando a configuração aceita todas as opções válidas, qualquer um dos três códigos é aceite, desde que correcto. A gravidade do aviso obedece às regras, ou erro por omissão.
 
 ---
 
 #### Passa
 
-
+- Campo preenchido, valor 0, 1 ou 2 e, havendo lista restritiva, opção autorizada pelas regras (ou regras que abrangem todas as opções válidas).
 
 ---
 
 #### Falha
 
-
-
-
-
-
+- Campo em falta – não se indica se o veículo tem piso rebaixado, não o tem ou o caso não aplicável não se declara.
+- Valor inválido – não é 0, 1 nem 2.
+- Incoerência com as regras do projecto – a opção escolhida não é permitida na lista das regras, quando essa restrição está activa.
