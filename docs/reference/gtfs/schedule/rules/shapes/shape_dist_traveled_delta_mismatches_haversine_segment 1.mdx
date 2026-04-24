@@ -1,0 +1,47 @@
+---
+title: Regra das distancias das shapes (shape_dist_traveled)
+description: Regra utilizada para a precaução de duplicação de dados
+---
+## Regras de validação do campo shape_id
+
+
+### Campos que serão utilizados nesta regra
+
+| Nome do Campo         | Tipo                        | Presença    | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| --------------------- | --------------------------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `shape_id`            | ID                          | Obrigatório | Identifica um formato.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `shape_dist_traveled` | Número decimal não negativo | Opcional    | Distância real percorrida ao longo da forma, desde o primeiro ponto da forma até ao ponto especificado neste registo. Utilizado pelos planeadores de viagens para mostrar a porção correta da forma num mapa. Os valores devem aumentar juntamente com `shape_pt_sequence`; não devem ser utilizados para mostrar o percurso inverso ao longo de um percurso. As unidades de distância devem ser consistentes com as utilizadas em `stop_times.txt`.<br/><br/>Recomendado para percursos com troços em loop ou em linha (o veículo atravessa ou percorre o mesmo troço do alinhamento numa viagem). Se um veículo refaz ou cruza o alinhamento da rota em pontos ao longo de uma viagem, `shape_dist_traveled` é importante para esclarecer como as porções dos pontos em `shapes.txt` se alinham com os registos em `stop_times.txt`.<br/><br/><u>Exemplo</u>: Se um autocarro percorrer os três pontos definidos acima para `A_shp`, os valores adicionais de `shape_dist_traveled` (mostrados aqui em quilómetros) seriam semelhantes aos isto:<br/><br/>`shape_id`,`shape_pt_lat,shape_pt_lon,shape_pt_sequence,shape_dist_traveled`<br/>`A_shp,37.61 956,-122.48161,0,0`<br/>`A_shp,37.64430,-122.41070,6,6.8310`<br/>`A_shp,37.65863,-122.30839,11,15.8765` |
+
+
+
+### O que esta validação faz
+
+Para cada percurso geométrico (conjunto de pontos com o mesmo `shape_id`), os pontos são considerados por ordem (`shape_pt_sequence`).
+
+Entre cada par de pontos consecutivos dessa ordem, o validador:
+
+1. Calcula a distância real no terreno (aproximação de geodesia, como num mapa) a partir da latitude e longitude de cada ponto, expressa em metros.
+2. Calcula, a partir de `shape_dist_traveled`, a diferença entre o valor acumulado no ponto atual e o do ponto anterior — ou seja, o troço que a publicação de dados declara ter sido percorrido entre esses dois pontos, também em metros (o sistema de importação ajusta se os valores no ficheiro forem em quilómetros ou em metros, com base no contexto de toda a forma).
+
+A validação verifica se essas duas grandezas — distância medida pelas coordenadas e o incremento de `shape_dist_traveled` — estão coerentes entre si, permitindo uma tolerância (padrão em metros) porque fontes e ferramentas de publicação raramente coincidem ao milímetro.
+
+Se um dos pontos do par não tiver `shape_dist_traveled`, ou se os valores forem 0 nesse cálculo (início de forma ou “reinício” do percorrido), esse par não é usado nesta regra, para evitar falsos problemas nesses casos.
+
+---
+
+#### Passa
+
+- Quando a diferença entre a distância geográfica e o incremento de `shape_dist_traveled` (em metros) não excede a margem de tolerância definida.
+
+---
+
+#### Falha
+
+- Quando, para um par de pontos consecutivos válidos, a diferença entre a distância calculada a partir das coordenadas e o incremento de `shape_dist_traveled` ultrapassa a tolerância (e o incremento de `shape_dist_traveled` neste passo é significativo o suficiente para ser considerado).
+- Há ainda um modo resumido quando existem muitas incoerências: em vez de listar dezenas/centenas de ocorrências, o relatório indica o problema de forma agregada.
+
+
+
+
+
+
