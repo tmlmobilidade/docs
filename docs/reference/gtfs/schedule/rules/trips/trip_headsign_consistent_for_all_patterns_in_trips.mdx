@@ -22,6 +22,7 @@ Garante consistência de `trip_headsign` por `pattern_id`: para um mesmo `p
 - Se, para esse `pattern_id`, existir no máximo um `trip_headsign` “efetivo” distinto, isto é: zero ou um valor entre: ausência, string vazia (ambos `""`) e, no máximo, uma cadeia não vazia partilhada por todas as viagens. Na prática: ou todas têm o mesmo texto, ou todas estão vazias/ausentes (só a chave `""`).
 
 #### Falha
+
 - Falha se existirem dois ou mais valores distintos: por exemplo, uma viagem com headsign e outra sem, ou duas cadeias não vazias diferentes.
 
 Diferença em relação a `route_id` / `shape_id` / `direction_id` (agrupados): nesses, viagens com o campo não preenchido em geral não entram no conjunto de “variedade”. Aqui, cada viagem contribui: ausência/empty é um valor, por isso “metade vazio e metade preenchido” no mesmo `pattern_id` falha.
