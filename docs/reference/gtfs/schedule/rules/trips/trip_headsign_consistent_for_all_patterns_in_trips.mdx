@@ -15,16 +15,19 @@ description: Regra utilizada para a consistência da circulação
 
 ### O que esta validação faz (agrupado por pattern_id)
 
-Garante consistência de `trip_headsign` por `pattern_id`: para um mesmo `pattern_id`, todas as viagens devem partilhar o mesmo texto de destino exibido no veículo. Aqui a regra inclui “presença”: ausência (campo nulo) e cadeia vazia contam como o mesmo valor lógico (`""`), mas misturar “vazio” com um texto concreto não — isso produz dois valores distintos e falha.
+O destino anunciado na viagem (`trip_headsign`) tem de ser coerente para todas as viagens que partilham o mesmo padrão de percurso (`pattern_id`).
 
-#### Passa
+A validação trata “não informado” e “texto vazio” da mesma forma: ambos representam “sem destino explícito”. O problema começa quando, no mesmo padrão, umas viagens estão nesse estado e outras têm um texto concreto, ou quando aparecem dois (ou mais) textos concretos diferentes. Isso significa “no mesmo padrão, o passageiro veria coisas diferentes (ou nada e algo ao mesmo tempo)”, o que a regra rejeita.
 
-- Se, para esse `pattern_id`, existir no máximo um `trip_headsign` “efetivo” distinto, isto é: zero ou um valor entre: ausência, string vazia (ambos `""`) e, no máximo, uma cadeia não vazia partilhada por todas as viagens. Na prática: ou todas têm o mesmo texto, ou todas estão vazias/ausentes (só a chave `""`).
+#### Passa  
 
-#### Falha
+- Para aquele padrão, depois de normalizar vazio e ausente para o mesmo significado, só pode existir um “tipo” de headsign: ou todas as viagens com o mesmo destino em texto, ou todas sem destino explícito (vazio/ausente de forma homogénea).
 
-- Se existirem dois ou mais valores distintos: por exemplo, uma viagem com headsign e outra sem, ou duas cadeias não vazias diferentes.
+#### Falha 
 
-Diferença em relação a `route_id` / `shape_id` / `direction_id` (agrupados): nesses, viagens com o campo não preenchido em geral não entram no conjunto de “variedade”. Aqui, cada viagem contribui: ausência/empty é um valor, por isso “metade vazio e metade preenchido” no mesmo `pattern_id` falha.
+- Há mais do que um destino lógico distinto no mesmo padrão: por exemplo, uma viagem com headsign e outra sem, ou “Lisboa” e “Cascais” no mesmo `pattern_id`.
+
+
+Noutros campos agrupados, viagens com valor em falte costumam ser excluídas da contagem de variedade. Aqui, cada viagem conta: ausente ou vazio é um valor, logo misturar isso com texto preenchido no mesmo padrão conta como conflito.
 
 
