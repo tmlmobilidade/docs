@@ -1,6 +1,6 @@
 ---
 title: Regra da shape_id (agrupado por shape_id)
-description: Regra utilizada para a consistência da circulação
+description: Regra utilizada para a precaução de duplicação de dados
 ---
 ## Regras de validação do campo shape_id
 
@@ -17,9 +17,9 @@ description: Regra utilizada para a consistência da circulação
 
 Garante que, para um dado `shape_id`, todas as viagens com `pattern_id` preenchido referem o mesmo padrão: no máximo um `pattern_id` distinto nesse conjunto. Viagens com `pattern_id` vazio não entram nesse cálculo.
 
-Comportamento:
+#Passa
 
-- Passa se, nesse `shape_id`, existir no máximo um `pattern_id` diferente a considerar — ou seja, zero ou um valor distinto de `pattern_id` contando só as viagens em que o campo não é nulo (viagens com `pattern_id` vazio não “criam” conflito entre padrões).
+-  se, nesse `shape_id`, existir no máximo um `pattern_id` diferente a considerar — ou seja, zero ou um valor distinto de `pattern_id` contando só as viagens em que o campo não é nulo (viagens com `pattern_id` vazio não “criam” conflito entre padrões).
 - Falha se aparecerem dois ou mais `pattern_id` distintos entre as viagens com `pattern_id` definido, para o mesmo `shape_id` — e o aviso exibido é o que está em i18n: _o `shape_id` dado é utilizado em múltiplos `pattern_ids`._
 
 
