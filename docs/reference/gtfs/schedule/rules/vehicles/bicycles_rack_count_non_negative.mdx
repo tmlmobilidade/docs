@@ -16,21 +16,22 @@ description: Regra
 
 ### O que esta validação faz 
 
+O campo indica, para cada veículo, se é permitido transportar bicicletas que não sejam dobráveis (o transporte de bicicletas dobráveis costuma ser tratado noutro quadro, como regra geral _permitida_). Só entram no domínio do valor as opções canónicas: não (0) e sim (1), ambas com significado de política de operação.
 
+A validação exige, portanto, o campo preenchido e, em seguida, que o número corresponda a uma dessas opções. Se o projecto tiver, nas regras, uma lista de opções explícita (por exemplo, só veículos que não levam bicicletas), o valor de cada registo também tem de cair nessa lista; uma opção especial de regras pode significar “aceitar qualquer valor válido” (0 ou 1), consoante a configuração.
 
+A gravidade do aviso respeita as regras do projecto quando estão definidas; caso contrário, incumprimentos surgem tipicamente como erro.
 
 ---
 
 #### Passa
 
-
+- Quando o valor está preenchido, é 0 ou 1 e, se existir lista restritiva de opções, o valor encontra-se dentro dos permitidos (ou as regras abrangem _todas_ as opções válidas).
 
 ---
 
 #### Falha
 
-
-
-
-
-
+- Campo em falta – não se declara se o veículo transporta ou não bicicletas não dobráveis.
+- Valor fora do domínio – não é 0 nem 1, ou o número não mapeia para “não / sim” previstos.
+- Política incoerente com o projecto – a combinação veículo–valor não é autorizada pelas regras adicionais (ex.: 1 quando a operação só publica 0), quando essa lista está ativa.
