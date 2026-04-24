@@ -13,6 +13,8 @@
 		"license_plate_format_per_market_rules",
 		"lowered_floor_valid_enum",
 		"onboard_monitor_valid_enum",
+		"passenger_counting_valid_enum",
+		"propulsion_type_valid_enum",
 		"vehicle_agency_id_references_agency_table",
 		"vehicle_make_required",
 		"vehicle_model_required",
