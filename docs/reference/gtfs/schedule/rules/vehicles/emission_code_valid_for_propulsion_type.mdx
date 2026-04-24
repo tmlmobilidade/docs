@@ -15,22 +15,22 @@ description: Regra
 
 ### O que esta validação faz 
 
-O campo identifica a classe de emissões do veículo (poluentes), normalmente alinhada com a norma Euro ou outro esquema numérico definido no vosso dicionário de dados. Os valores válidos são códigos inteiros que mapeiam para esses níveis (no esquema habitual, por exemplo de Euro I a Euro VI; podem existir códigos extra para “sem classificação”, “não aplicável” ou extensões do feed, conforme a documentação interna).
+O campo indica, para cada veículo, se existe informação de som de exterior (no sentido de public address ou avisos acústicos para o exterior), na convenção: não (0) e sim (1).
+
+A validação exige o valor preenchido e contido nesse par de opções. Se o projecto definir regras com uma lista de opções permitidas, o registo de cada veículo tem de caber nessa lista; quando a configuração aceita todas as opções válidas, qualquer um dos dois valores (0 ou 1) é aceite, desde que correcto. A gravidade do aviso depende das regras, ou erro por omissão.
 
 ---
 
 #### Passa
 
-- Campo preenchido, código reconhecido no conjunto permitido pelo validador e, havendo lista restritiva nas regras, valor autorizado (ou regras que abrangem todas as opções válidas).
+- Campo preenchido, valor 0 ou 1 e, havendo lista restritiva, opção autorizada pelas regras (ou regras que abrangem todas as opções válidas).
 
 ---
 
 #### Falha
 
-- Campo em falta – não se indica a classe de emissão do veículo.
-- Código inválido – o número não corresponde a nenhuma classe de emissão admitida (fora do domínio previsto).
-- Incoerência com as regras do projecto – o código é válido no dicionário geral mas não é permitido pela lista das regras, quando essa restrição está activa.
-
+- Campo em falta – não se declara se o veículo tem ou não som / PA de exterior.
+- Valor inválido – não é 0 nem 1.
 
 
 
