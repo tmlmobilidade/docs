@@ -7,29 +7,34 @@ description: Regra
 
 ### Campos que serão utilizados nesta regra
 
-| Nome do Campo | Tipo | Presença    | Descrição                                                                                                 |
-| ------------- | ---- | ----------- | --------------------------------------------------------------------------------------------------------- |
-| `typology`    |      | obrigatório | ID da entidade responsável pelo veículo, usado para associar cada veículo à respetiva agência no sistema. |
+| Nome do Campo | Tipo | Presença    | Descrição                                                            |
+| ------------- | ---- | ----------- | -------------------------------------------------------------------- |
+| `typology`    | Enum | obrigatório | Indica a tipologia do veículo mas atualmente a lista está incompleta |
 
 
 
 ### O que esta validação faz 
 
+O campo descreve a tipologia do veículo: a família e, por vezes, a variação (por exemplo _light rail_ com tipos, _metro_, _ferroviário_, _autocarros_ em várias subcategorias urbanas ou interurbanas, _embarcações_, _funiculares_ ou _elevadores_, etc.), muitas vezes em códigos alfanuméricos do estilo _major.minor_ (p. ex. “3.2” com significado de “autocarro urbano”).
 
+A validação exige sempre que o valor exista (campo preenchido). A verificação de “é permitido neste _feed_ / neste operador” assenta, na prática, nas regras do projecto: quando estão definidas opções, o texto da tipologia tem de figurar nessa lista; quando a configuração equivale a aceitar qualquer tipologia, não se aplica a restrição por lista. A gravidade do aviso obedece às regras, ou erro por omissão.
 
+_(Com a lista ainda imcompleta vai por norma devolver um aviso mas ainda assim pode ser aprovado  )_
 
 ---
 
 #### Passa
 
-
+- A tipologia do veículo vem preenchida e, existindo lista de tipologias nas regras, o valor consta nessa lista (ou a configuração abrange _todas_ as opções).
 
 ---
 
 #### Falha
 
+- Campo em falta – a tipologia não é indicada.
+- Não permitida nas regras – a tipologia indicada não consta da lista de opções do projecto, quando essa lista está activa (e não se trata de “aceitar tudo”).
 
+---
 
-
-
+Nota: Se a vossa publicação _exigir_ que só entrem códigos da tabela (p. ex. 3.1–3.7, 4.1…), isso tem de estar reflectido nas regras (opções) ou reactivar-se validação a um dicionário fixo no código, conforme a política do projecto.
 
