@@ -1,5 +1,5 @@
 ---
-title: Regra do
+title: Regra da data de registro do veículo
 description: Regra
 ---
 ## Regras de validação do campo registration_date
@@ -14,22 +14,19 @@ description: Regra
 
 
 ### O que esta validação faz 
+O campo regista a data da primeira matrícula do veículo (documento de registo civil), no mesmo estilo de data usado noutros atributos GTFS alfanuméricos: oito caracteres numéricos AAAAMMDD (ano de quatro dígitos, mês e dia de dois dígitos), sem separadores.
 
-
-
+Depois de obrigar a presença do valor, o validador verifica se a cadeia tem o comprimento certo e se corresponde a uma data calendário real (mês e dia válidos para o ano indicado). A gravidade do aviso obedece à configuração do projecto, ou erro por omissão.
 
 ---
 
 #### Passa
 
-
+- A data vem preenchida e reconhecida como válida no formato AAAAMMDD, com dia e mês coerentes.
 
 ---
 
 #### Falha
 
-
-
-
-
-
+- Campo em falta – não se indica a data da primeira matrícula.
+- Data inválida – o valor está em falta de comprimento, não representa oito dígitos no formato esperado, ou não corresponde a uma data existente no calendário (por exemplo mês inexistente ou dia fora do mês).
