@@ -17,10 +17,14 @@ description: Regra utilizada para a consistência da circulação
 
 Garante consistência entre `pattern_id` e `shape_id` nas viagens: para um mesmo `pattern_id`, todas as viagens com `shape_id` preenchido devem referir a mesma geometria (o mesmo `shape_id`). Em termos de dados: 1 `pattern_id` → no máximo 1 `shape_id` distinto.
 
-Comportamento:
 
-- Passa se, entre as viagens desse `pattern_id`, existir no máximo um `shape_id` diferente a considerar — ou seja, zero ou um valor distinto de `shape_id` vindo só das viagens em que o campo não é nulo (viagens com `shape_id` vazio não entram nesse conjunto e não “criam” variedade).
-- Falha se existirem dois ou mais `shape_id` distintos entre as viagens com `shape_id` definido, para o mesmo `pattern_id`.
+#### Passa
+
+-  Se entre as viagens desse `pattern_id`, existir no máximo um `shape_id` diferente a considerar — ou seja, zero ou um valor distinto de `shape_id` vindo só das viagens em que o campo não é nulo (viagens com `shape_id` vazio não entram nesse conjunto e não “criam” variedade).
+
+#### Falha
+
+- Se existirem dois ou mais `shape_id` distintos entre as viagens com `shape_id` definido, para o mesmo `pattern_id`.
 
 
 
