@@ -15,21 +15,21 @@ description: Regra
 
 ### O que esta validação faz 
 
+O campo identifica a matrícula do veículo, é obrigatório e deve corresponder a um formato reconhecido após tratar o texto: conversão para maiúsculas, remoção de separadores habituais (hífens, espaços, etc.) e exactamente seis caracteres alfanuméricos, obedecendo a um dos padrões de matrícula portugueses suportados pelo validador (variações do tipo pares de letras e algarismos, incluindo formatos clássicos e mais recentes, conforme a expressão de validação do projecto).
 
-
+Se existirem dados GTFS carregados, o validador ainda exige unicidade da matrícula: o mesmo valor não pode aparecer em mais do que um registo de veículo.
 
 ---
 
 #### Passa
 
-
+- Matrícula preenchida, válida no formato admitido.
+- Não existem outros veículos no feed com a mesma matrícula (quando a verificação de duplicados está activa com dados disponíveis).
 
 ---
 
 #### Falha
 
-
-
-
-
-
+- Campo em falta – a matrícula não é indicada.
+- Formato inválido – a cadeia, depois de normalizada, não tem seis caracteres ou não corresponde a nenhum dos padrões de matrícula aceites.
+- Duplicado – a matrícula repete-se em mais do que um registo de veículo.
