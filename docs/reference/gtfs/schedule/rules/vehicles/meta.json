@@ -16,7 +16,7 @@
 		"passenger_counting_valid_enum",
 		"propulsion_type_valid_enum",
 		"ramp_valid_enum",
-		"rear_display_count_non_negative",
+		"rear_display_valid_enum",
 		"registration_date_valid_day_granularity",
 		"side_display_valid_enum",
 		"vehicle_agency_id_references_agency_table",
