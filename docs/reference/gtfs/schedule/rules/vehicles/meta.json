@@ -8,6 +8,7 @@
 		"emission_code_valid_for_propulsion_type",
 		"external_sound_valid_enum",
 		"front_display_count_non_negative",
+		"internal_sound_level_valid_enum",
 		"vehicle_agency_id_references_agency_table"
 	]
 }
