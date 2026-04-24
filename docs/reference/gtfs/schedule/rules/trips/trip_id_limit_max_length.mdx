@@ -16,14 +16,17 @@ description: Regra utilizada para a consistência do pattern_id
 
 Regra por linha de `trips.txt`: limita o comprimento do `trip_id` (regra TML)
 
+---
 #### Passa
 
 - Se o `trip_id` tiver 36 caracteres ou menos. Porquê: cumpre o limite máximo imposto pelo validador.
 
+---
 #### Falha
 
 - Se o `trip_id` tiver mais de 36 caracteres. Porquê: identificadores demasiado longos fogem ao limite acordado para integrações, chaves ou armazenamento.
 
+---
 #### Não realizada
 
 -  Se `trip_id` for nulo — a função sai sem erro (não aplica o limite de comprimento neste passo; a obrigatoriedade do campo é outra validação). Porquê: só há verificação de tamanho quando existe valor para medir.
