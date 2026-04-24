@@ -24,6 +24,7 @@ Garante que, em cada viagem que participa num grupo por `pattern_id`, `route_i
 - Se a viagem está nesse grupo e `route_id`, `shape_id`, `direction_id` e `trip_headsign` estão todos definidos (não nulos). Porquê: sem estes quatro valores não dá para tratar todas as viagens do mesmo `pattern_id` de forma comparável com o resto das validações de consistência do padrão; a regra só “deixa passar” quando nada falta.
 
 ---
+
 #### Falha
 
 - Se a viagem está no grupo por `pattern_id` e algum de `route_id`, `shape_id`, `direction_id` ou `trip_headsign` vem vazio/nulo. Porquê: uma viagem com o mesmo identificador de padrão mas sem, por exemplo, `shape_id` ou `trip_headsign` não pode ser alinhada com as outras do grupo; o feed fica ambíguo para “o que é este padrão” e o validador recusa essa linha com a mensagem correspondente (`*_not_found`).

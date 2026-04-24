@@ -16,6 +16,8 @@ description: Regra utilizada para a consistência do pattern_id
 
 Garante que todas as viagens com o mesmo `pattern_id` partilham uma única “assinatura” de sequência de paragens (a mesma cadeia de paragens, na mesma ordem e com os mesmos dados usados para construir o hash). O relatório usa a linha da primeira viagem do grupo e a mensagem com o `pattern_id`.
 
+---
+
 #### Passa
 
 - Se, entre as viagens desse `pattern_id`, existe no máximo um hash de sequência distinto — ou seja, zero ou uma variação de sequência no conjunto `Hash` (na prática, com viagens no grupo, costuma ser uma assinatura comum a todas). Porquê: o mesmo identificador de padrão deve corresponder ao mesmo percurso/sequência em todas as viagens onde aparece.
