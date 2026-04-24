@@ -17,6 +17,7 @@
 		"propulsion_type_valid_enum",
 		"ramp_valid_enum",
 		"rear_display_count_non_negative",
+		"registration_date_valid_day_granularity",
 		"vehicle_agency_id_references_agency_table",
 		"vehicle_make_required",
 		"vehicle_model_required",
