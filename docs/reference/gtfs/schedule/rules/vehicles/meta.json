@@ -12,6 +12,7 @@
 		"kneeling_valid_enum",
 		"license_plate_format_per_market_rules",
 		"lowered_floor_valid_enum",
+		"vehicle_make_required",
 		"vehicle_agency_id_references_agency_table"
 	]
 }
