@@ -12,3 +12,30 @@ description: Regra utilizada para a precaução de duplicação de dados
 | `shape_id`            | ID                          | Obrigatório | Identifica um formato.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | `shape_dist_traveled` | Número decimal não negativo | Opcional    | Distância real percorrida ao longo da forma, desde o primeiro ponto da forma até ao ponto especificado neste registo. Utilizado pelos planeadores de viagens para mostrar a porção correta da forma num mapa. Os valores devem aumentar juntamente com `shape_pt_sequence`; não devem ser utilizados para mostrar o percurso inverso ao longo de um percurso. As unidades de distância devem ser consistentes com as utilizadas em `stop_times.txt`.<br/><br/>Recomendado para percursos com troços em loop ou em linha (o veículo atravessa ou percorre o mesmo troço do alinhamento numa viagem). Se um veículo refaz ou cruza o alinhamento da rota em pontos ao longo de uma viagem, `shape_dist_traveled` é importante para esclarecer como as porções dos pontos em `shapes.txt` se alinham com os registos em `stop_times.txt`.<br/><br/><u>Exemplo</u>: Se um autocarro percorrer os três pontos definidos acima para `A_shp`, os valores adicionais de `shape_dist_traveled` (mostrados aqui em quilómetros) seriam semelhantes aos isto:<br/><br/>`shape_id`,`shape_pt_lat,shape_pt_lon,shape_pt_sequence,shape_dist_traveled`<br/>`A_shp,37.61 956,-122.48161,0,0`<br/>`A_shp,37.64430,-122.41070,6,6.8310`<br/>`A_shp,37.65863,-122.30839,11,15.8765` |
 
+
+### O que esta validação faz
+
+A validação aplica-se a cada percurso geométrico (conjunto de pontos com o mesmo identificador de forma), ordenado pelo número de sequência de cada ponto.
+
+Para cada par de pontos consecutivos nessa ordem, calcula-se a distância aproximada no terreno entre as respetivas latitudes e longitudes. O objetivo é detetar saltos na polilinha: trechos em que o percurso “salta” no mapa por pontos muito distantes, o que em geral indica erro ou inconsistência nos dados (e não uma curva contínua que se possa acompanhar a pé ou em veículo a velocidade de circulação normal).
+
+A distância considerada “aceitável” entre dois puntos consecutivos é limitada a um valor máximo (ordem de grandeza de** um quilómetro**). Acima disso, o par é considerado inconsistente.
+
+Há ainda regras que ignoram certos pares (por exemplo, situações em que a sequência se reinicia), para não sinalizar falsos problemas em casos limite de modelação da forma.
+
+---
+
+#### Passa
+
+- Quando, para cada par de pontos consecutivos relevante, a distância geográfica entre o ponto anterior e o seguinte não excede o limite permitido, ou o par fica fora do âmbito desta regra (ignorado).
+
+---
+
+#### Falha
+
+- Quando a distância entre dois pontos consecutivos na ordem de sequência, ultrapassa esse limite — ou seja, a forma deixa de ser continuada o suficiente entre pontos.
+- Se existir um muito elevado número de falhas, o sistema pode resumir o aviso (mensagem agregada) em vez de listar todas as ocorrências.
+
+---
+
+Diferença em relação à validação de `shape_dist_traveled`: aqui não se compara com distância acumulada declarada no ficheiro; só se verifica se cada segmento, entre dois pontos seguidos, não é anormalmente longo. A outra validação cruza coordenadas com a distância percorrida reportada.
