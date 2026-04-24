@@ -7,9 +7,9 @@ description: Regra
 
 ### Campos que serão utilizados nesta regra
 
-| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
-| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
-| `agency_id`   | ID externo que faz referência a `agency.txt` | obrigatório | ID da entidade responsável pelo veículo, usado para associar cada veículo à respetiva agência no sistema. |
+| Nome do Campo | Tipo | Presença    | Descrição                                                                                                                                                                                                                                                                                                                                                                                               |
+| ------------- | ---- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `emission`    | Enum | obrigatório | Classe de emissões.<br/><br/>**Opções válidas:**<ul><li>`0` - Sem classificação de emissões (exceção).</li><li>`1` - EURO I.</li><li>`2` - EURO II.</li><li>`3` - EURO III.</li><li>`4` - EURO IV.</li><li>`5` - EURO V.</li><li>`6` - EURO VI.</li></ul><br/>Este campo indica a norma de emissões do veículo. O valor **0** é usado em casos excecionais para veículos sem classificação de emissões. |
 
 
 
