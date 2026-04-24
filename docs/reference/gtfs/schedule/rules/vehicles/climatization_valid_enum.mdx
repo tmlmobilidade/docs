@@ -1,0 +1,37 @@
+---
+title: Regra do
+description: Regra
+---
+## Regras de validação do campo 
+
+
+### Campos que serão utilizados nesta regra
+
+| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
+| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
+| `agency_id`   | ID externo que faz referência a `agency.txt` | obrigatório | ID da entidade responsável pelo veículo, usado para associar cada veículo à respetiva agência no sistema. |
+
+
+
+### O que esta validação faz 
+
+O campo descreve, para cada veículo, se existe climatização (p. ex. ar condicionado) ao nível a divulgar nos sistemas, como enumeração simples: não (0) e sim (1).
+
+A validação exige o valor preenchido e contido nesse par de opções. Se o projecto definir, nas regras, uma lista de opções permitidas, o registo de cada veículo tem de caber nessa lista; quando a configuração abrange todas as opções válidas (0 e 1), o valor pode ser qualquer um dos dois, desde que coerente com o dicionário. A gravidade do aviso segue as regras do projecto, ou erro por omissão.
+
+---
+
+#### Passa
+
+- O campo está preenchido, o valor é 0 ou 1 e, se existir lista restritiva, corresponde a uma opção autorizada pelas regras (ou as regras permitem o conjunto completo de valores válidos).
+
+---
+
+#### Falha
+
+- Campo em falta – o veículo não indica se tem ou não climatização, conforme a convenção 0/1.
+- Valor inválido – não é 0 nem 1, logo não mapeia para “não / sim” previstos.
+- Incoerência com a política do projecto – o par veículo–valor não é aceite na lista de opções das regras, quando essa restrição está ativa.
+
+
+
