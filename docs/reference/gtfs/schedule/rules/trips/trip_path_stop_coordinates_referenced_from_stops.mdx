@@ -47,7 +47,7 @@ Não basta “estar na mesma rua”: há uma distância máxima aceitável ent
 
 ---
 
-### Notas 
+### Nota
 
 - O comentário no topo do ficheiro (“validar se stop_lat e stop_lon são válidos”) é genérico; o comportamento concreto é “distância paragem ↔ shape da viagem” usando caches, não um validador isolado de intervalo lat/lon neste ficheiro.
 - A função devolve a lista de `StopCoordinatesValidation` agregada para a viagem (para outros consumidores); as mensagens ligam-se ao `row` da viagem em `trips.txt`.
