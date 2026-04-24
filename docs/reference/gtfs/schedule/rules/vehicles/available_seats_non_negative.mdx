@@ -15,20 +15,22 @@ description: Regra
 
 ### O que esta validação faz 
 
+Cada registo de veículo regista, em lugar sentado disponíveis, quanto à capacidade sentada a divulgar nos sistemas. O nome do campo (lugares _disponíveis_) implica pelo menos um lugar, por isso a validação exige o campo preenchido e o valor numérico estritamente positivo (maior do que zero).
 
-
+A gravidade do aviso obedece às regras do projecto, quando definidas; caso contrário, trata-se de erro.
 
 ---
 
 #### Passa
 
-
+- Quando o valor está presente e é igual ou superior a 1 (um ou mais lugares assinalados com capacidade de lugares sentados).
 
 ---
 
 #### Falha
 
-
+- Campo em falta – o número de lugares assinalados com capacidade _available_ não vem preenchido.
+- Valor nulo em capacidade – o valor indica zero ou negativo, o que não representa “lugares assinalados com capacidade disponíveis” num veículo em serviço normal (zero lugares, ou abuso de sinal, ou erro de dado).
 
 
 
