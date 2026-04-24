@@ -1,5 +1,5 @@
 ---
-title: Regra do
+title: Regra do fabricante do veículo
 description: Regra
 ---
 ## Regras de validação do campo make
@@ -15,21 +15,19 @@ description: Regra
 
 ### O que esta validação faz 
 
+O campo indica a marca (_make_) do veículo — o fabricante ou designação de marca a divulgar nos sistemas, em texto.
 
-
+A regra exige apenas que o valor esteja preenchido (não vazio a nível de presença do campo; o validador trata a ausência do valor). Não se impõe, nesta validação, um formato, lista fechada ou códigos específicos. A gravidade do aviso segue a 
 
 ---
 
 #### Passa
 
-
+- A marca do veículo vem indicada no dado fornecido.
 
 ---
 
 #### Falha
 
-
-
-
-
+- Campo em falta – não se fornece a marca do veículo, impedindo a identificação básica do fabricante a partir deste atributo.
 
