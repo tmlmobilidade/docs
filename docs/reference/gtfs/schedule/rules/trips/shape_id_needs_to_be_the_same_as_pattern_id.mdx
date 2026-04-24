@@ -18,11 +18,13 @@ description: Regra utilizada para a consistência do pattern_id
 Regra por linha em `trips.txt`: quando `shape_id` e `pattern_id` vêm ambos preenchidos, o valor de `shape_id` tem de ser igual ao de `pattern_id` (comparação de strings, carácter a carácter).
 
 ---
+
 #### Passa
 
 - Se os dois existem e `shape_id == pattern_id`.
 
 ---
+
 #### Falha
 
 - Se os dois campos estão preenchidos e os textos diferem. Porquê: no perfil do projeto, o mesmo identificador deve servir de chave coerente para o padrão e para a shape; valores diferentes indicam inconsistência entre `trips.shape_id` e `trips.pattern_id`.
