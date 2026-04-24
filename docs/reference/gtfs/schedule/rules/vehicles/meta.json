@@ -5,6 +5,7 @@
 		"bicycles_rack_count_non_negative",
 		"climatization_valid_enum",
 		"consumption_meter_valid_format",
+		"emission_code_valid_for_propulsion_type",
 		"vehicle_agency_id_references_agency_table"
 	]
 }
