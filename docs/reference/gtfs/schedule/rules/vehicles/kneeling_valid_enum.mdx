@@ -1,0 +1,38 @@
+---
+title: Regra do
+description: Regra
+---
+## Regras de validação do campo 
+
+
+### Campos que serão utilizados nesta regra
+
+| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
+| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
+| `agency_id`   | ID externo que faz referência a `agency.txt` | obrigatório | ID da entidade responsável pelo veículo, usado para associar cada veículo à respetiva agência no sistema. |
+
+
+
+### O que esta validação faz 
+
+O campo descreve, para cada veículo, a existência de função de inclinação ou “ajoelhamento” (_kneeling_) do chassis face ao solo, para reduzir a altura do degrau e facilitar a entrada, sobretudo a passageiros com mobilidade condicionada. A convenção do feed tem três opções: não (0), sim (1) e não aplicável (2) — por exemplo, quando a equipamento ou o conceito de veículo torna a pergunta irrelevante.
+
+A validação exige o valor preenchido e que o número seja 0, 1 ou 2. Se o projecto definir regras com uma lista de opções permitidas, cada registo tem de caber nessa lista; quando a configuração aceita todas as opções válidas, qualquer um dos três códigos é aceite, desde que correcto. A gravidade do aviso obedece às regras, ou erro por omissão.
+
+---
+
+#### Passa
+
+- Campo preenchido, valor 0, 1 ou 2 e, havendo lista restritiva, opção autorizada pelas regras (ou regras que abrangem todas as opções válidas).
+
+---
+
+#### Falha
+
+- Campo em falta – não se indica a situação da função _kneeling_.
+- Valor inválido – não é 0, 1 nem 2.
+- Incoerência com as regras do projecto – a opção escolhida não é permitida na lista das regras, quando essa restrição está activa.
+
+
+
+
