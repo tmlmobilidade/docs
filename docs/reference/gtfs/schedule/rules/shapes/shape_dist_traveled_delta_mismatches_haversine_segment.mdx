@@ -16,20 +16,20 @@ description: Regra utilizada para a precaução de duplicação de dados
 
 ### O que esta validação faz ()
 
-
+Com base das coordenadas (`shape_pt_lat` e `shape_pt_lon`) entre duas `shape_id` vai calcular a distancia entre os dois pontos, com o valor da distancia entre esses dois pontos vai comparar se o `shape_dist_traveled` tem a mesma distancia. tendo em conta de uma margem de erro por ser calculado por diferentes programas.
 
 
 ---
 
 #### Passa
 
-- Se
+- Se o valor entre os dois pontos (shapes) corresponde ao valor previsto `shape_dist_traveled`.
 
 ---
 
 #### Falha
 
-- S
+- Se as distancias não corresponderem ultrapassando ate a margem de erro.
 
 
 
