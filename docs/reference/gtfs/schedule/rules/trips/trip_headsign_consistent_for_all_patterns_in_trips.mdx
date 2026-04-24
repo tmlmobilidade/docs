@@ -12,21 +12,25 @@ description: Regra utilizada para a consistência da circulação
 | `trip_headsign` | Texto | Opcional    | Texto que aparece na sinalização identificando o destino da viagem para os passageiros. <br/>Este campo é recomendado para todos os serviços com texto de sinalização apresentado no veículo, que pode ser utilizado para distinguir entre viagens numa rota. <br/><br/>Se a sinalização mudar durante uma viagem, os valores de `trip_headsign` podem ser substituídos definindo valores em `stop_times.stop_headsign` para `stop_times` específicos ao longo viagem. |
 | `pattern_id`    | ID    | Obrigatório | O `pattern_id` identifica a variante de serviço em que a viagem opera na linha. <br/><br/>Não faz parte do GTFS standart, mas é obrigatório para nós TML.                                                                                                                                                                                                                                                                                                              |
 
-
+---
 ### O que esta validação faz (agrupado por pattern_id)
 
 O destino anunciado na viagem (`trip_headsign`) tem de ser coerente para todas as viagens que partilham o mesmo padrão de percurso (`pattern_id`).
 
 A validação trata “não informado” e “texto vazio” da mesma forma: ambos representam “sem destino explícito”. O problema começa quando, no mesmo padrão, umas viagens estão nesse estado e outras têm um texto concreto, ou quando aparecem dois (ou mais) textos concretos diferentes. Isso significa “no mesmo padrão, o passageiro veria coisas diferentes (ou nada e algo ao mesmo tempo)”, o que a regra rejeita.
 
+---
 #### Passa  
 
 - Para aquele padrão, depois de normalizar vazio e ausente para o mesmo significado, só pode existir um “tipo” de headsign: ou todas as viagens com o mesmo destino em texto, ou todas sem destino explícito (vazio/ausente de forma homogénea).
 
+---
 #### Falha 
 
 - Há mais do que um destino lógico distinto no mesmo padrão: por exemplo, uma viagem com headsign e outra sem, ou “Lisboa” e “Cascais” no mesmo `pattern_id`.
 
+
+---
 
 Noutros campos agrupados, viagens com valor em falte costumam ser excluídas da contagem de variedade. Aqui, cada viagem conta: ausente ou vazio é um valor, logo misturar isso com texto preenchido no mesmo padrão conta como conflito.
 
