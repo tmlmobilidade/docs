@@ -1,5 +1,5 @@
 ---
-title: Regra do
+title: Regra de existencia de algum dispositivo de climatização
 description: Regra
 ---
 ## Regras de validação do campo 
@@ -7,9 +7,9 @@ description: Regra
 
 ### Campos que serão utilizados nesta regra
 
-| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
-| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
-| `agency_id`   | ID externo que faz referência a `agency.txt` | obrigatório | ID da entidade responsável pelo veículo, usado para associar cada veículo à respetiva agência no sistema. |
+| Nome do Campo   | Tipo | Presença    | Descrição                                                                                                                          |
+| --------------- | ---- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `climatization` | Enum | obrigatório | Indica se o veículo dispõe de sistema de climatização.<br/><br/>**Opções válidas:**<ul><li>`0` - Não.</li><li>`1` - Sim.</li></ul> |
 
 
 
