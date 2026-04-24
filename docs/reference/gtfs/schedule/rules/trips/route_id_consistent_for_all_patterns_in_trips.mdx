@@ -17,14 +17,17 @@ description: Regra utilizada para a consistência da circulação
 
 Garante consistência entre `pattern_id` e `route_id` nas viagens: para um mesmo `pattern_id`, todas as viagens com `route_id` preenchido devem referir a mesma rota (o mesmo `route_id`). Em termos de dados: 1 `pattern_id` → no máximo 1 `route_id` distinto (entre viagens com `route_id` definido).
 
-
+---
 #### Passa
 
 - Se entre as viagens desse `pattern_id`, existir **no máximo um** `route_id` distinto a considerar — isto é, zero ou um valor de `route_id` vindo **só** das viagens em que o campo **não é nulo** (viagens com `route_id` vazio/nulo não entram nesse conjunto e não “criam” variedade).
 
+---
 #### Falha
 
 - Se existirem **dois ou mais** `route_id` distintos entre as viagens com `route_id` definido, para o **mesmo** `pattern_id` (a mensagem inclui o `pattern_id` e a lista de `route_id` em conflito, ordenada).
+
+---
 
 Em resumo: é o análogo da validação “1 `pattern_id` → 1 `shape_id`”, mas para **`route_id`**, sempre **agrupado por `pattern_id`**.
 

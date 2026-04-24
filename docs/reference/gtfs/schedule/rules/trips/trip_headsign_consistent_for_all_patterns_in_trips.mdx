@@ -12,7 +12,7 @@ description: Regra utilizada para a consistência da circulação
 | `trip_headsign` | Texto | Opcional    | Texto que aparece na sinalização identificando o destino da viagem para os passageiros. <br/>Este campo é recomendado para todos os serviços com texto de sinalização apresentado no veículo, que pode ser utilizado para distinguir entre viagens numa rota. <br/><br/>Se a sinalização mudar durante uma viagem, os valores de `trip_headsign` podem ser substituídos definindo valores em `stop_times.stop_headsign` para `stop_times` específicos ao longo viagem. |
 | `pattern_id`    | ID    | Obrigatório | O `pattern_id` identifica a variante de serviço em que a viagem opera na linha. <br/><br/>Não faz parte do GTFS standart, mas é obrigatório para nós TML.                                                                                                                                                                                                                                                                                                              |
 
----
+
 ### O que esta validação faz (agrupado por pattern_id)
 
 O destino anunciado na viagem (`trip_headsign`) tem de ser coerente para todas as viagens que partilham o mesmo padrão de percurso (`pattern_id`).
