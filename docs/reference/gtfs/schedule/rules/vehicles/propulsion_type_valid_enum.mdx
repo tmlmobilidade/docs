@@ -15,21 +15,20 @@ description: Regra
 
 ### O que esta validação faz 
 
+O campo descreve o tipo de propulsão do veículo: a fonte de energia ou combinação usada (por exemplo gasolina, gasóleo, GPL automóvel, mistura, biodiesel, electricidade, híbrido ou gás natural), codificada por números de 1 a 8 conforme o dicionário do feed.
 
-
+A validação exige o valor preenchido e que o número pertença a esse conjunto de códigos. Se o projecto definir regras com uma lista de opções permitidas, cada veículo tem de caber nessa lista (p. ex. para alinhar com a política de electrificação); quando a configuração aceita todas as opções válidas, qualquer um dos códigos reconhecidos é aceite. A gravidade do aviso obedece às regras, ou erro por omissão.
 
 ---
 
 #### Passa
 
-
+- Campo preenchido, código válido entre 1 e 8 e, havendo lista restritiva, opção autorizada pelas regras (ou regras que abrangem todas as opções válidas).
 
 ---
 
 #### Falha
 
-
-
-
-
-
+- Campo em falta – não se indica o tipo de propulsão.
+- Valor inválido – o número não corresponde a nenhum dos tipos de propulsão previstos (fora de 1–8).
+- Incoerência com as regras do projecto – o código é válido no dicionário geral mas não é permitido pela lista das regras, quando essa restrição está activa.
