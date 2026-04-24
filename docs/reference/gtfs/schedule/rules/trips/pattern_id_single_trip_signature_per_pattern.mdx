@@ -14,7 +14,7 @@ description: Regra utilizada para a consistência do pattern_id
 
 ### O que esta validação faz
 
-Garante que todas as viagens com o mesmo `pattern_id` partilham uma única “assinatura” de sequência de paragens (a mesma cadeia de paragens, na mesma ordem e com os mesmos dados usados para construir o hash). O relatório usa a linha da primeira viagem do grupo (`group.Trips[0].Row`) e a mensagem `pattern_id_validation.multiple_stop_sequence_variations` com o `pattern_id`.
+Garante que todas as viagens com o mesmo `pattern_id` partilham uma única “assinatura” de sequência de paragens (a mesma cadeia de paragens, na mesma ordem e com os mesmos dados usados para construir o hash). O relatório usa a linha da primeira viagem do grupo e a mensagem `pattern_id_validation.multiple_stop_sequence_variations` com o `pattern_id`.
 
 #### Passa
 
