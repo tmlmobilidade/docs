@@ -1,0 +1,33 @@
+---
+title: Regra do
+description: Regra
+---
+## Regras de validação do campo 
+
+
+### Campos que serão utilizados nesta regra
+
+| Nome do Campo | Tipo | Presença    | Descrição                                                                                                                                                                                                      |
+| ------------- | ---- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ramp`        | Enum | obrigatório | Indica o tipo de rampa para pessoas com mobilidade reduzida.<br/><br/>**Opções válidas:**<ul><li>`0` - Não.</li><li>`1` - Sim.</li><li>`2` - Sistema elétrico dobrável.</li><li>`3` - Não aplicável.</li></ul> |
+
+
+
+### O que esta validação faz 
+
+O campo descreve o tipo de rampa (ou meio de acesso) para pessoas com mobilidade condicionada: não (0), rampa manual (1), sistema de dobramento eléctrico (2) e não aplicável (3), quando a classificação do veículo ou o contexto do dado torna a resposta “sem rampa / outro” inadequada sem esta terceira opção.
+
+
+---
+
+#### Passa
+
+- Campo preenchido, valor 0 a 3 e, havendo lista restritiva, opção autorizada pelas regras (ou regras que abrangem todas as opções válidas).
+
+---
+
+#### Falha
+
+- Campo em falta – não se indica a situação da rampa ou da solução de acessibilidade prevista.
+- Valor inválido – não é 0, 1, 2 nem 3.
+- Incoerência com as regras do projecto – a opção escolhida não é permitida na lista das regras, quando essa restrição está activa.
