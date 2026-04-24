@@ -17,6 +17,7 @@ description: Regra utilizada para a consistência do pattern_id
 Garante que, em cada viagem que participa num grupo por `pattern_id`, `route_id`, `shape_id`, `direction_id` e `trip_headsign` não estão vazios, para as validações de consistência do padrão poderem correr. A `stop_sequence` não é tratada neste passo em concreto.
 
 ---
+
 #### Passa
 
 - Se a viagem não entra no agrupamento por `pattern_id` — não há exigência destes campos só por causa desta regra (o validador só aplica isto a viagens que já têm `pattern_id` e foram colocadas no grupo).
