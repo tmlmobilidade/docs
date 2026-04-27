@@ -4,6 +4,7 @@
 		"block_id_in_allowed_set",
 		"direction_id_matches_feed_pattern_direction",
 		"direction_id_consistent_for_all_patterns_in_trips",
+		"direction_id_valid_enum",
 		"one_pattern_id_per_shape_id_group",
 		"one_shape_id_per_pattern_id_group",
 		"pattern_id_matches_feed_pattern_id_syntax",
