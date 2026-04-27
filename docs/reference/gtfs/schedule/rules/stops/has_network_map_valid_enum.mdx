@@ -1,21 +1,21 @@
 ---
-title: Regra da existência de um abrigo
+title: Regra do
 description: Regra
 ---
-## Regras de validação do campo has_bench
+## Regras de validação do campo 
 
 
-### Campos que serão validados nesta regra
+### Campos que serão utilizados nesta regra
 
 | Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
 | ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
-
+| `agency_id`   | ID externo que faz referência a `agency.txt` | obrigatório | ID da entidade responsável pelo veículo, usado para associar cada veículo à respetiva agência no sistema. |
 
 
 
 ### O que esta validação faz 
 
-O `has_bench` descreve se a paragem tem banco, e em que estado: não aplicável, sem banco, com banco em mau estado ou com banco em bom estado. No feed o campo é opcional; deixar o campo vazio é aceite no standard — significa não fornecer essa informação. O validador aplica as regras do projecto sobre presença, proibição, valores permitidos (0 a 3) e, se existir, lista de opções permitidas.
+O `has_network_map` descreve se a paragem dispõe de mapa da rede, e em que estado: não aplicável, sem mapa, com mapa em mau estado ou com mapa em bom estado. No feed o campo é opcional; deixar o campo vazio é aceite no standard — significa não fornecer essa informação. O validador aplica as regras do projecto sobre presença, proibição, valores permitidos (0 a 3) e, se existir, lista de opções permitidas.
 
 ---
 
@@ -31,6 +31,11 @@ O `has_bench` descreve se a paragem tem banco, e em que estado: não aplicá
 #### Falha
 
 - Valor em falta — o campo fica vazio, quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado (o standard admite vazio, mas a política de dados exige a indicação).
-- Proibido — as regras não permitem o `has_bench`, mas o valor veio no mesmo fornecido.
+- Proibido — as regras não permitem o `has_network_map`, mas o valor veio no mesmo fornecido.
 - Inválido — um valor que não seja 0, 1, 2 nem 3.
 - Fora do permitido — o valor é um dos códigos válidos, mas não consta do conjunto de opções definido nas regras (salvo quando a regra abrange todas as opções).
+
+
+
+
+

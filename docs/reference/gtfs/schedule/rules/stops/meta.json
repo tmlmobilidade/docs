@@ -1,5 +1,6 @@
 {
 	"pages": [
 		"has_bench_valid_enum",
+		"has_network_map_valid_enum"
 	]
 }
