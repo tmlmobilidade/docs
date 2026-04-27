@@ -9,27 +9,29 @@ description: Regra
 
 | Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
 | ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
-| `agency_id`   | ID externo que faz referência a `agency.txt` | obrigatório | ID da entidade responsável pelo veículo, usado para associar cada veículo à respetiva agência no sistema. |
+
 
 
 
 ### O que esta validação faz 
 
-
-
+O `stop_lon` é a longitude (WGS84) do local, em par com a latitude. Para paragens e plataformas, o par de coordenadas deve assentar no postalete ou, em alternativa, no sítio de embarque do passageiro, e não na faixa de rodagem ou carril. A obrigatoriedade no GTFS segue o `location_type`: obrigatória para paragem/plataforma (0), estação (1) e entrada/saída (2); opcional para nó genérico (3) e área de embarque (4). O validador aplica ainda regras do projecto com obrigatoriedade ou recomendação quando a longitude falta em tipos opcionais, e dispensa a verificação se a regra o permitir. Quando o valor existe, tem de ser uma longitude válida (intervalo de graus previsto na validação).
 
 ---
 
 #### Passa
 
-
+- A longitude vem preenchida e situa-se no intervalo válido para coordenadas geográficas.
+- Para tipos 0, 1 e 2, a longitude vem fornecida (cumpre o requisito condicional de presença).
+- Para tipos 3 e 4 (e ausência de tipo, conforme a interpretação de dados do feed), a longitude pode faltar, e a regra dispensa a verificação ou o preenchimento cumpre obrigatoriedade / recomendação consoante a severidade.
 
 ---
 
 #### Falha
 
-
-
+- Em falta — para `location_type` 0, 1 ou 2, a longitude não vem fornecida (requisito condicional do GTFS).
+- Em falta (ou política de dados) — noutros casos, longitude vazia quando o projecto exige o preenchimento como erro ou recomendação, sem dispensa.
+- Inválida — o valor numérico não representa uma longitude admissível.
 
 
 
