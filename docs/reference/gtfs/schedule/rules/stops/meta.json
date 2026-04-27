@@ -9,6 +9,8 @@
 		"has_tariffs_information_valid_enum",
 		"level_id_valid_id",
 		"location_type_valid_enum",
-		"municipality_id_valid"
+		"municipality_id_valid",
+		"parent_station_id_valid_for_stop_hierarchy",
+		"parish_id_valid"
 	]
 }
