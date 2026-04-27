@@ -7,29 +7,29 @@ description: Regra
 
 ### Campos que serão utilizados nesta regra
 
-| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
-| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
-| `agency_id`   | ID externo que faz referência a `agency.txt` | obrigatório | ID da entidade responsável pelo veículo, usado para associar cada veículo à respetiva agência no sistema. |
+| Nome do Campo | Tipo                                        | Presença                     | Descrição                                                                                                                                                                                                                                                                                                             |
+| ------------- | ------------------------------------------- | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `shape_id`    | ID externo que referencia `shapes.shape_id` | Condicionalmente obrigatório | Identifica uma forma geoespacial que descreve o trajeto do veículo para uma viagem. <br/><br/>**Condicionalmente obrigatório**:<ul><li>Obrigatório se a viagem tiver um comportamento contínuo de embarque ou desembarque definido em `routes.txt` ou em `stop_times.txt`.</li><li>Opcional caso contrário.</li></ul> |
 
 
 
 ### O que esta validação faz 
 
-
-
+ O  associa a viagem a um traçado geográfico (percurso no mapa) em `shapes.txt`. No GTFS o campo é obrigatório com condições: torna-se obrigatório quando existe embarque ou desembarque contínuo definido na própria rota ou nas paragens da viagem (`stop_times`); noutros casos pode ficar vazio. Para além do standard, o projecto pode exigir ou recomendar o `shape_id`, ou dispensar a verificação consoante a severidade das regras. Quando o valor vem indicado, tem de corresponder a um identificador existente no conjunto de formas.
 
 ---
 
 #### Passa
 
-
+- Embarque ou desembarque contínuo na rota ou ao longo da viagem e o `shape_id` vem preenchido, fornecendo o traçado exigido nessa situação.
+- Sem esse comportamento contínuo e o campo pode ficar vazio conforme o standard e as regras não obrigam nem recomendam o preenchimento (ou dispensam a verificação).
+- O `shape_id` vem preenchido e o identificador existe na tabela de formas do feed.
+- O valor em falta só é aceite quando as regras ativas permitem omitir o traçado sem mensagem.
 
 ---
 
 #### Falha
 
-
-
-
-
-
+- Comportamento contínuo na rota ou em `stop_times`, mas sem `shape_id` — o traçado é necessário para representar o percurso quando há embarque ou desembarque contínuo.
+- Valor em falta quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado (fora ou para além da regra GTFS do pickup contínuo).
+- Referência inválida — o `shape_id` indicado não existe entre as formas publicadas no feed (incluindo situações em que a rota da viagem não se consegue resolver de forma inequívoca para concluir a verificação).

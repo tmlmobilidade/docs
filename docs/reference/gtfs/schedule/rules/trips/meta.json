@@ -14,6 +14,7 @@
 		"route_id_references_routes_table",
 		"service_id_references_calendar_service",
 		"shape_id_needs_to_be_the_same_as_pattern_id",
+		"shape_id_references_shapes_table_when_present",
 		"trip_headsign_consistent_for_all_patterns_in_trips",
 		"trip_id_limit_max_length",
 		"trip_path_stop_coordinates_referenced_from_stops"
