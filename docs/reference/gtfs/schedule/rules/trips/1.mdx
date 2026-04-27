@@ -1,0 +1,39 @@
+---
+title: Regra do
+description: Regra
+---
+## Regras de validação do campo 
+
+
+### Campos que serão utilizados nesta regra
+
+| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
+| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
+| `agency_id`   | ID externo que faz referência a `agency.txt` | obrigatório | ID da entidade responsável pelo veículo, usado para associar cada veículo à respetiva agência no sistema. |
+
+
+
+### O que esta validação faz 
+
+O campo indica se, para aquela viagem, as bicicletas são permitidas (ou se não há informação sobre o assunto), segundo a semântica GTFS: sem informação, viagem com capacidade para pelo menos uma bicicleta, ou viagem em que não são permitidas.
+
+---
+
+#### Passa
+
+- O valor lido no dado é um dos permitidos para o enumerado (0, 1 ou 2), interpretados no sentido usual do GTFS (incluindo 0 para “sem informação” quando a célula veio preenchida com 0).
+- Quando o projeto aplica restrição explícita de valores, o número indicado figura entre as opções permitidas pelas regras (ou a regra aceita “todas as opções”).
+- Se a célula está vazia no ficheiro, a verificação não exige o campo neste validador (por exemplo, validação com severidade de ignorar, ou regra que dispensa a mensagem nesse contexto) — nesse caso a linha “passa” para este critério sem ser reprovada por falta de valor.
+- O campo veio preenchido e as regras não o tratam como proibido: pode prosseguir a validação do valor em vez de falhar de imediato por “campo proibido”.
+
+---
+
+#### Falha
+
+- Célula vazia no dado, quando, para a severidade e regras ativas, o preenchimento é exigido ou recomendado: não há distinção explícita no feed entre “sem informação” e “valor omitido” — o validador vê ausência de valor.
+- Campo proibido pelas regras do projeto, mas o valor ainda veio preenchido no ficheiro.
+- Valor inválido — qualquer coisa que não seja 0, 1 ou 2 (não é um dos três códigos previstos).
+- Opção fora do permitido — o valor é 0, 1 ou 2 no GTFS, mas as regras restringem a um conjunto de opções e o valor lido não pertence a esse conjunto (exceto quando a regra abrange todas as opções).
+
+
+
