@@ -1,0 +1,34 @@
+---
+title: Regra do
+description: Regra
+---
+## Regras de validação do campo 
+
+
+### Campos que serão utilizados nesta regra
+
+| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
+| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
+| `agency_id`   | ID externo que faz referência a `agency.txt` | obrigatório | ID da entidade responsável pelo veículo, usado para associar cada veículo à respetiva agência no sistema. |
+
+
+
+### O que esta validação faz 
+
+O `stop_url` é o endereço Web associado à paragem (por exemplo página de informação do operador). No GTFS o campo é opcional; não fornecer o URL é aceite. Quando o valor existe, tem de ser uma URL válida segundo as regras do validador. O projecto pode exigir ou recomendar o preenchimento quando o valor falta, proibir o campo quando vem preenchido, dispensar a verificação consoante a severidade, e restringir a lista de URLs (ou prefixos exactos) permitidas nas regras.
+
+---
+
+#### Passa
+
+- O `stop_url` vem preenchido com uma URL válida, e o atributo não está proibido, e o valor figura entre os permitidos pelas regras (ou a regra aceita todas as opções), quando aplica.
+- O valor não vem fornecido e a regra dispensa a verificação (por exemplo, severidade de ignorar), sem exigir o endereço neste passo.
+
+---
+
+#### Falha
+
+- URL em falta — o valor não vem fornecido, quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado (o standard admite omitir, mas a política de dados exige o link).
+- Proibido — as regras não permitem o `stop_url`, mas o valor veio no mesmo fornecido.
+- Inválido — o texto não passa na validação de formato de URL.
+- Fora do permitido — a URL é válida, mas não consta do conjunto de opções definido nas regras (salvo quando a regra abrange todas as opções).

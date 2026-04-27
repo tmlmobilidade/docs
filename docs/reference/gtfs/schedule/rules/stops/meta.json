@@ -25,5 +25,6 @@
 		"stop_name_required_by_location_type",
 		"stop_short_name_valid",
 		"stop_timezone_valid",
+		"stop_url_valid_url"
 	]
 }
