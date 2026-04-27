@@ -20,6 +20,7 @@
 		"trip_headsign_present_when_short_name_absent",
 		"trip_id_limit_max_length",
 		"trip_id_unique",
-		"trip_path_stop_coordinates_referenced_from_stops"
+		"trip_path_stop_coordinates_referenced_from_stops",
+		"trip_short_name_exclusivity_with_trip_headsign"
 	]
 }
