@@ -2,34 +2,34 @@
 title: Regra do
 description: Regra
 ---
-## Regras de validação do campo 
+## Regras de validação do campo shelter_code
 
 
-### Campos que serão utilizados nesta regra
+### Campos que serão valid nesta regra
 
 | Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
 | ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
-| `agency_id`   | ID externo que faz referência a `agency.txt` | obrigatório | ID da entidade responsável pelo veículo, usado para associar cada veículo à respetiva agência no sistema. |
+
 
 
 
 ### O que esta validação faz 
 
-
-
+O `shelter_code` regista o código do abrigo associado à paragem (extensão ao `stops.txt`). O campo é opcional; deixar o campo vazio é aceite no standard — significa não fornecer essa informação. O validador aplica as regras do projecto sobre presença (obrigatório ou recomendado, quando a verificação não é dispensada), proibição quando o valor vem fornecido, e, se existir lista de opções, que o código consta entre os permitidos. Não se verifica, nesta função, existência em ficheiro externo nem formato além do texto não vazio.
 
 ---
 
 #### Passa
 
-
+- O `shelter_code` vem preenchido com texto não vazio e o atributo não está proibido pelas regras.
+- O valor figura entre os códigos permitidos pelas regras (ou a regra aceita todas as opções).
+- O campo fica vazio e a regra dispensa a verificação (por exemplo, severidade de ignorar), sem exigir o código do abrigo neste passo.
 
 ---
 
 #### Falha
 
-
-
-
-
+- Identificador em falta — o campo fica vazio, quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado.
+- Proibido — as regras não permitem o `shelter_code`, mas o valor veio no mesmo fornecido.
+- Fora do permitido — o texto existe, mas não consta do conjunto de opções definido nas regras (salvo quando a regra abrange todas as opções).
 
