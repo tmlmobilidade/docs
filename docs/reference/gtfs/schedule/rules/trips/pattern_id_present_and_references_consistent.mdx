@@ -2,7 +2,7 @@
 title: Regra do
 description: Regra
 ---
-## Regras de validação do campo 
+## Regras de validação do campo pattern_id
 
 
 ### Campos que serão utilizados nesta regra
@@ -15,7 +15,7 @@ description: Regra
 
 ### O que esta validação faz 
 
-O cam identifica a vista de padrão a que a viagem pertence: o desdobramento de uma rota por sentidos, quando aplica, de modo que viagens com o mesmo `pattern_id` representem a mesma sequência de serviço. No GTFS o campo é opcional; no vosso contexto pode ser tratado como exigido em feeds específicos. Nesta função só se verifica se o identificador vem fornecido; a coerência do padrão com `route_id`, `trip_headsign`, `direction_id`, `shape_id` e sequência de paragens não é feita aqui (outras validações podem cuidar disso).
+O campo identifica a vista de padrão a que a viagem pertence: o desdobramento de uma rota por sentidos, quando aplica, de modo que viagens com o mesmo `pattern_id` representem a mesma sequência de serviço. No GTFS o campo é opcional; no vosso contexto pode ser tratado como exigido em feeds específicos. Nesta função só se verifica se o identificador vem fornecido; a coerência do padrão com `route_id`, `trip_headsign`, `direction_id`, `shape_id` e sequência de paragens não é feita aqui (outras validações podem cuidar disso).
 
 ---
 
