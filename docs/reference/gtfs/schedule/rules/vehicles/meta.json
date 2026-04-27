@@ -25,6 +25,7 @@
 		"vehicle_id_unique",
 		"vehicle_make_required",
 		"vehicle_model_required",
-		"vehicle_owner_required"
+		"vehicle_owner_required",
+		"wheelchair_spots_valid_enum"
 	]
 }
