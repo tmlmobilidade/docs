@@ -1,0 +1,36 @@
+---
+title: Regra do
+description: Regra
+---
+## Regras de validação do campo stop_desc
+
+
+### Campos que serão val nesta regra
+
+| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
+| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
+| `agency_id`   | ID externo que faz referência a `agency.txt` | obrigatório | ID da entidade responsável pelo veículo, usado para associar cada veículo à respetiva agência no sistema. |
+
+
+
+### O que esta validação faz 
+
+O `stop_desc` é a descrição do local, pensada para informação útil ao passageiro, sem repetir o próprio `stop_name` — o GTFS desaconselha que descrição e nome sejam o mesmo texto. O campo é opcional; deixar o campo vazio é aceite — significa não fornecer descrição extra. O validador aplica as regras do projecto sobre presença, proibição e opções permitidas. Quando `stop_desc` e `stop_name` são iguais, emite aviso (qualidade de dados, não erro de enum). Não se valida, nesta função, conteúdo longo ou estilo além do critério de duplicado com o nome.
+
+---
+
+#### Passa
+
+- O `stop_desc` vem preenchido com texto não vazio e o atributo não está proibido pelas regras e o valor figura entre os permitidos pelas regras (ou a regra aceita todas as opções), e não coincide com o `stop_name` ou só gera aviso de duplicado, não falha por esse critério isolado.
+- O campo fica vazio e a regra dispensa a verificação (por exemplo, severidade de ignorar), sem exigir a descrição neste passo.
+
+---
+
+#### Falha
+
+- Texto em falta — o campo fica vazio, quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado.
+- Proibido — as regras não permitem o `stop_desc`, mas o valor veio no mesmo fornecido.
+- Fora do permitido — o texto existe, mas não consta do conjunto de opções definido nas regras (salvo quando a regra abrange todas as opções).
+
+
+
