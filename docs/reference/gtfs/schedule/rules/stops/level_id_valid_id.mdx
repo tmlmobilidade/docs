@@ -1,0 +1,38 @@
+---
+title: Regra do
+description: Regra
+---
+## Regras de validação do campo 
+
+
+### Campos que serão valid nesta regra
+
+| Nome do Campo | Tipo                                                    | Presença | Descrição                                                                         |
+| ------------- | ------------------------------------------------------- | -------- | --------------------------------------------------------------------------------- |
+| level_id      | ID estrangeiro que faz referência aos `levels.level_id` | Opcional | Nível do local. O mesmo nível pode ser utilizado por várias estações não ligadas. |
+
+
+
+### O que esta validação faz 
+
+O `level_id` associa a paragem a um nível (andar, plataforma ou estrato de um espaço multi-nível), tal como definido em `levels.txt`. No GTFS o campo é opcional; o mesmo nível pode servir várias estações sem ligação directa entre si. O validador exige, conforme as regras, presença do identificador quando aplicável, proibição quando o projecto não admite o campo preenchido, existência do valor em `levels.txt` (chave estrangeira) e, se existir lista de opções nas regras, que o identificador pertence a esse conjunto permitido.
+
+---
+
+#### Passa
+
+- O `level_id` vem preenchido com um identificador que existe em `levels.txt`.
+- O identificador consta entre os permitidos pelas regras (ou a regra aceita todas as opções).
+- O campo fica vazio e a regra dispensa a verificação (por exemplo, severidade de ignorar), sem exigir o nível neste passo.
+- O valor veio fornecido e o atributo não está proibido pelas regras.
+
+---
+
+#### Falha
+
+- Identificador em falta — o campo fica vazio ou sem valor útil, quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado.
+- Proibido — as regras não permitem o `level_id`, mas o valor veio no mesmo fornecido.
+- Referência inválida — o valor indicado não existe em `levels.txt`.
+- Fora do permitido — o nível existe no feed, mas o identificador não consta do conjunto de opções definido nas regras (salvo quando a regra abrange todas as opções).
+
+
