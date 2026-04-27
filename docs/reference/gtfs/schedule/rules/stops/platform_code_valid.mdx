@@ -2,34 +2,33 @@
 title: Regra do
 description: Regra
 ---
-## Regras de validação do campo 
+## Regras de validação do campo platform_code
 
 
 ### Campos que serão utilizados nesta regra
 
 | Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
 | ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
-| `agency_id`   | ID externo que faz referência a `agency.txt` | obrigatório | ID da entidade responsável pelo veículo, usado para associar cada veículo à respetiva agência no sistema. |
+
 
 
 
 ### O que esta validação faz 
 
-
-
+O `platform_code` identifica a plataforma numa paragem que pertence a uma estação — em geral um código curto (por exemplo letra ou número), sem palavras descritivas como “plataforma” ou “linha”, para facilitar a apresentação noutras línguas. No GTFS o campo é opcional; deixar o campo vazio é aceite — significa não fornecer esse código. O validador trata presença conforme as regras do projecto, proibição quando o valor vem fornecido, e lista de opções permitidas. Não se verifica, nesta função, o estilo do texto (por exemplo ausência da palavra “plataforma”) — apenas o cumprimento das regras acima.
 
 ---
 
 #### Passa
 
-
+- O `platform_code` vem preenchido com texto não vazio e o atributo não está proibido pelas regras.
+- O valor figura entre os códigos permitidos pelas regras (ou a regra aceita todas as opções).
+- O campo fica vazio e a regra dispensa a verificação (por exemplo, severidade de ignorar), sem exigir o código de plataforma neste passo.
 
 ---
 
 #### Falha
 
-
-
-
-
-
+- Identificador em falta — o campo fica vazio, quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado.
+- Proibido — as regras não permitem o `platform_code`, mas o valor veio no mesmo fornecido.
+- Fora do permitido — o texto existe, mas não consta do conjunto de opções definido nas regras (salvo quando a regra abrange todas as opções).
