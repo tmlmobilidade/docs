@@ -20,6 +20,7 @@
 		"stop_code_valid",
 		"stop_desc_valid",
 		"stop_id_unique",
-		"stop_lat_valid_latitude_range"
+		"stop_lat_valid_latitude_range",
+		"stop_lon_valid_longitude_range"
 	]
 }
