@@ -8,6 +8,7 @@
 		"has_stop_sign_valid_enum",
 		"has_tariffs_information_valid_enum",
 		"level_id_valid_id",
-		"location_type_valid_enum"
+		"location_type_valid_enum",
+		"municipality_id_valid"
 	]
 }
