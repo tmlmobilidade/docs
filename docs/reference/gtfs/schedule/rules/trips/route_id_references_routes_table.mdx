@@ -7,29 +7,28 @@ description: Regra
 
 ### Campos que serão utilizados nesta regra
 
-| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
-| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
-| `agency_id`   | ID externo que faz referência a `agency.txt` | obrigatório | ID da entidade responsável pelo veículo, usado para associar cada veículo à respetiva agência no sistema. |
+| Nome do Campo | Tipo                                              | Presença    | Descrição            |
+| ------------- | ------------------------------------------------- | ----------- | -------------------- |
+| `route_id`    | ID externo que faz referência a `routes.route_id` | Obrigatório | Identifica uma rota. |
 
 
 
 ### O que esta validação faz 
 
-
-
+O camp em `trips.txt` identifica a rota a que a viagem pertence. No GTFS o campo é obrigatório e deve corresponder a um identificador que exista em `routes.txt` — ou seja, a viagem tem de apontar para uma rota realmente definida no feed.
 
 ---
 
 #### Passa
 
-
+- O `route_id` vem preenchido.
+- Esse identificador existe em `routes.txt` (a referência é válida no conjunto de dados).
 
 ---
 
 #### Falha
 
-
-
-
+- Identificador em falta — o `route_id` não vem fornecido na viagem.
+- Referência inválida — o valor indicado não corresponde a nenhuma rota no ficheiro de rotas (identificador inexistente ou incoerente com o resto do feed).
 
 

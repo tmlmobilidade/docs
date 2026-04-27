@@ -11,6 +11,7 @@
 		"pattern_id_present_and_references_consistent",
 		"pattern_id_single_trip_signature_per_pattern",
 		"route_id_consistent_for_all_patterns_in_trips",
+		"route_id_references_routes_table",
 		"shape_id_needs_to_be_the_same_as_pattern_id",
 		"trip_headsign_consistent_for_all_patterns_in_trips",
 		"trip_id_limit_max_length",
