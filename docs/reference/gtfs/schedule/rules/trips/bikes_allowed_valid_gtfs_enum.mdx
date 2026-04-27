@@ -7,9 +7,9 @@ description: Regra
 
 ### Campos que serão validados nesta regra
 
-| Nome do Campo | Tipo | Presença | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| ------------- | ---- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `block_id`    | ID   | Opcional | Identifica o bloco a que pertence a viagem. Um bloco consiste numa única viagem ou em várias viagens sequenciais realizadas com o mesmo veículo, definidas por dias de serviço partilhado e `block_id`. Um `block_id` pode ter viagens com dias de serviço diferentes, formando blocos distintos. <br/><br/>Veja o exemplo abaixo. Para fornecer informações sobre as transferências no assento, devem ser fornecidas as transferências do tipo `transfer_type` 4. |
+| Nome do Campo   | Tipo | Presença | Descrição                                                                                                                                                                                                                                                                                    |
+| --------------- | ---- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `bikes_allowed` | Enum | Opcional | Indica se as bicicletas são permitidas. <br/><br/>Opções válidas:<br/>`0` ou vazio - Sem informação sobre bicicletas para a viagem. <br/>`1` - O veículo utilizado nesta viagem específica pode acomodar pelo menos uma bicicleta. <br/>`2` - As bicicletas não são permitidas nesta viagem. |
 
 
 
