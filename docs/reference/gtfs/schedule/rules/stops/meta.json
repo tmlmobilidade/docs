@@ -12,6 +12,8 @@
 		"municipality_id_valid",
 		"parent_station_id_valid_for_stop_hierarchy",
 		"parish_id_valid",
-		"platform_code_valid"
+		"platform_code_valid",
+		"public_visible_valid_enum",
+		"region_id_valid"
 	]
 }
