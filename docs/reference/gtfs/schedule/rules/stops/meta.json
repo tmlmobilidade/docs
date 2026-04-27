@@ -22,6 +22,7 @@
 		"stop_id_unique",
 		"stop_lat_valid_latitude_range",
 		"stop_lon_valid_longitude_range",
-		"stop_name_required_by_location_type"
+		"stop_name_required_by_location_type",
+		"stop_short_name_valid"
 	]
 }
