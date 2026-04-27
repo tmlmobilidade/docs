@@ -1,15 +1,15 @@
 ---
-title: Regra de limitação do pattern_id
-description: Regra utilizada para a consistência do pattern_id
+title: Regra de limitação do trip_id
+description: Regra utilizada para a consistência do trip_id
 ---
-## Regras de validação do campo pattern_id
+## Regras de validação do campo trip_id
 
 
 ### Campos que serão validados nesta regra
 
-| Nome do Campo | Tipo | Presença    | Descrição                                                                                                                                                 |
-| ------------- | ---- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `pattern_id`  | ID   | Obrigatório | O `pattern_id` identifica a variante de serviço em que a viagem opera na linha. <br/><br/>Não faz parte do GTFS standart, mas é obrigatório para nós TML. |
+| Nome do Campo | Tipo     | Presença    | Descrição              |
+| ------------- | -------- | ----------- | ---------------------- |
+| `trip_id`     | ID único | Obrigatório | Identifica uma viagem. |
 
 ### O que esta validação faz
 
