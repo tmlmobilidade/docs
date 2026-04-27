@@ -19,6 +19,7 @@
 		"shelter_maintainer_valid",
 		"stop_code_valid",
 		"stop_desc_valid",
-		"stop_id_unique"
+		"stop_id_unique",
+		"stop_lat_valid_latitude_range"
 	]
 }
