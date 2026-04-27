@@ -7,9 +7,9 @@ description: Regra
 
 ### Campos que serão utilizados nesta regra
 
-| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
-| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
-| `agency_id`   | ID externo que faz referência a `agency.txt` | obrigatório | ID da entidade responsável pelo veículo, usado para associar cada veículo à respetiva agência no sistema. |
+| Nome do Campo   | Tipo                        | Presença    | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| --------------- | --------------------------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `stop_sequence` | Número inteiro não negativo | Obrigatório | Ordem das paragens, grupos de localização ou localizações GeoJSON para uma determinada viagem. Os valores devem aumentar ao longo da viagem, mas não têm de ser consecutivos. <br/><br/>Exemplo: A primeira localização da viagem pode ter `stop_sequence=1`, a segunda localização da viagem pode ter `stop_sequence=23`, a terceira localização pode ter `stop_sequence=40` e assim sucessivamente. As viagens dentro do mesmo grupo de localização ou localização GeoJSON requerem dois registos em `stop_times. txt` com o mesmo `location_group_id` ou `location_id`. |
 
 
 
