@@ -1,0 +1,35 @@
+---
+title: Regra do
+description: Regra
+---
+## Regras de validação do campo shelter_maintainer
+
+
+### Campos que serão v nesta regra
+
+| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
+| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
+| `agency_id`   | ID externo que faz referência a `agency.txt` | obrigatório | ID da entidade responsável pelo veículo, usado para associar cada veículo à respetiva agência no sistema. |
+
+
+
+### O que esta validação faz 
+
+O `shelter_maintainer` identifica quem mantém ou gere o abrigo da paragem (por exemplo entidade ou código operacional), em extensão ao `stops.txt`. O campo é opcional; deixar o campo vazio é aceite no standard — significa não fornecer essa informação. O validador aplica as regras do projecto sobre presença (obrigatório ou recomendado, quando a verificação não é dispensada), proibição quando o valor vem fornecido, e, se existir lista de opções, que o valor consta entre os permitidos. Não se verifica, nesta função, existência em ficheiro externo nem formato além do texto não vazio.
+
+---
+
+#### Passa
+
+- O `shelter_maintainer` vem preenchido com texto não vazio e o atributo não está proibido pelas regras.
+- O valor figura entre os identificadores permitidos pelas regras (ou a regra aceita todas as opções).
+- O campo fica vazio e a regra dispensa a verificação (por exemplo, severidade de ignorar), sem exigir o responsável pelo abrigo neste passo.
+
+---
+
+#### Falha
+
+- Valor em falta — o campo fica vazio, quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado.
+- Proibido — as regras não permitem o `shelter_maintainer`, mas o valor veio no mesmo fornecido.
+- Fora do permitido — o texto existe, mas não consta do conjunto de opções definido nas regras (salvo quando a regra abrange todas as opções).
+
