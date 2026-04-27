@@ -2,6 +2,7 @@
 	"pages": [
 		"has_bench_valid_enum",
 		"has_network_map_valid_enum",
-		"has_pip_real_time_valid_enum"
+		"has_pip_real_time_valid_enum",
+		"has_schedules_valid_enum"
 	]
 }
