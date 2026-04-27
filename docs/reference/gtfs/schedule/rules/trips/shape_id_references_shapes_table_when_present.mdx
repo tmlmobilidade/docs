@@ -2,10 +2,10 @@
 title: Regra do
 description: Regra
 ---
-## Regras de validação do campo 
+## Regras de validação do campo shape_id
 
 
-### Campos que serão utilizados nesta regra
+### Campos que serão validados nesta regra
 
 | Nome do Campo | Tipo                                        | Presença                     | Descrição                                                                                                                                                                                                                                                                                                             |
 | ------------- | ------------------------------------------- | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -15,7 +15,7 @@ description: Regra
 
 ### O que esta validação faz 
 
- O  associa a viagem a um traçado geográfico (percurso no mapa) em `shapes.txt`. No GTFS o campo é obrigatório com condições: torna-se obrigatório quando existe embarque ou desembarque contínuo definido na própria rota ou nas paragens da viagem (`stop_times`); noutros casos pode ficar vazio. Para além do standard, o projecto pode exigir ou recomendar o `shape_id`, ou dispensar a verificação consoante a severidade das regras. Quando o valor vem indicado, tem de corresponder a um identificador existente no conjunto de formas.
+ O campo associa a viagem a um traçado geográfico (percurso no mapa) em `shapes.txt`. No GTFS o campo é obrigatório com condições: torna-se obrigatório quando existe embarque ou desembarque contínuo definido na própria rota ou nas paragens da viagem (`stop_times`); noutros casos pode ficar vazio. Para além do standard, o projecto pode exigir ou recomendar o `shape_id`, ou dispensar a verificação consoante a severidade das regras. Quando o valor vem indicado, tem de corresponder a um identificador existente no conjunto de formas.
 
 ---
 
