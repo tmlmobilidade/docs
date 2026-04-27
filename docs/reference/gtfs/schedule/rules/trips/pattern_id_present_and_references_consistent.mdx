@@ -15,18 +15,17 @@ description: Regra
 
 ### O que esta validação faz 
 
-O campo identifica a vista de padrão a que a viagem pertence: o desdobramento de uma rota por sentidos, quando aplica, de modo que viagens com o mesmo `pattern_id` representem a mesma sequência de serviço. No GTFS o campo é opcional; no vosso contexto pode ser tratado como exigido em feeds específicos. Nesta função só se verifica se o identificador vem fornecido; a coerência do padrão com `route_id`, `trip_headsign`, `direction_id`, `shape_id` e sequência de paragens não é feita aqui (outras validações podem cuidar disso).
+O ` identifica a vista de padrão a que a viagem pertence: o desdobramento de uma rota por sentidos, quando aplica, de modo que viagens com o mesmo `pattern_id` devam alinhar com o mesmo padrão operacional. No GTFS o campo é opcional; o vosso contexto de dados pode exigir o preenchimento. A verificação limita-se a confirmar a presença do identificador; a coerência do padrão com rota, destino, sentido, forma e sequência de paragens trata-se ailleurs noutros critérios de qualidade, não neste ponto.
 
 ---
 
 #### Passa
 
-- O `pattern_id` vem preenchido no ficheiro (há identificador de padrão na linha).
-- O campo fica vazio e a regra dispensa a verificação (por exemplo, severidade de ignorar), pelo que a função não emite a mensagem de ausência e devolve o estado que o chamador use para deixar de seguir (no código, `false` quando falha a presença ou ignora, `true` quando o valor existe).
+- O `pattern_id` vem preenchido — existe um identificador de padrão associado à viagem.
+- O campo fica vazio e as regras ativas dispensam a verificação (por exemplo, quando a ausência de valor é aceite sem mensagem) — a viagem “passa” em relação a este critério de presença.
 
 ---
 
 #### Falha
 
-- Identificador em falta — o campo fica vazio, quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado (o GTFS permite omitir, mas a regra de dados do projecto exige o `pattern_id`).
-
+- Identificador em falta — o `pattern_id` não vem fornecido, quando, para a severidade e regras em vigor, o preenchimento é obrigatório ou recomendado (o standard permite omitir, mas a política de dados do projecto exige o identificador de padrão).
