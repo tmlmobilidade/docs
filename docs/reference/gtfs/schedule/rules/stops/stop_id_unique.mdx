@@ -15,20 +15,23 @@ description: Regra
 
 ### O que esta validação faz 
 
-
-
+O `stop_id` identifica, de forma única no feed, cada local em `stops.txt` (paragem, estação, entrada, nó ou área de embarque, consoante o tipo). No GTFS o campo é obrigatório e a identificação não se pode repetir: o mesmo id não pode servir paragens distintas (o referencial ainda alarga a exigência de unicidade global a outros ficheiros, como `locations` e `location_groups` — a verificação no conjunto de paragens reforça a coerência local). Se existir lista de opções nas regras do projecto, o identificador tem de pertencer a esse conjunto (ou a regra aceita todas as opções).
 
 ---
 
 #### Passa
 
-
+- O `stop_id` vem preenchido (não vazio).
+- O identificador não se repete noutro registo de `stops.txt` processado.
+- O valor figura entre os identificadores permitidos pelas regras (ou a regra aceita todas as opções), quando aplica.
 
 ---
 
 #### Falha
 
-
+- Identificador em falta — o `stop_id` não vem fornecido ou fica vazio.
+- Duplicado — o mesmo `stop_id` aparece em mais do que um registo, inviabilizando a referência inequívoca ao local.
+- Fora do permitido — o identificador não consta do conjunto de opções definido nas regras (salvo quando a regra abrange todas as opções).
 
 
 
