@@ -7,9 +7,9 @@ description: Regra
 
 ### Campos que serão utilizados nesta regra
 
-| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
-| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
-| `agency_id`   | ID externo que faz referência a `agency.txt` | obrigatório | ID da entidade responsável pelo veículo, usado para associar cada veículo à respetiva agência no sistema. |
+| Nome do Campo   | Tipo | Presença | Descrição                                                                                                                                                                                                                                                                                    |
+| --------------- | ---- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `bikes_allowed` | Enum | Opcional | Indica se as bicicletas são permitidas. <br/><br/>Opções válidas:<br/>`0` ou vazio - Sem informação sobre bicicletas para a viagem. <br/>`1` - O veículo utilizado nesta viagem específica pode acomodar pelo menos uma bicicleta. <br/>`2` - As bicicletas não são permitidas nesta viagem. |
 
 
 
