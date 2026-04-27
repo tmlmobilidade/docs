@@ -7,10 +7,10 @@ description: Regra utilizada para a consistência da circulação
 
 ### Campos que serão validados nesta regra
 
-| Nome do Campo | Tipo                                              | Presença    | Descrição                                                                                                                                                 |
-| ------------- | ------------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `route_id`    | ID externo que faz referência a `routes.route_id` | Obrigatório | Identifica uma rota.                                                                                                                                      |
-| `pattern_id`  | ID                                                | Obrigatório | O `pattern_id` identifica a variante de serviço em que a viagem opera na linha. <br/><br/>Não faz parte do GTFS standart, mas é obrigatório para nós TML. |
+| Nome do Campo | Tipo                                              | Presença    | Descrição                                                                                                                              |
+| ------------- | ------------------------------------------------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `route_id`    | ID externo que faz referência a `routes.route_id` | Obrigatório | Identifica uma rota.                                                                                                                   |
+| `pattern_id`  | ID                                                | Obrigatório | Indica a variante de serviço em que a viagem opera na linha. <br/><br/>Não faz parte do GTFS standart, mas é obrigatório para nós TML. |
 
 
 ### O que esta validação faz (agrupado por pattern_id)
