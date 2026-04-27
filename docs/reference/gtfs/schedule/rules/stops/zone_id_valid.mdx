@@ -1,0 +1,33 @@
+---
+title: Regra do
+description: Regra
+---
+## Regras de validação do campo zone_id
+
+
+### Campos que serão utilizados nesta regra
+
+| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
+| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
+
+
+
+
+### O que esta validação faz 
+
+O `zone_id` identifica a zona tarifária da paragem, para ligação ao modelo de tarifas do feed. No GTFS o campo é opcional; para estação ou entrada/saída de estação o `zone_id` pode ser ignorado pelos consumidores de dados — o validador não dispensa automaticamente a verificação por `location_type`; aplica sempre as regras do projecto sobre presença (obrigatório ou recomendado, quando a verificação não é dispensada), proibição quando o valor vem fornecido, e lista de opções permitidas. Não se verifica, nesta função, existência em `fare_zones.txt` nem chave estrangeira.
+
+---
+
+#### Passa
+
+- O `zone_id` vem preenchido com texto não vazio e o atributo não está proibido pelas regras e o valor figura entre os identificadores permitidos (ou a regra aceita todas as opções), quando aplica.
+- O campo fica vazio e a regra dispensa a verificação (por exemplo, severidade de ignorar), sem exigir a zona neste passo.
+
+---
+
+#### Falha
+
+- Identificador em falta — o campo fica vazio, quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado (o standard admite vazio; em estações o consumidor pode ignorar o valor, mas a política de dados do projecto pode exigir preenchimento ou ausência consoante a regra).
+- Proibido — as regras não permitem o `zone_id`, mas o valor veio no mesmo fornecido.
+- Fora do permitido — o texto existe, mas não consta do conjunto de opções definido nas regras (salvo quando a regra abrange todas as opções).

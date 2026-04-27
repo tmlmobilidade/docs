@@ -27,6 +27,7 @@
 		"stop_timezone_valid",
 		"stop_url_valid_url",
 		"ttc_stop_name_valid",
-		"wheelchair_boarding_valid_enum"
+		"wheelchair_boarding_valid_enum",
+		"zone_id_valid"
 	]
 }
