@@ -5,7 +5,7 @@ description: Regra
 ## Regras de validação do campo 
 
 
-### Campos que serão utilizados nesta regra
+### Campos que serão validados nesta regra
 
 | Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
 | ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
@@ -14,6 +14,7 @@ description: Regra
 
 
 ### O que esta validação faz 
+
 O `wheelchair_boarding` indica, consoante o contexto da paragem no GTFS (paragem sem estação mãe, paragem filha de estação, ou entrada/saída de estação), se há informação sobre acessibilidade para cadeira de rodas e qual o grau de possibilidade de embarque ou de percurso acessível. Os códigos 0, 1 e 2 têm significados diferentes em cada caso — ver a referência GTFS. No standard o campo é opcional; deixar o campo vazio é legítimo (muitas vezes implica herança do comportamento a partir da estação mãe, quando aplica). O validador trata presença conforme as regras do projecto, proibição, valores permitidos (0, 1 e 2 apenas) e opções restritas nas regras. Não reproduz, nesta função, a lógica de herança entre estação e paragens filhas.
 
 ---
