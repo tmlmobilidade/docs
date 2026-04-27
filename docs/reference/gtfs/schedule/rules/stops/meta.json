@@ -25,6 +25,8 @@
 		"stop_name_required_by_location_type",
 		"stop_short_name_valid",
 		"stop_timezone_valid",
-		"stop_url_valid_url"
+		"stop_url_valid_url",
+		"ttc_stop_name_valid",
+		"wheelchair_boarding_valid_enum"
 	]
 }

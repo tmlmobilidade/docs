@@ -1,5 +1,5 @@
 ---
-title: Regra de identificação
+title: Regra de capacidade de embarque de uma pessoa de cadeira de rodas
 description: Regra
 ---
 ## Regras de validação do campo wheelchair_boarding
@@ -15,22 +15,26 @@ description: Regra
 
 ### O que esta validação faz 
 
-O `wheelchair_boarding` indica, consoante o contexto da paragem no GTFS (paragem sem estação mãe, paragem filha de estação, ou entrada/saída de estação), se há informação sobre acessibilidade para cadeira de rodas e qual o grau de possibilidade de embarque ou de percurso acessível. Os códigos 0, 1 e 2 têm significados diferentes em cada caso — ver a referência GTFS. No standard o campo é opcional; deixar o campo vazio é legítimo (muitas vezes implica herança do comportamento a partir da estação mãe, quando aplica). O validador trata presença conforme as regras do projecto, proibição, valores permitidos (0, 1 e 2 apenas) e opções restritas nas regras. Não reproduz, nesta função, a lógica de herança entre estação e paragens filhas.
+O `wheelchair_boarding` indica se o embarque de utilizadores de cadeira de rodas é possível a partir do local. O significado dos códigos 0, 1 e 2 depende de a paragem ser isolada, filha de estação ou entrada/saída de estação; vazio alinha, em muitos casos, com herança a partir da estação, quando a especificação do GTFS o prevê.
+
+Paragem sem estação mãe (parentless):
+
+- 0 ou vazio — Sem informação de acessibilidade para a paragem.
+- 1 — Alguns veículos nesta paragem podem ser usados com embarque por quem se desloca em cadeira de rodas.
+- 2 — Não é possível embarque em cadeira de rodas nesta paragem.
+
+Paragem filha de estação (com `parent_station`):
+
+- 0 ou vazio — A paragem herda o comportamento de `wheelchair_boarding` da estação, se este estiver definido na estação.
+- 1 — Existe percurso acessível desde fora da estação até à paragem/plataforma em questão.
+- 2 — Não existe percurso acessível desde fora da estação até a essa paragem/plataforma.
+
+Entradas e saídas de estação (`location_type` entrada/saída):
+
+- 0 ou vazio — A entrada herda o comportamento da estação mãe, se este estiver definido nessa estação.
+- 1 — A entrada é acessível a utilizadores de cadeira de rodas.
+- 2 — Não há percurso acessível da entrada da estação até às paragens/plataformas.
 
 ---
 
-#### Passa
-
-- O valor vem preenchido e é 0, 1 ou 2.
-- O campo fica vazio e a regra dispensa a verificação (por exemplo, severidade de ignorar), sem exigir o preenchimento neste passo.
-- O valor está entre as opções permitidas pelas regras (ou a regra aceita todas as opções).
-- O valor veio fornecido e o atributo não está proibido pelas regras.
-
----
-
-#### Falha
-
-- Valor em falta — o campo fica vazio, quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado (o standard admite vazio e herança, mas a política de dados exige o código).
-- Proibido — as regras não permitem o `wheelchair_boarding`, mas o valor veio no mesmo fornecido.
-- Inválido — um valor que não seja 0, 1 nem 2.
-- Fora do permitido — 0, 1 ou 2 são válidos no GTFS, mas o valor lido não consta do conjunto de opções definido nas regras (salvo quando a regra abrange todas as opções).
+Para além do standard, o validador aplica regras do projecto (presença, proibição, e lista de códigos permitidos) e só aceita 0, 1 ou 2 quando o valor vem fornecido; não reconstitui sozinho a herança entre ficheiros ou linhas.
