@@ -1,5 +1,6 @@
 {
 	"pages": [
+		"bikes_allowed_valid_gtfs_enum",
 		"direction_id_matches_feed_pattern_direction",
 		"direction_id_consistent_for_all_patterns_in_trips",
 		"one_pattern_id_per_shape_id_group",
