@@ -3,6 +3,8 @@
 		"has_bench_valid_enum",
 		"has_network_map_valid_enum",
 		"has_pip_real_time_valid_enum",
-		"has_schedules_valid_enum"
+		"has_schedules_valid_enum",
+		"has_shelter_valid_enum",
+		"has_stop_sign_valid_enum"
 	]
 }
