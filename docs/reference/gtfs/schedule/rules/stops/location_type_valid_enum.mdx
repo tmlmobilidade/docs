@@ -1,0 +1,39 @@
+---
+title: Regra do
+description: Regra
+---
+## Regras de validação do campo 
+
+
+### Campos que serão utilizados nesta regra
+
+| Nome do Campo | Tipo | Presença | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| ------------- | ---- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| location_type | Enum | Opcional | Tipo de localização. As opções válidas são: 0 (ou vazio) - Paragem (ou Plataforma). Um local onde os passageiros embarcam ou desembarcam de um veículo de transporte público. É chamado de plataforma quando definido dentro de uma parent_station. 1 - Estação. Uma estrutura física ou área que contém uma ou mais plataformas. 2 - Entrada/Saída. Um local onde os passageiros podem entrar ou sair de uma estação a partir da rua. Se uma entrada/saída pertencer a várias estações, poderá ser ligada por caminhos a ambas, mas o fornecedor de dados terá de escolher uma delas como pai. 3 - Nó Genérico. Um local dentro de uma estação, que não corresponde a nenhum outro location_type, que pode ser utilizado para ligar caminhos definidos em pathways.txt. 4 - Área de Embarque. Um local específico numa plataforma, onde os passageiros podem embarcar e/ou desembarcar de veículos. |
+
+
+
+### O que esta validação faz 
+
+O `` classifica o tipo de local no modelo de paragens do GTFS: paragem (ou plataforma), estação, entrada/saída, nó genérico para percursos, ou área de embarque, conforme os códigos 0 a 4. No standard o campo é opcional; deixar o campo vazio é legítimo e corresponde, em termos de informação, à situação “paragem / plataforma” (o mesmo significado atribuível ao 0 quando o valor vem preenchido). O validador aplica as regras do projecto sobre presença (recomendado ou obrigatório, quando a verificação não é dispensada), proibição, códigos válidos nesse intervalo e, se existir, lista de opções permitidas.
+
+---
+
+#### Passa
+
+- O valor vem preenchido e é 0, 1, 2, 3 ou 4, alinhado com o tipo de local previsto.
+- O campo fica vazio e a regra dispensa a verificação (por exemplo, severidade de ignorar), sem exigir o tipo de local neste passo.
+- O valor está entre as opções permitidas pelas regras (ou a regra aceita todas as opções).
+- O valor veio fornecido e o atributo não está proibido pelas regras.
+
+---
+
+#### Falha
+
+- Valor em falta — o campo fica vazio, quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado (o standard admite vazio, mas a política de dados exige a classificação).
+- Proibido — as regras não permitem o `location_type`, mas o valor veio no mesmo fornecido.
+- Inválido — um valor que não seja 0, 1, 2, 3 nem 4.
+- Fora do permitido — o código é válido no GTFS, mas não consta do conjunto de opções definido nas regras (salvo quando a regra abrange todas as opções).
+
+
+
