@@ -5,31 +5,31 @@ description: Regra
 ## Regras de validação do campo 
 
 
-### Campos que serão utilizados nesta regra
+### Campos que serão validados nesta regra
 
-| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
-| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
-| `agency_id`   | ID externo que faz referência a `agency.txt` | obrigatório | ID da entidade responsável pelo veículo, usado para associar cada veículo à respetiva agência no sistema. |
+| Nome do Campo | Tipo     | Presença    | Descrição                       |
+| ------------- | -------- | ----------- | ------------------------------- |
+| `vehicle_id`  | ID único | obrigatório | ID de identificação do veículo. |
 
 
 
 ### O que esta validação faz 
 
-
-
+O campo identifica, de forma única no conjunto de dados, cada veículo no ficheiro `vehicles.txt`. A regra exige valor obrigatório (identificador presente) e unicidade: o mesmo identificador não pode repetir-se em mais do que um registo.
 
 ---
 
 #### Passa
 
-
+- O identificador do veículo vem preenchido no ficheiro (não fica vazio após a leitura).
+- Esse identificador não se rep — existe no máximo uma linha com aquele `vehicle_id` no feed processado.
+- (Se a severidade da regra for só de aviso ou outra, a mensagem mantém o mesmo sentido, mas o impacto muda; o critério de “correto / incorreto” mantém-se.)
 
 ---
 
 #### Falha
 
-
-
-
+- Identificador em falta — o campo fica vazio; não é possível distinguir o veículo.
+- Duplicado — o mesmo `vehicle_id` aparece em mais do que um registo; o identificador deixa de ser único, o que inviabiliza a referência inequívoca ao veículo.
 
 
