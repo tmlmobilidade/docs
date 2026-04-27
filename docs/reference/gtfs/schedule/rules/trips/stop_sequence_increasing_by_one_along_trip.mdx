@@ -15,21 +15,25 @@ description: Regra
 
 ### O que esta validação faz 
 
+O campo no ficheiro `stop_times.txt` define a ordem das paragens (ou equivalentes) ao longo de uma viagem: os números têm de aumentar ao longo do percurso, sem necessidade de serem consecutivos. A verificação percorre todas as entradas da viagem e garante, para além do GTFS, regras de coerência: sequência numérica bem formada, progressão das distâncias ao longo da forma (quando vêm indicadas) e proibição de repetir a mesma `stop_id` em duas posições seguidas na ordem da sequência, quando a paragem identifica com `stop_id` (há excepção lógica quando a paragem se resolve por grupo ou localização geográfica em vez de `stop_id`).
 
-
+Se a regra tiver severidade de ignorar (ou o fluxo equivalente que suprime a verificação), nada se reporta. Sem identificador de viagem, a verificação não aplica a esta linha de `trips.txt`.
 
 ---
 
 #### Passa
 
-
+- Cada `stop_sequence` da viagem é um número inteiro válido (não negativo, de acordo com o descrito no feed).
+- `shape_dist_traveled`, quando preenchida, constitui número válido; quando não aplica, não gera este tipo de falha.
+- Após ordenar pelos valores de `stop_sequence`, a sequência é estritamente crescente (cada posição vem depois da anterior, sem repetição nem inversão).
+- Quando duas entradas consecutivas têm `shape_dist_traveled` definida, a distância não diminui da anterior para a seguinte.
+- Com `stop_id` preenchida em entradas consecutivas, o identificador da paragem muda de uma posição para a seguinte (não há a mesma paragem duas vezes seguidas nessa ordem).
+- A verificação está dispensada pelas regras, ou a viagem carece de `trip_id` e esta regra não produz conclusão para esse caso.
 
 ---
 
 #### Falha
 
-
-
-
-
-
+- `stop_sequence` inválida — texto que não se interpreta como inteiro aceitável, ou valores que, ordenados, não crescem estritamente (empates ou retrocessos).
+- Distância à forma inválida — `shape_dist_traveled` mal formatada, ou menor na passagem seguinte do que na anterior, quando ambas vêm fornecidas.
+- Paragem consecutiva repetida — a mesma `stop_id` aparece em posições seguintes após ordenar por `stop_sequence` (não basta trocar o número: viola a regra de alternância mínima entre paragens distintas).
