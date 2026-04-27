@@ -15,25 +15,24 @@ description: Regra
 
 ### O que esta validação faz 
 
-O campo indica se, para aquela viagem, as bicicletas são permitidas (ou se não há informação sobre o assunto), segundo a semântica GTFS: sem informação, viagem com capacidade para pelo menos uma bicicleta, ou viagem em que não são permitidas.
+O campo indica, por viagem, se existe informação sobre o transporte de bicicletas: sem informação, viagem com capacidade para pelo menos uma bicicleta, ou viagem em que não são permitidas. No GTFS o campo é opcional; deixar o campo vazio no ficheiro é legítimo — significa não fornecer essa informação (a mesma intenção que o valor `0` quando o valor vem preenchido). O validador do projeto, para além do standard, pode recomendar ou exigir o preenchimento ou restringir a valores permitidos pelas regras.
 
 ---
 
 #### Passa
 
-- O valor lido no dado é um dos permitidos para o enumerado (0, 1 ou 2), interpretados no sentido usual do GTFS (incluindo 0 para “sem informação” quando a célula veio preenchida com 0).
-- Quando o projeto aplica restrição explícita de valores, o número indicado figura entre as opções permitidas pelas regras (ou a regra aceita “todas as opções”).
-- Se a célula está vazia no ficheiro, a verificação não exige o campo neste validador (por exemplo, validação com severidade de ignorar, ou regra que dispensa a mensagem nesse contexto) — nesse caso a linha “passa” para este critério sem ser reprovada por falta de valor.
-- O campo veio preenchido e as regras não o tratam como proibido: pode prosseguir a validação do valor em vez de falhar de imediato por “campo proibido”.
+- O ficheiro contém 0, 1 ou 2 (códigos válidos) e, se houver opções definidas nas regras, o valor encontra-se entre as permitidas (ou a regra aceita todas as opções).
+- O campo fica vazio no ficheiro (ou a validação deste atributo está ignorada nas regras) e, por isso, não se exige o preenchimento neste ponto.
+- O valor veio fornecido e o atributo não está proibido pelas regras — a validação pode continuar; caso contrário, reprova logo por proibição, não por valor.
 
 ---
 
 #### Falha
 
-- Célula vazia no dado, quando, para a severidade e regras ativas, o preenchimento é exigido ou recomendado: não há distinção explícita no feed entre “sem informação” e “valor omitido” — o validador vê ausência de valor.
-- Campo proibido pelas regras do projeto, mas o valor ainda veio preenchido no ficheiro.
-- Valor inválido — qualquer coisa que não seja 0, 1 ou 2 (não é um dos três códigos previstos).
-- Opção fora do permitido — o valor é 0, 1 ou 2 no GTFS, mas as regras restringem a um conjunto de opções e o valor lido não pertence a esse conjunto (exceto quando a regra abrange todas as opções).
+- Campo vazio no ficheiro quando, para a severidade e regras em vigor, o preenchimento é obrigatório ou recomendado (o GTFS aceita vazio, mas a vossa regra de dados exige o valor).
+- O atributo é proibido nas regras, mas o valor veio na mesma fornecido.
+- Valor inválido — não é 0, 1 nem 2.
+- Valor válido no GTFS (0, 1 ou 2) fora do conjunto de opções permitido pelas regras do projeto.
 
 
 
