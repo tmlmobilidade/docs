@@ -16,6 +16,7 @@
 		"public_visible_valid_enum",
 		"region_id_valid",
 		"shelter_code_valid",
-		"shelter_maintainer_valid"
+		"shelter_maintainer_valid",
+		"stop_code_valid"
 	]
 }
