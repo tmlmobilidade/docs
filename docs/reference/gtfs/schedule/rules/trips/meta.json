@@ -21,6 +21,7 @@
 		"trip_id_limit_max_length",
 		"trip_id_unique",
 		"trip_path_stop_coordinates_referenced_from_stops",
-		"trip_short_name_exclusivity"
+		"trip_short_name_exclusivity",
+		"wheelchair_accessible_valid_gtfs_enum"
 	]
 }
