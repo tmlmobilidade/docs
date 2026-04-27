@@ -7,29 +7,27 @@ description: Regra
 
 ### Campos que serão utilizados nesta regra
 
-| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
-| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
-| `agency_id`   | ID externo que faz referência a `agency.txt` | obrigatório | ID da entidade responsável pelo veículo, usado para associar cada veículo à respetiva agência no sistema. |
+| Nome do Campo | Tipo | Presença | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| ------------- | ---- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `block_id`    | ID   | Opcional | Identifica o bloco a que pertence a viagem. Um bloco consiste numa única viagem ou em várias viagens sequenciais realizadas com o mesmo veículo, definidas por dias de serviço partilhado e `block_id`. Um `block_id` pode ter viagens com dias de serviço diferentes, formando blocos distintos. <br/><br/>Veja o exemplo abaixo. Para fornecer informações sobre as transferências no assento, devem ser fornecidas as transferências do tipo `transfer_type` 4. |
 
 
 
 ### O que esta validação faz 
 
-
-
+O campo liga a viagem a um bloco — a sequência de serviço em que a mesma unidade cumpre uma ou mais viagens encadeadas, conforme a modelação do GTFS. No standard o campo é opcional; o validador aplica, em cima disso, as regras do projecto: pode recomendar ou exigir o preenchimento, ignorar a verifica ou tratar o campo como proibido quando o valor vem fornecido.
 
 ---
 
 #### Passa
 
-
+- O `block_id` vem preenchido no ficheiro e o atributo não está marcado como proibido pelas regras (a validação não interrompe por “campo proibido”).
+- O campo fica vazio (opcional no GTFS) e a regra ativa dispensa a checagem (por exemplo, severidade de ignorar ou, no caso vazio, o fluxo que suprime a mensagem nesse contexto) — nesse sentido, “passa” sem reportar ausência.
+- Não aplica, nesta função, validação de formato, lista de valores nem existência noutro ficheiro; limita-se à presença e à regra _forbidden_.
 
 ---
 
 #### Falha
 
-
-
-
-
-
+- Valor em falta quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado (no standard o campo pode estar vazio, mas a regra de dados do projecto exige o identificador do bloco).
+- Proibido — as regras definem que o `block_id` não deve constar, mas o valor veio na mesma fornecido.
