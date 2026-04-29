@@ -13,13 +13,13 @@ description: Regra
 
 
 
-### O que esta validação faz 
+## O que esta validação faz 
 
 O `parent_station` liga local filho a local ascendente na hierarquia de `stops.txt` (paragem sob estação, entrada ou nó sob estação, área de embarque sob plataforma, etc.). O GTFS fixa requisitos em função do `location_type`: estação (1) não pode ter ascendente; entrada (2), nó genérico (3) e área de embarque (4) têm o ascendente obrigatório; paragem / plataforma (0) pode ter ou não ascendente, consoante o modelo. Quando o valor vem fornecido, tem de ser um `stop_id` que exista no mesmo ficheiro. O validador aplica ainda o preenchimento consoante a severidade e regras do projecto, o caso proibido, e, se existir, opções permitidas para o identificador.
 
 ---
 
-#### Passa
+### Passa
 
 - Estação (tipo 1) e o `parent_station` fica vazio (sem ascendente, como o standard exige).
 - Entrada, nó genérico ou área de embarque (tipos 2, 3 ou 4) e o `parent_station` vem preenchido com identificador válido e permitido (incluindo, para a área de embarque, apontar para a plataforma correta).
@@ -28,7 +28,7 @@ O `parent_station` liga local filho a local ascendente na hierarquia de `
 
 ---
 
-#### Falha
+### Falha
 
 - Estação (tipo 1) com `parent_station` preenchido (o standard proíbe ascendente em estações).
 - Entrada, nó genérico ou área de embarque (2, 3 ou 4) com `parent_station` em falta.
