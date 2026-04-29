@@ -2,10 +2,7 @@
 title: Regra da existência de um texto visível
 description: trip_short_name_exclusivity
 ---
-## Regras de validação do campo trip_short_name
-
-
-### Campos que serão validados nesta regra
+## Campos que serão validados nesta regra
 
 | Nome do Campo     | Tipo  | Presença | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | ----------------- | ----- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -13,20 +10,20 @@ description: trip_short_name_exclusivity
 
 
 
-### O que esta validação faz 
+## O que esta validação faz 
 
 O campo é o nome curto ou código público que identifica a viagem perante o passageiro (por exemplo, número de comboio). No GTFS o campo é opcional; o standard recomenda vazio quando essa chave quase não se usa, e, quando preenchida, o texto não deve servir de destino nem de nota de serviço limitado, mas isso fica fora de desta função. Aqui trata-se apenas de regras do projecto sobre o preenchimento: obrigatoriedade ou recomendação quando o valor falta, proibição quando o valor vem dado, ou dispensa da verificação. Não se testa, nesta verificação, formato, exclusividade com o `trip_headsign` ou unicidade por dia de serviço.
 
 ---
 
-#### Passa
+### Passa
 
 - O `trip_short_name` vem preenchido e o atributo não está proibido pelas regras.
 - O campo fica vazio e a regra dispensa a verificação (por exemplo, severidade de ignorar), aceitando a omissão sem mensagem nesse passo.
 
 ---
 
-#### Falha
+### Falha
 
 - Texto em falta - o nome curto não vem fornecido, quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado (o standard admite vazio, mas a política de dados exige a indicação).
 - Proibido - as regras definem que o `trip_short_name` não deve constar, mas o valor veio no mesmo fornecido.
