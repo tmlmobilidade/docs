@@ -26,13 +26,10 @@ O campo `drop_off_type`no ficheiro `stop_times.txt` indica como será realizada
 
 - Valor entre 0 e 3 (enumerado válido).
 - Com janelas definidas: tipo de descida não é 0 (ou o campo vazio, que o GTFS trata como regular mas aqui a verificação explícita só falha quando o valor é 0 com janelas).
-- Campo vazio com regra em ignorar ou proibido (no sentido de saltar a verificação de presença) - sem mensagem por ausência.
 
 ---
 
 ### Falha
 
 - Inválido - número fora de 0–3.
-- Proibido com janelas - existe janela de pickup/drop-off preenchida e o tipo de descida é 0 (descida regular programada).
-- Fora do permitido - valor GTFS válido mas não autorizado pelas opções do projecto.
-- Ausência de valor quando a severidade não é “ignorar” e o projecto exige obrigatório ou recomendado (mensagem conforme política).
+- Proibido com janelas - existe janela de pickup/drop-off preenchida e o tipo de descida é 0 (descida regular programada)..
