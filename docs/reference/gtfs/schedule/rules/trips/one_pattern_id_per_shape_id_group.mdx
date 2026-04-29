@@ -10,19 +10,19 @@ description: one_pattern_id_per_shape_id_group
 | `pattern_id`  | ID                                          | Obrigatório                  | Indica a variante de serviço em que a viagem opera na linha. <br/><br/>Não faz parte do GTFS standart, mas é obrigatório para nós TML.                                                                                                                                                                                |
 
 
-### O que esta validação faz (agrupado por shape_id)
+## O que esta validação faz (agrupado por shape_id)
 
 Garante que, para um dado `shape_id`, todas as viagens com `pattern_id` preenchido referem o mesmo padrão: no máximo um `pattern_id` distinto nesse conjunto. Viagens com `pattern_id` vazio não entram nesse cálculo.
 
 ---
 
-#### Passa
+### Passa
 
 -  Se neste `shape_id`, existir no máximo um `pattern_id` diferente a considerar - ou seja, zero ou um valor distinto de `pattern_id` contando só as viagens em que o campo não é nulo (viagens com `pattern_id` vazio não “criam” conflito entre padrões).
 
 ---
 
-#### Falha
+### Falha
 
 -  Se aparecerem dois ou mais `pattern_id` distintos entre as viagens com `pattern_id` definido, para o mesmo `shape_id` - e o aviso exibido é o que está em i18n: _o `shape_id` dado é utilizado em múltiplos `pattern_ids`._
 
