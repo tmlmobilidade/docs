@@ -1,11 +1,8 @@
 ---
-title: Regra de Identificação da reserva de desembarque
+title: Validação de Identificação da reserva de desembarque
 description: drop_off_booking_rule_id_references_booking_rules_or_empty
 ---
-## Regras de validação do campo drop_off_booking_rule_id
-
-
-### Campos que serão validação nesta regra
+## Campos que serão validação nesta regra
 
 | Nome do Campo              | Tipo                                                            | Presença | Descrição                                                                                                              |
 | -------------------------- | --------------------------------------------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------- |
@@ -15,7 +12,7 @@ description: drop_off_booking_rule_id_references_booking_rules_or_empty
 
 
 
-### O que esta validação faz 
+## O que esta validação faz 
 
 O campo `drop_off_booking_rule_id` associa, a esta paragem da viagem, a regra de reserva aplicável à descida. No GTFS é opcional; a referência recomenda preenchê-lo quando o tipo de descida implica contacto com a operadora (`drop_off_type = 2`) - o detalhe do campo está na documentação geral do feed.
 
