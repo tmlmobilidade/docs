@@ -1,11 +1,8 @@
 ---
 title: Regra de classificação de emissão do veículo
-description: Regra
+description: emission_code_valid_for_propulsion_type
 ---
-## Regras de validação do campo emission
-
-
-### Campos que serão validados nesta regra
+## Campos que serão validados nesta regra
 
 | Nome do Campo | Tipo | Presença    | Descrição                                                                                                                                                                                                                                                                                                                                                                                               |
 | ------------- | ---- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -13,13 +10,13 @@ description: Regra
 
 
 
-### O que esta validação faz 
+## O que esta validação faz 
 
 O campo identifica a classe de emissões do veículo (poluentes), normalmente alinhada com a norma Euro ou outro esquema numérico definido no vosso dicionário de dados. Os valores válidos são códigos inteiros que mapeiam para esses níveis (no esquema habitual, por exemplo de Euro I a Euro VI; podem existir códigos extra para “sem classificação”, “não aplicável” ou extensões do feed, conforme a documentação interna).
 
 ---
 
-#### Passa
+### Passa
 
 - Campo preenchido, código reconhecido no conjunto permitido pelo validador e, havendo lista restritiva nas regras, valor autorizado (ou regras que abrangem todas as opções válidas).
 
