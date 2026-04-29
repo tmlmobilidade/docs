@@ -16,21 +16,26 @@ description: Regra
 
 ### O que esta validação faz 
 
+O campo `continuous_drop_off` em `stop_times.txt` indica se o passageiro pode descer em qualquer ponto do troço entre esta paragem e a seguinte (alinhado com o percurso em `shapes.txt`), em modo de paragem contínua. Os valores permitidos pelo GTFS são o enumerado 0–3 (paragem contínua, sem paragem contínua ou vazio, telefonar à operadora, coordenar com o motorista). Quando o campo está preenchido, prevalece sobre o que vier em `routes.txt`; quando está vazio, herda o comportamento definido na rota.
 
-
-
----
-
-#### Passa
-
-
+O validador aplica a severidade e opções do projecto quando existem regras. Garante valores dentro do enumerado GTFS, a regra “condicionalmente proibido” quando existem janelas de pickup/drop-off na mesma linha (só é permitido o valor equivalente a “sem paragem contínua”, ou seja 1, ou o campo sem valor), e pode restringir quais códigos do enumerado o projecto aceita.
 
 ---
 
-#### Falha
+### Passa
 
+- Valor dentro do enumerado GTFS (0 a 3).
+- Com janelas de pickup/drop-off definidas na linha: só 1 ou ausência do valor (sem paragem contínua explícita neste `stop_time`); qualquer outro código do enumerado não passa neste caso.
+- Valor escolhido integra o conjunto permitido pelas regras do projecto (ou a regra declara todas as opções válidas).
+- Campo vazio e as regras estão em modo ignorar ou proibido quanto ao campo — não se gera a mensagem de ausência.
+- Campo vazio em fluxo em que o projecto não exige mensagem para ausência (após o ponto anterior).
 
+---
 
+### Falha
 
-
+- Inválido — número fora de 0–3.
+- Proibido com janelas — há janelas de pickup/drop-off preenchidas e o valor não é o código de “sem paragem contínua” (1); 0, 2 e 3 ficam excluídos neste contexto.
+- Fora do permitido — valor válido no GTFS, mas não incluído nas opções fixadas pelo projecto (salvo quando a regra aceita todas).
+- Ausência do valor quando, para a severidade configurada, o projecto trata o campo como obrigatório ou recomendado (mensagem de erro vs aviso conforme a política), exceto quando a regra manda ignorar ou marcar o campo como proibido de verificação nesse fluxo.
 
