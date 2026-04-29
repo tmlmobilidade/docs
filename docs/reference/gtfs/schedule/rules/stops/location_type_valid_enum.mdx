@@ -2,10 +2,7 @@
 title: Tipo de local da paragem válido de acordo com a numeração do GTFS
 description: Regra
 ---
-## Regras de validação do campo location_type
-
-
-### Campos que serão validados nesta regra
+## Campos que serão validados nesta regra
 
 | Nome do Campo | Tipo | Presença | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | ------------- | ---- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -13,13 +10,13 @@ description: Regra
 
 
 
-### O que esta validação faz 
+## O que esta validação faz 
 
 O `location_type` classifica o tipo de local no modelo de paragens do GTFS: paragem (ou plataforma), estação, entrada/saída, nó genérico para percursos, ou área de embarque, conforme os códigos 0 a 4. No standard o campo é opcional; deixar o campo vazio é legítimo e corresponde, em termos de informação, à situação “paragem / plataforma” (o mesmo significado atribuível ao 0 quando o valor vem preenchido). O validador aplica as regras do projecto sobre presença (recomendado ou obrigatório, quando a verificação não é dispensada), proibição, códigos válidos nesse intervalo e, se existir, lista de opções permitidas.
 
 ---
 
-#### Passa
+### Passa
 
 - O valor vem preenchido e é 0, 1, 2, 3 ou 4, alinhado com o tipo de local previsto.
 - O campo fica vazio e a regra dispensa a verificação (por exemplo, severidade de ignorar), sem exigir o tipo de local neste passo.
