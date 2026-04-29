@@ -18,9 +18,9 @@ description: "Valida o campo continuous_pickup em stop_times.txt: valores admiti
 
 ### O que esta validação faz 
 
-O `continuous_pickup` indica se o passageiro pode embarcar em qualquer ponto do troço entre esta paragem e a seguinte, segundo o percurso (por exemplo o definido em `shapes.txt`). Valor preenchido prevalece sobre o definido na rota; vazio herda o comportamento da rota — o significado de cada código está na documentação do campo.
+O `continuous_pickup` indica se o passageiro pode embarcar em qualquer ponto do troço entre esta paragem e a seguinte, segundo o percurso (por exemplo o definido em `shapes.txt`). Valor preenchido prevalece sobre o definido na rota; vazio herda o comportamento da rota - o significado de cada código está na documentação do campo.
 
-Com janelas de pickup/drop-off com valor na mesma linha, o GTFS não admite paragem contínua para embarque (nem contacto com operadora/motorista nesse modo): só faz sentido “sem embarque contínuo neste registo” — no enumerado, código 1, ou o campo sem valor.
+Com janelas de pickup/drop-off com valor na mesma linha, o GTFS não admite paragem contínua para embarque (nem contacto com operadora/motorista nesse modo): só faz sentido “sem embarque contínuo neste registo” - no enumerado, código 1, ou o campo sem valor.
 
 Fora desse caso, o valor tem de estar no intervalo válido do GTFS. Pode ainda ser recusado um código válido na referência que não esteja entre as opções que o vosso feed ou política de dados aceitam.
 
@@ -37,8 +37,8 @@ Fora desse caso, o valor tem de estar no intervalo válido do GTFS. Pode ainda
 
 #### Falha
 
-- Valor inválido — número fora do enumerado. Correção: usar apenas códigos previstos na referência GTFS do `continuous_pickup`.
-- Proibido com janelas — janelas com valor e código diferente de 1. Correção: passar a 1, limpar o campo (herdando da rota, se adequado) ou rever janelas vs modelo de embarque contínuo.
-- Valor não admitido — código válido no GTFS mas não autorizado para o vosso feed. Correção: escolher outra opção admitida ou alinhar a política de dados com o serviço real.
+- Valor inválido - número fora do enumerado. Correção: usar apenas códigos previstos na referência GTFS do `continuous_pickup`.
+- Proibido com janelas - janelas com valor e código diferente de 1. Correção: passar a 1, limpar o campo (herdando da rota, se adequado) ou rever janelas vs modelo de embarque contínuo.
+- Valor não admitido - código válido no GTFS mas não autorizado para o vosso feed. Correção: escolher outra opção admitida ou alinhar a política de dados com o serviço real.
 - Ausência com obrigatoriedade ou recomendação registada. Correção: preencher com o código adequado ou confirmar se o campo deve ser exigido neste feed.
 

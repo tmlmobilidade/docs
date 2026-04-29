@@ -17,7 +17,7 @@ description: Valida o campo drop_off_booking_rule_id em stop_times.txt, garantin
 
 ### O que esta validação faz 
 
-O campo `drop_off_booking_rule_id` associa, a esta paragem da viagem, a regra de reserva aplicável à descida. No GTFS é opcional; a referência recomenda preenchê-lo quando o tipo de descida implica contacto com a operadora (`drop_off_type = 2`) — o detalhe do campo está na documentação geral do feed.
+O campo `drop_off_booking_rule_id` associa, a esta paragem da viagem, a regra de reserva aplicável à descida. No GTFS é opcional; a referência recomenda preenchê-lo quando o tipo de descida implica contacto com a operadora (`drop_off_type = 2`) - o detalhe do campo está na documentação geral do feed.
 
 Quando o identificador vem preenchido, deve ser exactamente um registo válido de `booking_rules.txt`. Se não existir essa correspondência, o dado está incorrecto. Em cenários em que o validador está preparado para rejeitar o uso deste campo, qualquer valor preenchido pode ser sinalizado.
 
@@ -32,6 +32,6 @@ Quando o identificador vem preenchido, deve ser exactamente um registo válid
 
 ### Falha
 
-- Referência inexistente — o valor indicado não aparece em `booking_rules.txt`. Correção: criar ou corrigir a entrada em `booking_rules` ou ajustar o identificador em `stop_times` para bater certo com um `booking_rule_id` válido.
-- Campo não admitido — o feed envia um identificador mas, no contexto de validação, esse campo não deve ser usado. Correção: retirar o valor de `stop_off_booking_rule_id` ou rever o modelo de publicação.
-- Ausência — o campo está vazio e o validador regista obrigatoriedade ou recomendação de preenchimento. Correção: preencher com o `booking_rule_id` adequado (de preferência alinhado com o tipo de descida e com o que está definido em `booking_rules`) ou confirmar com o operador do validador se o campo deve ser obrigatório para o vosso feed.
+- Referência inexistente - o valor indicado não aparece em `booking_rules.txt`. Correção: criar ou corrigir a entrada em `booking_rules` ou ajustar o identificador em `stop_times` para bater certo com um `booking_rule_id` válido.
+- Campo não admitido - o feed envia um identificador mas, no contexto de validação, esse campo não deve ser usado. Correção: retirar o valor de `stop_off_booking_rule_id` ou rever o modelo de publicação.
+- Ausência - o campo está vazio e o validador regista obrigatoriedade ou recomendação de preenchimento. Correção: preencher com o `booking_rule_id` adequado (de preferência alinhado com o tipo de descida e com o que está definido em `booking_rules`) ou confirmar com o operador do validador se o campo deve ser obrigatório para o vosso feed.

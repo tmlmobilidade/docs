@@ -16,7 +16,7 @@ description: "Valida o campo departure_time em stop_times.txt: formato de tempo 
 
 ### O que esta validação faz 
 
-O `departure_time` é a hora de partida do veículo da paragem para uma dada viagem, expressa no fuso horário da agência (`agency_timezone`, não o da paragem). No GTFS pode usar-se mais de 24 horas para tempos após a meia-noite do dia de serviço; quando chegada e partida são iguais, `arrival_time` e `departure_time` devem coincidir — o detalhe está na referência do feed.
+O `departure_time` é a hora de partida do veículo da paragem para uma dada viagem, expressa no fuso horário da agência (`agency_timezone`, não o da paragem). No GTFS pode usar-se mais de 24 horas para tempos após a meia-noite do dia de serviço; quando chegada e partida são iguais, `arrival_time` e `departure_time` devem coincidir - o detalhe está na referência do feed.
 
 Esta verificação garante, em concreto: horário certo na paragem (`timepoint = 1`) implica partida preenchida e bem formatada; com janelas de pickup/drop-off definidas na linha, não deve existir partida fixa neste campo; qualquer valor preenchido deve ser um tempo válido. Pode ainda sinalizar ausência de partida quando o modo de validação não trata o campo como “apenas informativo”. Outros requisitos GTFS (por exemplo primeira ou última paragem da viagem) podem constar da documentação global ou de outras verificações do mesmo validador.
 
@@ -32,7 +32,7 @@ Esta verificação garante, em concreto: horário certo na paragem (`timepoint
 
 ### Falha
 
-- Obrigatório em horário certo — `timepoint = 1` sem partida. Correção: preencher `departure_time` (e, se aplicável, alinhar com `arrival_time`).
-- Proibido com janelas — janelas presentes na linha e partida preenchida. Correção: retirar a partida ou rever o modelo (janelas vs tempos fixos de paragem).
-- Tempo inválido — valor que não respeita o formato de hora esperado. Correção: usar `HH:MM:SS` válido.
-- Ausência — partida em falta e o validador regista obrigatoriedade ou recomendação. Correção: preencher nos casos previstos na referência GTFS ou clarificar com o operador do feed se o campo deve ser exigido.
+- Obrigatório em horário certo - `timepoint = 1` sem partida. Correção: preencher `departure_time` (e, se aplicável, alinhar com `arrival_time`).
+- Proibido com janelas - janelas presentes na linha e partida preenchida. Correção: retirar a partida ou rever o modelo (janelas vs tempos fixos de paragem).
+- Tempo inválido - valor que não respeita o formato de hora esperado. Correção: usar `HH:MM:SS` válido.
+- Ausência - partida em falta e o validador regista obrigatoriedade ou recomendação. Correção: preencher nos casos previstos na referência GTFS ou clarificar com o operador do feed se o campo deve ser exigido.
