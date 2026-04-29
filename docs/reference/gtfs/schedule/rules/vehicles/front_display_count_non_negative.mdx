@@ -2,10 +2,7 @@
 title: Regra de existência de visor frontal
 description: front_display_count_non_negative
 ---
-## Regras de validação do campo front_display
-
-
-### Campos que serão validados nesta regra
+## Campos que serão validados nesta regra
 
 | Nome do Campo   | Tipo | Presença    | Descrição                                                                                                                                                          |
 | --------------- | ---- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -13,19 +10,19 @@ description: front_display_count_non_negative
 
 
 
-### O que esta validação faz 
+## O que esta validação faz 
 
 O campo descreve, para cada veículo, a existência de painel de destino na frente do veículo, visível no exterior (indicador de linha/destino à frente). A convenção do feed tem três opções: não (0), sim (1) e não aplicável (2) - por exemplo, quando o veículo ou o serviço não se enquadra num destes casos de equipamento.
 
 ---
 
-#### Passa
+### Passa
 
 - Campo preenchido, valor 0, 1 ou 2 e, havendo lista restritiva, opção autorizada pelas regras (ou regras que abrangem todas as opções válidas).
 
 ---
 
-#### Falha
+### Falha
 
 - Campo em falta – não se indica a situação do painel de destino frontal.
 - Valor inválido – não é 0, 1 nem 2.
