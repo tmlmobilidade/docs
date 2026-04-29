@@ -33,5 +33,6 @@ Quando o identificador vem preenchido, deve ser exactamente um registo válid
 ### Falha
 
 - Referência inexistente — o valor indicado não aparece em `booking_rules.txt`. Correção: criar ou corrigir a entrada em `booking_rules` ou ajustar o identificador em `stop_times` para bater certo com um `booking_rule_id` válido.
+
 - Campo não admitido — o feed envia um identificador mas, no contexto de validação, esse campo não deve ser usado. Correção: retirar o valor de `stop_off_booking_rule_id` ou rever o modelo de publicação.
 - Ausência — o campo está vazio e o validador regista obrigatoriedade ou recomendação de preenchimento. Correção: preencher com o `booking_rule_id` adequado (de preferência alinhado com o tipo de descida e com o que está definido em `booking_rules`) ou confirmar com o operador do validador se o campo deve ser obrigatório para o vosso feed.
