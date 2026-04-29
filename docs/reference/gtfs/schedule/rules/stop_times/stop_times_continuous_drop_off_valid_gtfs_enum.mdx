@@ -18,26 +18,26 @@ description: Regra
 
 ### O que esta validação faz 
 
-O campo no ficheiro `stop_times.txt` indica se o passageiro pode descer em qualquer ponto do troço entre esta paragem e a seguinte (alinhado com o percurso em `shapes.txt`), em modo de paragem contínua. Os valores permitidos pelo GTFS são o enumerado 0–3 (paragem contínua, sem paragem contínua ou vazio, telefonar à operadora, coordenar com o motorista). Quando o campo está preenchido, prevalece sobre o que vier em `routes.txt`; quando está vazio, herda o comportamento definido na rota.
+O `continuous_drop_off` indica se o passageiro pode descer em qualquer ponto do troço entre esta paragem e a seguinte, segundo o percurso (por exemplo o de `shapes.txt`). Valor preenchido prevalece sobre o da rota; vazio herda o da rota — os significados dos códigos estão na documentação do campo.
 
-O validador aplica a severidade e opções do projecto quando existem regras. Garante valores dentro do enumerado GTFS, a regra “condicionalmente proibido” quando existem janelas de pickup/drop-off na mesma linha (só é permitido o valor equivalente a “sem paragem contínua”, ou seja 1, ou o campo sem valor), e pode restringir quais códigos do enumerado o projecto aceita.
+Com janelas de pickup/drop-off com valor na mesma linha, o GTFS não admite desembarque contínuo nem os modos associados a contacto com operadora ou motorista nesse registo: só é admissível “sem desembarque contínuo neste stop_time” — no enumerado, código 1, ou campo vazio.
+
+Fora desse caso, o valor tem de cumprir o enumerado GTFS. Um código válido na referência pode ainda ser recusado se o feed não o incluir nas opções aceites.
 
 ---
 
 #### Passa
 
-- Valor dentro do enumerado GTFS (0 a 3).
-- Com janelas de pickup/drop-off definidas na linha: só 1 ou ausência do valor (sem paragem contínua explícita neste `stop_time`); qualquer outro código do enumerado não passa neste caso.
-- Valor escolhido integra o conjunto permitido pelas regras do projecto (ou a regra declara todas as opções válidas).
-- Campo vazio e as regras estão em modo ignorar ou proibido quanto ao campo - não se gera a mensagem de ausência.
-- Campo vazio em fluxo em que o projecto não exige mensagem para ausência (após o ponto anterior).
+- Código válido para o enumerado ou campo vazio, quando isso é aceite no fluxo aplicado.
+- Com janelas preenchidas: apenas 1 ou ausência de valor (não usar 0, 2 nem 3 nesse contexto).
+- Código permitido para o vosso feed, ou política que não restringe o enumerado.
+- Campo vazio sem aviso de presença, quando o modo de validação assim o prevê.
 
 ---
 
 #### Falha
 
-- Inválido - número fora de 0–3.
-- Proibido com janelas - há janelas de pickup/drop-off preenchidas e o valor não é o código de “sem paragem contínua” (1); 0, 2 e 3 ficam excluídos neste contexto.
-- Fora do permitido - valor válido no GTFS, mas não incluído nas opções fixadas pelo projecto (salvo quando a regra aceita todas).
-- Ausência do valor quando, para a severidade configurada, o projecto trata o campo como obrigatório ou recomendado (mensagem de erro vs aviso conforme a política), exceto quando a regra manda ignorar ou marcar o campo como proibido de verificação nesse fluxo.
-
+- Valor inválido — fora do enumerado. Correção: usar só códigos previstos na referência GTFS de `continuous_drop_off`.
+- Proibido com janelas — janelas com valor e código ≠ 1. Correção: usar 1, limpar o campo (herdando da rota, se aplicável) ou rever janelas vs desembarque contínuo.
+- Valor não admitido — válido no GTFS mas não autorizado no feed. Correção: alterar para uma opção admitida ou alinhar dados com o serviço real.
+- Ausência com obrigatoriedade ou recomendação. Correção: preencher com o código certo ou confirmar se o campo deve ser exigido.
