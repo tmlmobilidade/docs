@@ -2,10 +2,7 @@
 title: Regra do ID do veículo
 description: vehicle_id_unique
 ---
-## Regras de validação do campo vehicle_id
-
-
-### Campos que serão validados nesta regra
+## Campos que serão validados nesta regra
 
 | Nome do Campo | Tipo     | Presença    | Descrição                       |
 | ------------- | -------- | ----------- | ------------------------------- |
@@ -13,13 +10,13 @@ description: vehicle_id_unique
 
 
 
-### O que esta validação faz 
+## O que esta validação faz 
 
 O campo identifica, de forma única no conjunto de dados, cada veículo no ficheiro `vehicles.txt`. A regra exige valor obrigatório (identificador presente) e unicidade: o mesmo identificador não pode repetir-se em mais do que um registo.
 
 ---
 
-#### Passa
+### Passa
 
 - O identificador do veículo vem preenchido no ficheiro (não fica vazio após a leitura).
 - Esse identificador não se rep - existe no máximo uma linha com aquele `vehicle_id` no feed processado.
