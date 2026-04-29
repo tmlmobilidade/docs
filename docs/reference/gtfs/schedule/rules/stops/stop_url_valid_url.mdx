@@ -10,13 +10,13 @@ description: stop_url_valid_url
 
 
 
-### O que esta validação faz 
+## O que esta validação faz 
 
 O `stop_url` é o endereço Web associado à paragem (por exemplo página de informação do operador). No GTFS o campo é opcional; não fornecer o URL é aceite. Quando o valor existe, tem de ser uma URL válida segundo as regras do validador. O projecto pode exigir ou recomendar o preenchimento quando o valor falta, proibir o campo quando vem preenchido, dispensar a verificação consoante a severidade, e restringir a lista de URLs (ou prefixos exactos) permitidas nas regras.
 
 ---
 
-#### Passa
+### Passa
 
 - O `stop_url` vem preenchido com uma URL válida, e o atributo não está proibido, e o valor figura entre os permitidos pelas regras (ou a regra aceita todas as opções), quando aplica.
 - O valor não vem fornecido e a regra dispensa a verificação (por exemplo, severidade de ignorar), sem exigir o endereço neste passo.
