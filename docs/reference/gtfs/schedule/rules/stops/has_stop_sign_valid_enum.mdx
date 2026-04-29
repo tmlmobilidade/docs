@@ -1,14 +1,11 @@
 ---
 title: Sinalética na paragem válida de acordo com a numeração do GTFS
-description: Regra
+description: has_stop_sign_valid_enum
 ---
-## Regras de validação do campo has_stop_sign
+## Campos que serão validados nesta regra
 
-
-### Campos que serão validados nesta regra
-
-| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
-| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
+| Nome do Campo | Tipo | Presença | Descrição |
+| ------------- | ---- | -------- | --------- |
 
 
 
@@ -19,7 +16,7 @@ O `has_stop_sign` descreve se a paragem tem postalete ou sinalética de ident
 
 ---
 
-#### Passa
+### Passa
 
 - O valor vem preenchido e é 0, 1, 2 ou 3, de acordo com o significado previsto.
 - O campo fica vazio e a regra dispensa a verificação (por exemplo, severidade de ignorar), sem exigir o preenchimento neste passo.
@@ -28,7 +25,7 @@ O `has_stop_sign` descreve se a paragem tem postalete ou sinalética de ident
 
 ---
 
-#### Falha
+### Falha
 
 - Valor em falta - o campo fica vazio, quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado (o standard admite vazio, mas a política de dados exige a indicação).
 - Proibido - as regras não permitem o `has_stop_sign`, mas o valor veio no mesmo fornecido.
