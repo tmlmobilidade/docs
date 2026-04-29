@@ -4,9 +4,10 @@ description: Regra
 ---
 ## Campos que serão utilizados nesta regra
 
-| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
-| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
-| `agency_id`   | ID externo que faz referência a `agency.txt` | obrigatório | ID da entidade responsável pelo veículo, usado para associar cada veículo à respetiva agência no sistema. |
+| Nome do Campo                | Tipo    | Presença                     | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| ---------------------------- | ------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `end_pickup_drop_off_window` | Horário | Condicionalmente Obrigatório | Horário em que o serviço on-demand termina num local GeoJSON, grupo de locais ou paragem. <br/><br/>**Condicionalmente Obrigatório**:<ul><li>Obrigatório se `stop_times.location_group_id` ou `stop_times.location_id` estiver definido.</li><li>Obrigatório se `start_pickup_drop_off_window` estiver definido.</li><li>Proibido se `arrival_time` ou `departure_time` estiver definido.</li><li>Opcional caso contrário.</li></ul> |
+
 
 
 
@@ -24,6 +25,8 @@ No `stop_times.txt`, o campo `end_pickup_drop_off_window` indica o momento e
 - `end_pickup_drop_off_window` vazio e sem chegada/partida fixas ou, se há chegada/partida, também sem fim de janela (combinação admitida).
 - `end_pickup_drop_off_window` vazio em cenário opcional onde não há mensagem por ausência.
 - Sem chegada nem partida preenchidas ou, se estão preenchidas, não há valor em `end_pickup_drop_off_window` (não aciona o conflito).
+
+---
 
 ### Falha
 
