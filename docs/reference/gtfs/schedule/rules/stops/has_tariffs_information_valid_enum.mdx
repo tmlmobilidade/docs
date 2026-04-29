@@ -1,11 +1,8 @@
 ---
 title: Informação tarifária na paragem válida de acordo com a numeração do GTFS
-description: Regra
+description: has_tariffs_information_valid_enum
 ---
-## Regras de validação do campo has_tariffs_information
-
-
-### Campos que serão validados nesta regra
+## Campos que serão validados nesta regra
 
 | Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
 | ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
@@ -13,13 +10,13 @@ description: Regra
 
 
 
-### O que esta validação faz 
+## O que esta validação faz 
 
 O `has_tariffs_information` descreve se a paragem dispõe de informação tarifária e em que situação: não aplicável, sem informação, com informação em mau estado ou com informação em bom estado. O campo é opcional; deixar o campo vazio é aceite no standard - significa não fornecer essa informação. O validador aplica as regras do projecto sobre presença, proibição, valores permitidos (0 a 3) e, se existir, lista de opções permitidas.
 
 ---
 
-#### Passa
+### Passa
 
 - O valor vem preenchido e é 0, 1, 2 ou 3, de acordo com o significado previsto.
 - O campo fica vazio e a regra dispensa a verificação (por exemplo, severidade de ignorar), sem exigir o preenchimento neste passo.
