@@ -47,5 +47,4 @@ Se não for possível resolver a viagem (por exemplo identificador de viagem inc
 - Obrigatório na primeira ou última paragem — extremo da viagem sem chegada. Correção: preencher para o menor e maior `stop_sequence` do trip; confirmar que todos os `stop_times` desse trip têm sequências coerentes.
 - Tempo inválido — valor fora do formato de hora esperado. Correção: usar `HH:MM:SS` válido (incluindo > 24 se for o caso).
 - Dados da viagem inconsistentes — falha ao determinar a sequência da viagem (trip inexistente, sem linhas úteis, ou sequência não numérica onde é necessário calcular extremos). Correção: corrigir `trip_id`, `stop_sequence` e o conjunto de `stop_times` desse trip.
-    
 - Ausência — chegada em falta e o validador regista obrigatoriedade ou recomendação. Correção: preencher onde o GTFS ou o feed o exige ou clarificar com o operador do feed o nível de exigência.
