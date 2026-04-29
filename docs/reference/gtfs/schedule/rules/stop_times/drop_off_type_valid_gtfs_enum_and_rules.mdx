@@ -2,10 +2,10 @@
 title: Regra do
 description: Regra
 ---
-## Regras de validação do campo 
+## Regras de validação do campo drop_off_type
 
 
-### Campos que serão utilizados nesta regra
+### Campos que serão validados nesta regra
 
 | Nome do Campo   | Tipo | Presença                  | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | --------------- | ---- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -16,21 +16,24 @@ description: Regra
 
 ### O que esta validação faz 
 
+O campo `drop_off_type` em `stop_times.txt` indica como é feita a descida do veículo nesta paragem: horário normal, sem descida, com reserva por telefone ou coordenação com o motorista. No GTFS usa um enumerado (0 a  3; 0 ou vazio equivalem a descida regular). Com janelas de pickup/drop-off na mesma linha, o valor 0 (“descida regular”) é proibido - o modelo de janelas entra em conflito com “paragem fixa programada” neste sentido.
 
-
-
----
-
-#### Passa
-
-
+O validador aplica severidade e lista de opções do projecto, confirma que o valor está no intervalo GTFS e impõe a regra condicionalmente proibida acima quando há janelas preenchidas.
 
 ---
 
-#### Falha
+### Passa
 
+- Valor entre 0 e 3 (enumerado válido).
+- Com janelas definidas: tipo de descida não é 0 (ou o campo vazio, que o GTFS trata como regular mas aqui a verificação explícita só falha quando o valor é 0 com janelas — campo ausente não passa pelo ramo `dt == 0`).
+- Código admitido pelo conjunto de opções do projecto, ou regra que aceita todas as opções.
+- Campo vazio com regra em ignorar ou proibido (no sentido de saltar a verificação de presença) — sem mensagem por ausência.
 
+---
 
+### Falha
 
-
-
+- Inválido - número fora de 0–3.
+- Proibido com janelas - existe janela de pickup/drop-off preenchida e o tipo de descida é 0 (descida regular programada).
+- Fora do permitido — valor GTFS válido mas não autorizado pelas opções do projecto.
+- Ausência de valor quando a severidade não é “ignorar” e o projecto exige obrigatório ou recomendado (mensagem conforme política).
