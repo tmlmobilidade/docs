@@ -1,11 +1,8 @@
 ---
 title: Regra de matrícula
-description: Regra
+description: license_plate_format_per_market_rules
 ---
-## Regras de validação do campo license_plate
-
-
-### Campos que serão validados nesta regra
+## Campos que serão validados nesta regra
 
 | Nome do Campo   | Tipo     | Presença    | Descrição                                                               |
 | --------------- | -------- | ----------- | ----------------------------------------------------------------------- |
@@ -13,7 +10,7 @@ description: Regra
 
 
 
-### O que esta validação faz 
+## O que esta validação faz 
 
 O campo identifica a matrícula do veículo, é obrigatório e deve corresponder a um formato reconhecido após tratar o texto: conversão para maiúsculas, remoção de separadores habituais (hífens, espaços, etc.) e exactamente seis caracteres alfanuméricos, obedecendo a um dos padrões de matrícula portugueses suportados pelo validador (variações do tipo pares de letras e algarismos, incluindo formatos clássicos e mais recentes, conforme a expressão de validação do projecto).
 
@@ -21,7 +18,7 @@ Se existirem dados GTFS carregados, o validador ainda exige unicidade da mat
 
 ---
 
-#### Passa
+### Passa
 
 - Matrícula preenchida, válida no formato admitido.
 - Não existem outros veículos no feed com a mesma matrícula (quando a verificação de duplicados está activa com dados disponíveis).
