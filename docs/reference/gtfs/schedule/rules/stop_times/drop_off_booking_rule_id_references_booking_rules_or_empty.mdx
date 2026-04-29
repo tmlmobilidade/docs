@@ -17,22 +17,23 @@ description: Regra
 
 ### O que esta validação faz 
 
-O campo no ficheiro `stop_times.txt` identifica a regra de reserva para descida aplicável a esta paragem na viagem. É uma chave estrangeira para `booking_rules.txt`. No GTFS é opcional; a especificação recomenda preenchimento quando o tipo de descida indica reserva com antecedência (`drop_off_type = 2`).
+O campo `drop_off_booking_rule_id` associa, a esta paragem da viagem, a regra de reserva aplicável à descida. No GTFS é opcional; a referência recomenda preenchê-lo quando o tipo de descida implica contacto com a operadora (`drop_off_type = 2`) — o detalhe do campo está na documentação geral do feed.
 
-A validação respeita a severidade do campo. Se o valor vem preenchido, verifica se o identificador existe no ficheiro `booking_rules.txt`. Se as regras marcarem o campo como proibido, qualquer valor preenchido gera mensagem. Se o campo estiver vazio, só comenta ausência quando a regra não está em modo ignorar nem trata o campo como proibido para fins de “campo opcional” (neste padrão, ignorar/proibido saltam a mensagem de ausência).
+Quando o identificador vem preenchido, deve ser exactamente um registo válido de `booking_rules.txt`. Se não existir essa correspondência, o dado está incorrecto. Em cenários em que o validador está preparado para rejeitar o uso deste campo, qualquer valor preenchido pode ser sinalizado.
 
 ---
 
 ### Passa
 
-- Identificador preenchido e encontrado em `booking_rules`.
-- Campo vazio com regra em ignorar ou em fluxo em que a verificação de presença é ignorada - sem reportar ausência.
-- Campo vazio sem política que exija reporte (conforme a severidade aplicada).
+- O campo contém um identificador que existe em `booking_rules`.
+- O campo está vazio e o fluxo de validação aplicável não exige reporte desse caso (por exemplo, quando o campo é tratado como neutro ou não sujeito a mensagem de presença).
 
 ---
 
 ### Falha
 
-- Proibido - o projecto não permite este campo mas o feed enviou um identificador.
-- Referência inválida - identificador inexistente em `booking_rules`.
-- Ausência do valor quando, para a severidade configurada, o validador deve sinalizar obrigatório ou recomendado (mensagem de erro vs recomendação, conforme política), exceto quando a regra manda ignorar ou saltar por campo proibido nesse ramo de “campo vazio”.
+- Referência inexistente — o valor indicado não aparece em `booking_rules.txt`. Correção: criar ou corrigir a entrada em `booking_rules` ou ajustar o identificador em `stop_times` para bater certo com um `booking_rule_id` válido.
+
+- Campo não admitido — o feed envia um identificador mas, no contexto de validação, esse campo não deve ser usado. Correção: retirar o valor de `stop_off_booking_rule_id` ou rever o modelo de publicação.
+
+- Ausência — o campo está vazio e o validador regista obrigatoriedade ou recomendação de preenchimento. Correção: preencher com o `booking_rule_id` adequado (de preferência alinhado com o tipo de descida e com o que está definido em `booking_rules`) ou confirmar com o operador do validador se o campo deve ser obrigatório para o vosso feed.
