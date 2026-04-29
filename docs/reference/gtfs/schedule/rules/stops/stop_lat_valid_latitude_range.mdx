@@ -2,10 +2,7 @@
 title: Latitude da paragem dentro do intervalo válido
 description: stop_lat_valid_latitude_range
 ---
-## Regras de validação do campo stop_lat
-
-
-### Campos que serão validados nesta regra
+## Campos que serão validados nesta regra
 
 | Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
 | ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
@@ -13,13 +10,13 @@ description: stop_lat_valid_latitude_range
 
 
 
-### O que esta validação faz 
+## O que esta validação faz 
 
 O `stop_lat` é a latitude (WGS84) do local: para paragens e plataformas, deve reflectir o postalete ou, na sua falta, o sítio onde o passageiro embarca, e não a via de circulação do veículo. No GTFS a obrigatoriedade depende do `location_type`: obrigatória para paragem/plataforma (0), estação (1) e entrada/saída (2); opcional para nó genérico (3) e área de embarque (4), ainda que a documentação geral do feed recomende coordenadas correctas nesses casos. O validador, para além do standard, aplica regras do projecto com obrigatoriedade ou recomendação quando a latitude vem vazia em tipos opcionais, e dispensa a verificação se a regra o permitir. Quando o valor existe, tem de ser uma latitude válida (intervalo de graus previsto na validação).
 
 ---
 
-#### Passa
+### Passa
 
 - A latitude vem preenchida e situa-se no intervalo válido para coordenadas geográficas.
 - Para tipos 0, 1 e 2, a latitude vem fornecida (cumpre o requisito condicional de presença).
@@ -27,7 +24,7 @@ O `stop_lat` é a latitude (WGS84) do local: para paragens e plataformas, de
 
 ---
 
-#### Falha
+### Falha
 
 - Em falta - para `location_type` 0, 1 ou 2, a latitude não vem fornecida (requisito condicional do GTFS).
 - Em falta (ou política de dados) - noutros casos, latitude vazia quando o projecto exige o preenchimento como erro ou recomendação, sem dispensa.
