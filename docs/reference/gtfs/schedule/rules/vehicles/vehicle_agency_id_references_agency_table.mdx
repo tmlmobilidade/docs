@@ -1,11 +1,8 @@
 ---
 title: Regra do agency_id
-description: Regra
+description: vehicle_agency_id_references_agency_table
 ---
-## Regras de validação do campo agency_id
-
-
-### Campos que serão validados nesta regra
+## Campos que serão validados nesta regra
 
 | Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
 | ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
@@ -13,7 +10,7 @@ description: Regra
 
 
 
-### O que esta validação faz 
+## O que esta validação faz 
 
 Cada registo de veículo tem de identificar, sem ambiguidade, a operadora a que pertence, através de um identificador que liga a `agency.txt` (GTFS).
 
@@ -21,13 +18,13 @@ A validação verifica duas coisas, por ordem: que o identificador da operador
 
 ---
 
-#### Passa
+### Passa
 
 - Quando o identificador da operadora está preenchido e existe na lista de operadoras do feed.
 
 ---
 
-#### Falha
+### Falha
 
 - Campo em falta – quando o identificador não é indicado, impedindo a ligação a uma operadora.
 - Referência inválida – quando o valor indicado não encontra nenhum registo de operadora correspondente; o dado fica desligado de qualquer definição real de agência no conjunto de ficheiros.
