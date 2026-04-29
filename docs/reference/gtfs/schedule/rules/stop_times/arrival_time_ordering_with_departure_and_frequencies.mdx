@@ -1,0 +1,41 @@
+---
+title: Regra do
+description: Regra
+---
+## Regras de validação do campo 
+
+
+### Campos que serão utilizados nesta regra
+
+| Nome do Campo    | Tipo    | Presença                     | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| ---------------- | ------- | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ``arrival_time`` | Horário | Condicionalmente Obrigatório | Horário de chegada na paragem (definida por `stop_times.stop_id`) para uma viagem específica (definida por `stop_times.trip_id`) no fuso horário especificado por `agency.agency_timezone`, e não por `stops.stop_timezone`. <br/><br/>Se não existirem horários separados para chegada e partida numa paragem, `arrival_time` e `departure_time` devem ser iguais. Para os horários que ocorram após a meia-noite no dia do serviço, introduza o horário como um valor superior a `24:00:00` em `HH:MM:SS`. <br/><br/>Se os horários exatos de chegada e partida (`timepoint=1`) não estiverem disponíveis, devem ser fornecidos os horários estimados ou interpolados de chegada e partida (`timepoint=0`). <br/><br/>**Condicionalmente Obrigatório**:<ul><li>Obrigatório para a primeira e a última paragem numa viagem (definida por `stop_times.stop_sequence`).</li><li>Obrigatório para `timepoint=1`.</li><li>Proibido quando `start_pickup_drop_off_window` ou `end_pickup_drop_off_window` estão definidos.</li><li>Opcional caso contrário.</li></ul> |
+
+
+
+### O que esta validação faz 
+
+O campo `arrival_time` em `stop_times.txt` é a hora de chegada à paragem para uma viagem. No GTFS é condicionalmente obrigatório: por exemplo na primeira e última paragem do trip, quando o ponto é horário certo (`timepoint = 1`), e não deve ser usado quando a linha define janelas de pickup/drop-off (`start_pickup_drop_off_window` / `end_pickup_drop_off_window`). Quando o valor existe, deve ser um tempo válido (incluindo horas acima de 24 quando o serviço atravessa meia-noite).
+
+O validador ajusta o rigor às regras. Cumpre as condições GTFS acima, valida o formato do tempo quando há valor e, nos casos em que o feed ainda pode omitir a chegada, pode reportar obrigatoriedade ou recomendação conforme como o projecto classifica o campo — salvo quando a regra diz para ignorar essa verificação.
+
+Para saber primeira/última paragem por viagem, usa informação agregada por trip (mínimo e máximo de sequência de paragem), com recurso a leitura completa do trip apenas se essa informação não existir.
+
+---
+
+### Passa
+
+- Hora de chegada preenchida quando o GTFS a exige (ponto horário certo, ou primeira/última paragem do trip) e o valor é um tempo válido.
+- Sem hora de chegada quando alguma janela de pickup/drop-off está definida na mesma linha (o GTFS não mistura esse modelo com tempos fixos de chegada nesta linha).
+- Hora de chegada ausente onde o GTFS não a torna obrigatória para esse registo e as regras do projecto dispensam reportar ausência (p. ex. fluxo em que a severidade é “ignorar”).
+- Hora de chegada presente só quando é permitida pelo perfil da linha (sem conflito com janelas) e o texto do tempo é válido.
+
+---
+
+### Falha
+
+- Ausência da chegada quando é obrigatória no standard (horário certo ou extremos do trip).
+- Presença da chegada quando janelas de pickup/drop-off estão definidas (proibido nesse contexto).
+- Formato inválido quando a hora vem preenchida mas não respeita o formato de tempo esperado.
+- Dados de apoio inválidos ao determinar primeira/última paragem (viagem inexistente ou sequência ilegível), se o validador precisar desse cálculo e não conseguir.
+- Ausência da chegada tratada como problema de dados do projecto: quando, para além do GTFS, as regras exigem ou recomendam o preenchimento e não estão em modo “ignorar”, emite mensagem de erro (obrigatório) ou aviso (recomendado) conforme a política configurada.
