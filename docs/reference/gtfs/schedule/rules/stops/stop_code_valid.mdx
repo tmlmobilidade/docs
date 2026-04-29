@@ -10,13 +10,13 @@ description: stop_code_valid
 
 
 
-### O que esta validação faz 
+## O que esta validação faz 
 
 O `stop_code` é o código curto (texto ou número) apresentado ao passageiro para identificar o local (por exemplo em linhas de informação telefónica ou na sinalética). Pode coincidir com o `stop_id` quando o identificador é de facto público. No GTFS o campo é opcional; o standard recomenda vazio quando o local não tem código voltado para o utente. O validador aplica regras do projecto sobre presença (obrigatório ou recomendado, quando a verificação não é dispensada), proibição, e opções permitidas. Pode ainda levantar aviso se o mesmo `stop_code` se repetir em mais do que uma paragem (o passageiro deixa de ter um código inequívoco). Não se aplica, nesta função, outro critério de formato além do texto não vazio.
 
 ---
 
-#### Passa
+### Passa
 
 - O `stop_code` vem preenchido com texto não vazio e o atributo não está proibido pelas regras, e o valor figura entre os permitidos pelas regras (ou a regra aceita todas as opções), e a verificação de código duplicado não gera aviso (ou deixa de aplicar-se no fluxo de validação), conforme o caso.
 - O campo fica vazio e a regra dispensa a verificação (por exemplo, severidade de ignorar), alinhado com paragens sem código público.
