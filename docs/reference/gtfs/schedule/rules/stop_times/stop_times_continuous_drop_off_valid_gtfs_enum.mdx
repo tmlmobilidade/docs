@@ -16,7 +16,7 @@ description: Regra
 
 ### O que esta validação faz 
 
-O campo no  `stop_times.txt` indica se o passageiro pode descer em qualquer ponto do troço entre esta paragem e a seguinte (alinhado com o percurso em `shapes.txt`), em modo de paragem contínua. Os valores permitidos pelo GTFS são o enumerado 0–3 (paragem contínua, sem paragem contínua ou vazio, telefonar à operadora, coordenar com o motorista). Quando o campo está preenchido, prevalece sobre o que vier em `routes.txt`; quando está vazio, herda o comportamento definido na rota.
+O campo no ficheiro `stop_times.txt` indica se o passageiro pode descer em qualquer ponto do troço entre esta paragem e a seguinte (alinhado com o percurso em `shapes.txt`), em modo de paragem contínua. Os valores permitidos pelo GTFS são o enumerado 0–3 (paragem contínua, sem paragem contínua ou vazio, telefonar à operadora, coordenar com o motorista). Quando o campo está preenchido, prevalece sobre o que vier em `routes.txt`; quando está vazio, herda o comportamento definido na rota.
 
 O validador aplica a severidade e opções do projecto quando existem regras. Garante valores dentro do enumerado GTFS, a regra “condicionalmente proibido” quando existem janelas de pickup/drop-off na mesma linha (só é permitido o valor equivalente a “sem paragem contínua”, ou seja 1, ou o campo sem valor), e pode restringir quais códigos do enumerado o projecto aceita.
 
