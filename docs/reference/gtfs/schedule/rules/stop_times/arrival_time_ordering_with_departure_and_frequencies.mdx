@@ -15,7 +15,7 @@ description: Regra
 
 ### O que esta validação faz 
 
-O `arrival_time` é a hora de chegada à paragem (fuso da agência). O GTFS permite horas acima de 24 após meia-noite do dia de serviço; quando não há distinção prática entre chegada e partida, estes campos devem coincidir - ver referência do feed.
+O `arrival_time` é a hora de chegada à paragem (fuso da agência). O GTFS permite horas acima de 24 após meia-noite do dia de serviço; quando não há distinção prática entre chegada e partida, estes campos devem coincidir — ver referência do feed.
 
 Esta verificação garante:
 
@@ -36,13 +36,13 @@ Pode ainda reportar falta de chegada quando o modo de validação não trata o c
 
 ### Falha
 
-- `timepoint = 1` sem chegada - preencher `arrival_time` (e alinhar com `departure_time` se fizer sentido).
-- Janelas definidas e chegada preenchida - retirar a chegada ou alterar o modelo (janelas vs tempos fixos).
-- Extremo do trip (primeira ou última paragem) sem chegada - preencher nos mínimos e máximos de `stop_sequence`; rever coerência de todos os `stop_times` do trip.
-- Tempo inválido - corrigir para `HH:MM:SS` válido (incluindo > 24 se aplicável).
-- Trip ou sequências inconsistentes - corrigir `trip_id`, `stop_sequence` e o conjunto de linhas do mesmo trip.
-- Ausência reportada como obrigatório ou recomendado - preencher onde o feed o exige ou clarificar o nível de exigência com o operador.
+- `timepoint = 1` sem chegada — preencher `arrival_time` (e alinhar com `departure_time` se fizer sentido).
+- Janelas definidas e chegada preenchida — retirar a chegada ou alterar o modelo (janelas vs tempos fixos).
+- Extremo do trip (primeira ou última paragem) sem chegada — preencher nos mínimos e máximos de `stop_sequence`; rever coerência de todos os `stop_times` do trip.
+- Tempo inválido — corrigir para `HH:MM:SS` válido (incluindo > 24 se aplicável).
+- Trip ou sequências inconsistentes — corrigir `trip_id`, `stop_sequence` e o conjunto de linhas do mesmo trip.
+- Ausência reportada como obrigatório ou recomendado — preencher onde o feed o exige ou clarificar o nível de exigência com o operador.
 
 ---
 
-Se quiseres, no próximo campo podes dizer se preferes sem negrito nos nomes de campo ou só negrito no título/descrição - mantenho o mesmo padrão em todos.
+Se quiseres, no próximo campo podes dizer se preferes sem negrito nos nomes de campo ou só negrito no título/descrição — mantenho o mesmo padrão em todos.
