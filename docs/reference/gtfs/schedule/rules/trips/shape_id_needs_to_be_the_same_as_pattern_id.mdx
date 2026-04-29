@@ -10,25 +10,25 @@ description: shape_id_needs_to_be_the_same_as_pattern_id
 | `pattern_id`  | ID                                          | Obrigatório                  | Indica a variante de serviço em que a viagem opera na linha. <br/><br/>Não faz parte do GTFS standart, mas é obrigatório para nós TML.                                                                                                                                                                                |
 
 
-### O que esta validação faz
+## O que esta validação faz
 
 Regra por linha em `trips.txt`: quando `shape_id` e `pattern_id` vêm ambos preenchidos, o valor de `shape_id` tem de ser igual ao de `pattern_id` (comparação de strings, carácter a carácter).
 
 ---
 
-#### Passa
+### Passa
 
 - Se os dois existem e `shape_id == pattern_id`.
 
 ---
 
-#### Falha
+### Falha
 
 - Se os dois campos estão preenchidos e os textos diferem. Porquê: no perfil do projeto, o mesmo identificador deve servir de chave coerente para o padrão e para a shape; valores diferentes indicam inconsistência entre `trips.shape_id` e `trips.pattern_id`.
 
 ---
 
-#### Não realizada
+### Não realizada
 
 -  Se `shape_id` ou `pattern_id` for nulo (qualquer um em falta) não será realizada for insuficiência de valores.
 
