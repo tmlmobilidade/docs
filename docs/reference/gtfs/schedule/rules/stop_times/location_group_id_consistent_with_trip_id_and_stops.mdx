@@ -30,12 +30,5 @@ O validador impede que `location_group_id` venha preenchido na mesma lin
 - Proibido em conjunto: há `stop_id` ou `location_id` com valor e `location_group_id` também preenchido. _Correção:_ deixar só um tipo de referência de local (paragem, local único ou grupo) por linha.
 - Referência inexistente: `location_group_id` preenchido mas ausente de `location_groups`. _Correção:_ criar o grupo em `location_groups` ou corrigir o identificador em `location_group_id`.
 
----
-
-### Nota
-
-O nome técnico `location_group_id_consistent_with_trip_id_and_stops` sugere também coerência com o `trip_id` em sentido alargado; esta rotina não valida a sequência global do trip além do que está acima — só exclusividade face a `stop_id`/`location_id` e chave estrangeira para `location_groups`.
-
-
 
 
