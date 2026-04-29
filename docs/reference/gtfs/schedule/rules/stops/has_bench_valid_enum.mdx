@@ -1,11 +1,8 @@
 ---
-title: Regra de existência de um banco
-description: Regra
+title: Banco na paragem válido de acordo com a numeração do GTFS
+description: has_bench_valid_enum
 ---
-## Regras de validação do campo has_bench
-
-
-### Campos que serão validados nesta regra
+## Campos que serão validados nesta regra
 
 | Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
 | ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
@@ -15,22 +12,18 @@ description: Regra
 
 ### O que esta validação faz 
 
-O `has_bench` descreve se a paragem tem banco, e em que estado: não aplicável, sem banco, com banco em mau estado ou com banco em bom estado. No feed o campo é opcional; deixar o campo vazio é aceite no standard - significa não fornecer essa informação. O validador aplica as regras do projecto sobre presença, proibição, valores permitidos (0 a 3) e, se existir, lista de opções permitidas.
+No `stops.txt`, o campo indica se a paragem tem banco e o estado (não aplicável, sem banco, mau estado, bom estado). A validação restringe o valor aos códigos admitidos pela referência, trata o campo vazio conforme o modo de validação (silêncio, obrigatoriedade ou recomendação), recusa o campo quando não deve existir no feed e pode limitar quais códigos são aceites além do mínimo GTFS.
 
----
+### Passa
 
-#### Passa
+- Valor 0, 1, 2 ou 3, conforme a referência do campo.
+- Valor dentro do conjunto de códigos permitidos para o feed, quando esse conjunto existe.
+- Campo vazio quando o modo de validação não exige mensagem (por exemplo, tratar a ausência como neutra ou não aplicável).
+- Campo vazio ou omitido no fluxo em que a presença não é verificada.
 
-- O valor vem preenchido e é 0, 1, 2 ou 3, de acordo com o significado previsto.
-- O campo fica vazio e a regra dispensa a verificação (por exemplo, severidade de ignorar), sem exigir o preenchimento neste passo.
-- O valor está entre as opções permitidas pelas regras (ou a regra aceita todas as opções).
-- O valor veio fornecido e o atributo não está proibido pelas regras.
+### Falha
 
----
-
-#### Falha
-
-- Valor em falta - o campo fica vazio, quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado (o standard admite vazio, mas a política de dados exige a indicação).
-- Proibido - as regras não permitem o `has_bench`, mas o valor veio no mesmo fornecido.
-- Inválido - um valor que não seja 0, 1, 2 nem 3.
-- Fora do permitido - o valor é um dos códigos válidos, mas não consta do conjunto de opções definido nas regras (salvo quando a regra abrange todas as opções).
+- Valor inválido: número fora de 0–3. _Correção:_ usar só códigos da documentação GTFS de `has_bench`.
+- Proibido: veio valor mas o feed não deve publicar este campo. _Correção:_ remover o valor ou alinhar a política de dados.
+- Código não permitido: valor válido na referência mas fora da lista aceite no feed. _Correção:_ escolher um dos códigos admitidos ou rever a lista.
+- Ausência com obrigatoriedade ou recomendação registada. _Correção:_ preencher com o código adequado à realidade da paragem ou clarificar se o campo é exigido.
