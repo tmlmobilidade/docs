@@ -1,11 +1,8 @@
 ---
 title: Regra de identificação do bloco de uma viagem
-description: Regra
+description: block_id_in_allowed_set
 ---
-## Regras de validação do campo block_id
-
-
-### Campos que serão utilizados nesta regra
+## Campos que serão utilizados nesta regra
 
 | Nome do Campo | Tipo | Presença | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 | ------------- | ---- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -13,13 +10,13 @@ description: Regra
 
 
 
-### O que esta validação faz 
+## O que esta validação faz 
 
 O campo liga a viagem a um bloco - a sequência de serviço em que a mesma unidade cumpre uma ou mais viagens encadeadas, conforme a modelação do GTFS. No standard o campo é opcional; o validador aplica, em cima disso, as regras do projecto: pode recomendar ou exigir o preenchimento, ignorar a verificação ou tratar o campo como proibido quando o valor vem fornecido.
 
 ---
 
-#### Passa
+### Passa
 
 - O `block_id` vem preenchido no ficheiro e o atributo não está marcado como proibido pelas regras (a validação não interrompe por “campo proibido”).
 - O campo fica vazio (opcional no GTFS) e a regra ativa dispensa a verificação (por exemplo, severidade de ignorar ou, no caso vazio, o fluxo que suprime a mensagem nesse contexto) - nesse sentido, “passa” sem reportar ausência.
