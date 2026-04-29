@@ -1,11 +1,8 @@
 ---
 title: Regra de permissão de transporte de bicicletas
-description: Regra
+description: bicycles_rack_count_non_negative
 ---
-## Regras de validação do campo bicycles
-
-
-### Campos que serão validados nesta regra
+## Campos que serão validados nesta regra
 
 | Nome do Campo | Tipo | Presença    | Descrição                                                                                                                                                                                  |
 | ------------- | ---- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -14,7 +11,7 @@ description: Regra
 
 
 
-### O que esta validação faz 
+## O que esta validação faz 
 
 O campo indica, para cada veículo, se é permitido transportar bicicletas que não sejam dobráveis (o transporte de bicicletas dobráveis costuma ser tratado noutro quadro, como regra geral _permitida_). Só entram no domínio do valor as opções canónicas: não (0) e sim (1), ambas com significado de política de operação.
 
@@ -22,13 +19,13 @@ A validação exige, portanto, o campo preenchido e, em seguida, que o número
 
 ---
 
-#### Passa
+### Passa
 
 - Quando o valor está preenchido, é 0 ou 1 e, se existir lista restritiva de opções, o valor encontra-se dentro dos permitidos (ou as regras abrangem _todas_ as opções válidas).
 
 ---
 
-#### Falha
+### Falha
 
 - Campo em falta – não se declara se o veículo transporta ou não bicicletas não dobráveis.
 - Valor fora do domínio – não é 0 nem 1, ou o número não mapeia para “não / sim” previstos.
