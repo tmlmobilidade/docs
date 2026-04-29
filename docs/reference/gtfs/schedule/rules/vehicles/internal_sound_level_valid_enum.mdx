@@ -1,11 +1,8 @@
 ---
 title: Regra de existência de sistema sonoro interior
-description: Regra
+description: internal_sound_level_valid_enum
 ---
-## Regras de validação do campo internal_sound
-
-
-### Campos que serão validados nesta regra
+## Campos que serão validados nesta regra
 
 | Nome do Campo    | Tipo | Presença    | Descrição                                                                                                                                             |
 | ---------------- | ---- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -13,19 +10,19 @@ description: Regra
 
 
 
-### O que esta validação faz 
+## O que esta validação faz 
 
 O campo indica, para cada veículo, se existe informação de som a bordo (sistema de anúncios ou PA interior), na convenção: não (0) e sim (1).
 
 ---
 
-#### Passa
+### Passa
 
 - Campo preenchido, valor 0 ou 1 e, havendo lista restritiva, opção autorizada pelas regras (ou regras que abrangem todas as opções válidas).
 
 ---
 
-#### Falha
+### Falha
 
 - Campo em falta – não se declara se o veículo tem ou não som / PA interior.
 - Valor inválido – não é 0 nem 1.
