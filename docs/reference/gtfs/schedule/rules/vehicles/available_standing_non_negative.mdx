@@ -1,11 +1,8 @@
 ---
 title: Regra do lugares em pé disponíveis no veículo
-description: Regra
+description: available_standing_non_negative
 ---
-## Regras de validação do campo available_standing
-
-
-### Campos que serão validados nesta regra
+## Campos que serão validados nesta regra
 
 | Nome do Campo        | Tipo           | Presença    | Descrição                                                                |
 | -------------------- | -------------- | ----------- | ------------------------------------------------------------------------ |
@@ -13,19 +10,19 @@ description: Regra
 
 
 
-### O que esta validação faz 
+## O que esta validação faz 
 
 Cada registo de veículo descreve a capacidade de transporte em pé que se pretende publicar, sob a forma de um número. O termo _standing_ (lugares _de pé_ disponíveis) pressupõe pelo menos um lugar, pelo que a validação exige o campo preenchido e o valor numérico estritamente positivo (maior do que zero).
 
 ---
 
-#### Passa
+### Passa
 
 - Quando o valor está presente e é igual ou superior a 1 (um ou mais lugares _de pé_ com capacidade correspondente no dado publicado).
 
 ---
 
-#### Falha
+### Falha
 
 - Campo em falta – o indicador de lugares _de pé_ não vem preenchido.
 - Capacidade inválida – o valor indica zero ou negativo, o que é incoerente com “lugares _de pé_ com capacidade disponível” e sugere dado em falta ou errado.
