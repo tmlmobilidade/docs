@@ -1,0 +1,41 @@
+---
+title: Coerência do grupo de localizações com a viagem e o registo de paragem
+description: location_group_id_consistent_with_trip_id_and_stops
+---
+## Campos que serão utilizados nesta regra
+
+| Nome do Campo | Tipo                                                  | Presença                  | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| ------------- | ----------------------------------------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `location_id` | ID externo que referencia o ID de `locations.geojson` | Condicionalmente Proibido | Identifica a localização GeoJSON que corresponde à zona servida onde os passageiros podem solicitar o embarque ou desembarque. Todas as localizações GeoJSON servidas durante uma viagem devem ter um registo em `stop_times.txt`. Várias viagens e rotas podem servir a mesma localização GeoJSON. <br/><br/>O serviço on-demand dentro das localizações deve ser referenciado na sequência em que o serviço está disponível nessas localizações. Um consumidor de dados deve presumir que a viagem é possível de uma paragem ou localização para qualquer paragem ou localização posterior na viagem, desde que o tipo de embarque/desembarque de cada `stop_time` e as restrições de tempo de cada janela de início/fim de embarque/desembarque não a impeçam. <br/><br/>**Condicionalmente Proibido**:<ul><li>Proibido se `stop_times.stop_id` ou `stop_times.location_group_id` estiverem definidos.</li></ul> |
+
+
+## O que esta validação faz 
+
+No `stop_times.txt`, o campo `location_group_id` aponta para um grupo de localizações (tabela `location_groups`) que define onde o serviço à pedido pode incluir embarque e desembarque nesse ponto da sequência da viagem, em alternativa a uma paragem clássica ou a um único local GeoJSON.
+
+O validador impede que `location_group_id` venha preenchido na mesma linha em que existe `stop_id` ou `location_id` com valor: o registo deve escolher um modelo de localização, não vários em simultâneo. Quando `location_group_id` está preenchido e não há esse conflito, confirma que o identificador existe em `location_groups`. Não emite avisos separados por campo vazio; o foco é incompatibilidade entre identificadores e referência inválida.
+
+---
+
+### Passa
+
+- `location_group_id` vazio sempre que `stop_id` ou `location_id` trazem valor (não mistura modelos).
+- `location_group_id` preenchido, `stop_id` e `location_id` sem valor e identificador existente em `location_groups`.
+- `location_group_id` vazio e sem conflito com outros identificadores (o registo não viola a regra de exclusividade).
+
+---
+
+### Falha
+
+- Proibido em conjunto: há `stop_id` ou `location_id` com valor e `location_group_id` também preenchido. _Correção:_ deixar só um tipo de referência de local (paragem, local único ou grupo) por linha.
+- Referência inexistente: `location_group_id` preenchido mas ausente de `location_groups`. _Correção:_ criar o grupo em `location_groups` ou corrigir o identificador em `location_group_id`.
+
+---
+
+### Nota
+
+o nome técnico `location_group_id_consistent_with_trip_id_and_stops` sugere também coerência com o `trip_id` em sentido alargado; esta rotina não valida a sequência global do trip além do que está acima — só exclusividade face a `stop_id`/`location_id` e chave estrangeira para `location_groups`.
+
+
+
+
