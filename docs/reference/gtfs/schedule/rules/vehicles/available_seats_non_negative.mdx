@@ -1,11 +1,8 @@
 ---
 title: Regra de lugares sentados disponíveis no veículo
-description: Regra
+description: available_seats_non_negative
 ---
-## Regras de validação do campo available_seats
-
-
-### Campos que serão validados nesta regra
+## Campos que serão validados nesta regra
 
 | Nome do Campo     | Tipo           | Presença    | Descrição                                                                 |
 | ----------------- | -------------- | ----------- | ------------------------------------------------------------------------- |
@@ -13,13 +10,13 @@ description: Regra
 
 
 
-### O que esta validação faz 
+## O que esta validação faz 
 
 Cada registo de veículo regista, em lugar sentado disponíveis, quanto à capacidade sentada a divulgar nos sistemas. O nome do campo (lugares _disponíveis_) implica pelo menos um lugar, por isso a validação exige o campo preenchido e o valor numérico estritamente positivo (maior do que zero).
 
 ---
 
-#### Passa
+### Passa
 
 - Quando o valor está presente e é igual ou superior a 1 (um ou mais lugares assinalados com capacidade de lugares sentados).
 
