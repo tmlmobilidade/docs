@@ -32,4 +32,19 @@ Entradas e saídas de estação (`location_type` entrada/saída):
 
 ---
 
+### Passa
+
+- `wheelchair_boarding` com valor 0, 1 ou 2 (únicos códigos numéricos aceites quando o campo vem preenchido).
+- Campo vazio e o modo de validação não exige alteração (trata a ausência como neutra ou ignora esta verificação).
+- Código incluído na lista de valores permitidos para o feed, quando essa lista existe no validador.
+- Combinações 0 / vazio / 1 / 2 coerentes com o tipo de local da paragem (`location_type`) e com existência ou não de `parent_station`, à luz da referência GTFS que descreveste acima _nota: o validador não valida sozinho essa coerência semântica; só os valores e a política do feed._
+
+### Falha
+
+- Valor inválido: qualquer número que não seja 0, 1 ou 2. _Correção:_ corrigir `wheelchair_boarding` para um destes três códigos ou deixar vazio se for aceitável no teu feed.
+- Campo proibido: `wheelchair_boarding` preenchido quando o feed ou o validador não admite o campo. _Correção:_ remover o valor ou rever a política de publicação.
+- Código não permitido: 0, 1 ou 2 válido no GTFS mas fora da lista de opções admitidas. _Correção:_ usar um código permitido ou ajustar a lista.
+- Ausência com mensagem de obrigatoriedade ou recomendação. _Correção:_ preencher `wheelchair_boarding` com o código adequado à paragem (isolada, filha de estação ou entrada/saída) ou confirmar se o operador exige o campo.
+
+--- 
 Para além do standard, o validador aplica regras do projecto (presença, proibição, e lista de códigos permitidos) e só aceita 0, 1 ou 2 quando o valor vem fornecido; não reconstitui sozinho a herança entre ficheiros ou linhas.
