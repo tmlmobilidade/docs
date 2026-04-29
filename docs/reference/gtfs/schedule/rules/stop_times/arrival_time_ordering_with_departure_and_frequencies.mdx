@@ -1,11 +1,8 @@
 ---
-title: Regra do horário de chegada na paragem
+title: Regras de validação do campo arrival_time
 description: "Valida o campo arrival_time em stop_times.txt: tempo bem formado, obrigação na primeira e última paragem da viagem e quando timepoint = 1, incompatibilidade com janelas de pickup/drop-off na mesma linha, e mensagens de presença conforme o modo de validação."
 ---
-## Regras de validação do campo arrival_time
-
-
-### Campos que serão validados nesta regra
+## Campos que serão validados nesta regra
 
 | Nome do Campo    | Tipo    | Presença                     | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | ---------------- | ------- | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -13,7 +10,7 @@ description: "Valida o campo arrival_time em stop_times.txt: tempo bem formado, 
 
 
 
-### O que esta validação faz 
+## O que esta validação faz 
 
 O `arrival_time` é a hora de chegada à paragem (fuso da agência). O GTFS permite horas acima de 24 após meia-noite do dia de serviço; quando não há distinção prática entre chegada e partida, estes campos devem coincidir — ver referência do feed.
 
