@@ -2,10 +2,7 @@
 title: Regra da identificação da variante de serviço
 description: pattern_id_present_and_references_consistent
 ---
-## Regras de validação do campo pattern_id
-
-
-### Campos que serão validados nesta regra
+## Campos que serão validados nesta regra
 
 | Nome do Campo | Tipo | Presença    | Descrição                                                                                                                              |
 | ------------- | ---- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------- |
@@ -13,19 +10,19 @@ description: pattern_id_present_and_references_consistent
 
 
 
-### O que esta validação faz 
+## O que esta validação faz 
 
 O campo identifica a vista de padrão a que a viagem pertence: o desdobramento de uma rota por sentidos, quando aplica, de modo que viagens com o mesmo `pattern_id` devam alinhar com o mesmo padrão operacional. No GTFS o campo é opcional; o vosso contexto de dados pode exigir o preenchimento. A verificação limita-se a confirmar a presença do identificador; a coerência do padrão com rota, destino, sentido, forma e sequência de paragens trata-se ailleurs noutros critérios de qualidade, não neste ponto.
 
 ---
 
-#### Passa
+### Passa
 
 - O `pattern_id` vem preenchido - existe um identificador de padrão associado à viagem.
 - O campo fica vazio e as regras ativas dispensam a verificação (por exemplo, quando a ausência de valor é aceite sem mensagem) - a viagem “passa” em relação a este critério de presença.
 
 ---
 
-#### Falha
+### Falha
 
 - Identificador em falta - o `pattern_id` não vem fornecido, quando, para a severidade e regras em vigor, o preenchimento é obrigatório ou recomendado (o standard permite omitir, mas a política de dados do projecto exige o identificador de padrão).
