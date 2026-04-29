@@ -27,15 +27,15 @@ O validador liga a severidade e as opções às regras do projecto, confirma qu
 - Código entre os valores válidos do enumerado GTFS (0–3).
 - Com janelas de pickup/drop-off preenchidas na linha: apenas 1 ou campo sem valor; outros códigos não são admissíveis nesse contexto.
 - Código incluído nas opções permitidas pelo projecto, ou regra que aceita todas as opções.
-- Campo vazio com regra em modo ignorar ou proibido relativamente a exigir preenchimento — sem mensagem por ausência.
+- Campo vazio com regra em modo ignorar ou proibido relativamente a exigir preenchimento - sem mensagem por ausência.
 
 ---
 
 #### Falha
 
-- Inválido — valor fora do enumerado 0–3.
-- Proibido com janelas — janelas definidas e o valor não é 1 (equivalente a “sem paragem contínua” neste registo).
-- Fora do permitido — valor GTFS válido mas não autorizado pelo conjunto de opções do projecto.
+- Inválido - valor fora do enumerado 0–3.
+- Proibido com janelas - janelas definidas e o valor não é 1 (equivalente a “sem paragem contínua” neste registo).
+- Fora do permitido - valor GTFS válido mas não autorizado pelo conjunto de opções do projecto.
 - Ausência de valor quando a severidade configurada faz o validador reportar obrigatório ou recomendado (conforme política), exceto quando a regra manda ignorar ou tratar o campo como proibido para essa verificação.
 
 

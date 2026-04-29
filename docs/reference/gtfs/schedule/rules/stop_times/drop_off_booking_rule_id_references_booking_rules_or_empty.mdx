@@ -26,13 +26,13 @@ O validador respeita a severidade e a política do projecto. Se o valor vem pre
 ### Passa
 
 - Identificador preenchido e encontrado em `booking_rules`.
-- Campo vazio com regra em ignorar ou em fluxo em que a verificação de presença é ignorada — sem reportar ausência.
+- Campo vazio com regra em ignorar ou em fluxo em que a verificação de presença é ignorada - sem reportar ausência.
 - Campo vazio sem política que exija reporte (conforme a severidade aplicada).
 
 ---
 
 ### Falha
 
-- Proibido — o projecto não permite este campo mas o feed enviou um identificador.
-- Referência inválida — identificador inexistente em `booking_rules`.
+- Proibido - o projecto não permite este campo mas o feed enviou um identificador.
+- Referência inválida - identificador inexistente em `booking_rules`.
 - Ausência do valor quando, para a severidade configurada, o validador deve sinalizar obrigatório ou recomendado (mensagem de erro vs recomendação, conforme política), exceto quando a regra manda ignorar ou saltar por campo proibido nesse ramo de “campo vazio”.

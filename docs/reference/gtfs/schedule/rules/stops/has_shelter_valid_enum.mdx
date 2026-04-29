@@ -15,7 +15,7 @@ description: Regra
 
 ### O que esta validação faz 
 
-O `has_shelter` descreve se a paragem tem abrigo (marquesina / refúgio) e em que situação: não aplicável, sem abrigo, com abrigo em mau estado ou com abrigo em bom estado. O campo é opcional; deixar o campo vazio é aceite no standard — significa não fornecer essa informação. O validador aplica as regras do projecto sobre presença, proibição, valores permitidos (0 a 3) e, se existir, lista de opções permitidas.
+O `has_shelter` descreve se a paragem tem abrigo (marquesina / refúgio) e em que situação: não aplicável, sem abrigo, com abrigo em mau estado ou com abrigo em bom estado. O campo é opcional; deixar o campo vazio é aceite no standard - significa não fornecer essa informação. O validador aplica as regras do projecto sobre presença, proibição, valores permitidos (0 a 3) e, se existir, lista de opções permitidas.
 
 ---
 
@@ -30,8 +30,8 @@ O `has_shelter` descreve se a paragem tem abrigo (marquesina / refúgio) e e
 
 #### Falha
 
-- Valor em falta — o campo fica vazio, quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado (o standard admite vazio, mas a política de dados exige a indicação).
-- Proibido — as regras não permitem o `has_shelter`, mas o valor veio no mesmo fornecido.
-- Inválido — um valor que não seja 0, 1, 2 nem 3.
-- Fora do permitido — o valor é um dos códigos válidos, mas não consta do conjunto de opções definido nas regras (salvo quando a regra abrange todas as opções).
+- Valor em falta - o campo fica vazio, quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado (o standard admite vazio, mas a política de dados exige a indicação).
+- Proibido - as regras não permitem o `has_shelter`, mas o valor veio no mesmo fornecido.
+- Inválido - um valor que não seja 0, 1, 2 nem 3.
+- Fora do permitido - o valor é um dos códigos válidos, mas não consta do conjunto de opções definido nas regras (salvo quando a regra abrange todas as opções).
 

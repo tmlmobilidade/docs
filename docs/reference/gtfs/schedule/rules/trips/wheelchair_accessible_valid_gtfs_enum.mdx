@@ -15,7 +15,7 @@ description: Regra
 
 ### O que esta validação faz 
 
-O campo indica, para a viagem, se há informação sobre acessibilidade para cadeira de rodas: sem informação, veículo que pode acolher pelo menos um utente em cadeira de rodas, ou viagem em que não é possível. No GTFS o campo é opcional; deixar o campo vazio é legítimo — significa não fornecer essa informação (equivalente em intenção ao 0 quando o valor vem preenchido). O validador aplica as regras do projecto sobre presença, proibição, valores permitidos (0, 1 ou 2) e, se existir, lista de opções permitidas.
+O campo indica, para a viagem, se há informação sobre acessibilidade para cadeira de rodas: sem informação, veículo que pode acolher pelo menos um utente em cadeira de rodas, ou viagem em que não é possível. No GTFS o campo é opcional; deixar o campo vazio é legítimo - significa não fornecer essa informação (equivalente em intenção ao 0 quando o valor vem preenchido). O validador aplica as regras do projecto sobre presença, proibição, valores permitidos (0, 1 ou 2) e, se existir, lista de opções permitidas.
 
 ---
 
@@ -30,10 +30,10 @@ O campo indica, para a viagem, se há informação sobre acessibilidade para 
 
 #### Falha
 
-- Valor em falta — o campo fica vazio, quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado (o GTFS aceita vazio, mas a política de dados exige a indicação).
-- Proibido — as regras não permitem o `wheelchair_accessible`, mas o valor veio no mesmo fornecido.
-- Inválido — um número que não seja 0, 1 nem 2.
-- Fora do permitido — 0, 1 ou 2 são válidos no GTFS, mas o valor lido não consta do conjunto de opções definido nas regras (salvo quando a regra abrange todas as opções).
+- Valor em falta - o campo fica vazio, quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado (o GTFS aceita vazio, mas a política de dados exige a indicação).
+- Proibido - as regras não permitem o `wheelchair_accessible`, mas o valor veio no mesmo fornecido.
+- Inválido - um número que não seja 0, 1 nem 2.
+- Fora do permitido - 0, 1 ou 2 são válidos no GTFS, mas o valor lido não consta do conjunto de opções definido nas regras (salvo quando a regra abrange todas as opções).
 
 
 

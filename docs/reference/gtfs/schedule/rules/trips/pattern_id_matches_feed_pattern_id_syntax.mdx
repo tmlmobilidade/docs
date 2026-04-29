@@ -14,7 +14,7 @@ description: Regra utilizada para a consistência do formato do pattern_id
 
 ### Que formato é validado
 
-Valida o formato do `pattern_id` em cada linha de `trips.txt` em que o campo vem preenchido: o valor tem de respeitar um padrão fixo de segmentos separados por `_` (não é validação de existência em `patterns` aqui, só o “shape” do texto — o ficheiro descreve o tipo como chave para `patterns.pattern_id`).
+Valida o formato do `pattern_id` em cada linha de `trips.txt` em que o campo vem preenchido: o valor tem de respeitar um padrão fixo de segmentos separados por `_` (não é validação de existência em `patterns` aqui, só o “shape” do texto - o ficheiro descreve o tipo como chave para `patterns.pattern_id`).
 
 - Primeiro segmento: 1 a 4 caracteres, nenhum deles pode ser `_`.
 - Segundo segmento:  exatamente 1 caracter que não seja `_`.
@@ -28,7 +28,7 @@ O comentário do ficheiro fala de algo na linha de `"X" … "XXXX_X_X"`: o segm
 
 #### Passa 
 
--  Se `pattern_id` for nulo — o campo continua opcional a nível de presença.
+-  Se `pattern_id` for nulo - o campo continua opcional a nível de presença.
 -  Se o valor, quando existe, corresponde à expressão regular acima.
 
 ---

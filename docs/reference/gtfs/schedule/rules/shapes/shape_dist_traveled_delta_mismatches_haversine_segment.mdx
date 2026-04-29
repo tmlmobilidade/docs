@@ -21,9 +21,9 @@ Para cada percurso geométrico (conjunto de pontos com o mesmo `shape_id`), os 
 Entre cada par de pontos consecutivos dessa ordem, o validador:
 
 1. Calcula a distância real no terreno (aproximação de geodesia, como num mapa) a partir da latitude e longitude de cada ponto, expressa em metros.
-2. Calcula, a partir de `shape_dist_traveled`, a diferença entre o valor acumulado no ponto atual e o do ponto anterior — ou seja, o troço que a publicação de dados declara ter sido percorrido entre esses dois pontos, também em metros (o sistema de importação ajusta se os valores no ficheiro forem em quilómetros ou em metros, com base no contexto de toda a forma).
+2. Calcula, a partir de `shape_dist_traveled`, a diferença entre o valor acumulado no ponto atual e o do ponto anterior - ou seja, o troço que a publicação de dados declara ter sido percorrido entre esses dois pontos, também em metros (o sistema de importação ajusta se os valores no ficheiro forem em quilómetros ou em metros, com base no contexto de toda a forma).
 
-A validação verifica se essas duas grandezas — distância medida pelas coordenadas e o incremento de `shape_dist_traveled` — estão coerentes entre si, permitindo uma tolerância (padrão em metros) porque fontes e ferramentas de publicação raramente coincidem ao milímetro.
+A validação verifica se essas duas grandezas - distância medida pelas coordenadas e o incremento de `shape_dist_traveled` - estão coerentes entre si, permitindo uma tolerância (padrão em metros) porque fontes e ferramentas de publicação raramente coincidem ao milímetro.
 
 Se um dos pontos do par não tiver `shape_dist_traveled`, ou se os valores forem 0 nesse cálculo (início de forma ou “reinício” do percorrido), esse par não é usado nesta regra, para evitar falsos problemas nesses casos.
 

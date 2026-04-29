@@ -15,7 +15,7 @@ description: Regra
 
 ### O que esta validação faz 
 
-O `region_id` identifica a região associada à paragem (extensão ao `stops.txt`). O campo é opcional; deixar o campo vazio é aceite no standard — significa não fornecer essa informação. O validador aplica as regras do projecto sobre presença (obrigatório ou recomendado, quando a verificação não é dispensada), proibição quando o valor vem fornecido, e, se existir lista de opções, que o identificador consta entre as regiões permitidas. Não se verifica, nesta função, existência em ficheiro externo nem formato além do texto não vazio.
+O `region_id` identifica a região associada à paragem (extensão ao `stops.txt`). O campo é opcional; deixar o campo vazio é aceite no standard - significa não fornecer essa informação. O validador aplica as regras do projecto sobre presença (obrigatório ou recomendado, quando a verificação não é dispensada), proibição quando o valor vem fornecido, e, se existir lista de opções, que o identificador consta entre as regiões permitidas. Não se verifica, nesta função, existência em ficheiro externo nem formato além do texto não vazio.
 
 ---
 
@@ -29,6 +29,6 @@ O `region_id` identifica a região associada à paragem (extensão ao `stop
 
 #### Falha
 
-- Identificador em falta — o campo fica vazio, quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado.
-- Proibido — as regras não permitem o `region_id`, mas o valor veio no mesmo fornecido.
-- Fora do permitido — o texto existe, mas não consta do conjunto de opções definido nas regras (salvo quando a regra abrange todas as opções).
+- Identificador em falta - o campo fica vazio, quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado.
+- Proibido - as regras não permitem o `region_id`, mas o valor veio no mesmo fornecido.
+- Fora do permitido - o texto existe, mas não consta do conjunto de opções definido nas regras (salvo quando a regra abrange todas as opções).

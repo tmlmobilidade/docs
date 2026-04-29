@@ -20,7 +20,7 @@ O campo `departure_time` em `stop_times.txt` é a hora de partida da parag
 
 Esta rotina aplica a severidade das regras do projecto, exige partida quando o ponto é horário certo, proíbe partida se existir janela de pickup/drop-off preenchida na mesma entrada, valida o formato do tempo quando há valor e, quando a partida falta e o projecto não está em modo ignorar, emite mensagem de obrigatório ou recomendado consoante a política configurada.
 
-_(Nota: o texto de especificação no topo do ficheiro cita também obrigatoriedade na primeira e última paragem do trip; esta função não implementa essa verificação — isso pode estar noutra validação ou ser uma lacuna face à quadro GTFS descrito no comentário.)_
+_(Nota: o texto de especificação no topo do ficheiro cita também obrigatoriedade na primeira e última paragem do trip; esta função não implementa essa verificação - isso pode estar noutra validação ou ser uma lacuna face à quadro GTFS descrito no comentário.)_
 
 ---
 
@@ -28,7 +28,7 @@ _(Nota: o texto de especificação no topo do ficheiro cita também obrigatoried
 
 - `timepoint = 1` com partida preenchida e tempo válido.
 - Janelas de pickup/drop-off sem hora de partida na mesma linha, ou sem janelas com partida permitida e formato válido.
-- Partida ausente onde o GTFS/processo não a torna obrigatória para esse registo e a regra está em ignorar — sem mensagem no final.
+- Partida ausente onde o GTFS/processo não a torna obrigatória para esse registo e a regra está em ignorar - sem mensagem no final.
 - Partida presente só quando não entra em conflito com janelas e passa na validação de formato de tempo.
 
 ---
@@ -36,6 +36,6 @@ _(Nota: o texto de especificação no topo do ficheiro cita também obrigatoried
 ### Falha
 
 - Ausência da partida com `timepoint = 1` (horário certo exige partida).
-- Proibido com janelas — há janela definida e veio hora de partida.
-- Tempo inválido — valor presente mas fora do formato de tempo esperado.
+- Proibido com janelas - há janela definida e veio hora de partida.
+- Tempo inválido - valor presente mas fora do formato de tempo esperado.
 - Ausência de partida com severidade não “ignorar”: mensagem de erro (obrigatório) ou recomendação, conforme a regra do projecto.

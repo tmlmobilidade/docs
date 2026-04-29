@@ -19,16 +19,16 @@ description: Regra
 
 Partida: cada viagem em `trips.txt` tem um `trip_id`, um `shape_id` (nesta regra só interessa quando a viagem tem shape) e, em `stop_times.txt`, a lista de paragens por onde essa viagem passa.
 
-Passo 1 — Quais paragens?  
+Passo 1 - Quais paragens?  
 Para essa viagem, o validador percorre os `stop_times` e recolhe os `stop_id` que aparecem no percurso (cada paragem só conta uma vez, mesmo que apareça em vários horários).
 
-Passo 2 — Onde estão as coordenadas?  
+Passo 2 - Onde estão as coordenadas?  
 Cada `stop_id` liga-se a um registo em `stops.txt`, onde estão `stop_lat` e `stop_lon`. É a posição da paragem que se usa como referência.
 
-Passo 3 — Qual geometria?  
+Passo 3 - Qual geometria?  
 O `shape_id` da viagem identifica a polyline (a “linha” do percurso desenhada em `shapes.txt`). A pergunta é: essa linha passa “perto” de cada paragem do percurso?
 
-Passo 4 — Margem de erro (tolerância)  
+Passo 4 - Margem de erro (tolerância)  
 Não basta “estar na mesma rua”: há uma distância máxima aceitável entre o ponto da paragem e o ponto mais próximo na shape (em metros). Se a distância ultrapassa essa margem, o par paragem + shape é considerado inválido, por isso que recomendamos ter sempre as shapes atualizadas.
 
 
@@ -43,6 +43,6 @@ Não basta “estar na mesma rua”: há uma distância máxima aceitável ent
 
 #### Falha
 
-- Pelo menos uma paragem utilizada nos horários dessa viagem fica demasiado afastada da linha do percurso: a distância ao ponto mais próximo na geometria ultrapassa a tolerância acordada. Porquê: ou a shape não corresponde ao traçado real das paragens, ou há erro de coordenadas, identificadores trocados, ou geometria desatualizada — o feed fica inconsistente entre “por onde o veículo desenha o percurso” e “onde as paragens estão no mapa”. A mensagem de erro costuma indicar quantos metros faltam ou sobram e onde na linha fica o ponto mais próximo, para facilitar a correção.
+- Pelo menos uma paragem utilizada nos horários dessa viagem fica demasiado afastada da linha do percurso: a distância ao ponto mais próximo na geometria ultrapassa a tolerância acordada. Porquê: ou a shape não corresponde ao traçado real das paragens, ou há erro de coordenadas, identificadores trocados, ou geometria desatualizada - o feed fica inconsistente entre “por onde o veículo desenha o percurso” e “onde as paragens estão no mapa”. A mensagem de erro costuma indicar quantos metros faltam ou sobram e onde na linha fica o ponto mais próximo, para facilitar a correção.
 
 

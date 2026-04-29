@@ -15,7 +15,7 @@ description: Regra
 
 ### O que esta validação faz 
 
-O campo indica, por viagem, se existe informação sobre o transporte de bicicletas: sem informação, viagem com capacidade para pelo menos uma bicicleta, ou viagem em que não são permitidas. No GTFS o campo é opcional; deixar o campo vazio no ficheiro é legítimo — significa não fornecer essa informação (a mesma intenção que o valor `0` quando o valor vem preenchido). O validador do projeto, para além do standard, pode recomendar ou exigir o preenchimento ou restringir a valores permitidos pelas regras.
+O campo indica, por viagem, se existe informação sobre o transporte de bicicletas: sem informação, viagem com capacidade para pelo menos uma bicicleta, ou viagem em que não são permitidas. No GTFS o campo é opcional; deixar o campo vazio no ficheiro é legítimo - significa não fornecer essa informação (a mesma intenção que o valor `0` quando o valor vem preenchido). O validador do projeto, para além do standard, pode recomendar ou exigir o preenchimento ou restringir a valores permitidos pelas regras.
 
 ---
 
@@ -23,7 +23,7 @@ O campo indica, por viagem, se existe informação sobre o transporte de bicicl
 
 - O ficheiro contém 0, 1 ou 2 (códigos válidos) e, se houver opções definidas nas regras, o valor encontra-se entre as permitidas (ou a regra aceita todas as opções).
 - O campo fica vazio no ficheiro (ou a validação deste atributo está ignorada nas regras) e, por isso, não se exige o preenchimento neste ponto.
-- O valor veio fornecido e o atributo não está proibido pelas regras — a validação pode continuar; caso contrário, reprova logo por proibição, não por valor.
+- O valor veio fornecido e o atributo não está proibido pelas regras - a validação pode continuar; caso contrário, reprova logo por proibição, não por valor.
 
 ---
 
@@ -31,7 +31,7 @@ O campo indica, por viagem, se existe informação sobre o transporte de bicicl
 
 - Campo vazio no ficheiro quando, para a severidade e regras em vigor, o preenchimento é obrigatório ou recomendado (o GTFS aceita vazio, mas a vossa regra de dados exige o valor).
 - O atributo é proibido nas regras, mas o valor veio na mesma fornecido.
-- Valor inválido — não é 0, 1 nem 2.
+- Valor inválido - não é 0, 1 nem 2.
 - Valor válido no GTFS (0, 1 ou 2) fora do conjunto de opções permitido pelas regras do projeto.
 
 

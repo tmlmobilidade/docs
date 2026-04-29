@@ -15,7 +15,7 @@ description: Regra
 
 ### O que esta validação faz 
 
-O `stop_desc` é a descrição do local, pensada para informação útil ao passageiro, sem repetir o próprio `stop_name` — o GTFS desaconselha que descrição e nome sejam o mesmo texto. O campo é opcional; deixar o campo vazio é aceite — significa não fornecer descrição extra. O validador aplica as regras do projecto sobre presença, proibição e opções permitidas. Quando `stop_desc` e `stop_name` são iguais, emite aviso (qualidade de dados, não erro de enum). Não se valida, nesta função, conteúdo longo ou estilo além do critério de duplicado com o nome.
+O `stop_desc` é a descrição do local, pensada para informação útil ao passageiro, sem repetir o próprio `stop_name` - o GTFS desaconselha que descrição e nome sejam o mesmo texto. O campo é opcional; deixar o campo vazio é aceite - significa não fornecer descrição extra. O validador aplica as regras do projecto sobre presença, proibição e opções permitidas. Quando `stop_desc` e `stop_name` são iguais, emite aviso (qualidade de dados, não erro de enum). Não se valida, nesta função, conteúdo longo ou estilo além do critério de duplicado com o nome.
 
 ---
 
@@ -28,9 +28,9 @@ O `stop_desc` é a descrição do local, pensada para informação útil a
 
 #### Falha
 
-- Texto em falta — o campo fica vazio, quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado.
-- Proibido — as regras não permitem o `stop_desc`, mas o valor veio no mesmo fornecido.
-- Fora do permitido — o texto existe, mas não consta do conjunto de opções definido nas regras (salvo quando a regra abrange todas as opções).
+- Texto em falta - o campo fica vazio, quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado.
+- Proibido - as regras não permitem o `stop_desc`, mas o valor veio no mesmo fornecido.
+- Fora do permitido - o texto existe, mas não consta do conjunto de opções definido nas regras (salvo quando a regra abrange todas as opções).
 
 
 

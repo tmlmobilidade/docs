@@ -29,10 +29,10 @@ Convenção: o `pattern_id` deve ter exatamente três segmentos ao fazer `s
 
 #### Falha
 
-- `direction_pattern_id_match.required` — `pattern_id` ou `direction_id` em falta. Porquê: sem os dois campos não dá para verificar a correspondência.
-- `direction_pattern_id_match.invalid_pattern_id` — o `pattern_id` não se divide em três partes por `_`. Porquê: o formato não segue o esquema `X_Y_Z` esperado para extrair a direção.
-- `direction_pattern_id_match.invalid_direction_id` — o segundo segmento não é um inteiro válido ou está fora do intervalo 0–1. Porquê: só `0` e `1` são direções válidas nesta convenção.
-- `direction_pattern_id_match.not_matching` — o `direction_id` da viagem diferente do número obtido do `pattern_id`. Porquê: a viagem diz uma direção e o `pattern_id` codifica outra.
+- `direction_pattern_id_match.required` - `pattern_id` ou `direction_id` em falta. Porquê: sem os dois campos não dá para verificar a correspondência.
+- `direction_pattern_id_match.invalid_pattern_id` - o `pattern_id` não se divide em três partes por `_`. Porquê: o formato não segue o esquema `X_Y_Z` esperado para extrair a direção.
+- `direction_pattern_id_match.invalid_direction_id` - o segundo segmento não é um inteiro válido ou está fora do intervalo 0–1. Porquê: só `0` e `1` são direções válidas nesta convenção.
+- `direction_pattern_id_match.not_matching` - o `direction_id` da viagem diferente do número obtido do `pattern_id`. Porquê: a viagem diz uma direção e o `pattern_id` codifica outra.
 
 ---
 
