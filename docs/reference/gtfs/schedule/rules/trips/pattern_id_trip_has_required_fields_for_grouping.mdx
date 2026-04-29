@@ -2,23 +2,20 @@
 title: Regra do pattern_id (verificação)
 description: pattern_id_trip_has_required_fields_for_grouping
 ---
-## Regras de validação do campo pattern_id
-
-
-### Campos que serão validados nesta regra
+## Campos que serão validados nesta regra
 
 | Nome do Campo | Tipo | Presença    | Descrição                                                                                                                              |
 | ------------- | ---- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------- |
 | `pattern_id`  | ID   | Obrigatório | Indica a variante de serviço em que a viagem opera na linha. <br/><br/>Não faz parte do GTFS standart, mas é obrigatório para nós TML. |
 
 
-### O que esta validação faz
+## O que esta validação faz
 
 Garante que, em cada viagem que participa num grupo por `pattern_id`, `route_id`, `shape_id`, `direction_id` e `trip_headsign` não estão vazios, para as validações de consistência do padrão poderem correr. A `stop_sequence` não é tratada neste passo em concreto.
 
 ---
 
-#### Passa
+### Passa
 
 - Se a viagem não entra no agrupamento por `pattern_id` - não há exigência destes campos só por causa desta regra (o validador só aplica isto a viagens que já têm `pattern_id` e foram colocadas no grupo).
 - Se a viagem está nesse grupo e `route_id`, `shape_id`, `direction_id` e `trip_headsign` estão todos definidos (não nulos). Porquê: sem estes quatro valores não dá para tratar todas as viagens do mesmo `pattern_id` de forma comparável com o resto das validações de consistência do padrão; a regra só “deixa passar” quando nada falta.
