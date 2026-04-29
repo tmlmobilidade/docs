@@ -1,11 +1,8 @@
 ---
-title: Regra do horário de partida da paragem
+title: Validação do horário de partida da paragem
 description: departure_time_ordering_with_arrival_and_timepoint
 ---
-## Regras de validação do campo departure_time
-
-
-### Campos que serão validados nesta regra
+## Campos que serão validados nesta regra
 
 | Nome do Campo      | Tipo | Presença                     | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | ------------------ | ---- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -14,7 +11,7 @@ description: departure_time_ordering_with_arrival_and_timepoint
 
 
 
-### O que esta validação faz 
+## O que esta validação faz 
 
 O `departure_time` é a hora de partida do veículo da paragem para uma dada viagem, expressa no fuso horário da agência (`agency_timezone`, não o da paragem). No GTFS pode usar-se mais de 24 horas para tempos após a meia-noite do dia de serviço; quando chegada e partida são iguais, `arrival_time` e `departure_time` devem coincidir - o detalhe está na referência do feed.
 
