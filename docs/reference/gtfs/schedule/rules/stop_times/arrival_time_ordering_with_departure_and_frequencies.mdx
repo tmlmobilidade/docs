@@ -17,7 +17,7 @@ description: Regra
 
 O campo `arrival_time` em `stop_times.txt` é a hora de chegada à paragem para uma viagem. No GTFS é condicionalmente obrigatório: por exemplo na primeira e última paragem do trip, quando o ponto é horário certo (`timepoint = 1`), e não deve ser usado quando a linha define janelas de pickup/drop-off (`start_pickup_drop_off_window` / `end_pickup_drop_off_window`). Quando o valor existe, deve ser um tempo válido (incluindo horas acima de 24 quando o serviço atravessa meia-noite).
 
-O validador ajusta o rigor às regras. Cumpre as condições GTFS acima, valida o formato do tempo quando há valor e, nos casos em que o feed ainda pode omitir a chegada, pode reportar obrigatoriedade ou recomendação conforme como o projecto classifica o campo — salvo quando a regra diz para ignorar essa verificação.
+O validação cumpre as condições GTFS acima, valida o formato do tempo quando há valor e, nos casos em que o feed ainda pode omitir a chegada, pode reportar obrigatoriedade ou recomendação conforme como a regra classifica o campo — salvo quando a regra diz para ignorar essa verificação.
 
 Para saber primeira/última paragem por viagem, usa informação agregada por trip (mínimo e máximo de sequência de paragem), com recurso a leitura completa do trip apenas se essa informação não existir.
 
