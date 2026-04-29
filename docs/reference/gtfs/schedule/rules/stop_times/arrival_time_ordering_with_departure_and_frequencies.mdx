@@ -24,7 +24,6 @@ A verificação assegura que:
 - se a linha traz janelas de pickup/drop-off (`start_…` e/ou `end_…`) definidas neste registo, não deve existir chegada fixa em `arrival_time`;
 - qualquer valor preenchido deve ser um tempo em formato válido.
 
-
 Pode ainda sinalizar ausência de chegada quando, para o modo de validação, o campo não é tratado como meramente opcional sem aviso.
 
 Se não for possível resolver a viagem (por exemplo identificador de viagem inconsistente ou sequências ilegíveis nos dados), pode falhar por dados de apoio inválidos ao aplicar a regra da primeira/última paragem.
@@ -44,13 +43,9 @@ Se não for possível resolver a viagem (por exemplo identificador de viagem inc
 ### Falha
 
 - Obrigatório em horário certo — `timepoint = 1` sem chegada. Correção: preencher `arrival_time` (e alinhar com `departure_time`, se aplicável).
-    
 - Proibido com janelas — janelas definidas na linha e chegada preenchida. Correção: retirar a chegada ou rever o modelo (janelas vs tempos fixos).
-    
 - Obrigatório na primeira ou última paragem — extremo da viagem sem chegada. Correção: preencher para o menor e maior `stop_sequence` do trip; confirmar que todos os `stop_times` desse trip têm sequências coerentes.
-    
 - Tempo inválido — valor fora do formato de hora esperado. Correção: usar `HH:MM:SS` válido (incluindo > 24 se for o caso).
-    
 - Dados da viagem inconsistentes — falha ao determinar a sequência da viagem (trip inexistente, sem linhas úteis, ou sequência não numérica onde é necessário calcular extremos). Correção: corrigir `trip_id`, `stop_sequence` e o conjunto de `stop_times` desse trip.
     
 - Ausência — chegada em falta e o validador regista obrigatoriedade ou recomendação. Correção: preencher onde o GTFS ou o feed o exige ou clarificar com o operador do feed o nível de exigência.
