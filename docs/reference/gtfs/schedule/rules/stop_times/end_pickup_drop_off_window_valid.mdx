@@ -1,6 +1,6 @@
 ---
 title: Fim da janela horária de embarque e desembarque válido
-description: Regra
+description: end_pickup_drop_off_window_valid
 ---
 ## Campos que serão utilizados nesta regra
 
@@ -13,25 +13,24 @@ description: Regra
 
 ## O que esta validação faz 
 
-No `stop_times.txt`, o campo `end_pickup_drop_off_window` indica o momento em que termina o serviço à pedido (pickup/drop-off flexível) para o troço associado a uma paragem, grupo de localizações ou local GeoJSON, conforme a referência GTFS.
+No `stop_times.txt`, o campo `end_pickup_drop_off_window` indica o momento em que termina a janela horária em que é permitido o embarque e o desembarque flexíveis (serviço à pedido) para a localização associada à linha — paragem, grupo de localizações ou identificador de local, consoante a referência GTFS.
 
-À luz desta regra, o validador trata `end_pickup_drop_off_window` da seguinte forma: proíbe preencher este fim de janela quando já existem horários fixos de chegada ou partida na mesma linha (modelos incompatíveis); obriga o valor quando existe `start_pickup_drop_off_window` preenchido ou quando há `location_group_id` / `location_id` preenchidos; quando `end_pickup_drop_off_window` vem preenchido, valida o formato de tempo; quando o campo falta sem essas condições obrigatórias, pode ainda emitir obrigatoriedade ou recomendação, salvo em modo que ignore essa verificação.
+O validador proíbe combinar `end_pickup_drop_off_window` preenchido com `arrival_time` ou `departure_time` preenchidos na mesma linha (horário fixo incompatível com este modelo). Exige `end_pickup_drop_off_window` quando existe `start_pickup_drop_off_window` com valor ou quando `location_group_id` / `location_id` vêm preenchidos. Se `end_pickup_drop_off_window` tem valor, valida o formato de tempo. Se o campo falta fora desses casos obrigatórios, pode gerar obrigatoriedade ou recomendação, salvo modo ignorar.
 
 ---
 
 ### Passa
 
-- `end_pickup_drop_off_window` preenchido com tempo válido quando deve existir (início de janela definido ou `location_group_id` / `location_id` definidos).
-- `end_pickup_drop_off_window` vazio e sem chegada/partida fixas ou, se há chegada/partida, também sem fim de janela (combinação admitida).
-- `end_pickup_drop_off_window` vazio em cenário opcional onde não há mensagem por ausência.
-- Sem chegada nem partida preenchidas ou, se estão preenchidas, não há valor em `end_pickup_drop_off_window` (não aciona o conflito).
+- `end_pickup_drop_off_window` preenchido com tempo válido quando é obrigatório (início de janela ou localização em grupo/local definidos).
+- `end_pickup_drop_off_window` vazio quando não é exigido e não há conflito com chegada/partida fixas.
+- Sem combinação proibida: chegada ou partida fixa junto com fim de janela preenchido.
+
 
 ---
 
 ### Falha
 
-- Proibido com horário fixo: há `arrival_time` ou `departure_time` com valor e `end_pickup_drop_off_window` também preenchido. _Correção:_ retirar o fim da janela ou os horários fixos, conforme o modelo correto do serviço.
-- Obrigatório em falta: existe `start_pickup_drop_off_window` ou `location_group_id` / `location_id`, mas `end_pickup_drop_off_window` está vazio. _Correção:_ preencher com o instante final coerente com a janela / localização.
-- Tempo inválido: `end_pickup_drop_off_window` preenchido com texto que não é um tempo aceite. _Correção:_ corrigir para o formato de hora esperado pelo validador (no mesmo espírito que outros campos de tempo GTFS).
-- Ausência com obrigatoriedade ou recomendação gerada pelo modo de validação. _Correção:_ preencher `end_pickup_drop_off_window` ou alinhar com o operador do feed.
-
+- Proibido com horário fixo: `arrival_time` ou `departure_time` com valor e `end_pickup_drop_off_window` também preenchido. _Correção:_ remover o fim de janela ou os horários fixos.
+- Obrigatório em falta: há `start_pickup_drop_off_window` ou `location_group_id` / `location_id`, mas `end_pickup_drop_off_window` vazio. _Correção:_ preencher o fim da janela de forma coerente.
+- Tempo inválido em `end_pickup_drop_off_window`. _Correção:_ usar formato de hora admitido pelo validador.
+- Ausência com mensagem de obrigatoriedade ou recomendação. _Correção:_ preencher `end_pickup_drop_off_window` ou alinhar com o operador do feed.
