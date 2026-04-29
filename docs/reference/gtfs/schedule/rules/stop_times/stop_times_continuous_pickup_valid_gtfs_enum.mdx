@@ -5,7 +5,7 @@ description: Regra
 ## Regras de validação do campo continuous_pickup
 
 
-### Campos que serão utilizados nesta regra
+### Campos que serão validados nesta regra
 
 | Nome do Campo       | Tipo | Presença                  | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | ------------------- | ---- | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -16,7 +16,7 @@ description: Regra
 
 ### O que esta validação faz 
 
-O campo `continuous_pickup` em `stop_times.txt` indica se o passageiro pode embarcar em qualquer ponto do troço entre esta paragem e a seguinte, ao longo do percurso descrito em `shapes.txt`. O GTFS define um enumerado de 0 a 3 (paragem contínua para pickup, sem paragem contínua ou campo vazio, contactar operadora, coordenar com o motorista). Valor preenchido prevalece sobre `routes.txt`; vazio herda o comportamento da rota.
+O campo em `stop_times.txt` indica se o passageiro pode embarcar em qualquer ponto do troço entre esta paragem e a seguinte, ao longo do percurso descrito em `shapes.txt`. O GTFS define um enumerado de 0 a 3 (paragem contínua para pickup, sem paragem contínua ou campo vazio, contactar operadora, coordenar com o motorista). Valor preenchido prevalece sobre `routes.txt`; vazio herda o comportamento da rota.
 
 O validador liga a severidade e as opções às regras do projecto, confirma que o valor está no intervalo permitido pelo GTFS, aplica a restrição com janelas de pickup/drop-off (só 1 ou ausência quando essas janelas existem na mesma linha) e pode limitar quais códigos são aceites em dados de produção.
 
