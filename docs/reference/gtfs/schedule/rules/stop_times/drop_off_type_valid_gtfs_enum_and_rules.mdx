@@ -18,18 +18,24 @@ description: Regra
 
 ### O que esta validação faz 
 
-O campo `drop_off_type`no ficheiro `stop_times.txt` indica como será realizada a descida do veículo nesta paragem. O GTFS usa uma enumeração (0 a 3); 0 ou vazio equivalente a descida regular). Com janelas de pickup/drop-off na mesma linha, o valor 0 ("descida regular") é proibido - o modelo de janelas que entre em conflito com "paragem fixa programada" neste sentido. 
+No ficheiro `stop_times.txt`, o campo `drop_off_type` define como é feita a descida do veículo nessa paragem da viagem (.
+
+O GTFS admite apenas códigos válidos para esse enumerado e cruza o valor com o resto da linha: quando existem janelas de pickup/drop-off (`start_pickup_drop_off_window` e/ou `end_pickup_drop_off_window` com valor), não é permitido `drop_off_type` = 0 (descida regular num serviço programado à paragem), porque esse modelo colide com o uso de janelas em vez de tempos fixos de paragem para esse efeito.
 
 ---
 
 ### Passa
 
-- Valor entre 0 e 3 (enumerado válido).
-- Com janelas definidas: tipo de descida não é 0 (ou o campo vazio, que o GTFS trata como regular mas aqui a verificação explícita só falha quando o valor é 0 com janelas).
+- O valor é um dos códigos permitidos pelo enumerado, ou o campo está vazio (se for aceitável para o conjunto de dados, nos termos da mesma referência).
+- Com janelas preenchidas na mesma linha, o tipo de descida não é 0; deve corresponder ao modo real de descida através de outro código admissível, ou o modelo da linha (janelas _versus_ paragem fixa) deve ser revisto para ficar coerente.
 
 ---
 
 ### Falha
 
-- Inválido - número fora de 0–3.
-- Proibido com janelas - existe janela de pickup/drop-off preenchida e o tipo de descida é 0 (descida regular programada).
+- Valor inválido — número fora do conjunto definido para este campo. Correção: usar apenas os valores previstos na referência GTFS para `drop_off_type`.
+    
+- Proibido com janelas — existem janelas de pickup/drop-off com valor e o tipo de descida é 0. Correção: escolher outro código válido, adequado ao serviço, ou ajustar as janelas e o modelo de publicação de forma a não combinar 0 com janelas.
+    
+
+Se utilizar janelas, é preferível preencher sempre explicitamente um tipo de descida adequado, em vez de depender do vazio (no GTFS, equivalente ao modo “regular”), para evitar ambiguidade neste contexto.
