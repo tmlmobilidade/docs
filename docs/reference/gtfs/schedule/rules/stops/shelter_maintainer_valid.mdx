@@ -13,13 +13,13 @@ description: Regra
 
 
 
-### O que esta validação faz 
+## O que esta validação faz 
 
 O `shelter_maintainer` identifica quem mantém ou gere o abrigo da paragem (por exemplo entidade ou código operacional), em extensão ao `stops.txt`. O campo é opcional; deixar o campo vazio é aceite no standard - significa não fornecer essa informação. O validador aplica as regras do projecto sobre presença (obrigatório ou recomendado, quando a verificação não é dispensada), proibição quando o valor vem fornecido, e, se existir lista de opções, que o valor consta entre os permitidos. Não se verifica, nesta função, existência em ficheiro externo nem formato além do texto não vazio.
 
 ---
 
-#### Passa
+### Passa
 
 - O `shelter_maintainer` vem preenchido com texto não vazio e o atributo não está proibido pelas regras.
 - O valor figura entre os identificadores permitidos pelas regras (ou a regra aceita todas as opções).
