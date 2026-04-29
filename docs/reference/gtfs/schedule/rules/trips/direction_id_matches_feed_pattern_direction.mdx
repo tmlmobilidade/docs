@@ -1,11 +1,8 @@
 ---
 title: Regra de igualdade entre direction_id e pattern_id
-description: Regra utilizada para a consistência dos campos direction_id e pattern_id
+description: direction_id_matches_feed_pattern_direction
 ---
-## Regras de validação entre o campo direction_id e pattern_id
-
-
-### Campos que serão validados nesta regra
+## Campos que serão validados nesta regra
 
 | Nome do Campo  | Tipo | Presença    | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | -------------- | ---- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -13,7 +10,7 @@ description: Regra utilizada para a consistência dos campos direction_id e patt
 | `pattern_id`   | ID   | Obrigatório | Indica a variante de serviço em que a viagem opera na linha. <br/><br/>Não faz parte do GTFS standart, mas é obrigatório para nós TML.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 
 
-### O que esta validação faz (agrupado por pattern_id)
+## O que esta validação faz (agrupado por pattern_id)
 
 Regra por linha em `trips.txt`: o `direction_id` da viagem tem de coincidir com o segmento de direção codificado no `pattern_id`, no formato esperado pelo perfil do feed (`route_direção_variante` em três partes separadas por `_`). Chave lógica: `direction_id_matches_feed_pattern_direction`.
 
@@ -21,13 +18,13 @@ Convenção: o `pattern_id` deve ter exatamente três segmentos ao fazer `s
 
 ---
 
-#### Passa
+### Passa
 
 - Se `pattern_id` tem três partes, o segundo segmento é um inteiro 0 ou 1, e `direction_id` da viagem é exatamente esse valor. Porquê: a direção declarada na viagem está alinhada com a direção embutida no identificador do padrão.
 
 ---
 
-#### Falha
+### Falha
 
 - `direction_pattern_id_match.required` - `pattern_id` ou `direction_id` em falta. Porquê: sem os dois campos não dá para verificar a correspondência.
 - `direction_pattern_id_match.invalid_pattern_id` - o `pattern_id` não se divide em três partes por `_`. Porquê: o formato não segue o esquema `X_Y_Z` esperado para extrair a direção.
