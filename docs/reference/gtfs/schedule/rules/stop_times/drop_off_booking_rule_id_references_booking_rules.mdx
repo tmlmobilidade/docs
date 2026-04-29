@@ -1,0 +1,36 @@
+---
+title: Regra do
+description: Regra
+---
+## Regras de validação do campo 
+
+
+### Campos que serão utilizados nesta regra
+
+| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
+| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
+| `agency_id`   | ID externo que faz referência a `agency.txt` | obrigatório | ID da entidade responsável pelo veículo, usado para associar cada veículo à respetiva agência no sistema. |
+
+
+
+### O que esta validação faz 
+
+O campo no ficheiro`stop_times.txt` identifica a regra de reserva para descida aplicável a esta paragem na viagem. É uma chave estrangeira para `booking_rules.txt`. No GTFS é opcional; a especificação recomenda preenchimento quando o tipo de descida indica reserva com antecedência (`drop_off_type = 2`).
+
+O validador respeita a severidade e a política do projecto. Se o valor vem preenchido, verifica se o identificador existe em `booking_rules`. Se as regras marcarem o campo como proibido, qualquer valor preenchido gera mensagem. Se o campo estiver vazio, só comenta ausência quando o projecto não está em modo ignorar nem trata o campo como proibido para fins de “campo opcional” (neste padrão, ignorar/proibido saltam a mensagem de ausência).
+
+---
+
+### Passa
+
+- Identificador preenchido e encontrado em `booking_rules`.
+- Campo vazio com regra em ignorar ou em fluxo em que a verificação de presença é ignorada — sem reportar ausência.
+- Campo vazio sem política que exija reporte (conforme a severidade aplicada).
+
+---
+
+### Falha
+
+- Proibido — o projecto não permite este campo mas o feed enviou um identificador.
+- Referência inválida — identificador inexistente em `booking_rules`.
+- Ausência do valor quando, para a severidade configurada, o validador deve sinalizar obrigatório ou recomendado (mensagem de erro vs recomendação, conforme política), exceto quando a regra manda ignorar ou saltar por campo proibido nesse ramo de “campo vazio”.
