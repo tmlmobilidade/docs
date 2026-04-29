@@ -2,10 +2,7 @@
 title: Regra de identificação do trajeto da viagem
 description: shape_id_references_shapes_table_when_present
 ---
-## Regras de validação do campo shape_id
-
-
-### Campos que serão validados nesta regra
+## Campos que serão validados nesta regra
 
 | Nome do Campo | Tipo                                        | Presença                     | Descrição                                                                                                                                                                                                                                                                                                             |
 | ------------- | ------------------------------------------- | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -13,13 +10,13 @@ description: shape_id_references_shapes_table_when_present
 
 
 
-### O que esta validação faz 
+## O que esta validação faz 
 
  O campo associa a viagem a um traçado geográfico (percurso no mapa) em `shapes.txt`. No GTFS o campo é obrigatório com condições: torna-se obrigatório quando existe embarque ou desembarque contínuo definido na própria rota ou nas paragens da viagem (`stop_times`); noutros casos pode ficar vazio. Para além do standard, o projecto pode exigir ou recomendar o `shape_id`, ou dispensar a verificação consoante a severidade das regras. Quando o valor vem indicado, tem de corresponder a um identificador existente no conjunto de formas.
 
 ---
 
-#### Passa
+### Passa
 
 - Embarque ou desembarque contínuo na rota ou ao longo da viagem e o `shape_id` vem preenchido, fornecendo o traçado exigido nessa situação.
 - Sem esse comportamento contínuo e o campo pode ficar vazio conforme o standard e as regras não obrigam nem recomendam o preenchimento (ou dispensam a verificação).
@@ -28,7 +25,7 @@ description: shape_id_references_shapes_table_when_present
 
 ---
 
-#### Falha
+### Falha
 
 - Comportamento contínuo na rota ou em `stop_times`, mas sem `shape_id` - o traçado é necessário para representar o percurso quando há embarque ou desembarque contínuo.
 - Valor em falta quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado (fora ou para além da regra GTFS do pickup contínuo).
