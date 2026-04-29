@@ -34,6 +34,5 @@ Esta verificação garante, em concreto: horário certo na paragem (`timepoint
 
 - Obrigatório em horário certo — `timepoint = 1` sem partida. Correção: preencher `departure_time` (e, se aplicável, alinhar com `arrival_time`).
 - Proibido com janelas — janelas presentes na linha e partida preenchida. Correção: retirar a partida ou rever o modelo (janelas vs tempos fixos de paragem).
-   
 - Tempo inválido — valor que não respeita o formato de hora esperado. Correção: usar `HH:MM:SS` válido.
 - Ausência — partida em falta e o validador regista obrigatoriedade ou recomendação. Correção: preencher nos casos previstos na referência GTFS ou clarificar com o operador do feed se o campo deve ser exigido.
