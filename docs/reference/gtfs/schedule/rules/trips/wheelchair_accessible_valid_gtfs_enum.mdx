@@ -1,11 +1,8 @@
 ---
 title: Regra de acessibilidade de pessoas de cadeira de rodas
-description: Regra
+description: wheelchair_accessible_valid_gtfs_enum
 ---
-## Regras de validação do campo wheelchair_accessible
-
-
-### Campos que serão utilizados nesta regra
+## Campos que serão utilizados nesta regra
 
 | Nome do Campo           | Tipo | Presença | Descrição                                                                                                                                                                                                                                                                                                                                                      |
 | ----------------------- | ---- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -13,13 +10,13 @@ description: Regra
 
 
 
-### O que esta validação faz 
+## O que esta validação faz 
 
 O campo indica, para a viagem, se há informação sobre acessibilidade para cadeira de rodas: sem informação, veículo que pode acolher pelo menos um utente em cadeira de rodas, ou viagem em que não é possível. No GTFS o campo é opcional; deixar o campo vazio é legítimo - significa não fornecer essa informação (equivalente em intenção ao 0 quando o valor vem preenchido). O validador aplica as regras do projecto sobre presença, proibição, valores permitidos (0, 1 ou 2) e, se existir, lista de opções permitidas.
 
 ---
 
-#### Passa
+### Passa
 
 - O valor vem preenchido e é 0, 1 ou 2 (significados previstos no enumerado).
 - O campo fica vazio e a regra dispensa a verificação (por exemplo, severidade de ignorar), sem exigir o preenchimento neste passo.
@@ -28,7 +25,7 @@ O campo indica, para a viagem, se há informação sobre acessibilidade para 
 
 ---
 
-#### Falha
+### Falha
 
 - Valor em falta - o campo fica vazio, quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado (o GTFS aceita vazio, mas a política de dados exige a indicação).
 - Proibido - as regras não permitem o `wheelchair_accessible`, mas o valor veio no mesmo fornecido.
