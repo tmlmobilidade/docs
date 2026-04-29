@@ -2,24 +2,20 @@
 title: Regra da verificação do sentido da viagem
 description: direction_id_valid_enum
 ---
-## Regras de validação do campo direction_id
-
-
-### Campos que serão validados nesta regra
+## Campos que serão validados nesta regra
 
 | Nome do Campo  | Tipo | Presença | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | -------------- | ---- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `direction_id` | Enum | Opcional | Indica o sentido da viagem. Este campo não deve ser utilizado no encaminhamento; fornece uma forma de separar as viagens por sentido ao publicar tabelas de horários. <br/><br/>Opções válidas:<br/>`0` - Viagem num sentido (por exemplo, viagem de ida).<br/>`1` - Viagem no sentido oposto (por exemplo, viagem de regresso). <br/><br/>Exemplo: Os campos `trip_headsign` e `direction_id` podem ser utilizados em conjunto para atribuir um nome à viagem em cada sentido para um conjunto de viagens. Um ficheiro `trips.txt` poderia conter estes registos para utilização em tabelas de horários: `trip_id`,...,`trip_headsign`,`direction_id` 1234,...,Airport,0 1505,...,Downtown,1 |
 
 
-
-### O que esta validação faz 
+## O que esta validação faz 
 
 O campo indica o sentido da viagem (por exemplo ida ou volta), para apoio a horários e separação de viagens por direcção; não é usado para o cálculo de itinerários no GTFS. No standard o campo é opcional. O validador trata a presença conforme as regras do projecto, exige que o valor seja 0 ou 1 quando existe, pode marcar o campo como proibido e pode restringir a subconjuntos de opções nas regras.
 
 ---
 
-#### Passa
+### Passa
 
 - O valor vem preenchido e é 0 ou 1 (significados previstos no enumerado).
 - O campo fica vazio e a regra dispensa a verificação (por exemplo, severidade de ignorar ou fluxo em que a ausência não gera mensagem).
