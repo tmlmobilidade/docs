@@ -19,7 +19,7 @@ description: Regra
 
 O campo no ficheiro `stop_times.txt` identifica a regra de reserva para descida aplicável a esta paragem na viagem. É uma chave estrangeira para `booking_rules.txt`. No GTFS é opcional; a especificação recomenda preenchimento quando o tipo de descida indica reserva com antecedência (`drop_off_type = 2`).
 
-O validador respeita a severidade e a política do projecto. Se o valor vem preenchido, verifica se o identificador existe em `booking_rules`. Se as regras marcarem o campo como proibido, qualquer valor preenchido gera mensagem. Se o campo estiver vazio, só comenta ausência quando o projecto não está em modo ignorar nem trata o campo como proibido para fins de “campo opcional” (neste padrão, ignorar/proibido saltam a mensagem de ausência).
+A validação respeita a severidade do ca. Se o valor vem preenchido, verifica se o identificador existe em `booking_rules`. Se as regras marcarem o campo como proibido, qualquer valor preenchido gera mensagem. Se o campo estiver vazio, só comenta ausência quando o projecto não está em modo ignorar nem trata o campo como proibido para fins de “campo opcional” (neste padrão, ignorar/proibido saltam a mensagem de ausência).
 
 ---
 
