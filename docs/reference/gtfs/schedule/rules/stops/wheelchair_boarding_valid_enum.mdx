@@ -4,8 +4,6 @@ description: wheelchair_boarding_valid_enum
 ---
 ## Campos que serão validados nesta regra
 
-| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
-| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
 
 
 ## O que esta validação faz 
@@ -38,6 +36,7 @@ Entradas e saídas de estação (`location_type` entrada/saída):
 - Campo vazio e o modo de validação não exige alteração (trata a ausência como neutra ou ignora esta verificação).
 - Código incluído na lista de valores permitidos para o feed, quando essa lista existe no validador.
 - Combinações 0 / vazio / 1 / 2 coerentes com o tipo de local da paragem (`location_type`) e com existência ou não de `parent_station`, à luz da referência GTFS que descreveste acima _nota: o validador não valida sozinho essa coerência semântica; só os valores e a política do feed._
+---
 
 ### Falha
 
