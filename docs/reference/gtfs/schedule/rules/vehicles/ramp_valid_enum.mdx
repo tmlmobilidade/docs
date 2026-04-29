@@ -1,11 +1,8 @@
 ---
 title: Regra de existência de rampa
-description: Regra
+description: ramp_valid_enum
 ---
-## Regras de validação do campo ramp
-
-
-### Campos que serão validados nesta regra
+## Campos que serão validados nesta regra
 
 | Nome do Campo | Tipo | Presença    | Descrição                                                                                                                                                                                                      |
 | ------------- | ---- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -13,19 +10,19 @@ description: Regra
 
 
 
-### O que esta validação faz 
+## O que esta validação faz 
 
 O campo descreve o tipo de rampa (ou meio de acesso) para pessoas com mobilidade condicionada: não (0), rampa manual (1), sistema de dobramento eléctrico (2) e não aplicável (3), quando a classificação do veículo ou o contexto do dado torna a resposta “sem rampa / outro” inadequada sem esta terceira opção.
 
 ---
 
-#### Passa
+### Passa
 
 - Campo preenchido, valor 0 a 3 e, havendo lista restritiva, opção autorizada pelas regras (ou regras que abrangem todas as opções válidas).
 
 ---
 
-#### Falha
+### Falha
 
 - Campo em falta – não se indica a situação da rampa ou da solução de acessibilidade prevista.
 - Valor inválido – não é 0, 1, 2 nem 3.
