@@ -1,11 +1,8 @@
 ---
 title: Regra de identificação de tipo de energia ou combustível do veículo
-description: Regra
+description: propulsion_type_valid_enum
 ---
-## Regras de validação do campo propulsion
-
-
-### Campos que serão validados nesta regra
+## Campos que serão validados nesta regra
 
 | Nome do Campo | Tipo | Presença    | Descrição                                                                                                                                                                                                                                                                                                                     |
 | ------------- | ---- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -13,7 +10,7 @@ description: Regra
 
 
 
-### O que esta validação faz 
+## O que esta validação faz 
 
 O campo descreve o tipo de propulsão do veículo: a fonte de energia ou combinação usada (por exemplo gasolina, gasóleo, GPL automóvel, mistura, biodiesel, electricidade, híbrido ou gás natural), codificada por números de 1 a 8 conforme o dicionário do feed.
 
@@ -21,13 +18,13 @@ A validação exige o valor preenchido e que o número pertença a esse conj
 
 ---
 
-#### Passa
+### Passa
 
 - Campo preenchido, código válido entre 1 e 8 e, havendo lista restritiva, opção autorizada pelas regras (ou regras que abrangem todas as opções válidas).
 
 ---
 
-#### Falha
+### Falha
 
 - Campo em falta – não se indica o tipo de propulsão.
 - Valor inválido – o número não corresponde a nenhum dos tipos de propulsão previstos (fora de 1–8).
