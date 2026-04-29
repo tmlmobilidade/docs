@@ -1,11 +1,8 @@
 ---
 title: Nome da paragem obrigatório de acordo com o tipo de local
-description: Regra
+description: stop_name_required_by_location_type
 ---
-## Regras de validação do campo stop_name
-
-
-### Campos que serão validados nesta regra
+## Campos que serão validados nesta regra
 
 | Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
 | ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
@@ -13,13 +10,13 @@ description: Regra
 
 
 
-### O que esta validação faz 
+## O que esta validação faz 
 
 O `stop_name` é o nome público do local, o que o operador usa em horários, sítio ou sinalética; outras línguas tratam-se em `translations.txt`. Para área de embarque (tipo 4), o nome deve reflectir a designação usada pela agência (por exemplo uma letra ou um texto descritivo). No GTFS o preenchimento é obrigatório para paragem/plataforma (0), estação (1) e entrada/saída (2); é opcional para nó genérico (3) e área de embarque (4). O validador reprova por falta de nome nos tipos 0, 1 e 2; nos restantes casos, a severidade das regras do projecto pode exigir ou recomendar o nome quando o campo fica vazio, ou dispensar a verificação.
 
 ---
 
-#### Passa
+### Passa
 
 - O `stop_name` vem preenchido (texto não vazio) - cumpre o requisito de presença para qualquer tipo.
 - O nome pode faltar para tipos 3 e 4 (ou quando o tipo não obriga nome no GTFS), e a regra dispensa a verificação ou não exige mensagem para ausência, consoante a severidade.
