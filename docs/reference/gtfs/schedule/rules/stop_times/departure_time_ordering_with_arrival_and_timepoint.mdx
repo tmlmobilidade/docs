@@ -16,26 +16,24 @@ description: "Valida o campo departure_time em stop_times.txt: formato de tempo 
 
 ### O que esta validação faz 
 
-O campo `departure_time` em `stop_times.txt` é a hora de partida da paragem para uma viagem, no fuso da agência. No GTFS é condicionalmente obrigatório em vários casos (incluindo horário certo com `timepoint = 1` e, segundo a referência, extremos da viagem) e não deve aparecer quando a linha usa janelas de pickup/drop-off. Tempos após meia-noite usam horas superiores a 24.
+O `departure_time` é a hora de partida do veículo da paragem para uma dada viagem, expressa no fuso horário da agência (`agency_timezone`, não o da paragem). No GTFS pode usar-se mais de 24 horas para tempos após a meia-noite do dia de serviço; quando chegada e partida são iguais, `arrival_time` e `departure_time` devem coincidir — o detalhe está na referência do feed.
 
-Esta rotina aplica a severidade das regras do projecto, exige partida quando o ponto é horário certo, proíbe partida se existir janela de pickup/drop-off preenchida na mesma entrada, valida o formato do tempo quando há valor e, quando a partida falta e o projecto não está em modo ignorar, emite mensagem de obrigatório ou recomendado consoante a política configurada.
-
-_(Nota: o texto de especificação no topo do ficheiro cita também obrigatoriedade na primeira e última paragem do trip; esta função não implementa essa verificação - isso pode estar noutra validação ou ser uma lacuna face à quadro GTFS descrito no comentário.)_
+Esta verificação garante, em concreto: horário certo na paragem (`timepoint = 1`) implica partida preenchida e bem formatada; com janelas de pickup/drop-off definidas na linha, não deve existir partida fixa neste campo; qualquer valor preenchido deve ser um tempo válido. Pode ainda sinalizar ausência de partida quando o modo de validação não trata o campo como “apenas informativo”. Outros requisitos GTFS (por exemplo primeira ou última paragem da viagem) podem constar da documentação global ou de outras verificações do mesmo validador.
 
 ---
 
 ### Passa
 
-- `timepoint = 1` com partida preenchida e tempo válido.
-- Janelas de pickup/drop-off sem hora de partida na mesma linha, ou sem janelas com partida permitida e formato válido.
-- Partida ausente onde o GTFS/processo não a torna obrigatória para esse registo e a regra está em ignorar - sem mensagem no final.
-- Partida presente só quando não entra em conflito com janelas e passa na validação de formato de tempo.
+- `timepoint = 1` com `departure_time` preenchido e em formato de tempo admitido (incluindo, se aplicável, horas > 24).
+- Janelas de pickup/drop-off na linha sem `departure_time`, ou sem janelas com partida permitida e formato correcto.
+- Campo vazio quando o fluxo não exige mensagem por falta de valor.
 
 ---
 
 ### Falha
 
-- Ausência da partida com `timepoint = 1` (horário certo exige partida).
-- Proibido com janelas - há janela definida e veio hora de partida.
-- Tempo inválido - valor presente mas fora do formato de tempo esperado.
-- Ausência de partida com severidade não “ignorar”: mensagem de erro (obrigatório) ou recomendação, conforme a regra do projecto.
+- Obrigatório em horário certo — `timepoint = 1` sem partida. Correção: preencher `departure_time` (e, se aplicável, alinhar com `arrival_time`).
+- Proibido com janelas — janelas presentes na linha e partida preenchida. Correção: retirar a partida ou rever o modelo (janelas vs tempos fixos de paragem).
+   
+- Tempo inválido — valor que não respeita o formato de hora esperado. Correção: usar `HH:MM:SS` válido.
+- Ausência — partida em falta e o validador regista obrigatoriedade ou recomendação. Correção: preencher nos casos previstos na referência GTFS ou clarificar com o operador do feed se o campo deve ser exigido.
