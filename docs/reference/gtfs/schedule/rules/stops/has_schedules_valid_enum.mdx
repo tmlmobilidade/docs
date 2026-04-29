@@ -1,11 +1,8 @@
 ---
 title: Horários na paragem válidos de acordo com a numeração do GTFS
-description: Regra
+description: has_schedules_valid_enum
 ---
-## Regras de validação do campo 
-
-
-### Campos que serão validados nesta regra
+## Campos que serão validados nesta regra
 
 | Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
 | ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
@@ -13,13 +10,13 @@ description: Regra
 
 
 
-### O que esta validação faz 
+## O que esta validação faz 
 
 O `has_schedules` descreve se a paragem dispõe de horários (informação de quadros) e em que situação: não aplicável, sem horários, com horários em mau estado ou com horários em bom estado. O campo é opcional; deixar o campo vazio é aceite no standard - significa não fornecer essa informação. O validador aplica as regras do projecto sobre presença, proibição, valores permitidos (0 a 3) e, se existir, lista de opções permitidas.
 
 ---
 
-#### Passa
+### Passa
 
 - O valor vem preenchido e é 0, 1, 2 ou 3, de acordo com o significado previsto.
 - O campo fica vazio e a regra dispensa a verificação (por exemplo, severidade de ignorar), sem exigir o preenchimento neste passo.
