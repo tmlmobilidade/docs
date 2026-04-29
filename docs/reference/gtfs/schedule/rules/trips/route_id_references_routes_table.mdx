@@ -2,10 +2,7 @@
 title: Regra de identificação da rota
 description: route_id_references_routes_table
 ---
-## Regras de validação do campo route_id
-
-
-### Campos que serão validados nesta regra
+## Campos que serão validados nesta regra
 
 | Nome do Campo | Tipo                                              | Presença    | Descrição            |
 | ------------- | ------------------------------------------------- | ----------- | -------------------- |
@@ -13,13 +10,13 @@ description: route_id_references_routes_table
 
 
 
-### O que esta validação faz 
+## O que esta validação faz 
 
 O campo no ficheiro `trips.txt` identifica a rota a que a viagem pertence. No GTFS o campo é obrigatório e deve corresponder a um identificador que exista em `routes.txt` - ou seja, a viagem tem de apontar para uma rota realmente definida no feed.
 
 ---
 
-#### Passa
+### Passa
 
 - O `route_id` vem preenchido.
 - Esse identificador existe em `routes.txt` (a referência é válida no conjunto de dados).
