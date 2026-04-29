@@ -1,0 +1,36 @@
+---
+title: Regra do
+description: Regra
+---
+## Regras de validação do campo 
+
+
+### Campos que serão utilizados nesta regra
+
+| Nome do Campo   | Tipo | Presença                  | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| --------------- | ---- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `drop_off_type` | Enum | Proibido Condicionalmente | Indica o método de entrega.<br/>**Opções válidas:**<ul><li>`0` ou `vazio` - Entrega agendada regularmente.</li><li>`1` - Sem entrega disponível.</li><li>`2` - É necessário ligar para a agência para agendar a entrega.</li><li>`3` - É necessário coordenar com o motorista para agendar a entrega.</li></ul>**Proibido Condicionalmente**:<ul><li>`0` **proibido** se `start_pickup_drop_off_window` ou `end_pickup_drop_off_window` estiverem definidos.</li><li>Opcional caso contrário.</li></ul> |
+
+
+
+
+### O que esta validação faz 
+
+
+
+
+---
+
+#### Passa
+
+
+
+---
+
+#### Falha
+
+
+
+
+
+

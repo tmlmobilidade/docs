@@ -2,7 +2,7 @@
 	"pages": [
 		"arrival_time_ordering_with_departure_and_frequencies",
 		"departure_time_ordering_with_arrival_and_timepoint",
-		"drop_off_booking_rule_id_references_booking_rules",
+		"drop_off_booking_rule_id_references_booking_rules_or_empty",
 		"stop_times_continuous_drop_off_valid_gtfs_enum",
 		"stop_times_continuous_pickup_valid_gtfs_enum"
 	]
