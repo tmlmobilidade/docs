@@ -7,9 +7,10 @@ description: Regra
 
 ### Campos que serão validação nesta regra
 
-| Nome do Campo   | Tipo | Presença                  | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| --------------- | ---- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `drop_off_type` | Enum | Proibido Condicionalmente | Indica o método de entrega.<br/><br/>**Opções válidas:**<ul><li>`0` ou `vazio` - Entrega agendada regularmente.</li><li>`1` - Sem entrega disponível.</li><li>`2` - É necessário ligar para a agência para agendar a entrega.</li><li>`3` - É necessário coordenar com o motorista para agendar a entrega.</li></ul>**Proibido Condicionalmente**:<ul><li>`0` **proibido** se `start_pickup_drop_off_window` ou `end_pickup_drop_off_window` estiverem definidos.</li><li>Opcional caso contrário.</li></ul> |
+| Nome do Campo              | Tipo                                                            | Presença | Descrição                                                                                                              |
+| -------------------------- | --------------------------------------------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `drop_off_booking_rule_id` | ID externo que faz referência a `booking_rules.booking_rule_id` | Opcional | Identifica a regra de reserva de desembarque neste horário de paragem. <br/><br/>Recomendado quando `drop_off_type=2.` |
+
 
 
 
