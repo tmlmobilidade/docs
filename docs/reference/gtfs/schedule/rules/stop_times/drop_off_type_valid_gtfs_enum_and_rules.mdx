@@ -20,14 +20,12 @@ description: Regra
 
 O campo `drop_off_type`no ficheiro `stop_times.txt` indica como será realizada a descida do veículo nesta paragem. O GTFS usa uma enumeração (0 a 3); 0 ou vazio equivalente a descida regular). Com janelas de pickup/drop-off na mesma linha, o valor 0 ("descida regular") é proibido - o modelo de janelas que entre em conflito com "paragem fixa programada" neste sentido. 
 
-
 ---
 
 ### Passa
 
 - Valor entre 0 e 3 (enumerado válido).
-- Com janelas definidas: tipo de descida não é 0 (ou o campo vazio, que o GTFS trata como regular mas aqui a verificação explícita só falha quando o valor é 0 com janelas - campo ausente não passa pelo ramo `dt == 0`).
-- Código admitido pelo conjunto de opções do projecto, ou regra que aceita todas as opções.
+- Com janelas definidas: tipo de descida não é 0 (ou o campo vazio, que o GTFS trata como regular mas aqui a verificação explícita só falha quando o valor é 0 com janelas).
 - Campo vazio com regra em ignorar ou proibido (no sentido de saltar a verificação de presença) - sem mensagem por ausência.
 
 ---
