@@ -18,28 +18,28 @@ description: "Valida o campo continuous_pickup em stop_times.txt: valores admiti
 
 ### O que esta validação faz 
 
-O campo no ficheiro `stop_times.txt` indica se o passageiro pode embarcar em qualquer ponto do troço entre esta paragem e a seguinte, ao longo do percurso descrito em `shapes.txt`. O GTFS define um enumerado dse 0 a 3 (paragem contínua para pickup, sem paragem contínua ou campo vazio, contactar operadora, coordenar com o motorista). Valor preenchido prevalece sobre `routes.txt`; vazio herda o comportamento da rota.
+O `continuous_pickup` indica se o passageiro pode embarcar em qualquer ponto do troço entre esta paragem e a seguinte, segundo o percurso (por exemplo o definido em `shapes.txt`). Valor preenchido prevalece sobre o definido na rota; vazio herda o comportamento da rota — o significado de cada código está na documentação do campo.
 
-O validador liga a severidade e as opções às regras do projecto, confirma que o valor está no intervalo permitido pelo GTFS, aplica a restrição com janelas de pickup/drop-off (só 1 ou ausência quando essas janelas existem na mesma linha) e pode limitar quais códigos são aceites em dados de produção.
+Com janelas de pickup/drop-off com valor na mesma linha, o GTFS não admite paragem contínua para embarque (nem contacto com operadora/motorista nesse modo): só faz sentido “sem embarque contínuo neste registo” — no enumerado, código 1, ou o campo sem valor.
 
----
-
-#### Passa
-
-- Código entre os valores válidos do enumerado GTFS (0–3).
-- Com janelas de pickup/drop-off preenchidas na linha: apenas 1 ou campo sem valor; outros códigos não são admissíveis nesse contexto.
-- Código incluído nas opções permitidas pelo projecto, ou regra que aceita todas as opções.
-- Campo vazio com regra em modo ignorar ou proibido relativamente a exigir preenchimento - sem mensagem por ausência.
+Fora desse caso, o valor tem de estar no intervalo válido do GTFS. Pode ainda ser recusado um código válido na referência que não esteja entre as opções que o vosso feed ou política de dados aceitam.
 
 ---
 
-#### Falha
+### Passa
 
-- Inválido - valor fora do enumerado 0–3.
-- Proibido com janelas - janelas definidas e o valor não é 1 (equivalente a “sem paragem contínua” neste registo).
-- Fora do permitido - valor GTFS válido mas não autorizado pelo conjunto de opções do projecto.
-- Ausência de valor quando a severidade configurada faz o validador reportar obrigatório ou recomendado (conforme política), exceto quando a regra manda ignorar ou tratar o campo como proibido para essa verificação.
+- Código dentro do enumerado GTFS permitido para este campo ou campo vazio, quando isso é aceite no fluxo aplicado.
+- Com janelas preenchidas: apenas 1 ou ausência de valor (não usar 0, 2 nem 3 nesse contexto).
+- Código incluído nas opções admitidas para o feed, ou política que não restringe o enumerado.
+- Campo vazio sem mensagem de presença, quando o modo de validação assim o trata.
 
+---
 
+### Falha
 
+- Valor inválido — número fora do enumerado. Correção: usar apenas códigos previstos na referência GTFS do `continuous_pickup`.
+- Proibido com janelas — janelas com valor e código diferente de 1. Correção: passar a 1, limpar o campo (herdando da rota, se adequado) ou rever janelas vs modelo de embarque contínuo.
+- Valor não admitido — código válido no GTFS mas não autorizado para o vosso feed. Correção: escolher outra opção admitida ou alinhar a política de dados com o serviço real.
+
+- Ausência com obrigatoriedade ou recomendação registada. Correção: preencher com o código adequado ou confirmar se o campo deve ser exigido neste feed.
 
