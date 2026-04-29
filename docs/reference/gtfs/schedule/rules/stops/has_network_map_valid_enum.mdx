@@ -1,6 +1,6 @@
 ---
 title: Regra da existência de um mapa da rede
-description: Regra
+description: has_network_map_valid_enum
 ---
 ## Campos que serão validados nesta regra
 
@@ -32,6 +32,20 @@ O `has_network_map` descreve se a paragem dispõe de mapa da rede, e em que e
 - Inválido - um valor que não seja 0, 1, 2 nem 3.
 - Fora do permitido - o valor é um dos códigos válidos, mas não consta do conjunto de opções definido nas regras (salvo quando a regra abrange todas as opções).
 
+No `stops.txt`, o campo indica se a paragem dispõe de mapa da rede e em que situação (não aplicável, sem mapa, mapa em mau estado, mapa em bom estado). A validação limita os valores aos códigos da referência, trata o campo vazio conforme o modo de validação (sem mensagem, obrigatoriedade ou recomendação), sinaliza uso do campo quando ele não é admitido no feed e pode restringir quais códigos são aceites para além do mínimo definido no GTFS.
+
+### Passa
+
+- Valor 0, 1, 2 ou 3, conforme a referência do campo.
+- Valor incluído na lista de códigos permitidos para o feed, quando essa lista existe.
+- Campo vazio quando o modo de validação não exige aviso por ausência.
+
+### Falha
+
+- Valor inválido: número fora de 0–3. _Correção:_ usar só os códigos previstos na documentação de `has_network_map`.
+- Proibido: o feed inclui o campo mas não o deve publicar. _Correção:_ remover o valor ou rever a política de dados.
+- Código não permitido: valor válido na referência mas fora da lista aceite. _Correção._ escolher um código admitido ou ajustar a lista.
+- Ausência reportada como obrigatório ou recomendado. _Correção:_ preencher com o código adequado à paragem ou confirmar se o campo é exigido.
 
 
 
