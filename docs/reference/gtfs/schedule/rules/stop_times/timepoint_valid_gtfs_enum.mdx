@@ -1,5 +1,5 @@
 ---
-title: Regra do
+title: Rigor dos horários na paragem (exactos ou aproximados) válido de acordo com a numeração do GTFS
 description: timepoint_valid_gtfs_enum
 ---
 ## Campos que serão utilizados nesta regra
@@ -12,20 +12,26 @@ description: timepoint_valid_gtfs_enum
 
 ## O que esta validação faz 
 
+No `stop_times.txt`, o campo `timepoint` indica se os horários de chegada e partida neste registo devem ser tratados como rigorosos (o veículo deve cumpri-los de forma exacta) ou como aproximados / interpolados. O GTFS prevê 0 (aproximado) e 1 (exacto). Recomenda-se preencher `timepoint` quando `arrival_time` ou `departure_time` existem; se o campo faltar em todo o conjunto relevante, a especificação trata os tempos como exactos por omissão.
 
-
-
----
-
-#### Passa
-
-
+Esta validação limita `timepoint`, quando preenchido, a 0 ou 1; pode sinalizar o campo vazio como obrigatório ou recomendado, consoante a severidade; pode recusar qualquer valor se `timepoint` estiver interdito; e pode restringir a 0, a 1 ou ambos, através de uma lista de opções admitidas.
 
 ---
 
-#### Falha
+### Passa
 
+- `timepoint` com valor 0 ou 1.
+- `timepoint` vazio quando a ausência não gera mensagem para esta regra (por exemplo, severidade ignorar ou regra proibida que dispensa o aviso de campo vazio).
+- Código permitido pela lista de opções, quando essa lista existe.
 
+---
+
+### Falha
+
+- Valor inválido: `timepoint` diferente de 0 e 1. _Correção:_ usar só esses códigos ou deixar vazio se for aceitável no perfil de dados.
+- Campo interdito com valor. _Correção:_ esvaziar `timepoint`.
+- Código não admitido pela lista de opções (mesmo sendo 0 ou 1). _Correção:_ alterar para um valor permitido.
+- Ausência tratada como obrigatório ou recomendado. _Correção:_ preencher `timepoint` sobretudo quando há chegada ou partida definidas, ou rever a severidade.
 
 
 
