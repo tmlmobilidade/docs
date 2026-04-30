@@ -9,8 +9,6 @@ description: continuous_drop_off_valid_gtfs_enum
 | `continuous_drop_off` | Enum | Proibido condicionalmente | Indica que o passageiro pode desembarcar do veículo de transporte em qualquer ponto ao longo do percurso do veículo, conforme descrito em shapes.txt, em todas as viagens da rota. <br/><br/>As opções válidas são:<br/>`0` - Desembarque com paragens contínuas. <br/>`1` ou |
 
 
-
-
 ## O que esta validação faz 
 
 o `routes.txt`, o campo `continuous_drop_off` define, ao nível da rota, se o passageiro pode descer em qualquer ponto do percurso ao longo de todas as viagens dessa linha (comportamento reproduzível em `shapes.txt`). O valor pode ser refinado em `stop_times.continuous_drop_off` por paragem. No ficheiro trata-se como texto (códigos em string).
