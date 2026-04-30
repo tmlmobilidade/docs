@@ -13,21 +13,19 @@ description: route_short_name_or_long_name_present
 
 ## O que esta validação faz 
 
-
-
+Garante que a rota não fica sem qualquer nome utilizável: tem de existir pelo menos o nome abreviado ou o nome completo. Se o nome completo estiver em falta, o nome abreviado deixa de ser opcional e tem de estar preenchido. O GTFS recomenda que o nome abreviado seja curto (como referência, até doze caracteres); valores mais longos podem gerar um aviso informativo. Quando a configuração define uma lista fechada de textos admitidos para o nome abreviado, o valor indicado só é aceite se pertencer a essa lista (ou se a regra não restringir os valores).
 
 ---
 
 ### Passa
 
-
+- O nome completo está definido (neste caso o nome abreviado pode ficar vazio), ou o nome abreviado está definido enquanto o completo está vazio, ou ambos estão definidos.
+- Se o nome abreviado estiver preenchido e existir lista de valores permitidos, o texto respeita essa lista (ou o critério da regra que admite qualquer valor).
+- O nome abreviado tem no máximo doze caracteres, ou aceita-se o aviso quando ultrapassa esse limite, conforme o comportamento configurado para avisos.
 
 ---
 
 ### Falha
 
-
-
-
-
-
+- O nome abreviado e o nome completo estão ambos em branco.
+- O nome abreviado está preenchido mas não corresponde a nenhum valor admitido pela regra, quando essa regra impõe uma lista fechada.
