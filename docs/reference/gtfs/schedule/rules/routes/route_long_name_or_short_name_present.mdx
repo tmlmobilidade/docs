@@ -13,21 +13,16 @@ description: route_long_name_or_short_name_present
 
 ## O que esta validação faz 
 
-
-
+Garante que a rota não fica sem qualquer nome utilizável: tem de existir pelo menos o nome abreviado ou o nome completo. Se o nome abreviado estiver em falta, o nome completo deixa de ser opcional e tem de estar preenchido. Quando a configuração define uma lista fechada de textos admitidos para o nome completo, o valor indicado só é aceite se pertencer a essa lista (ou se a regra não restringir os valores).
 
 ---
 
-### Passa
+### Passa 
 
-
+- O nome abreviado está definido (neste caso o nome completo pode ficar vazio), ou o nome completo está definido enquanto o abreviado está vazio, ou ambos estão definidos. Se o nome completo estiver preenchido e existir lista de valores permitidos, o texto respeita essa lista (ou o critério da regra que admite qualquer valor).
 
 ---
 
 ### Falha
 
-
-
-
-
-
+- O nome abreviado e o nome completo estão ambos em branco, ou o nome completo está preenchido mas não corresponde a nenhum valor admitido pela regra, quando essa regra impõe uma lista fechada.
