@@ -1,0 +1,38 @@
+---
+title: Descrição da rota coerente com o nome curto e com a política do feed
+description: route_desc_per_severity_and_content_rules
+---
+## Campos que serão validados nesta regra
+
+| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
+| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
+
+
+
+
+## O que esta validação faz 
+
+No `routes.txt`, o campo `route_desc` é um texto descritivo da linha de modo a informar o passageiro com qualidade. Pelo GTFS, não deve repetir à letra o nome curto nem o nome longo da rota — situações dessas são tratadas como avisos quando a descrição existe e coincide com um desses campos.
+
+É obrigatório preencher `route_desc` quando `route_short_name` está vazio (ausente ou em branco). Se o nome curto existe, `route_desc` pode ficar vazio sem incumprimento por essa regra.
+
+Se o campo for interdito no perfil de dados mas estiver preenchido, incumpre. Pode ainda existir uma lista de textos admitidos; nesse caso o conteúdo de `route_desc` tem de constar dessa lista (ou a política aceitar todas as opções).
+
+---
+
+### Passa
+
+- `route_short_name` preenchido e `route_desc` vazio (opcional nesse caso).
+- `route_short_name` vazio e `route_desc` preenchido com texto válido face às restrições.
+- `route_desc` preenchido sem incidir em proibição, com texto admisível nas opções, quando existem.
+
+---
+
+### Falha
+
+- `route_short_name` e `route_desc` ambos vazios. _Correção:_ preencher pelo menos `route_desc` (ou, em alternativa coerente com o GTFS, preencher `route_short_name` para não depender da descrição obrigatória).
+- Campo proibido com texto. _Correção:_ esvaziar `route_desc` ou rever a política.
+- Texto fora da lista permitida. _Correção:_ usar descrição admitida.
+
+
+
