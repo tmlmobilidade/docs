@@ -1,0 +1,36 @@
+---
+title: Língua por omissão do conjunto de dados
+description: default_lang_matches_feed_lang_when_present
+---
+## Campos que serão validados nesta regra
+
+| Nome do Campo | Tipo             | Presença | Descrição                                                                                                                              |
+| ------------- | ---------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| default_lang  | Código do idioma | Opcional | Define o idioma que deve ser utilizado quando o consumidor de dados não conhece o idioma do passageiro. Geralmente será `en` (inglês). |
+
+
+
+
+## O que esta validação faz 
+
+O campo facultativo `default_lang` indica a língua por omissão a usar quando quem consome os dados não conhece a língua do utente (no GTFS costuma referir-se a códigos como `en` para inglês, mas o conjunto depende da convenção). Quando o valor existe e não é cadeia vazia, esta verificação confirma que corresponde a um código de língua reconhecido pelas regras internas. Conforme a severidade passada à função e o contexto, a ausência do campo pode ser tratada como obrigatória ou recomendada (excepto quando a verificação está em modo de ignorar), e o campo pode ser proibido pela configuração.
+
+---
+
+### Passa
+
+- O campo está vazio (ponteiro nulo ou omitido) e a regra permite isso, ou está excluído por “ignorar”.
+- O campo está vazio como texto mas a regra não o proíbe de forma incompatível, ou contém um código de língua válido após validação.
+- O campo não está preenchido quando a regra não admite valores neste campo.
+
+---
+
+### Falha
+
+- O texto não é um código de língua aceite (quando há texto não vazio a validar).
+- O campo está em falta quando a regra exige ou recomenda preenchimento (com a severidade configurada).
+- O campo está preenchido quando a regra o proíbe.
+
+
+
+
