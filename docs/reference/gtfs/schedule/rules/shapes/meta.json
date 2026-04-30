@@ -1,7 +1,0 @@
-{
-	"pages": [
-		"shape_block_total_dist_traveled_mismatches_geometry",
-		"shape_dist_traveled_delta_mismatches_haversine_segment",
-		"shape_sequence_position_mismatches_cumulative_traveled_distance"
-	]
-}
