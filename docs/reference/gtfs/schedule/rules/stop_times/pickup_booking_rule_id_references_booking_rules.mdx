@@ -1,0 +1,38 @@
+---
+title: Regra do
+description: pickup_booking_rule_id_references_booking_rules
+---
+## Campos que serão utilizados nesta regra
+
+| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
+| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
+| `agency_id`   | ID externo que faz referência a `agency.txt` | obrigatório | ID da entidade responsável pelo veículo, usado para associar cada veículo à respetiva agência no sistema. |
+
+
+
+## O que esta validação faz 
+
+No `stop_times.txt`, o campo `pickup_booking_rule_id` associa, a este instante da viagem, a regra de reserva que se aplica ao embarque. É uma chave estrangeira para `booking_rules`: o valor, quando existe, tem de corresponder a um `booking_rule_id` definido nesse ficheiro. O GTFS considera o campo opcional e recomenda preenchê-lo quando o tipo de embarque implica contactar a operadora (`pickup_type = 2`).
+
+A validação trata a ausência de `pickup_booking_rule_id` conforme o modo de validação (sem mensagem, obrigatoriedade ou recomendação). Rejeita o valor se o feed não admitir o campo (proibido). Exige que o identificador exista em `booking_rules`. Pode ainda limitar quais identificadores são aceites, para além da existência na tabela.
+
+---
+
+### Passa
+
+- `pickup_booking_rule_id` preenchido e presente em `booking_rules`, sem conflito com o modo _proibido_.
+- `pickup_booking_rule_id` vazio quando o fluxo não exige advertência ou quando a verificação de presença é ignorada ou equivalente.
+- Valor incluído na lista de identificadores permitidos pelo feed, quando essa lista existe.
+
+---
+
+### Falha
+
+- Referência inexistente: o identificador em `pickup_booking_rule_id` não existe em `booking_rules`. _Correção:_ corrigir o identificador ou criar a entrada em `booking_rules`.
+- Campo proibido: houve valor em `pickup_booking_rule_id` mas o feed não deve usar o campo. _Correção:_ esvaziar `pickup_booking_rule_id` ou rever a política de publicação.
+- Identificador não permitido: existe em `booking_rules` mas falta na lista admitida para o feed. _Correção:_ usar outro `booking_rule_id` admitido.
+- Ausência com obrigatoriedade ou recomendação registada. _Correção:_ preencher `pickup_booking_rule_id` quando fizer sentido (por exemplo com `pickup_type = 2`) ou confirmar com o operador do feed.
+
+
+
+
