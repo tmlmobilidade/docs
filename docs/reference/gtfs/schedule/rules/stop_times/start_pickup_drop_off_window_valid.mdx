@@ -4,9 +4,9 @@ description: start_pickup_drop_off_window_valid
 ---
 ## Campos que serão utilizados nesta regra
 
-| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
-| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
-| `agency_id`   | ID externo que faz referência a `agency.txt` | obrigatório | ID da entidade responsável pelo veículo, usado para associar cada veículo à respetiva agência no sistema. |
+| Nome do Campo                  | Tipo    | Presença                     | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| ------------------------------ | ------- | ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `start_pickup_drop_off_window` | Horário | Condicionalmente Obrigatório | Horário em que o serviço on-demand fica disponível num local GeoJSON, grupo de locais ou paragem. <br/><br/>**Condicionalmente Obrigatório**:<ul><li>Obrigatório se `stop_times.location_group_id` ou `stop_times.location_id` estiver definido.</li><li>Obrigatório se `stop_times.location_group_id` ou `stop_times.location_id` estiver definido.</li><li>Obrigatório se `end_pickup_drop_off_window` estiver definido.</li><li>Proibido se `arrival_time` ou `departure_time` estiver definido.</li><li>Opcional caso contrário.</li></ul> |
 
 
 
@@ -23,6 +23,8 @@ Esta validação proíbe que `start_pickup_drop_off_window` esteja preenchi
 - `start_pickup_drop_off_window` preenchido com tempo válido quando é obrigatório (fim de janela `end_pickup_drop_off_window` definido ou local em grupo / `location_id` definidos).
 - Sem combinação proibida: chegada ou partida fixa com início de janela preenchido.
 - `start_pickup_drop_off_window` vazio onde o campo é opcional e a ausência não produz mensagem para esta regra.
+
+---
 
 ### Falha
 
