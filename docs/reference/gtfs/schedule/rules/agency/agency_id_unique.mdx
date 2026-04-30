@@ -13,13 +13,13 @@ description: agency_id_unique
 
 ## O que esta validação faz 
 
-Este identificador distingue a operadora ou marca de transporte no conjunto deGTFS (num feed com várias operadoras, torna-se obrigatório para saber a que entidade pertencem rotas, viagens, etc.). Esta verificação confirma que o valor não falta quando o ficheiro de operadoras tem mais do que uma linha, que cada identificador não se repete em linhas diferentes com o mesmo código e, quando a regra do projecto define uma lista fechada de identificadores admitidos, o valor pertence a essa lista. Quando só existe uma operadora no conjunto de dados, o campo continua opcional ao nível GTFS, mas a regra do projecto pode tratá-lo como obrigatório ou recomendado (com severidade por omissão mais branda para este identificador, salvo outra definição na configuração).
+Este identificador distingue o operador ou marca de transporte no conjunto de GTFS (num feed com várias operadoras, torna-se obrigatório para saber a que entidade pertencem rotas, viagens, etc.). Esta verificação confirma que o valor não falta quando o ficheiro de operadoras tem mais do que uma linha, que cada identificador não se repete em linhas diferentes com o mesmo código e, quando a regra do projecto define uma lista fechada de identificadores admitidos, o valor pertence a essa lista. Quando só existe uma operadora no conjunto de dados, o campo continua opcional ao nível GTFS, mas a regra do projecto pode tratá-lo como obrigatório ou recomendado (com severidade por omissão mais branda para este identificador, salvo outra definição na configuração).
 
 ---
 
 ### Passa
 
-- O identificador está preenchido sempre que o conjunto de dados comporta várias operadoras, ou o feed tem uma única operadora e a regra permite o campo vazio (ou o caso está excluído da verificação).
+- O identificador está preenchido sempre que o conjunto de dados comporta vários operadores, ou o feed tem uma única operador e a regra permite o campo vazio (ou o caso está excluído da verificação).
 - Não há duas ou mais linhas de operadora com o mesmo identificador.
 - Se existir lista de identificadores permitidos na regra, o valor está nessa lista (ou a regra admite qualquer identificador válido no contexto).
 
@@ -27,7 +27,7 @@ Este identificador distingue a operadora ou marca de transporte no conjunto 
 
 ### Falha
 
-- O identificador está em falta quando o ficheiro de operadoras tem mais do que uma entrada.
+- O identificador está em falta quando o ficheiro de operadores tem mais do que uma entrada.
 - O mesmo identificador aparece em mais do que uma linha de operadora.
 - O identificador não consta da lista admitida pela regra, quando essa lista é fechada.
 - O campo está em falta (ou a ausência é reportada) quando a regra o exige ou recomenda num feed de uma só operadora, com a severidade configurada para esse caso.

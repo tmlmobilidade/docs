@@ -21,7 +21,7 @@ Comportamento:
 
 - Se `agency_id` está preenchido, o valor tem de existir em `agency` (chave estrangeira).
 - Se o feed tem mais do que uma linha em `agency`, `agency_id` na rota é obrigatório (não pode ficar vazio).
-- Se existe no máximo uma agência, `agency_id` vazio pode gerar mensagem de obrigatoriedade ou recomendação, conforme a severidade da regra — exceto quando a severidade é ignorar (não emite esse aviso).
+- Se existe no máximo uma agência, `agency_id` vazio pode gerar mensagem de obrigatoriedade ou recomendação, conforme a severidade da regra - exceto quando a severidade é ignorar (não emite esse aviso).
 
 O número de agências obtém-se por contagem da tabela `agency`, com recurso aos dados em memória se a contagem falhar.
 
