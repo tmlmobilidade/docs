@@ -1,33 +1,31 @@
 ---
-title: teste
+title: Tipo de excepção no calendário
 description: exception_type_add_or_remove_service
 ---
 ## Campos que serão validados nesta regra
 
-| Nome do Campo    | Tipo | Presença    | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| ---------------- | ---- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `exception_type` | Enum | Obrigatório | Indica se o serviço está disponível na data especificada no campo de data.<br/>**Opções válidas:**<ul><li>`1` - O serviço foi adicionado para a data especificada.</li><li>`2` - O serviço foi removido para a data especificada.</li></ul>**Exemplo:** Suponha que uma rota tem um conjunto de viagens disponíveis em dias feriados e outro conjunto de viagens disponíveis em todos os outros dias. Um `service_id` pode corresponder ao horário de funcionamento regular e outro `service_id` pode corresponder ao horário de funcionamento em dias feriados. Para um feriado específico, o ficheiro `calendar_dates.txt` pode ser utilizado para adicionar o feriado ao `service_id` de feriado e para remover o feriado do horário de funcionamento regular. |
+| Nome do Campo    | Tipo | Presença    | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| ---------------- | ---- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `exception_type` | Enum | Obrigatório | Indica se o serviço está disponível na data especificada no campo de data.<br/><br/>**Opções válidas:**<ul><li>`1` - O serviço foi adicionado para a data especificada.</li><li>`2` - O serviço foi removido para a data especificada.</li></ul>**Exemplo:** Suponha que uma rota tem um conjunto de viagens disponíveis em dias feriados e outro conjunto de viagens disponíveis em todos os outros dias. Um `service_id` pode corresponder ao horário de funcionamento regular e outro `service_id` pode corresponder ao horário de funcionamento em dias feriados. Para um feriado específico, o ficheiro `calendar_dates.txt` pode ser utilizado para adicionar o feriado ao `service_id` de feriado e para remover o feriado do horário de funcionamento regular. |
 
 
 
 
 ## O que esta validação faz 
 
-
-
+Indica, para cada linha de `calendar_dates.txt`, se no dia indicado o serviço é acrescentado em relação ao calendário base ou removido. O valor é obrigatório e tem de ser um dos dois códigos previstos no GTFS: serviço adicionado nesse dia ou serviço removido nesse dia. Quando a regra do projecto define uma lista fechada de tipos admitidos, o código indicado deveria pertencer a essa lista (em conjunto com a regra que pode admitir explicitamente todos os valores GTFS válidos).
 
 ---
 
 ### Passa
 
-
+- O tipo está preenchido com um dos dois valores inteiros válidos do GTFS.
+- Se existir lista de tipos permitidos na regra, o valor está incluído (ou a regra admite ambos os valores válidos).
 
 ---
 
 ### Falha
 
-
-
-
-
-
+- O campo está em falta.
+- O valor não é um dos dois códigos válidos do GTFS.
+- O código não consta da lista admitida pela regra, quando essa lista é fechada.
