@@ -1,0 +1,32 @@
+---
+title: URL de contacto técnico do conjunto GTFS
+description: feed_contact_url_valid_http_url
+---
+## Campos que serão validados nesta regra
+
+| Nome do Campo      | Tipo | Presença | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ------------------ | ---- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `feed_contact_url` | URL  | Opcional | URL para informações de contacto, formulário web, centro de suporte ou outras ferramentas para comunicação referentes ao conjunto de dados GTFS e às práticas de publicação de dados. `feed_contact_url` é um contacto técnico para aplicações que utilizam o GTFS. Forneça informações de contacto do serviço de apoio ao cliente através do ficheiro `agency.txt`. Recomenda-se que seja fornecido pelo menos um dos campos `feed_contact_url` ou `feed_contact_email`. |
+
+
+
+
+## O que esta validação faz 
+
+O GTFS prevê um URL facultativo em `feed_info.txt` para informação de contacto técnica sobre o conjunto de dados e a sua publicação (formulário Web, portal de suporte, etc.) — destinado a aplicações que consomem GTFS, não ao apoio ao utente do operador em `agency.txt`. Quando o valor existe e não é cadeia vazia, esta verificação confirma que tem forma de URL aceite pelas regras da aplicação. A ausência pode ser tratada como obrigatória ou recomendada (excepto quando a verificação não se aplica à linha), e o campo pode ser proibido pela configuração. Se nenhuma severidade for passada à função, assume-se por omissão nível de aviso para as mensagens do contexto.
+
+---
+
+### Passa
+
+- O campo está vazio e a regra permite isso (incluindo quando a verificação não se aplica).
+- O endereço está preenchido e é um URL válido segundo a validação usada, sem conflito com a regra de proibição.
+- O ponteiro existe mas o texto está vazio: não se chama `ValidateUrl` sobre valor vazio.
+
+---
+
+### Falha
+
+- O texto não é um URL aceite pelo formato verificado (quando há texto não vazio).
+- O campo está em falta quando a regra exige ou recomenda preenchimento (com a severidade configurada).
+- O campo está preenchido quando a regra o proíbe.
