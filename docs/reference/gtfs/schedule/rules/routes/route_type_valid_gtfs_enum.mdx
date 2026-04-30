@@ -1,32 +1,31 @@
 ---
-title: teste
+title: Tipo de transporte da rota
 description: route_type_valid_gtfs_enum
 ---
 ## Campos que serão validados nesta regra
 
-| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
-| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
+| Nome do Campo | Tipo | Presença    | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| ------------- | ---- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `route_type`  | Enum | Obrigatório | Indica o tipo de transporte utilizado numa rota. <br/>Opções válidas:<br/><br/>`0` - Eléctrico, LRT, Comboio Ligeiro. Qualquer sistema de comboio ligeiro ou de superfície numa área metropolitana.<br/>`1` - Metro. Qualquer sistema de metro subterrâneo numa área metropolitana.<br/>`2` - Comboio. Utilizado para viagens interurbanas ou de longa distância. <br/>`3` - Autocarro. Utilizado para percursos de autocarros de curta e longa distância.<br/>`4` - Ferry. Utilizado para serviços de barco de curta e longa distância. <br/>`5` - Eléctrico por cabo. Utilizado para elétricos de superfície em que o cabo corre por baixo do veículo (por exemplo, o elétrico por cabo em São Francisco). <br/>`6` - Teleférico, teleférico suspenso (por exemplo, teleférico de gôndola, teleférico aéreo). Transporte por cabo onde as cabines, carros, gôndolas ou cadeiras abertas são suspensas por meio de um ou mais cabos. <br/>`7` - Funicular. Qualquer sistema ferroviário concebido para inclinações acentuadas. <br/>`11` - Trólebus. Autocarros elétricos que obtêm energia de fios aéreos utilizando postes. <br/>`12` - Monocarril. Ferrovia na qual o carril consiste num único carril ou viga. |
 
 
 
 
 ## O que esta validação faz 
 
-
-
+Indica o modo de transporte associado à rota, através de um código numérico obrigatório definido na referência GTFS (por exemplo elétrico ou metro ligeiro de superfície, metro ou comboio subterrâneo, comboio interurbano, autocarro, ferry, carro americano por cabo subterrâneo, teleférico ou gondola suspensa, funicular, trólei e monorail). Só são aceites os códigos que a especificação GTFS prevê para este campo. Se a regra do projecto limitar os modos admitidos, o código indicado tem de figurar nessa lista restrita (ou a regra tem de admitir explicitamente todos os valores válidos do GTFS).
 
 ---
 
 ### Passa
 
-
+- O campo está preenchido com um código que o GTFS reconhece como tipo de rota válido.
+- Quando existe lista de tipos permitidos na regra, o código pertence a essa lista (ou a regra não restringe além dos valores GTFS válidos).
 
 ---
 
 ### Falha
 
-
-
-
-
-
+- O campo está em falta.
+- O valor não corresponde a nenhum tipo de rota válido no GTFS.
+- O código é válido no GTFS mas não consta dos tipos permitidos pela regra do projecto, quando essa regra define uma lista fechada.
