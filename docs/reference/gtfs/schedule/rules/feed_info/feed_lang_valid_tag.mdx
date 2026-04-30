@@ -1,32 +1,32 @@
 ---
-title: teste
+title: Língua dos textos
 description: feed_lang_valid_tag
 ---
 ## Campos que serão validados nesta regra
 
-| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
-| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
+| Nome do Campo | Tipo             | Presença    | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ------------- | ---------------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `feed_lang`   | Código do idioma | Obrigatório | Idioma predefinido utilizado para o texto neste conjunto de dados. Esta configuração ajuda os utilizadores do GTFS a escolher regras de capitalização e outras definições específicas de idioma para o conjunto de dados. O ficheiro `translations.txt` pode ser utilizado se o texto necessitar de ser traduzido para idiomas diferentes do padrão. <br/><br/>O idioma padrão pode ser multilingue para conjuntos de dados com o texto original em vários idiomas. Nestes casos, o campo `feed_lang` deve conter o código de idioma `mul` definido pela norma ISO 639-2, devendo ser fornecida uma tradução para cada idioma utilizado no conjunto de dados em `translations.txt`. Se todo o texto original no conjunto de dados estiver no mesmo idioma, então `mul` não deve ser utilizado. <br/><br/><u>Exemplo</u>: Considere um conjunto de dados de um país multilingue como a Suíça, com o campo original `stops.stop_name` preenchido com nomes de paragens em diferentes idiomas. Cada nome de paragem é escrito de acordo com a língua dominante na localização geográfica dessa paragem, por exemplo, `Genève` para a cidade francófona de Genebra, `Zürich` para a cidade germanófona de Zurique e `Biel/Bienne` para a cidade bilingue de Biel/Bienne. O conjunto de dados `feed_lang` deve ser `mul` e as traduções serão fornecidas em `translations.txt`, em alemão: `Genf`, `Zürich` e `Biel`; em francês: `Genève`, `Zurich` e `Bienne`; em italiano: `Ginevra`, `Zurigo` e `Bienna`; e em inglês: `Geneva`, `Zurich` e `Biel/Bienne`. |
 
 
 
 
 ## O que esta validação faz 
 
-
-
+Indica a língua por omissão dos textos no conjunto GTFS, para consumidores aplicarem capitalização e outras convenções linguísticas; o GTFS prevê ainda o código `mul` (multilingue) quando os textos originais estão deliberadamente em várias línguas, com traduções em `translations.txt`. O campo é obrigatório. Esta verificação exige que exista um valor não vazio; se o valor não for `mul`, o código é sujeito à validação de língua habitual da aplicação. Para `mul`, não se aplica essa validação formal do código (o GTFS trata este caso como excepção normativa).
 
 ---
 
 ### Passa
 
-
+- A língua do feed está preenchida.
+- O valor é `mul`, ou é qualquer outro texto que passe na validação de código de língua reconhecido.
 
 ---
 
 ### Falha
 
-
-
-
+- O campo está em falta ou está em branco.
+- O valor não é `mul` e não é aceite como código de língua válido.
 
 
