@@ -1,0 +1,35 @@
+---
+title: Distância acumulada ao longo da forma geométrica não negativa
+description: shape_dist_traveled_non_negative_monotonic
+---
+## Campos que serão utilizados nesta regra
+
+| Nome do Campo         | Tipo                        | Presença | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| --------------------- | --------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `shape_dist_traveled` | Número decimal não negativo | Opcional | Distância real percorrida ao longo da forma, desde o primeiro ponto da forma até ao ponto especificado neste registo. Utilizado pelos planeadores de viagens para mostrar a porção correta da forma num mapa. Os valores devem aumentar juntamente com `shape_pt_sequence`; não devem ser utilizados para mostrar o percurso inverso ao longo de um percurso. As unidades de distância devem ser consistentes com as utilizadas em `stop_times.txt`.<br/><br/>Recomendado para percursos com troços em loop ou em linha (o veículo atravessa ou percorre o mesmo troço do alinhamento numa viagem). Se um veículo refaz ou cruza o alinhamento da rota em pontos ao longo de uma viagem, `shape_dist_traveled` é importante para esclarecer como as porções dos pontos em `shapes.txt` se alinham com os registos em `stop_times.txt`.<br/><br/><u>Exemplo</u>: Se um autocarro percorrer os três pontos definidos acima para `A_shp`, os valores adicionais de `shape_dist_traveled` (mostrados aqui em quilómetros) seriam semelhantes aos isto:<br/><br/>`shape_id`,`shape_pt_lat,shape_pt_lon,shape_pt_sequence,shape_dist_traveled`<br/>`A_shp,37.61 956,-122.48161,0,0`<br/>`A_shp,37.64430,-122.41070,6,6.8310`<br/>`A_shp,37.65863,-122.30839,11,15.8765` |
+
+## O que esta validação faz 
+
+No `shapes.txt`, o campo `shape_dist_traveled` indica a distância percorrida ao longo da forma desde o primeiro ponto até ao ponto desta linha, nas mesmas unidades que em `stop_times.shape_dist_traveled`, quando esse campo é usado. Serve para alinhar o traçado com planeamento e com laços ou reutilização do mesmo troço na mesma viagem.
+
+Esta validação garante que `shape_dist_traveled`, quando preenchido, não é negativo. Pode sinalizar o campo vazio como obrigatório ou recomendado, consoante a severidade, ou omitir o aviso (por exemplo ignorar ou proibido que dispensa o texto de ausência). Pode recusar qualquer valor se o campo estiver interdito no perfil de dados.
+
+---
+
+### Passa
+
+- `shape_dist_traveled` com valor ≥ 0.
+- `shape_dist_traveled` vazio quando a ausência não gera mensagem para esta regra.
+- Ausência de valor interdito com campo preenchido (modo proibido coerente com a regra).
+
+---
+
+### Falha
+
+- `shape_dist_traveled` negativo. _Correção:_ usar distância acumulada não negativa e coerente com a forma.
+- Campo interdito com valor. _Correção:_ retirar `shape_dist_traveled`.
+- Ausência tratada como obrigatório ou recomendado. _Correção:_ preencher `shape_dist_traveled` onde ajuda a clarificar laços / alinhamento com `stop_times`, ou rever a severidade.
+
+
+
+
