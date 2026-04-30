@@ -1,11 +1,8 @@
 ---
-title: Regra do
+title: Viagem do tempo de paragem referenciada em trips
 description: stop_times_trip_id_references_trips_table
 ---
-## Regras de validação do campo 
-
-
-### Campos que serão utilizados nesta regra
+## Campos que serão utilizados nesta regra
 
 | Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
 | ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
@@ -15,19 +12,20 @@ description: stop_times_trip_id_references_trips_table
 
 ### O que esta validação faz 
 
+No `stop_times.txt`, o campo `trip_id` liga cada linha à viagem (`trips`) a que esse instante da sequência pertence: horários, paragens, ordem e restantes atributos ficam agrupados sob o mesmo identificador de viagem.
 
-
-
----
-
-#### Passa
-
-
+Esta validação exige que `trip_id` esteja preenchido e que o valor exist em `trips.txt`. Não aplica severidades opcionais nem listas de valores: ou o identificador é válido e presente, ou a linha não cumpre a regra.
 
 ---
 
-#### Falha
+### Passa
 
+- `trip_id` preenchido e com correspondência em `trips`.
+
+### Falha
+
+- `trip_id` vazio ou ausente. _Correção:_ indicar a viagem correcta em **`trip_id`*.
+- `trip_id` inexistente em `trips`. _Correção:_ alinhar com um `trip_id` definido em `trips` ou criar a viagem em falta.
 
 
 
