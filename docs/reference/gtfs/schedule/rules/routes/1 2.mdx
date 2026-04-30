@@ -12,21 +12,33 @@ description: id
 
 ## O que esta validação faz 
 
+No `routes.txt`, o campo `agency_id` indica a agência (operadora) a que a rota pertence. É uma chave para `agency.txt`.
 
+A severidade base vem da regra `AgencyId` quando existe; caso contrário usa-se aviso por omissão.
 
+Comportamento:
+
+- Se `agency_id` está preenchido, o valor tem de existir em `agency` (chave estrangeira).
+- Se o feed tem mais do que uma linha em `agency`, `agency_id` na rota é obrigatório (não pode ficar vazio).
+- Se existe no máximo uma agência, `agency_id` vazio pode gerar mensagem de obrigatoriedade ou recomendação, conforme a severidade da regra — exceto quando a severidade é ignorar (não emite esse aviso).
+
+O número de agências obtém-se por contagem da tabela `agency`, com recurso aos dados em memória se a contagem falhar.
 
 ---
 
 ### Passa
 
-
-
----
+- `agency_id` preenchido e presente em `agency`.
+- `agency_id` vazio com uma única agência no feed e a regra não exige mensagem por ausência (por exemplo ignorar).
+- Mais do que uma agência e `agency_id` preenchido e válido.
 
 ### Falha
 
-
-
+- `agency_id` preenchido inexistente em `agency`. _Correção:_ corrigir o identificador ou criar a agência em `agency`.
+    
+- Várias agências no feed e `agency_id` vazio na rota. _Correção:_ indicar `agency_id` da operadora correcta.
+    
+- Uma (ou zero na prática de contagens) agência e `agency_id` vazio com severidade que exige texto de ausência. _Correção:_ preencher `agency_id` (boa prática mesmo com uma agência) ou ajustar a severidade se for o pretendido
 
 
 
