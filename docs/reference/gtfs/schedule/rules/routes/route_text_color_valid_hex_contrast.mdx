@@ -1,0 +1,35 @@
+---
+title: Cor do texto sobre o fundo da rota
+description: route_text_color_valid_hex_contrast
+---
+## Campos que serão validados nesta regra
+
+| Nome do Campo      | Tipo | Presença | Descrição                                                                                                                                                                                                                                                                                         |
+| ------------------ | ---- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `route_text_color` | Cor  | Opcional | Cor legível a utilizar para texto desenhado sobre um fundo de `route_color`. O predefinido é preto (000000) quando omitido ou deixado em branco. A diferença de cor entre `route_color` e `route_text_color` deve proporcionar contraste suficiente quando visualizada num ecrã a preto e branco. |
+
+
+
+
+## O que esta validação faz 
+
+O GTFS prevê um campo opcional para a cor do texto associada à rota (por exemplo em mapas ou interfaces), com contraste legível face à cor de fundo. Esta verificação assegura que, quando o valor existe, tem o formato de cor hexadecimal de seis caracteres (algarismos 0–9 e letras A–F, normalmente interpretada como vermelho–verde–azul, sem prefixo nem separadores). Conforme a regra do projecto, o campo pode ser obrigatório, recomendado, opcional ou proibido, e pode ainda existir uma lista fechada de cores admitidas para o texto.
+
+---
+
+### Passa
+
+- O campo está vazio e a regra permite isso (incluindo quando a verificação não se aplica a esta linha).
+- O campo contém exactamente seis caracteres hexadecimais válidos e, se existir lista de valores permitidos, a cor indicada está nessa lista (ou a regra admite qualquer valor permitido pelo formato).
+- O campo está vazio quando a regra não admite valores neste campo.
+
+---
+
+### Falha
+
+- O texto do campo não corresponde a uma cor hexadecimal válida de seis posições.
+- O campo está em falta quando a regra exige preenchimento (ou quando a ausência é reportada com a severidade definida para “obrigatório” / “recomendado”).
+- O campo está preenchido quando a regra o proíbe.
+- A cor está preenchida mas não figura na lista admitida pela regra, quando essa lista é fechada.
+
+
