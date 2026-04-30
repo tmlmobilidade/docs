@@ -13,14 +13,14 @@ description: feed_lang_valid_tag
 
 ## O que esta validação faz 
 
-Indica a língua por omissão dos textos no conjunto GTFS, para consumidores aplicarem capitalização e outras convenções linguísticas; o GTFS prevê ainda o código `mul` (multilingue) quando os textos originais estão deliberadamente em várias línguas, com traduções em `translations.txt`. O campo é obrigatório. Esta verificação exige que exista um valor não vazio; se o valor não for `mul`, o código é sujeito à validação de língua habitual da aplicação. Para `mul`, não se aplica essa validação formal do código (o GTFS trata este caso como excepção normativa).
+Indica a língua por omissão dos textos no conjunto GTFS, para consumidores aplicarem capitalização e outras convenções linguísticas; o GTFS prevê ainda o código nulo (multilingue) quando os textos originais estão deliberadamente em várias línguas, com traduções em `translations.txt`. O campo é obrigatório. Esta verificação exige que exista um valor não vazio; se o valor não for nulo, o código é sujeito à validação de língua habitual da aplicação. Para `mul`, não se aplica essa validação formal do código (o GTFS trata este caso como excepção normativa).
 
 ---
 
 ### Passa
 
 - A língua do feed está preenchida.
-- O valor é `mul`, ou é qualquer outro texto que passe na validação de código de língua reconhecido.
+- O valor é nulo, ou é qualquer outro texto que passe na validação de código de língua reconhecido.
 
 ---
 
