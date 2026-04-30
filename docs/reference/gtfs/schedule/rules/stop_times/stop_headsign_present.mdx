@@ -10,7 +10,7 @@ description: stop_headsign_present
 
 ## O que esta validação faz 
 
-No `stop_times.txt`, o campo `stop_headsign` guarda o texto de destino (o que aparece na sinalética para o passageiro) neste ponto da sequência, substituindo o `trip_headsign` de `trips.txt` só para essa linha; não se propaga sozinho às linhas seguintes — para o mesmo texto em vários pontos, há de repetir o valor em cada registo. Se o destino é único em toda a viagem, o GTFS recomenda usar `trips.trip_headsign` em vez de preencher `stop_headsign` em todo o percurso.
+No `stop_times.txt`, o campo `stop_headsign` guarda o texto de destino (o que aparece na sinalética para o passageiro) neste ponto da sequência, substituindo o `trip_headsign` de `trips.txt` só para essa linha; não se propaga sozinho às linhas seguintes - para o mesmo texto em vários pontos, há de repetir o valor em cada registo. Se o destino é único em toda a viagem, o GTFS recomenda usar `trips.trip_headsign` em vez de preencher `stop_headsign` em todo o percurso.
 
 Esta validação trata a ausência de `stop_headsign`: pode exigir, recomendar ou nada dizer, consoante a severidade e se o campo está interdito ou ignorado para a ausência. Se o valor existe, pode recusá-lo quando o campo está proibido e pode confinar o texto a uma lista de frases admitidas.
 
