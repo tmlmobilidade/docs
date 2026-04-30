@@ -1,0 +1,33 @@
+---
+title: Distância acumulada ao longo da forma geométrica não negativa
+description: stop_times_shape_dist_traveled_non_decreasing_on_trip
+---
+## Campos que serão utilizados nesta regra
+
+| Nome do Campo       | Tipo                        | Presença | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| ------------------- | --------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| shape_dist_traveled | Número decimal não negativo | Opcional | Distância real percorrida ao longo da forma associada, desde a primeira paragem até à paragem especificada neste registo. Este campo especifica a quantidade da forma que deve ser desenhada entre quaisquer duas paragens durante uma viagem. Deve estar nas mesmas unidades utilizadas no shapes.txt. Os valores utilizados para shape_dist_traveled devem aumentar juntamente com stop_sequence; não devem ser utilizados para mostrar o percurso inverso ao longo de um percurso. <br/><br/>Recomendado para percursos que tenham looping ou inline (o veículo atravessa ou percorre a mesma porção do alinhamento numa viagem). Consulte `shapes. shape_dist_traveled`. <br/><br/>**Exemplo**: Se um autocarro percorrer uma distância de 5,25 quilómetros desde o início da forma até à paragem, `shape_dist_traveled=5.25`. |
+
+
+
+## O que esta validação faz 
+
+No `stop_times.txt`, o campo `shape_dist_traveled` indica a distância real percorrida ao longo da forma (`shape`) associada à viagem, desde o início da forma até ao ponto deste registo, nas mesmas unidades que em `shapes.txt`. Serve para descrever quanto do traçado corresponde ao troço entre paragens.
+
+Esta validação garante que `shape_dist_traveled`, quando está preenchido, não é negativo. Pode sinalizar o campo vazio como obrigatório ou recomendado, consoante a severidade, ou silenciar essa ausência (severidade ignorar ou regra proibida que dispensa o aviso). Pode recusar qualquer valor se o campo estiver interdito no perfil de dados.
+
+---
+
+### Passa
+
+- `shape_dist_traveled` com valor numérico ≥ 0.
+- `shape_dist_traveled` vazio quando a regra não exige mensagem por ausência.
+- Ausência de valor interdito com campo preenchido (conforme modo proibido).
+
+---
+
+### Falha
+
+- `shape_dist_traveled` negativo. _Correção:_ usar distância acumulada não negativa e coerente com a forma.
+- Campo interdito com valor. _Correção:_ retirar `shape_dist_traveled`.
+- Ausência tratada como obrigatório ou recomendado. _Correção:_ preencher `shape_dist_traveled` (recomendável em percursos com laços ou reutilização de troços da mesma forma) ou rever a severidade.
