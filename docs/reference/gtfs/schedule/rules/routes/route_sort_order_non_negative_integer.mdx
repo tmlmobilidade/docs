@@ -1,0 +1,35 @@
+---
+title: Ordem de apresentação da rota
+description: route_sort_order_non_negative_integer
+---
+## Campos que serão validados nesta regra
+
+| Nome do Campo      | Tipo                        | Presença | Descrição                                                                                                                                                  |
+| ------------------ | --------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `route_sort_order` | Número inteiro não negativo | Opcional | Ordena as rotas de uma forma ideal para apresentação aos clientes. As rotas com valores mais baixos de `route_sort_order` devem ser apresentadas primeiro. |
+
+
+
+
+## O que esta validação faz 
+
+O valor de ordenação (`route_sort_order`) é opcional no GTFS e serve para indicar a ordem em que as rotas devem ser mostradas (números mais baixos primeiro). Esta verificação garante que, quando existe valor, é um inteiro não negativo. Conforme a regra aplicada ao projecto, o campo pode ser tratado como obrigatório, recomendado, simplesmente opcional, ou proibido; nesses casos avalia-se também se o campo deve estar preenchido ou vazio.
+
+---
+
+### Passa
+
+- O campo está vazio e a regra permite isso (incluindo quando a verificação não se aplica a esta linha).
+- O campo contém um número inteiro maior ou igual a zero.
+- O campo está vazio quando a regra não admite valores neste campo.
+
+---
+
+### Falha
+
+- O número indicado é negativo.
+- O campo está em falta quando a regra exige preenchimento (ou quando a ausência é reportada com a severidade definida para o caso “obrigatório” / “recomendado”).
+- O campo está preenchido quando a regra o proíbe explicitamente.
+
+
+
