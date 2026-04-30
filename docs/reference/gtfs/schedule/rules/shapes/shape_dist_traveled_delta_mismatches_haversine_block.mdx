@@ -12,7 +12,25 @@ description: shape_dist_traveled_delta_mismatches_haversine_block
 
 ## O que esta validação faz 
 
-Em `shapes.txt`, para cada forma (conjunto de pontos com o mesmo `shape_id`), os vértices com sequência e coordenadas válidas ordenam-se pela `shape_pt_sequence`. Seguidamente identificam-se blocos de pontos entre um `shape_dist_traveled` igual a zero e o próximo zero (ou o fim da forma). Em cada bloco, compara-se, segmento a segmento, o incremento de `shape_dist_traveled` (convertido para metros à custa do máximo declarado na forma) com a distância geodésica entre vértices consecutivos, dentro de uma tolerância em metros (configurável; por omissão 20 m). Se todos os segmentos relevantes cumprirem essa tolerância, compara-se a soma das distâncias geodésicas com o `shape_dist_traveled` do último ponto do bloco (também em metros). Só quando essa diferença total ultrapassa a tolerância é que surge a mensagem de incumprimento associada a `shape_dist_traveled_delta_mismatches_haversine_block`.
+Dados de `shapes.txt`, por forma (`shape_id`):
+
+1. Junta os pontos que têm `shape_id`, `shape_pt_sequence`, `shape_pt_lat` e `shape_pt_lon` preenchidos.
+2. Ordena os pontos pela sequência ao longo do percurso.
+3. Parte a forma em blocos: cada bloco começa num ponto com `shape_dist_traveled = 0` e vai até ao último ponto antes do próximo 0 (ou até ao fim da lista).
+
+Dentro de cada bloco:
+
+- Entre vértices consecutivos com `shape_dist_traveled` definido nos dois e não nulo no par, calcula a distância em linha sobre a esfera (Haversine) e compara com o incremento de `shape_dist_traveled` entre esses dois pontos, convertido para metros (a conversão usa o máximo de `shape_dist_traveled` naquela forma para fixar a unidade).
+- Usa uma tolerância em metros (primeiro valor nas opções da regra `shape_distances`; se faltar ou for inválido → 20 m).
+
+Primeiro todos os segmentos relevantes têm de ficar dentro da tolerância. Só nesse caso soma as distâncias geodésicas desses segmentos e compara a soma com o `shape_dist_traveled` do último ponto do bloco (também em metros). Se a diferença absoluta for maior que a tolerância, obtém-se o incumprimento (regra `shape_dist_traveled_delta_mismatches_haversine_block`, mensagem `shape_distances_validation.invalid_distances`).
+
+
+### O que o erro indica
+
+A mensagem aponta uma forma e valores (esperado vs. soma geodésica vs. diferença). Significa: num bloco entre dois reinícios em zero, as distâncias acumuladas declaradas não estão consistentes com a geometria dos pontos — já depois de cada troço ter sido aceite dentro da tolerância, o total ainda não fecha com o declarado no fim do bloco.
+
+_(O nome `shape_block_distance_rows_aggregated` aparece no código no passe que só agrupa linhas; não gera mensagens na implementação actual.)_
 
 ---
 
