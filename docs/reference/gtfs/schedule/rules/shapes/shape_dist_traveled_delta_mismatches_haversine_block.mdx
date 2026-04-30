@@ -33,7 +33,7 @@ Primeiro todos os segmentos relevantes têm de ficar dentro da tolerância. 
 
 ### O que o erro indica
 
-A mensagem aponta uma forma e valores (esperado vs. soma geodésica vs. diferença). Significa: num bloco entre dois reinícios em zero, as distâncias acumuladas declaradas não estão consistentes com a geometria dos pontos — já depois de cada troço ter sido aceite dentro da tolerância, o total ainda não fecha com o declarado no fim do bloco.
+A mensagem aponta uma forma e valores (esperado vs. soma geodésica vs. diferença). Significa: num bloco entre dois reinícios em zero, as distâncias acumuladas declaradas não estão consistentes com a geometria dos pontos - já depois de cada troço ter sido aceite dentro da tolerância, o total ainda não fecha com o declarado no fim do bloco.
 
 ---
 
@@ -48,7 +48,7 @@ A mensagem aponta uma forma e valores (esperado vs. soma geodésica vs. difere
 ### Falha
 
 - Total do bloco fora da tolerância: os segmentos passaram um a um, mas a soma das distâncias geodésicas diverge do `shape_dist_traveled` final do bloco além do limiar. _Correção:_ rever coordenadas, `shape_pt_sequence`, `shape_dist_traveled`, reinícios a 0 e coerência de unidades; ou ajustar a tolerância na regra se for aceitável.
-- Segmento fora da tolerância: não se chega ao teste do total e não aparece esta mensagem de discrepância global — o problema está nos incrementos entre pares de vértices. _Correção:_ alinhar cada troço com a geometria antes de tratar o total.
+- Segmento fora da tolerância: não se chega ao teste do total e não aparece esta mensagem de discrepância global - o problema está nos incrementos entre pares de vértices. _Correção:_ alinhar cada troço com a geometria antes de tratar o total.
 
 
 
