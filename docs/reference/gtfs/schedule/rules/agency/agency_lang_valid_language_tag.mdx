@@ -1,0 +1,35 @@
+---
+title: Língua principal do operador
+description: agency_lang_valid_language_tag
+---
+## Campos que serão validados nesta regra
+
+| Nome do Campo | Tipo             | Presença | Descrição                                                                                                                                                                                                                |
+| ------------- | ---------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `agency_lang` | Código do idioma | Opcional | Idioma principal utilizado por esta agência de transporte. Deve ser fornecido para ajudar os utilizadores do GTFS a escolher regras de capitalização e outras definições específicas de idioma para o conjunto de dados. |
+
+
+
+
+## O que esta validação faz 
+
+Indica a língua principal usada pelo operador de transportes no contexto do conjunto GTFS, para consumidores poderem aplicar regras de capitalização e outras convenções linguísticas. Quando o valor existe, esta verificação confirma que corresponde a um código de língua admitido pelas regras internas (por exemplo no formato de etiquetas de idioma usadas na Web e em normas internacionais). Conforme a configuração, a ausência do campo pode ser tratada como obrigatória ou recomendada (excepto quando o caso é ignorado pela regra); o campo pode também ser proibido, e pode existir uma lista fechada de códigos permitidos para o projecto.
+
+---
+
+### Passa
+
+- A ausência de valor está alinhada com a regra (incluindo quando a verificação está marcada para ignorar este campo).
+- O código de língua é reconhecido como válido; o campo não está preenchido quando a regra o proíbe; e, se existir lista de valores permitidos, o código está nessa lista (ou a regra admite qualquer valor válido para a língua).
+
+---
+
+### Falha
+
+- O texto não corresponde a um código de língua válido.
+- O campo está em falta quando a regra exige ou recomenda preenchimento (e o caso não é ignorado), com a severidade configurada para esse tipo de mensagem.
+- O campo está preenchido quando a regra o proíbe.
+- O código não consta da lista admitida pela regra, quando essa lista é fechada.
+
+
+

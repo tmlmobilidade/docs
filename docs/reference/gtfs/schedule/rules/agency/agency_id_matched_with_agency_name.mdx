@@ -1,0 +1,38 @@
+---
+title: teste
+description: agency_id_matched_with_agency_name
+---
+## Campos que serão validados nesta regra
+
+| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
+| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
+
+
+
+
+## O que esta validação faz 
+
+Confirma se o identificador do operador e o nome completo do operador formam um par reconhecido: quando a regra inclui uma lista de pares autorizados (cada identificador associado ao nome oficial esperado), o valor do conjunto GTFS tem de coincidir exactamente com uma dessas entradas. Se faltar o identificador ou o nome, não é possível fazer a conferência e a regra pode tratar a situação como obrigatória ou recomendada. O campo lógico também pode estar proibido pela configuração. Quando a regra não define essa lista de pares, a parte relativa à correspondência não aplica critério adicional além do restante fluxo (ausência, proibição, etc.).
+
+---
+
+### Passa
+
+- A verificação está desactivada ou ignorada para esta linha (`ShouldSkip`).
+- Identificador e nome estão ambos preenchidos, existe lista de pares na regra, e o par indicado coincide com uma entrada autorizada.
+- Identificador e nome estão preenchidos e não há lista de pares na regra (não há confronto extra a exigir).
+- A regra não exige o par neste contexto ou o caso de ausência não é reportado, conforme configurado.
+
+_(Ajusta esta lista ao que queres mostrar aos editores: na prática, “passa sem confronto de pares” quando `Compare` não está definido.)_
+
+---
+
+### Falha
+
+- Falta o identificador ou o nome do operador quando a regra exige ou recomenda que ambos existam para esta verificação (com a severidade configurada).
+- A regra proíbe tratar este relacionamento identificador/nome neste registo.
+- Existe lista de pares na regra e o par identificador + nome do ficheiro não coincide com nenhuma entrada — ou o identificador existe na lista mas o nome não corresponde ao nome esperado para esse identificador (mensagem de “sem correspondência” com o nome de referência associado ao identificador, quando a regra o fornece).
+
+
+
+
