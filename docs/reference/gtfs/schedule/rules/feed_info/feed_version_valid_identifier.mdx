@@ -1,32 +1,28 @@
 ---
-title: teste
-description: id
+title: Versão do conjunto GTFS
+description: feed_version_valid_identifier
 ---
 ## Campos que serão validados nesta regra
 
-| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
-| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
+| Nome do Campo | Tipo  | Presença    | Descrição                                                                                                                                                                                                                                         |
+| ------------- | ----- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| feed_version  | Texto | Recomendado | String que indica a versão atual do conjunto de dados GTFS. As aplicações que consomem GTFS podem apresentar este valor para ajudar os editores de conjuntos de dados a determinar se a versão mais recente do conjunto de dados foi incorporada. |
 
 
 
 
 ## O que esta validação faz 
 
-
-
+O GTFS recomenda um texto que identifique a versão actual do conjunto de dados, para aplicações mostrarem essa informação e os publicadores saberem se já foi incorporada a última entrega. Esta verificação trata sobretudo da ausência do valor: pode ser reportada como obrigatória ou recomendada (excepto quando a verificação não se aplica a esta linha). Se não for passada severidade à função, usa-se por omissão nível de aviso. Quando o campo está preenchido, este ficheiro não aplica nenhuma regra extra de formato ou conteúdo ao texto — só deixa de assinalar falta de valor.
 
 ---
 
 ### Passa
 
-
+- A versão está indicada com texto não vazio, ou está em falta mas a regra permite isso (incluindo quando a verificação não se aplica).
 
 ---
 
 ### Falha
 
-
-
-
-
-
+- O campo está em falta ou em branco quando a regra exige ou recomenda preenchimento, com a severidade configurada para esse caso.
