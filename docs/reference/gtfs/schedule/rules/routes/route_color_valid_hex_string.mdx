@@ -1,0 +1,40 @@
+---
+title: or da rota representada por código hexadecimal válido
+description: route_color_valid_hex_string
+---
+## Campos que serão validados nesta regra
+
+| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
+| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
+
+
+
+
+## O que esta validação faz 
+
+No `routes.txt`, o campo `route_color` indica a cor da linha tal como aparece em material público (por exemplo em mapas ou interfaces). Pelo GTFS, vazio equivale a branco (`FFFFFF`); convém que combine com `route_text_color` para contraste legível.
+
+A verificação trata o campo vazio como situação passível de obrigatoriedade ou recomendação, conforme a severidade — salvo quando está em ignorar (ou equivalente que dispense o aviso). Se o campo é interdito no perfil de dados mas vem preenchido, incumpre. Quando há valor, este tem de ser exactamente seis caracteres hexadecimais (`0`–`9`, `A`–`F`), habitualmente em maiúsculas após normalização. Pode ainda existir uma lista de cores permitidas; nesse caso o valor tem de pertencer à lista (ou a política aceitar todas as opções).
+
+---
+
+### Passa
+
+- `route_color` vazio quando a política não exige mensagem por ausência.
+- `route_color` com três pares de hexadecimais válidos (formato RRGGBB).
+- Cor incluída nas opções admitidas, quando essa lista existe.
+
+---
+
+### Falha
+
+- Formato inválido: comprimento diferente de seis, ou caracteres fora do conjunto hexadecimal. _Correção:_ usar seis dígitos hex, por exemplo `FFFFFF` para branco.
+- Campo proibido com valor. _Correção:_ esvaziar `route_color` ou rever a política.
+
+- Cor fora da lista permitida. _Correção:_ usar código admitido pelo feed.
+    
+- Ausência sinalizada como obrigatória ou recomendada. _Correção:_ preencher com cor válida ou ajustar severidade.
+
+
+
+
