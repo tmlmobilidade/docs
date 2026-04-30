@@ -1,11 +1,12 @@
 ---
 title: teste
-description: id
+description: route_long_name_or_short_name_present
 ---
 ## Campos que serão validados nesta regra
 
-| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
-| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
+| Nome do Campo     | Tipo  | Presença                     | Descrição                                                                                                                                                                                                                                                                                                                                                                          |
+| ----------------- | ----- | ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `route_long_name` | Texto | Condicionalmente Obrigatório | Nome completo de uma rota. Este nome é geralmente mais descritivo do que o `route_short_name` e geralmente inclui o destino ou a paragem da rota. Tanto `route_short_name` como `route_long_name` podem ser definidos. <br/><br/>**Condicionalmente Obrigatório**:<ul><li>**Obrigatório** se routes.`route_short_name` estiver vazio. </li><li>Opcional caso contrário. </li></ul> |
 
 
 
