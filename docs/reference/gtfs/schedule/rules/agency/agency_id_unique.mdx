@@ -1,0 +1,36 @@
+---
+title: Identificador da operadora
+description: agency_id_unique
+---
+## Campos que serão validados nesta regra
+
+| Nome do Campo | Tipo     | Presença                     | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| ------------- | -------- | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `agency_id`   | ID Único | Condicionalmente obrigatório | Identifica uma marca de transporte, que é geralmente sinónimo de agência de transporte. Note que, em alguns casos, como quando uma única agência opera vários serviços separados, as agências e as marcas são distintas. Este documento utiliza o termo "agência" em vez de "marca". Um conjunto de dados pode conter dados de várias agências. Condicionalmente obrigatório: - Obrigatório quando o conjunto de dados contém dados para várias agências de transporte. - Recomendado caso contrário. |
+
+
+
+
+## O que esta validação faz 
+
+Este identificador distingue a operadora ou marca de transporte no conjunto deGTFS (num feed com várias operadoras, torna-se obrigatório para saber a que entidade pertencem rotas, viagens, etc.). Esta verificação confirma que o valor não falta quando o ficheiro de operadoras tem mais do que uma linha, que cada identificador não se repete em linhas diferentes com o mesmo código e, quando a regra do projecto define uma lista fechada de identificadores admitidos, o valor pertence a essa lista. Quando só existe uma operadora no conjunto de dados, o campo continua opcional ao nível GTFS, mas a regra do projecto pode tratá-lo como obrigatório ou recomendado (com severidade por omissão mais branda para este identificador, salvo outra definição na configuração).
+
+---
+
+### Passa
+
+- O identificador está preenchido sempre que o conjunto de dados comporta várias operadoras, ou o feed tem uma única operadora e a regra permite o campo vazio (ou o caso está excluído da verificação).
+- Não há duas ou mais linhas de operadora com o mesmo identificador.
+- Se existir lista de identificadores permitidos na regra, o valor está nessa lista (ou a regra admite qualquer identificador válido no contexto).
+
+---
+
+### Falha
+
+- O identificador está em falta quando o ficheiro de operadoras tem mais do que uma entrada.
+- O mesmo identificador aparece em mais do que uma linha de operadora.
+- O identificador não consta da lista admitida pela regra, quando essa lista é fechada.
+- O campo está em falta (ou a ausência é reportada) quando a regra o exige ou recomenda num feed de uma só operadora, com a severidade configurada para esse caso.
+
+
+

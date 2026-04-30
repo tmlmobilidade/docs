@@ -1,0 +1,32 @@
+---
+title: Página Web sobre tarifas ou bilhética da operadora
+description: agency_fare_url_valid_url
+---
+## Campos que serão validados nesta regra
+
+| Nome do Campo     | Tipo | Presença | Descrição                                                                                                                                                                                 |
+| ----------------- | ---- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `agency_fare_url` | URL  | Opcional | URL de uma página web onde um passageiro pode comprar bilhetes ou outros instrumentos de tarifa para essa agência, ou uma página web contendo informações sobre as tarifas dessa agência. |
+
+
+
+
+## O que esta validação faz 
+
+O campo facultativo aponta para uma página onde o utente pode comprar bilhetes ou outros títulos de transporte da operadora, ou obter informação sobre tarifas. Quando há endereço, esta verificação confirma que tem forma de URL aceite pelas regras da aplicação. Conforme a configuração, a ausência de valor pode ser tratada como obrigatória ou recomendada (excepto quando o caso é ignorado pela regra); o campo também pode ser proibido, e pode existir uma lista fechada de URLs admitidas.
+
+---
+
+### Passa
+
+- A ausência de valor está alinhada com a regra (incluindo quando a verificação está marcada para ignorar este campo).
+- O campo contém um URL válido; não está preenchido quando a regra o proíbe; e, se existir lista de endereços permitidos, o valor está nessa lista (ou a regra admite qualquer URL válido).
+
+---
+
+### Falha
+
+- O texto não é um URL aceite pelo formato verificado.
+- O campo está em falta quando a regra exige ou recomenda preenchimento (e o caso não é ignorado), com a severidade configurada para esse tipo de mensagem.
+- O campo está preenchido quando a regra o proíbe.
+- O endereço não consta da lista admitida pela regra, quando essa lista é fechada.
