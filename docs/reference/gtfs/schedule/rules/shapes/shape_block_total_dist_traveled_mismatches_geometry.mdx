@@ -24,12 +24,7 @@ A falha reportada por esta regra ocorre quando a totalidade do percurso geom
 
 Se qualquer segmento do bloco falhar a primeira verificação, o bloco deixa de ser considerado para esta segunda comparação de totais (o problema aí reporta-se por outra validação, ao nível de cada troço, em vez do total agregado).
 
----
 
-### O que o erro indica
-
-- Detalhe: entre dois ou mais vértices consecutivos com `shape_dist_traveled` não nulo e não zero, o salto geodésico não coincide com o incremento de `shape_dist_traveled` (já em metros), fora da tolerância configurada (ou 20 m).
-- Muitos erros: volume elevado de pares inconsistentes; convém rever a forma globalmente (sequência, coordenadas, unidades de `shape_dist_traveled`).
 
 ---
 
