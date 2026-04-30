@@ -1,0 +1,33 @@
+---
+title: Regras do agency_email
+description: agency_email_valid_address
+---
+## Regras de validação do agency_email
+
+
+### Campos que serão utilizados nesta regra
+
+| Nome do Campo  | Tipo   | Presença | Descrição                                                                                                                                                                                                                                                                           |
+| -------------- | ------ | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `agency_email` | E-mail | Opcional | Endereço de e-mail monitorizado ativamente pelo departamento de apoio ao cliente da agência. Este endereço de e-mail deve ser um ponto de contacto direto onde os utilizadores dos transportes públicos podem contactar um representante do serviço de apoio ao cliente da agência. |
+
+## O que esta validação faz
+
+O GTFS prevê um endereço de correio electrónico facultativo, destinado a um contacto activo do serviço de apoio ao cliente da operadora (para onde os utentes podem escrever com questões sobre o serviço). Quando o valor existe, esta verificação confirma que tem aspecto de endereço de correio válido segundo as regras internas da aplicação. Conforme a regra do projecto, o campo pode ser obrigatório, recomendado, opcional ou proibido, e pode ainda existir uma lista fechada de endereços admitidos.
+
+---
+
+### Passa
+
+- O campo está vazio e a regra permite isso (incluindo quando a verificação não se aplica a esta linha).
+- O endereço tem formato reconhecido como válido e, se existir lista de valores permitidos, coincide com uma entrada dessa lista (ou a regra admite qualquer endereço válido).
+- O campo está vazio quando a regra não admite valores neste campo.
+
+---
+
+### Falha
+
+- O texto não corresponde a um endereço de correio electrónico válido.
+- O campo está em falta quando a regra exige preenchimento (ou quando a ausência é reportada com a severidade definida para “obrigatório” / “recomendado”).
+- O campo está preenchido quando a regra o proíbe.
+- O endereço não consta da lista admitida pela regra, quando essa lista é fechada.
