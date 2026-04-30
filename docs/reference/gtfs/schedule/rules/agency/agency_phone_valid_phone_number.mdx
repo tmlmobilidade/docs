@@ -1,0 +1,35 @@
+---
+title: teste
+description: agency_phone_valid_phone_number
+---
+## Campos que serão validados nesta regra
+
+| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
+| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
+
+
+
+
+## O que esta validação faz 
+
+O GTFS prevê um número de telefone de voz facultativo para o operador, apresentado como é habitual na área de serviço (pode incluir pontuação ou texto marcável, como siglas no número, desde que seja marcável e sem texto descritivo extra). Nesta implementação, a verificação cinge-se a: tratar a ausência conforme a regra (obrigatório, recomendado ou ignorado); recusar o campo quando a regra o proíbe; e, quando existe lista fechada de números admitidos, exigir que o valor coincida com uma entrada dessa lista. Não há, no código deste ficheiro, validação automática do formato internacional ou nacional do número — apesar do identificador interno da regra sugerir “número válido”.
+
+---
+
+### Passa
+
+- O campo está vazio e a regra permite isso (incluindo quando a verificação não se aplica a esta linha).
+- O campo está preenchido, a regra não o proíbe e, se existir lista de valores permitidos, o texto coincide com uma entrada (ou a regra admite qualquer valor).
+- O campo está vazio quando a regra não admite valores neste campo.
+
+---
+
+### Falha
+
+- O campo está em falta quando a regra exige preenchimento (ou quando a ausência é reportada com a severidade definida para “obrigatório” / “recomendado”).
+- O campo está preenchido quando a regra o proíbe.
+- O valor não consta da lista admitida pela regra, quando essa lista é fechada.
+
+
+
+

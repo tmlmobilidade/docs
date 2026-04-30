@@ -1,0 +1,32 @@
+---
+title: Nome completo do operador
+description: agency_name_present
+---
+## Campos que serão validados nesta regra
+
+| Nome do Campo | Tipo  | Presença    | Descrição                               |
+| ------------- | ----- | ----------- | --------------------------------------- |
+| `agency_name` | Texto | Obrigatório | Nome completo da agência de transporte. |
+
+
+
+
+## O que esta validação faz 
+
+O GTFS exige o nome completo do operador de transportes (designação oficial utilizada nos dados). Esta verificação garante que o valor existe e, quando a regra do projecto define uma lista fechada de nomes admitidos, que o texto indicado pertence a essa lista (ou que a regra admite explicitamente qualquer nome). Se o nome estiver fora da lista, o reporte pode ser erro ou aviso, consoante a severidade configurada para esta regra; por omissão, a ausência do nome trata-se como erro.
+
+---
+
+### Passa
+
+- O nome está definido e a regra não impõe lista restrita, ou o texto coincide com um dos valores permitidos na lista.
+- O nome não está na lista mas a configuração apenas gera aviso para esse caso (e não bloqueio).
+
+---
+
+### Falha
+
+- O nome não está definido (campo em falta no registo tratado como obrigatório).
+- O nome está preenchido mas não consta da lista admitida pela regra, quando essa lista é fechada e a severidade para esse caso é erro.
+
+

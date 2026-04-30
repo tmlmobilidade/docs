@@ -4,8 +4,10 @@ description: agency_id_matched_with_agency_name
 ---
 ## Campos que serão validados nesta regra
 
-| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
-| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
+| Nome do Campo | Tipo     | Presença                     | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| ------------- | -------- | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `agency_id`   | ID Único | Condicionalmente obrigatório | Identifica uma marca de transporte, que é geralmente sinónimo de agência de transporte. Note que, em alguns casos, como quando uma única agência opera vários serviços separados, as agências e as marcas são distintas. Este documento utiliza o termo "agência" em vez de "marca". Um conjunto de dados pode conter dados de várias agências. Condicionalmente obrigatório: - Obrigatório quando o conjunto de dados contém dados para várias agências de transporte. - Recomendado caso contrário. |
+| `agency_name` | Texto    | Obrigatório                  | Nome completo da agência de transporte.                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 
 
 
@@ -22,8 +24,6 @@ Confirma se o identificador do operador e o nome completo do operador formam
 - Identificador e nome estão ambos preenchidos, existe lista de pares na regra, e o par indicado coincide com uma entrada autorizada.
 - Identificador e nome estão preenchidos e não há lista de pares na regra (não há confronto extra a exigir).
 - A regra não exige o par neste contexto ou o caso de ausência não é reportado, conforme configurado.
-
-_(Ajusta esta lista ao que queres mostrar aos editores: na prática, “passa sem confronto de pares” quando `Compare` não está definido.)_
 
 ---
 
