@@ -4,8 +4,9 @@ description: network_id_references_networks_table
 ---
 ## Campos que serão validados nesta regra
 
-| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
-| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
+| Nome do Campo | Tipo | Presença                  | Descrição                                                                                                                                                                                                                                 |
+| ------------- | ---- | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `network_id`  | ID   | Proibido condicionalmente | Identifica um grupo de rotas. Várias linhas em routes.txt podem ter o mesmo network_id.<br/><br/>**Proibido Condicionalmente**:<ul><li>**Proibido** se o arquivo route_networks.txt ou networks.txt existir. </li><li>Opcional.</li></ul> |
 
 
 
