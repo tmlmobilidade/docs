@@ -26,7 +26,10 @@ Se um dos pontos do par não tiver `shape_dist_traveled`, ou se os valores fore
 
 ---
 
+### O que o erro indica
 
+- Detalhe: entre dois vértices consecutivos com `shape_dist_traveled` não nulo e não zero, o salto geodésico não coincide com o incremento de `shape_dist_traveled` (já em metros), fora da tolerância configurada (ou 20 m).
+- Muitos erros: volume elevado de pares inconsistentes; convém rever a forma globalmente (sequência, coordenadas, unidades de `shape_dist_traveled`).
 
 ---
 
