@@ -11,29 +11,4 @@ description: continuous_drop_off_valid_gtfs_enum
 
 ## O que esta validação faz 
 
-o `routes.txt`, o campo `continuous_drop_off` define, ao nível da rota, se o passageiro pode descer em qualquer ponto do percurso ao longo de todas as viagens dessa linha (comportamento reproduzível em `shapes.txt`). O valor pode ser refinado em `stop_times.continuous_drop_off` por paragem. No ficheiro trata-se como texto (códigos em string).
-
-Esta validação:
-
-- Considera `continuous_drop_off` igual a `"1"` sempre válido para efeitos deste fluxo (sai logo — não volta a testar opções nem janelas).
-- Se o campo está vazio ou ausente, pode emitir obrigatoriedade ou recomendação conforme a severidade, salvo ignorar / proibido no sentido de saltar essa verificação (`ShouldSkip`).
-- Se a rota tem alguma viagem com `start_pickup_drop_off_window` ou `end_pickup_drop_off_window` nos `stop_times` (cache `routesWithWindows`), qualquer valor não vazio diferente de `"1"` (por exemplo `"0"`, `"2"`, `"3"`) é incorporável com esse modelo — regista-se proibido com janelas.
-- Pode restringir quais strings são admitidas além disso, via lista de opções da regra.
-
-Nota: não há neste ficheiro uma verificação explícita “só 0–3”; valores estranhos só caem na verificação de opções, se existir.
-
-### Passa
-
-- `continuous_drop_off` é `"1"`.
-- Campo vazio sem mensagem imposta pela severidade (ou com ignorar / fluxo que dispensa o aviso).
-- Valor não proibido pelas janelas (rota sem janelas em `stop_times`, ou valor `"1"`, ou campo vazio).
-- Valor incluído na lista de opções admitidas, ou lista todas as opções.
-
-### Falha
-
-- Proibido com janelas: a rota tem `stop_times` com janelas e o campo vem com valor não vazio e ≠ `"1"`. _Correção:_ passar a `"1"`, esvaizar (se o modelo de janelas o permitir ao nível da rota) ou rever janelas vs desembarque contínuo.ß
-- Valor não admitido pela lista de opções. _Correção:_ usar um código permitido pelo perfil de dados.
-- Ausência sinalizada como obrigatória ou recomendada. _Correção:_ preencher ou rever a severidade.
-
-
-
+checar validação

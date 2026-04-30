@@ -13,26 +13,4 @@ description: continuous_pickup_valid_gtfs_enum
 
 ## O que esta validação faz 
 
-No `routes.txt`, o campo `continuous_pickup` define, ao nível da rota, se o passageiro pode embarcar em qualquer ponto do percurso (segundo a forma) em todas as viagens dessa linha. Pode ser sobreposto por `stop_times.continuous_pickup` em paragens concretas. Os valores vêm como texto (códigos em string).
-
-Esta validação:
-
-- Trata `continuous_pickup` igual a `"1"` como sempre aceite neste fluxo e termina aí (não testa janelas nem lista de opções).
-- Se o campo está vazio ou ausente, pode emitir obrigatoriedade ou recomendação conforme a severidade, exceto quando a regra fica em modo que salta essa verificação de presença (`ShouldSkip`).
-- Se a rota tem alguma viagem com `start_pickup_drop_off_window` ou `end_pickup_drop_off_window` em `stop_times` (mapa `routesWithWindows`), qualquer valor não vazio diferente de `"1"` é incompatível com esse serviço — incumprimento proibido com janelas.
-- Pode limitar quais strings são aceites através das opções da regra.
-
-Nota: não há aqui verificação explícita “apenas 0–3”; valores fora do enumerado GTFS só chocam com a lista de opções, quando existe.
-
-### Passa
-
-- `continuous_pickup` é `"1"`.
-- Campo vazio sem mensagem exigida pela severidade (ou com ignorar / equivalente que dispense o aviso).
-- Valor não bloqueado pelas janelas ou rota sem janelas nos `stop_times`, com valor admitido pelas opções (ou opção “todas”).
-
-### Falha
-
-- Proibido com janelas: existe janela nalgum `stop_time` da rota e o valor é não vazio e ≠ `"1"`. _Correção:_ usar `"1"`, esvaziar se adequado ao modelo, ou rever janelas vs embarque contínuo.
-- Valor fora das opções permitidas. _Correção:_ escolher um código admitido.
-- Ausência com obrigatório ou recomendado. _Correção:_ preencher ou rever severidade.
-
+checar validação
