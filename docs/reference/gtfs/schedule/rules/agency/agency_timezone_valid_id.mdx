@@ -1,0 +1,34 @@
+---
+title: Fuso horário do operador
+description: agency_timezone_valid_id
+---
+## Campos que serão validados nesta regra
+
+| Nome do Campo     | Tipo         | Presença    | Descrição                                                                                                                                                        |
+| ----------------- | ------------ | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `agency_timezone` | Fuso horário | Obrigatório | Fuso horário onde se encontra a agência de transporte. Se forem especificadas várias agências no conjunto de dados, cada uma deverá ter o mesmo agency_timezone. |
+
+
+
+
+## O que esta validação faz 
+
+O GTFS exige o fusos horário em que o operador se situa, para interpretar correctamente horários e calendários nos dados. Esta verificação garante que o valor está preenchido, que corresponde a um identificador de fuso horário reconhecido pelas regras da aplicação (normalmente na forma usada em bases de dados públicas de fusos, por região ou cidade), e que, quando a regra do projecto define uma lista fechada de fusos admitidos, o indicado pertence a essa lista. Nota: a regra GTFS de que todos os operadores no mesmo conjunto de dados devem partilhar o mesmo fuso horário não é verificada neste ficheiro — apenas o valor de cada linha.
+
+---
+
+### Passa
+
+- O fuso horário está definido, tem formato reconhecido como válido e, se existir lista permitida na regra, está incluído nela (ou a regra admite qualquer fuso válido).
+
+---
+
+### Falha
+
+- O campo está em falta.
+- O texto não é um identificador de fuso horário aceite.
+- O fuso está preenchido mas não consta da lista admitida pela regra, quando essa lista é fechada.
+
+
+
+
