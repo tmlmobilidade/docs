@@ -1,0 +1,33 @@
+---
+title: teste
+description: shape_dist_traveled_delta_mismatches_haversine_block
+---
+## Campos que serão validados nesta regra
+
+| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
+| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
+
+
+
+
+## O que esta validação faz 
+
+Em `shapes.txt`, para cada forma (conjunto de pontos com o mesmo `shape_id`), os vértices com sequência e coordenadas válidas ordenam-se pela `shape_pt_sequence`. Seguidamente identificam-se blocos de pontos entre um `shape_dist_traveled` igual a zero e o próximo zero (ou o fim da forma). Em cada bloco, compara-se, segmento a segmento, o incremento de `shape_dist_traveled` (convertido para metros à custa do máximo declarado na forma) com a distância geodésica entre vértices consecutivos, dentro de uma tolerância em metros (configurável; por omissão 20 m). Se todos os segmentos relevantes cumprirem essa tolerância, compara-se a soma das distâncias geodésicas com o `shape_dist_traveled` do último ponto do bloco (também em metros). Só quando essa diferença total ultrapassa a tolerância é que surge a mensagem de incumprimento associada a `shape_dist_traveled_delta_mismatches_haversine_block`.
+
+Erro (`shape_distances_validation.invalid_distances`): indica que, num desses blocos, a geometria (soma dos troços em linha sobre a esfera) não está alinhada com as distâncias acumuladas declaradas — ou ao nível dos segmentos (não chega ao teste do total), ou ao nível do total depois de os segmentos passarem — acima do limiar permitido.
+
+---
+
+### Passa
+
+
+
+---
+
+### Falha
+
+
+
+
+
+
