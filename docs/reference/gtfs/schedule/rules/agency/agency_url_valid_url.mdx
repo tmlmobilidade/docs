@@ -1,0 +1,33 @@
+---
+title: Página Web do operador
+description: agency_url_valid_url
+---
+## Campos que serão validados nesta regra
+
+| Nome do Campo | Tipo | Presença    | Descrição                     |
+| ------------- | ---- | ----------- | ----------------------------- |
+| `agency_url`  | URL  | Obrigatório | URL da agência de transporte. |
+
+
+
+
+## O que esta validação faz 
+
+O GTFS exige o endereço (URL) da página Web do operador de transportes. Esta verificação garante que o valor existe, que tem forma de URL aceite pelas regras da aplicação e que, quando a regra do projecto define uma lista fechada de endereços admitidos, o URL indicado figura nessa lista (ou a regra admite explicitamente qualquer URL válido).
+
+---
+
+### Passa
+
+- O campo está preenchido com um URL válido e, se existir lista de valores permitidos na regra, o endereço está nessa lista.
+
+---
+
+### Falha
+
+- O campo está em falta.
+- O texto não é um URL aceite pelo formato verificado.
+- O URL está preenchido mas não consta da lista admitida pela regra, quando essa lista é fechada.
+
+
+
