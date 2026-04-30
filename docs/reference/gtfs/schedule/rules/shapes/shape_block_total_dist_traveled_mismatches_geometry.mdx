@@ -26,6 +26,13 @@ Se qualquer segmento do bloco falhar a primeira verificação, o bloco deixa d
 
 ---
 
+### O que o erro indica
+
+- Detalhe: entre dois ou mais vértices consecutivos com `shape_dist_traveled` não nulo e não zero, o salto geodésico não coincide com o incremento de `shape_dist_traveled` (já em metros), fora da tolerância configurada (ou 20 m).
+- Muitos erros: volume elevado de pares inconsistentes; convém rever a forma globalmente (sequência, coordenadas, unidades de `shape_dist_traveled`).
+
+---
+
 #### Passa
 
 - Quando a diferença entre a soma das distâncias geográficas do bloco e o valor de distância percorrida no fim do bloco fica dentro da tolerância, e o bloco cumpre a pré-condição de ser consistente em todos os segmentos do interior.
