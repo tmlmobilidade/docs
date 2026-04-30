@@ -1,0 +1,34 @@
+---
+title: Correio electrónico de contacto técnico do conjunto GTFS
+description: feed_contact_email_valid_address
+---
+## Campos que serão validados nesta regra
+
+| Nome do Campo        | Tipo  | Presença | Descrição                                                                                                                                                                                                                                                                                                                                                                                           |
+| -------------------- | ----- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `feed_contact_email` | Email | Opcional | Endereço de e-mail para comunicação referente ao conjunto de dados GTFS e às práticas de publicação de dados. `feed_contact_email` é um contacto técnico para aplicações que utilizam o GTFS. Forneça informações de contacto do serviço de apoio ao cliente através do ficheiro `agency.txt`. Recomenda-se que seja fornecido pelo menos um dos campos `feed_contact_email` ou `feed_contact_url`. |
+
+
+
+
+## O que esta validação faz 
+
+O GTFS prevê um endereço de correio electrónico facultativo em `feed_info.txt` para questões técnicas sobre o conjunto de dados e sobre como é publicado (não substitui o contacto de apoio ao utente do operador em `agency.txt`). Quando o valor existe e não é cadeia vazia, esta verificação confirma que tem formato de e-mail válido segundo as regras da aplicação. A ausência do campo pode ser tratada como obrigatória ou recomendada (excepto quando a verificação não se aplica a esta linha), e o campo pode ser proibido pela configuração. Se nenhuma severidade for indicada à função, a verificação assume por omissão nível de aviso para as mensagens geridas pelo contexto.
+
+---
+
+### Passa
+
+- O campo está vazio e a regra permite isso (incluindo quando a verificação não se aplica).
+- O endereço está preenchido, passa na validação de formato, e não viola a regra de proibição.
+- O ponteiro existe mas o texto está vazio: não se chama `ValidateEmail` (o GTFS trata o vazio como “sem valor”; a regra de obrigatoriedade/recomendação trata sobretudo do caso omitido / nulo na estrutura usada).
+
+---
+
+### Falha
+
+- O texto não corresponde a um endereço de correio electrónico válido (quando há texto não vazio).
+- O campo está em falta quando a regra exige ou recomenda preenchimento (com a severidade configurada).
+- O campo está preenchido quando a regra o proíbe.
+
+
