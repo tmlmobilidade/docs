@@ -1,0 +1,30 @@
+---
+title: Nome de quem publica o conjunto GTFS
+description: feed_publisher_name_non_empty
+---
+## Campos que serão validados nesta regra
+
+| Nome do Campo         | Tipo  | Presença    | Descrição                                                                                                                  |
+| --------------------- | ----- | ----------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `feed_publisher_name` | Texto | Obrigatório | Nome completo da organização que publica o conjunto de dados. Pode ser o mesmo que um dos valores de `agency.agency_name`. |
+
+
+
+
+## O que esta validação faz 
+
+O GTFS exige o nome completo da organização que publica o conjunto de dados (pode coincidir com o nome de uma operador em `agency.txt`, mas o conceito é o editor do feed, não necessariamente a operação de transporte). Esta verificação garante que o campo existe e não está em branco.
+
+---
+
+### Passa
+
+- O nome do publicador está preenchido com texto não vazio.
+
+---
+
+### Falha
+
+- O campo está em falta ou está em branco.
+
+

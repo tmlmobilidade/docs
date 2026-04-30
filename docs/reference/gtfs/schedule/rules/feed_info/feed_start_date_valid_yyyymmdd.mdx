@@ -1,0 +1,34 @@
+---
+title: Data de início de validade do conjunto
+description: feed_start_date_valid_yyyymmdd
+---
+## Campos que serão validados nesta regra
+
+| Nome do Campo     | Tipo | Presença    | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| ----------------- | ---- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `feed_start_date` | Data | Recomendado | O conjunto de dados fornece informações completas e fiáveis ​​sobre a programação do serviço no período desde o início do dia `feed_start_date` até ao final do dia `feed_end_date`. Ambos os dias podem ser deixados em branco se não estiverem disponíveis. A data `feed_end_date` não deve ser anterior à data `feed_start_date` se ambas forem fornecidas. Recomenda-se que os fornecedores de conjuntos de dados forneçam dados de programação fora deste período para informar sobre a provável disponibilidade futura, mas os consumidores de conjuntos de dados devem considerar que esta informação não é definitiva. Se `feed_start_date` ou `feed_end_date` ultrapassarem as datas do calendário ativo definidas em `calendar.txt` e `calendar_dates.txt`, o conjunto de dados está a declarar explicitamente que não há disponibilidade para datas dentro do intervalo de `feed_start_date` ou `feed_end_date`, mas não incluídas nas datas do calendário ativo. |
+
+
+
+
+## O que esta validação faz 
+
+O GTFS recomenda indicar o intervalo em que o conjunto se considera completo e fiável: do primeiro dia (`feed_start_date`) ao último dia (`feed_end_date`). As duas datas podem ficar vazias quando não estão disponíveis. Quando `feed_start_date` tem valor não vazio, esta verificação confirma que corresponde a uma data de serviço válida. A ausência pode ser reportada como obrigatória ou recomendada (excepto quando a verificação não se aplica). Se não for passada severidade à função, usa-se por omissão nível de aviso.
+
+O GTFS recomenda indicar o intervalo em que o conjunto se considera completo e fiável: do primeiro dia (`feed_start_date`) 
+
+---
+
+### Passa
+
+- A data de início está omitida ou vazia e a regra permite isso (incluindo quando a verificação não se aplica).
+- A data de início está preenchida e reconhecida como data de serviço válida.
+
+---
+
+### Falha
+
+- A data de início está em falta quando a regra exige ou recomenda preenchimento (com a severidade configurada).
+- O valor não representa uma data de serviço válida (quando há texto não vazio a validar).
+
+

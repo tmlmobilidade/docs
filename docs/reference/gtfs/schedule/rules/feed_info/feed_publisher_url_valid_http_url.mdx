@@ -1,0 +1,32 @@
+---
+title: Sítio Web do publicador do conjunto GTFS
+description: feed_publisher_url_valid_http_url
+---
+## Campos que serão validados nesta regra
+
+| Nome do Campo        | Tipo | Presença    | Descrição                                                                                                               |
+| -------------------- | ---- | ----------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `feed_publisher_url` | URL  | Obrigatório | URL do site da organização que publica o conjunto de dados. Pode ser o mesmo que um dos valores de `agency.agency_url`. |
+
+
+
+
+## O que esta validação faz 
+
+O GTFS exige o URL do sítio Web da organização que publica o conjunto de dados (pode coincidir com o URL de um operador em `agency.txt`, mas o significado é o editor do feed). Esta verificação garante que o endereço está preenchido e que tem forma de URL aceite pelas regras da aplicação.
+
+---
+
+### Passa
+
+- O URL do publicador está definido e passa na validação de formato.
+
+---
+
+### Falha
+
+- O campo está em falta ou está em branco.
+- O texto não é um URL aceite pelo formato verificado.
+
+
+
