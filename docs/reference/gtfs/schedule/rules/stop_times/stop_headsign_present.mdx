@@ -4,29 +4,27 @@ description: stop_headsign_present
 ---
 ## Campos que serão utilizados nesta regra
 
-| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
-| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
-| `agency_id`   | ID externo que faz referência a `agency.txt` | obrigatório | ID da entidade responsável pelo veículo, usado para associar cada veículo à respetiva agência no sistema. |
+| Nome do Campo   | Tipo  | Presença | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| --------------- | ----- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `stop_headsign` | Texto | Opcional | Texto que aparece na sinalização identificando o destino da viagem para os passageiros. Este campo substitui o valor por defeito `trips.trip_headsign` quando a sinalização muda entre paragens. Se o sinal de paragem for apresentado durante toda a viagem, deve ser utilizado `trips.trip_headsign` em vez disso. <br/><br/>Um valor de stop_headsign especificado para um `stop_time` não se aplica a `stop_times` subsequentes na mesma viagem. Se pretender substituir o trip_headsign para vários `stop_times` na mesma viagem, o valor de stop_headsign deve ser repetido em cada linha `stop_time`. |
 
 
 
 ## O que esta validação faz 
 
+No `stop_times.txt`, o campo `stop_headsign` guarda o texto de destino (o que aparece na sinalética para o passageiro) neste ponto da sequência, substituindo o `trip_headsign` de `trips.txt` só para essa linha; não se propaga sozinho às linhas seguintes — para o mesmo texto em vários pontos, há de repetir o valor em cada registo. Se o destino é único em toda a viagem, o GTFS recomenda usar `trips.trip_headsign` em vez de preencher `stop_headsign` em todo o percurso.
 
+Esta validação trata a ausência de `stop_headsign`: pode exigir, recomendar ou nada dizer, consoante a severidade e se o campo está interdito ou ignorado para a ausência. Se o valor existe, pode recusá-lo quando o campo está proibido e pode confinar o texto a uma lista de frases admitidas.
 
+### Passa
 
----
+- `stop_headsign` preenchido com texto admitido na lista de opções, quando essa lista existe, e o campo não está interdito.
+- `stop_headsign` vazio / ausente quando a regra não impõe mensagem por falta de valor (por exemplo, ignorar ou modo em que a ausência é aceite).
+- Texto livre permitido quando não há lista restritiva ou a lista aceita todas as opções configuradas.
 
-#### Passa
+### Falha
 
-
-
----
-
-#### Falha
-
-
-
-
-
+- `stop_headsign` fora da lista de textos permitidos. _Correção:_ usar uma das frases admitidas ou rever a lista.
+- Campo interdito com valor em `stop_headsign`. _Correção:_ remover o texto ou limpar o campo.
+- Ausência tratada como obrigatória ou recomendada. _Correção:_ preencher `stop_headsign` onde o destino muda a meio da viagem ou rever a severidade; se o destino é global, preferir `trip_headsign` em `trips.txt`.
 
