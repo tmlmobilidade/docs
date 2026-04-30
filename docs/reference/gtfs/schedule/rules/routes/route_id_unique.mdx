@@ -1,5 +1,5 @@
 ---
-title: teste
+title: Identificador obrigatório e sem repetições por rota
 description: route_id_unique
 ---
 ## Campos que serão validados nesta regra
@@ -13,20 +13,18 @@ description: route_id_unique
 
 ## O que esta validação faz 
 
-
-
+Garante que cada linha de rotas tem uma referência de rota preenchida e que essa referência não coincide com a de nenhuma outra linha no mesmo ficheiro.
 
 ---
 
-### Passa
-
-
+### Passa  
+- A referência está definida e não há duas linhas com a mesma referência.
 
 ---
 
 ### Falha
 
-
+- A referência está em falta ou aparece mais do que uma vez entre as rotas.
 
 
 
