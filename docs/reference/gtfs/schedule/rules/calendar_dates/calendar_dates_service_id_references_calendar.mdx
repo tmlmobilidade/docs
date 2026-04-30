@@ -1,0 +1,31 @@
+---
+title: Identificador de serviço nas excepções
+description: calendar_dates_service_id_references_calendar
+---
+## Campos que serão validados nesta regra
+
+| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
+| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
+
+
+
+
+## O que esta validação faz 
+
+O `service_id` na excepção de calendário indica que calendário de serviço está a ser alterado nesse dia (o mesmo conceito que em `calendar.txt`, podendo coexistir os dois ficheiros). No GTFS, cada par (serviço, data) neste ficheiro deve ser único quando se usam calendário e excepções em conjunto, e os valores devem alinhar com o calendário base quando este existe. Na implementação actual, esta verificação limita-se a exigir que o identificador não esteja em branco.
+
+---
+
+### Passa
+
+- O identificador de serviço está preenchido.
+
+---
+
+### Falha
+
+- O identificador de serviço está em branco.
+
+
+
+
