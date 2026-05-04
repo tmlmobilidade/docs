@@ -47,15 +47,9 @@ Quando um termo não corresponde diretamente a um filtro conhecido, o sistema ut
 As circulações são identificadas com o seguinte formato `[plan_id]-[agency_id]-[operational_day]-[trip_id]`
 Um exemplo de um `id` de uma circulação é `O9AXB-41-20260302-1001_0_1_0700_0729_0_1`. A pesquisa pelo `id` da circulação é a forma mais direta de chegar a uma circulação específica. Como os identificadores são únicos, colocando o ID na caixa de pesquisa irá devolver imediatamente a circulação que procuras.
 
-**Códigos operacionais**
+#### Códigos operacionais**
 
 Os códigos operacionais indentificam a linha, a variante ou o percurso e podem ser separados individualmente. Por exemplo: `line_id: 1001`, `route_id: 1001_0`, `pattern_id: 1001_0_1`.
-
-#### Horário da circulação
-
-Podemos filtrar as circulações por **hora de partida** (ex.: 0700) ou **hora de chegada** (0729) como identificadas no `id`
-Nota: Apenas é possível utilizar este filtro após inserido um código operacional
-
 #### Veículo associado
 
 É possível filtrar diretamente por identificador de veículo através do prefixo `v:{vehicle_id}`
