@@ -17,16 +17,16 @@ Confirma se o identificador do operador (`agency_id`) e o nome completo do o
 
 ### Passa
 
-- A verificação está desactivada ou ignorada.
-- Identificador e nome estão ambos preenchidos, existe lista de pares na regra, e o par indicado coincide com uma entrada autorizada.
-- Identificador e nome estão preenchidos e não há lista de pares na regra (não há confronto extra a exigir).
+- A verificação está desativada ou ignorada.
+- Identificador e o nome estão ambos preenchidos, existe lista de pares na regra, e o par indicado coincide com uma entrada autorizada.
+- Identificador e nome estão preenchidos e não há lista de pares na regra.
 - A regra não exige o par neste contexto ou o caso de ausência não é reportado, conforme configurado.
 
 ---
 
 ### Falha
 
-- Falta o identificador ou o nome do operador quando a regra exige ou recomenda que ambos existam para esta verificação (com a severidade configurada).
+- Falta o identificador ou o nome do operador quando a regra exige ou recomenda que ambos existam para esta verificação.
 - A regra proíbe tratar este relacionamento identificador/nome neste registo.
 - Existe lista de pares na regra e o par identificador + nome do ficheiro não coincide com nenhuma entrada - ou o identificador existe na lista mas o nome não corresponde ao nome esperado para esse identificador (mensagem de “sem correspondência” com o nome de referência associado ao identificador, quando a regra o fornece).
 
