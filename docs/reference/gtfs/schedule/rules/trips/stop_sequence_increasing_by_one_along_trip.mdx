@@ -12,7 +12,7 @@ description: stop_sequence_increasing_by_one_along_trip
 
 ## O que esta validação faz 
 
-O campo no ficheiro `stop_times.txt` define a ordem das paragens (ou equivalentes) ao longo de uma viagem: os números têm de aumentar ao longo do percurso, sem necessidade de serem consecutivos. A verificação percorre todas as entradas da viagem e garante, para além do GTFS, regras de coerência: sequência numérica bem formada, progressão das distâncias ao longo da forma (quando vêm indicadas) e proibição de repetir a mesma `stop_id` em duas posições seguidas na ordem da sequência, quando a paragem identifica com `stop_id` (há excepção lógica quando a paragem se resolve por grupo ou localização geográfica em vez de `stop_id`).
+No ficheiro `trips.txt`, o campo `stop_sequence` define a ordem das paragens (ou equivalentes) ao longo de uma viagem, os números têm de aumentar ao longo do percurso, sem necessidade de serem consecutivos. A verificação percorre todas as entradas da viagem e garante, para além do GTFS, regras de coerência: sequência numérica bem formada, progressão das distâncias ao longo da forma (quando vêm indicadas) e proibição de repetir a mesma `stop_id` em duas posições seguidas na ordem da sequência, quando a paragem identifica com `stop_id` (há excepção lógica quando a paragem se resolve por grupo ou localização geográfica em vez de `stop_id`).
 
 Se a regra tiver severidade de ignorar (ou o fluxo equivalente que suprime a verificação), nada se reporta. Sem identificador de viagem, a verificação não aplica a esta linha de `trips.txt`.
 
