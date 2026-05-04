@@ -16,7 +16,7 @@ description: drop_off_booking_rule_id_references_booking_rules_or_empty
 
 No ficheiro `stop_times`, o campo `drop_off_booking_rule_id` associa, a esta paragem da viagem, a regra de reserva aplicável à descida. No GTFS é opcional; a referência recomenda preenchê-lo quando o tipo de descida implica contacto com a operadora (`drop_off_type = 2`) - o detalhe do campo está na documentação geral do feed.
 
-Quando o identificador vem preenchido, deve ser exactamente um registo válido de `booking_rules.txt`. Se não existir essa correspondência, o dado está incorrecto. Em cenários em que o validador está preparado para rejeitar o uso deste campo, qualquer valor preenchido pode ser sinalizado.
+Quando o identificador vem preenchido, deve ser exactamente um registo válido de `booking_rules.txt`. Se não existir essa correspondência, o dado está incorrecto. Em cenários em que a regra está preparado para rejeitar o uso deste campo, qualquer valor preenchido pode ser sinalizado. 
 
 ---
 
@@ -31,4 +31,4 @@ Quando o identificador vem preenchido, deve ser exactamente um registo válid
 
 - Referência inexistente - o valor indicado não aparece em `booking_rules.txt`. 
 - Campo não admitido - o feed envia um identificador mas, no contexto de validação, esse campo não deve ser usado. 
-- Ausência - o campo está vazio e o validador regista obrigatoriedade ou recomendação de preenchimento. 
+- Ausência - o campo está vazio e a regra regista obrigatoriedade ou recomendação de preenchimento. 
