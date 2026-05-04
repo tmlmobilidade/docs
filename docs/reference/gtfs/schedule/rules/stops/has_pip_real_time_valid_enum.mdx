@@ -8,10 +8,6 @@ description: has_pip_real_time_valid_enum
 | ------------------- | ---- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `has_pip_real_time` | Enum | Opcional | Indica se a parada possui informações em tempo real.<br/><br/>Opções validas<br/><br/> `0` - Não aplicável para esta parada<br/> `1` - Possui informações em tempo real, mas está em mau estado<br/> `2` - Possui informações em tempo real e está em boas condições |
 
-
-
-
-
 ## O que esta validação faz 
 
 No ficheiro `stops.txt`, o campo `has_pip_real_time` indica, para a paragem, se existe informação em tempo real (por exemplo, PIP) e, quando aplicável, em que situação - através de códigos 0, 1 e 2 (o significado exacto de 1 e 2 deve constar do vosso dicionário de extensão de `stops.txt`). O campo é opcional; deixar o campo vazio é aceite no standard - significa não fornecer essa informação. O validador aplica as regras  sobre presença, proibição, valores permitidos nesse intervalo e, se existir, lista de opções permitidas.
