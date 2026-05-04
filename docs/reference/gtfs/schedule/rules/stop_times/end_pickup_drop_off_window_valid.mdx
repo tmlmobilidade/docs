@@ -31,6 +31,6 @@ A validação proíbe combinar `end_pickup_drop_off_window` preenchido com 
 ### Falha
 
 - Proibido com horário fixo: `arrival_time` ou `departure_time` com valor e `end_pickup_drop_off_window` também preenchido.
-- Obrigatório em falta: há `start_pickup_drop_off_window` ou `location_group_id` / `location_id`, mas `end_pickup_drop_off_window` vazio. _Correção:_ preencher o fim da janela de forma coerente.
-- Tempo inválido em `end_pickup_drop_off_window`. _Correção:_ usar formato de hora admitido pelo validador.
-- Ausência com mensagem de obrigatoriedade ou recomendação. _Correção:_ preencher `end_pickup_drop_off_window` ou alinhar com o operador do feed.
+- Obrigatório em falta: há `start_pickup_drop_off_window` ou `location_group_id` / `location_id`, mas `end_pickup_drop_off_window` vazio.
+- Tempo inválido em `end_pickup_drop_off_window`.
+- Ausência com mensagem de obrigatoriedade ou recomendação.
