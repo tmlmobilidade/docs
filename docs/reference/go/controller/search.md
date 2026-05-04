@@ -2,7 +2,7 @@
 title: Pesquisa de Circulações
 description: Técnicas avançadas para encontrares a circulação que procuras.
 ---
-Como cada Ride representa apenas uma circulação, o volume de dados é enorme. Só a Carris Metropolitana tem mais de 20.000 rides por dia. Por isso, é necessário aplicar filtros para ser possível encontrar as rides que procuras.
+Como cada Ride representa apenas uma circulação, o volume de dados é enorme. Só a Carris Metropolitana tem mais de 20.000 rides por dia. Por isso, é necessário aplicar filtros para conseguires encontrar as rides que procuras.
 ## Filtros
 
 No início da página está disponível uma barra com todos os filtros possíveis de aplicar à pesquisa. O único filtro obrigatório, e que está sempre ativo, é o do intervalo de datas. Por defeito, a aplicação mostra as rides que estão ativas agora.
