@@ -11,7 +11,7 @@ description: shape_pt_sequence_not_repeated_within_shape
 
 ## O que esta validação faz 
 
-No `shapes.txt`, o campo `shape_pt_sequence` define a ordem em que os pontos da mesma forma se ligam ao longo do percurso. Pelo GTFS, os valores devem aumentar ao longo da viagem mas não precisam de ser consecutivos (ex.: 0, 6, 11).
+O campo `shape_pt_sequence` define a ordem em que os pontos da mesma forma se ligam ao longo do percurso. Pelo GTFS, os valores devem aumentar ao longo da viagem mas não precisam de ser consecutivos (ex.: 0, 6, 11).
 
 Esta validação exige que `shape_pt_sequence` exista e que seja um inteiro ≥ 0. Não verifica aqui se o mesmo número se repete noutra linha da mesma `shape_id`, nem se a ordem é estritamente crescente ao longo da forma.
 
@@ -25,8 +25,8 @@ Esta validação exige que `shape_pt_sequence` exista e que seja um inteiro
 
 ### Falha
 
-- `shape_pt_sequence` ausente. _Correção:_ atribuir o índice de ordem do ponto na forma.
-- `shape_pt_sequence` negativo. _Correção:_ usar 0 ou valores não negativos coerentes com a ordem do traçado.
+- `shape_pt_sequence` ausente.
+- `shape_pt_sequence` negativo.
 
 
 
