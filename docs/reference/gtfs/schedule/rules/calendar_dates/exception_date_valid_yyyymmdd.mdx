@@ -6,14 +6,14 @@ description: exception_date_valid_yyyymmdd
 
 | Nome do Campo | Tipo | Presença    | Descrição                                |
 | ------------- | ---- | ----------- | ---------------------------------------- |
-| `data`        | Data | Obrigatório | Data em que ocorre a exceção de serviço. |
+| `date`        | Data | Obrigatório | Data em que ocorre a exceção de serviço. |
 
 
 
 
 ## O que esta validação faz 
 
-No ficheiro excepções de calendário, o campo data indica o dia em que se aplica a alteração ao serviço (por exemplo inclusão ou remoção de serviço nesse dia). O valor é obrigatório. Esta verificação garante que a data não está em branco e que corresponde a uma data de serviço válida segundo as regras da aplicação (em geral oito algarismos no formato ano–mês–dia, com dia civil existente no calendário).
+No ficheiro exceções de `calendar.txt`, o campo `date` indica o dia em que se aplica a alteração ao serviço (por exemplo inclusão ou remoção de serviço nesse dia). O valor é obrigatório. Esta verificação garante que a data não está em branco e que corresponde a uma data de serviço válida segundo as regras da aplicação (em geral oito algarismos no formato ano–mês–dia, com dia civil existente no calendário).
 
 ---
 
