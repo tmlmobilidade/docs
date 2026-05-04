@@ -12,5 +12,6 @@
 		"fare_attributes",
 		"fare_rules",
 		"vehicles"
-	]
+	],
+	"title": "Especificação"
 }
