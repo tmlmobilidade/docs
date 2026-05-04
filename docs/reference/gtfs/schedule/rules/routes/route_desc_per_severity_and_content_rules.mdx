@@ -13,11 +13,11 @@ description: route_desc_per_severity_and_content_rules
 
 ## O que esta validação faz 
 
-No `routes.txt`, o campo `route_desc` é um texto descritivo da linha de modo a informar o passageiro com qualidade. Pelo GTFS, não deve repetir à letra o nome curto nem o nome longo da rota - situações dessas são tratadas como avisos quando a descrição existe e coincide com um desses campos.
+No `routes.txt`, o campo `route_desc` é um texto descritivo da linha de modo a informar o passageiro com qualidade. Pelo GTFS, não deve repetir à letra o nome curto nem o nome longo da rota, situações destas são tratadas como avisos quando a descrição existe e coincide com um desses campos.
 
-É obrigatório preencher `route_desc` quando `route_short_name` está vazio (ausente ou em branco). Se o nome curto existe, `route_desc` pode ficar vazio sem incumprimento por essa regra.
+É obrigatório preencher `route_desc` quando `route_short_name` está vazio (ausente ou em branco). Se o nome curto existe, `route_desc` pode ficar vazio sem incumprimento por essa regra.
 
-Se o campo for interdito no perfil de dados mas estiver preenchido, incumpre. Pode ainda existir uma lista de textos admitidos; nesse caso o conteúdo de `route_desc` tem de constar dessa lista (ou a política aceitar todas as opções).
+Se o campo for interdito no perfil de dados mas estiver preenchido, incumpre. Pode ainda existir uma lista de textos admitidos, neste caso o conteúdo de `route_desc` tem de constar dessa lista (ou a política aceitar todas as opções).
 
 ---
 
@@ -31,9 +31,9 @@ Se o campo for interdito no perfil de dados mas estiver preenchido, incumpre.
 
 ### Falha
 
-- `route_short_name` e `route_desc` ambos vazios. _Correção:_ preencher pelo menos `route_desc` (ou, em alternativa coerente com o GTFS, preencher `route_short_name` para não depender da descrição obrigatória).
-- Campo proibido com texto. _Correção:_ esvaziar `route_desc` ou rever a política.
-- Texto fora da lista permitida. _Correção:_ usar descrição admitida.
+- `route_short_name` e `route_desc` ambos vazios.
+- Campo proibido com texto. 
+- Texto fora da lista permitida.
 
 
 
