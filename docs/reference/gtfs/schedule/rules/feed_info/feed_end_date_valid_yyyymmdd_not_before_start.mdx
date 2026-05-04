@@ -13,7 +13,7 @@ description: feed_end_date_valid_yyyymmdd_not_before_start
 
 ## O que esta validação faz 
 
-O campo `feed_end_date` indica o intervalo em que o conjunto de dados se considera completo e fiável, a data de início à data de fim (este campo é o último dia incluído nesse período). As duas datas podem ficar vazias quando não estão disponíveis. Quando `feed_end_date` tem valor não vazio, esta verificação confirma que corresponde a uma data de serviço válida (formato e dia civil aceites pela função interna). A ausência do valor pode ser reportada como obrigatória ou recomendada consoante a configuração (excepto quando a verificação não se aplica). Se não for passada severidade à função, usa-se por omissão nível de aviso.
+O campo `feed_end_date` indica o intervalo em que o conjunto de dados se considera completo e fiável, a data de início à data de fim (este campo é o último dia incluído nesse período). As duas datas podem ficar vazias quando não estão disponíveis. Quando `feed_end_date` tem valor não vazio, esta verificação confirma que corresponde a uma data de serviço válida. A ausência do valor pode ser reportada como obrigatória ou recomendada consoante a configuração.
 
 ---
 
