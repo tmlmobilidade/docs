@@ -12,7 +12,7 @@ description: stop_short_name_valid
 
 ## O que esta validação faz 
 
-O `stop_short_name` é um nome curto opcional para a paragem, útil quando o `stop_name` completo é demasiado longo para ecrãs ou listas. No GTFS o campo é opcional; deixar o campo vazio (ou não o fornecer) é aceite - significa não indicar nome curto. O validador aplica as regras  sobre presença (obrigatório ou recomendado, quando a verificação não é dispensada), proibição quando o valor vem fornecido, e lista de opções permitidas para o texto. Não há, nesta função, lógica adicional em função do `location_type` (apenas o que as regras e a severidade definirem).
+No ficheiro `stops.txt`, o campo `stop_short_name` é um nome curto opcional para a paragem, útil quando o `stop_name` completo é demasiado longo para ecrãs ou listas. No GTFS o campo é opcional; deixar o campo vazio (ou não o fornecer) é aceite - significa não indicar nome curto. O validador aplica as regras  sobre presença (obrigatório ou recomendado, quando a verificação não é dispensada), proibição quando o valor vem fornecido, e lista de opções permitidas para o texto. Não há, nesta função, lógica adicional em função do `location_type` (apenas o que as regras e a severidade definirem).
 
 ---
 
