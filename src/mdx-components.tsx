@@ -9,9 +9,9 @@ import { type MDXComponents } from 'mdx/types';
 
 export function getMDXComponents(components?: MDXComponents): MDXComponents {
 	return {
-		// ...defaultMdxComponents,
-		// ...obsidianComponents,
-		// ObsidianCallout: Callout,
-		// ...components,
+		...defaultMdxComponents,
+		...obsidianComponents,
+		ObsidianCallout: Callout,
+		...components,
 	};
 }
