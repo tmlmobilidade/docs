@@ -1,0 +1,49 @@
+---
+title: API
+description: O que é um alerta, para que serve, como criar um alerta e que visibilidade tem após publicação.
+---
+## O que é um Alerta e para que serve
+
+Um **alerta** é uma mensagem de serviço que informa passageiros e sistemas externos sobre situações que afectam a operação — acidentes, obras, greves, alterações de rede, entre outras.
+
+A plataforma funciona como uma camada de gestão interna: os alertas são criados e editados aqui e, após publicação, são convertidos automaticamente no formato [GTFS Realtime](/reference/gtfs/realtime/service-alerts) para[]() consumo por aplicações de passageiros, painéis de informação e sistemas de terceiros.
+
+Em resumo, um alerta serve para:
+
+- **Comunicar** interrupções, atrasos, desvios ou alterações de serviço aos passageiros.
+- **Publicar** informação estruturada e normalizada (causa, efeito, entidades afectadas) em feeds padrão.
+- **Distinguir** período em que o problema ocorre (período ativo) do período em que o alerta é visível (período de publicação), permitindo avisos antecipados ou alertas em curso.
+
+Para o modelo de dados completo e todos os campos do alerta, consulte o [[data-types.mdx|Modelo de dados]].
+
+## Criar um Alerta
+
+1. **Classificar o alerta** — Escolher a **causa** (o que originou a situação) e o **efeito** (como afecta o serviço). A lista de causas e efeitos disponíveis está em [[causes-effects.mdx|Causas e Efeitos]]. Nem todas as combinações são válidas; as combinações permitidas estão na [[cause-effect-matrix.mdx|Relações entre Causas e Efeitos]].
+
+2. **Definir os períodos** — Configurar as **datas vigência** (quando a situação ocorre) e as **datas de publicação** (quando o alerta fica visível no feed). O [[data-types.mdx|Modelo de dados]] descreve estes campos. Por defeito a data de públicação é o dia atual. e a data de vigência é desde o memento atual até 4 horas adiante.
+
+3. **Definir o âmbito** — Indicar **que entidades** são afectadas: toda a agência, linhas, paragens ou viagens específicas. Isto faz-se através do tipo de referência e das referências (ex.: linhas/paragens/viagens concretas). Para mais detalhe e exemplos, consulte [[reference-types.mdx|Referências]].
+
+4. **Definir o conteúdo** — Título, descrição e, se aplicável, URL de informação adicional ou imagem, até mesmo coordenadas geográficas. O título e descrição são gerados automaticamente a partir da causa e efeito, mas com a possibilidade de ser editados se o utilizador tiver permissões para o fazer.
+
+5. **Guardar e publicar** — O alerta pode ficar em rascunho até estar pronto. Após publicação, passa a ser incluído no feed GTFS-RT do GO.
+
+## Visibilidade do alerta após publicação
+
+Assim que um alerta é **publicado**:
+
+- **Inclusão no feed** — O alerta é convertido para o formato [[service-alerts.mdx|GTFS Realtime]] e incluído no feed de Service Alerts, desde que esteja dentro do **período de publicação** (`publish_start_date` / `publish_end_date`). Aplicações, painéis e sistemas que consomem o feed passam então a receber este alerta.
+
+- **Período de publicação vs período de vigência** — A **visibilidade** no feed é controlada pelo período de publicação. O **período de vigência** indica quando a situação descrita está efectivamente a ocorrer. Assim, é possível publicar um alerta antes do início do período de vigência (ex.: obras na próxima semana) ou mantê-lo visível após o fim do período de vigência, conforme configurado.
+
+- **Estado de publicação** — O campo `publish_status` pode ser `draft`, `published` ou `archived`. Apenas alertas com estado `published` e dentro do intervalo de datas de publicação são expostos no feed.
+
+### Exemplos de visibilidade do alerta após publicação:
+
+#### Carris Metropolitana
+
+![[Pasted image 20260213204111.png]]
+
+#### Google Maps
+
+![[Pasted image 20260213231019.png|300]]
