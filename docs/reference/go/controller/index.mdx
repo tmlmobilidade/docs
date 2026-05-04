@@ -1,8 +1,8 @@
 ---
-title: Monitorização
+title: Circulações
 description: Descrição
 ---
-## O que é a Monitorização
+## Visão Geral
 
 Este módulo é responsável por transformar a informação contida nos GTFS estáticos ([planos de operação](/reference/glossary#plano-de-operação)) em [circulações](/reference/glossary#circulação) e analisar cada uma individualmente, combinando as posições GPS dos veículos e as transações de bilhética APEX.
 
@@ -12,10 +12,10 @@ Chamamos a uma circulação de `ride`, para diferenciar de `trip`. Todas as `rid
 - **informações da componente de bilhética:** número de passageiros transportados, vendas a bordo, etc.
 - **resultado das análises:** se chegou a horas, se serviu todas as paragens, etc.
 
-![[Screenshot 2026-05-04 at 23.27.00.png]]
+![[go-controller-overview.png]]
 
 > [!INFO]
-> Conversão UNIX timestamp para hora - \[Célula com timestamp]/1000/86400 + DATE(1970,1,1)
+> Conversão UNIX timestamp para hora - \[Célula com timestamp]/1000/86400 + DATE(1970,1,1)
 ## Dados disponíveis
 
 | Campo                                     | Descrição                                                                                                                                                                  | Origem        | Exemplo                                                             |
