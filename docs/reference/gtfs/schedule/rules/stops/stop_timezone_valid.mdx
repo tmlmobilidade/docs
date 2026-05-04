@@ -4,8 +4,9 @@ description: stop_timezone_valid
 ---
 ## Campos que serão validados nesta regra
 
-| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
-| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
+| Nome do Campo   | Tipo         | Presença | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| --------------- | ------------ | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `stop_timezone` | Fuso horário | Opcional | Timezone of the location.<br><br>  <br><br>If the location has a parent station, it inherits the parent station's timezone instead of applying its own.<br><br>  <br><br>Stations and parentless stops with empty stop_timezone inherit the timezone specified by `agency.agency_timezone`.<br><br>  <br><br>The times provided in stop_times.txt are in the timezone specified by `agency.agency_timezone`, not stop_timezone. This ensures that the time values in a trip always increase over the course of a trip, regardless of which timezones the trip crosses. |
 
 
 
