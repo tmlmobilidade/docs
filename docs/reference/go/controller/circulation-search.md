@@ -28,6 +28,7 @@ Explora a plataforma para consultar os filtros disponíveis.
 A funcionalidade de pesquisa por texto permite localizar circulações de forma rápida e flexível através da introdução de palavras-chave, identificadores ou filtros diretos. O sistema interpreta automaticamente o conteúdo pesquisado e aplica os critérios mais adequados para encontrar os resultados pretendidos.
 
 A pesquisa pode ser utilizada tanto para consultas simples como para combinações mais avançadas.
+
 ### Como Funciona
 
 Ao introduzir texto no campo de pesquisa, o sistema analisa cada termo individualmente e tenta associá-lo ao tipo de informação mais relevante, como por exemplo:
@@ -41,28 +42,21 @@ Ao introduzir texto no campo de pesquisa, o sistema analisa cada termo individua
 Sempre que possível, os termos são encaminhados para filtros específicos, tornando a pesquisa mais precisa e eficiente.
 
 Quando um termo não corresponde diretamente a um filtro conhecido, o sistema utiliza-o como pesquisa genérica, procurando correspondências no identificador da circulação.
-
 #### ID da Ride
 
 As circulações são identificadas com o seguinte formato `[plan_id]-[agency_id]-[operational_day]-[trip_id]`
 Um exemplo de um `id` de uma circulação é `O9AXB-41-20260302-1001_0_1_0700_0729_0_1`. A pesquisa pelo `id` da circulação é a forma mais direta de chegar a uma circulação específica. Como os identificadores são únicos, colocando o ID na caixa de pesquisa irá devolver imediatamente a circulação que procuras.
-
-#### Códigos operacionais**
+#### Códigos operacionais
 
 Os códigos operacionais indentificam a linha, a variante ou o percurso e podem ser separados individualmente. Por exemplo: `line_id: 1001`, `route_id: 1001_0`, `pattern_id: 1001_0_1`.
 #### Veículo associado
 
-É possível filtrar diretamente por identificador de veículo através do prefixo `v:{vehicle_id}`
-Como por exemplo `v:1603`
-
-É possível ainda pesquisar por múltiplos veículos de uma só vez, separando os valores por virgulas
+É possível filtrar diretamente por identificador do veículo através do prefixo `v:{vehicle_id}`. É possível ainda pesquisar por múltiplos veículos de uma só vez, separando os valores por virgulas
 Como por exemplo `v:1603,2000`
 
+Exemplo: `v:1234` ou `v:1234,5678`
 #### Motorista associado
 
-É possível filtrar diretamente por identificador de motorista através do prefixo `d:{driver_id}`
-Como por exemplo `d:1234`
+É possível filtrar diretamente por identificador de motorista através do prefixo `d:{driver_id}`. É possível ainda pesquisar por múltiplos motoristas de uma só vez, separando os valores por virgulas.
 
-É possivel ainda pesquisar por múltiplos motoristas de uma só vez, separando os valores por virgulas
-Como por exemplo `v:1234,5678`
-
+Exemplo: `d:1234` ou `d:1234,5678`
