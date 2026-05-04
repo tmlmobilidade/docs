@@ -13,7 +13,7 @@ description: feed_contact_url_valid_http_url
 
 ## O que esta validação faz 
 
-O GTFS prevê um URL facultativo em `feed_info.txt` para informação de contacto técnica sobre o conjunto de dados e a sua publicação (formulário Web, portal de suporte, etc.) - destinado a aplicações que consomem GTFS, não ao apoio ao utente do operador em `agency.txt`. Quando o valor existe e não é cadeia vazia, esta verificação confirma que tem forma de URL aceite pelas regras da aplicação. A ausência pode ser tratada como obrigatória ou recomendada (excepto quando a verificação não se aplica à linha), e o campo pode ser proibido pela configuração. Se nenhuma severidade for passada à função, assume-se por omissão nível de aviso para as mensagens do contexto.
+O campo `feed_contact_url` prevê um URL facultativo em `feed_info.txt` para informação de contacto técnica sobre o conjunto de dados e a sua publicação (formulário Web, portal de suporte, etc.) - destinado a aplicações que consomem GTFS, não ao apoio ao utente do operador em `agency.txt`. Quando o valor existe e não é cadeia vazia, esta verificação confirma que tem forma de URL aceite pelas regras da aplicação. A ausência pode ser tratada como obrigatória ou recomendada (excepto quando a verificação não se aplica à linha), e o campo pode ser proibido pela configuração. Se nenhuma severidade for passada à função, assume-se por omissão nível de aviso para as mensagens do contexto.
 
 ---
 
