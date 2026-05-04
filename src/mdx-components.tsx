@@ -11,7 +11,6 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
 	return {
 		...defaultMdxComponents,
 		...obsidianComponents,
-		ObsidianCallout: Callout,
 		...components,
 	};
 }
