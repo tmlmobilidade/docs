@@ -4,15 +4,16 @@ description: calendar_start_end_dates_valid_yyyymmdd_order
 ---
 ## Campos que serão validados nesta regra
 
-| Nome do Campo  | Tipo | Presença    | Descrição                                                                                          |
-| -------------- | ---- | ----------- | -------------------------------------------------------------------------------------------------- |
-| `data_inicial` | Data | Obrigatório | Dia de início do serviço para o intervalo de serviço.                                              |
-| `data_fim`     | Data | Obrigatório | Dia de fim do serviço para o intervalo de serviço. Este dia de serviço está incluído no intervalo. |
+| Nome do Campo | Tipo | Presença    | Descrição                                                                                          |
+| ------------- | ---- | ----------- | -------------------------------------------------------------------------------------------------- |
+| `start_date`  | Data | Obrigatório | Dia de início do serviço para o intervalo de serviço.                                              |
+| `end_date`    | Data | Obrigatório | Dia de fim do serviço para o intervalo de serviço. Este dia de serviço está incluído no intervalo. |
+
 
 
 ## O que esta validação faz 
 
-No ficheiro calendário, os campos de data de início e data de fim do período de serviço são obrigatórios. Esta verificação, aplicada a cada uma dessas datas em separado, garante que o valor não está vazio e que corresponde a uma data de serviço válida segundo as regras da aplicação (em geral oito algarismos no formato ano–mês–dia, com dia civil existente no calendário).
+No ficheiro `calendar.txt`, os campos de data de início (`start_date`) e data de fim do período de serviço (`end_date`) são obrigatórios. Esta verificação, aplicada a cada uma dessas datas em separado, garante que o valor não está vazio e que corresponde a uma data de serviço válida segundo as regras da aplicação (em geral oito algarismos no formato ano–mês–dia, com dia civil existente no calendário).
 
 ---
 
