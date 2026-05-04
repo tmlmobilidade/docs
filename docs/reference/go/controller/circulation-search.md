@@ -3,7 +3,7 @@ title: Pesquisa de Circulações
 description: Técnicas avançadas para encontrares a circulação que procuras.
 ---
 Como cada Ride representa apenas uma circulação, o volume de dados é enorme. Só a Carris Metropolitana tem mais de 20.000 rides por dia. Por isso, é necessário aplicar filtros para conseguires encontrar as rides que procuras.
-## Barra de Filtros
+## Filtros
 
 No início da página está disponível uma barra com todos os filtros possíveis de aplicar à pesquisa. O único filtro obrigatório, e que está sempre ativo, é o do intervalo de datas. Por defeito, a aplicação mostra as rides que estão ativas agora.
 
@@ -11,38 +11,19 @@ Por questões de performance, a lista não mostra mais do que 2.000 rides de cad
 
 A funcionalidade de exportação não tem limite de resultados.
 
-**Os filtros disponíveis são:**
-- Intervalo de datas (obrigatório)
-- Operador
-- Estado
-- Atraso
-- Aceitação
-- 3 Momentos
-- Fim na Última Paragem
-- Intervalo Validações
-- Sequencialidade APEX
+#### Intervalo de datas
 
-### Intervalo de datas
+O filtro por i**ntervalo de datas** é o único que é obrigatório devido ao elevado volume de dados. Este permite-nos filtrar as circulações por um intervalo entre o *inicio de hora planeada* (`start_time_scheduled`) e *fim de hora planeada* (`end_time_scheduled`).
 
-O filtro por i**ntervalo de datas** é o único que é obrigatório devido ao elevado volume de dados. Este permite-nos filtar as circulações por um intervalo entre o *inicio de hora planeada* (`start_time_scheduled`) e *fim de hora planeada* (`end_time_scheduled`).
+#### Operador
 
-### Operador
+O filtro por **operador** (`agency_id`) permite-nos visualizar circulações realizadas pelos operadores selecionados.
 
-O filtro por **operador** (`agency_id`) permite-nos apenas visualizar circulações realizadas por os operadores selecionados.
-Por defeito todos os operadores estão selecionados.
+#### Outros filtros
 
-### Atraso
+Explora a plataforma para consultar os filtros disponíveis.
 
-O filtro por **atraso** permite-nos filtrar circulações pelo teste de atraso que compara o `start_time_scheduled` com o `start_time_observed`.
-
-As opções disponíveis são:
-- A Horas
-- Atrasada
-- Adiantada
-- (Sem valor) - Quando o teste ainda não foi realizado
-
----
-## Pesquisa por Texto
+## Pesquisa Livre
 
 A funcionalidade de pesquisa por texto permite localizar circulações de forma rápida e flexível através da introdução de palavras-chave, identificadores ou filtros diretos. O sistema interpreta automaticamente o conteúdo pesquisado e aplica os critérios mais adequados para encontrar os resultados pretendidos.
 
@@ -51,7 +32,7 @@ A pesquisa pode ser utilizada tanto para consultas simples como para combinaçõ
 
 Ao introduzir texto no campo de pesquisa, o sistema analisa cada termo individualmente e tenta associá-lo ao tipo de informação mais relevante, como por exemplo:
 
-- Identificador da circulação
+- ID da Ride
 - Códigos operacionais
 - Veículo associado
 - Motorista associado
@@ -61,16 +42,14 @@ Sempre que possível, os termos são encaminhados para filtros específicos, tor
 
 Quando um termo não corresponde diretamente a um filtro conhecido, o sistema utiliza-o como pesquisa genérica, procurando correspondências no identificador da circulação.
 
-#### Identificador da circulação
-
-A pesquisa pelo `id` da circulação é a forma mais direta de chegar a uma circulação específica. Os identificadores são únicos.
+#### ID da Ride
 
 As circulações são identificadas com o seguinte formato `[plan_id]-[agency_id]-[operational_day]-[trip_id]`
-Um exemplo de um `id` de uma circulação é `O9AXB-41-20260302-1001_0_1_0700_0729_0_1`.
+Um exemplo de um `id` de uma circulação é `O9AXB-41-20260302-1001_0_1_0700_0729_0_1`. A pesquisa pelo `id` da circulação é a forma mais direta de chegar a uma circulação específica. Como os identificadores são únicos, colocando o ID na caixa de pesquisa irá devolver imediatamente a circulação que procuras.
 
 **Códigos operacionais**
 
-Os códigos operacionais podem ser separados em:
+Os códigos operacionais indentificam a linha, a variante ou o percurso e podem ser separados em:
 - `line_id` - `1001`
 - `route_id` - `1001_0`
 - `pattern_id ` - `1001_0_1`
