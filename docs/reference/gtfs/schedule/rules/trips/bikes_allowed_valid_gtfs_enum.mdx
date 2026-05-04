@@ -12,7 +12,7 @@ description: bikes_allowed_valid_gtfs_enum
 
 ## O que esta validação faz 
 
-O campo indica, por viagem, se existe informação sobre o transporte de bicicletas: sem informação, viagem com capacidade para pelo menos uma bicicleta, ou viagem em que não são permitidas. No GTFS o campo é opcional; deixar o campo vazio no ficheiro é legítimo - significa não fornecer essa informação (a mesma intenção que o valor `0` quando o valor vem preenchido). O validador do projeto, para além do standard, pode recomendar ou exigir o preenchimento ou restringir a valores permitidos pelas regras.
+No ficheiro `trips.txt`, o campo `bikes_allowed` indica, por viagem, se existe informação sobre o transporte de bicicletas, sem informação, viagem com capacidade para pelo menos uma bicicleta, ou viagem em que não são permitidas. No GTFS o campo é opcional; deixar o campo vazio no ficheiro é legítimo - significa não fornecer essa informação (a mesma intenção que o valor `0` quando o valor vem preenchido). A regra, para além do standard, pode recomendar ou exigir o preenchimento ou restringir a valores permitidos pelas regras.
 
 ---
 
