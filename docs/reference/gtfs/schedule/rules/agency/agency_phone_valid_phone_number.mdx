@@ -13,24 +13,23 @@ description: agency_phone_valid_phone_number
 
 ## O que esta validação faz 
 
-O campo `agency_phone` prevê um número de telefone facultativo para o operador, apresentado como é habitual na área de serviço. Nesta implementação, a verificação consiste a tratar a ausência conforme a regra (obrigatório, recomendado ou ignorado); recusar o campo quando a regra o proíbe. Não há, no código deste ficheiro, validação automática do formato internacional ou nacional do número - apesar do identificador interno da regra sugerir “número válido”.
+O campo `agency_phone` prevê um número de telefone facultativo para o operador, apresentado como é habitual na área de serviço (pode incluir pontuação ou letras marcáveis, desde que o conjunto seja marcável e sem texto descritivo a mais, tal como o GTFS descreve). Trata-se a ausência conforme a regra (obrigatório, recomendado ou ignorado); recusa-se o campo quando a regra o proíbe. Quando o valor existe, esta verificação exige que o texto não seja vazio só com espaços, que só contenha caracteres permitidos para telefone (algarismos, letras, espaços e alguns separadores habituais) e que inclua pelo menos sete algarismos. Depois, se a regra definir uma lista fechada de números admitidos, o texto tem de coincidir com uma entrada dessa lista (ou a regra admite qualquer valor válido pelo critério anterior).
 
 ---
 
 ### Passa
 
-- O campo está vazio e a regra permite isso (incluindo quando a verificação não se aplica a esta linha).
-- O campo está preenchido, a regra não o proíbe e, se existir lista de valores permitidos, o texto coincide com uma entrada (ou a regra admite qualquer valor).
-- O campo está vazio quando a regra não admite valores neste campo.
+- O campo está vazio a nível de registo e a regra permite isso (incluindo quando a verificação não se aplica a esta linha).
+- O campo está preenchido, passa na validação de telefone, a regra não o proíbe e, se existir lista de valores permitidos, o texto coincide com uma entrada (ou a regra admite qualquer valor passível de aceitação).
+- O campo está vazio a nível de registo quando a regra não admite valores neste campo.
 
 ---
 
 ### Falha
 
-- O campo está em falta quando a regra exige preenchimento (ou quando a ausência é reportada com a severidade definida para “obrigatório” / “recomendado”).
+- O campo está em falta quando a regra exige preenchimento (ou quando a ausência é reportada com a severidade definida para obrigatório ou recomendado).
 - O campo está preenchido quando a regra o proíbe.
+- O valor não respeita as regras de telefone (vazio após ignorar espaços no fim, caracteres não permitidos ou menos de sete algarismos), com a severidade definida pelo contexto da mensagem.
 - O valor não consta da lista admitida pela regra, quando essa lista é fechada.
-
-
 
 
