@@ -2,7 +2,12 @@
 	"pages": [
 		"index",
 		"api",
-		"modules",
+		"alerts",
+		"ferramentas",
+		"controller",
+		"offer",
+		"plans",
+		"performance",
 		"tools"
 	]
 }
