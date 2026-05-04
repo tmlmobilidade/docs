@@ -15,7 +15,7 @@ description: shape_dist_traveled_delta_mismatches_haversine_segment
 
 Para cada percurso geométrico (conjunto de pontos com o mesmo `shape_id`), os pontos são considerados por ordem (`shape_pt_sequence`).
 
-Entre cada par de pontos consecutivos dessa ordem, o validador:
+Entre cada par de pontos consecutivos desta ordem, como é validado:
 
 1. Calcula a distância real no terreno (aproximação de geodesia, como num mapa) a partir da latitude e longitude de cada ponto, expressa em metros.
 2. Calcula, a partir de `shape_dist_traveled`, a diferença entre o valor acumulado no ponto atual e o do ponto anterior - ou seja, o troço que a publicação de dados declara ter sido percorrido entre esses dois pontos, também em metros (o sistema de importação ajusta se os valores no ficheiro forem em quilómetros ou em metros, com base no contexto de toda a forma).
@@ -28,7 +28,7 @@ Se um dos pontos do par não tiver `shape_dist_traveled`, ou se os valores fore
 
 ### O que o erro indica
 
-- Detalhe: entre dois vértices consecutivos com `shape_dist_traveled` não nulo e não zero, o salto geodésico não coincide com o incremento de `shape_dist_traveled` (já em metros), fora da tolerância configurada (ou 20 m).
+- Detalhe: entre dois vértices consecutivos com `shape_dist_traveled` não nulo e não zero, o salto geodésico não coincide com o incremento de `shape_dist_traveled` (já em metros), fora da tolerância configurada.
 - Muitos erros: volume elevado de pares inconsistentes; convém rever a forma globalmente (sequência, coordenadas, unidades de `shape_dist_traveled`).
 
 ---
