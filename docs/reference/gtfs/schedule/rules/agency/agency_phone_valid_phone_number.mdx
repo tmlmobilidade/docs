@@ -13,7 +13,7 @@ description: agency_phone_valid_phone_number
 
 ## O que esta validação faz 
 
-O campo `agency_phone` prevê um número de telefone facultativo para o operador, apresentado como é habitual na área de serviço (pode incluir pontuação ou letras marcáveis, desde que o conjunto seja marcável e sem texto descritivo a mais, tal como o GTFS descreve). Trata-se a ausência conforme a regra (obrigatório, recomendado ou ignorado); recusa-se o campo quando a regra o proíbe. Quando o valor existe, esta verificação exige que o texto não seja vazio só com espaços, que só contenha caracteres permitidos para telefone (algarismos, letras, espaços e alguns separadores habituais) e que inclua pelo menos sete algarismos. Depois, se a regra definir uma lista fechada de números admitidos, o texto tem de coincidir com uma entrada dessa lista (ou a regra admite qualquer valor válido pelo critério anterior).
+O campo `agency_phone` prevê um número de telefone facultativo para o operador, apresentado como é habitual na área de serviço. Trata-se a ausência conforme a regra (obrigatório, recomendado ou ignorado); recusa-se o campo quando a regra o proíbe. Quando o valor existe, esta verificação exige que o texto não seja vazio só com espaços, que só contenha caracteres permitidos para telefone (algarismos, letras, espaços e alguns separadores habituais) e que inclua pelo menos sete algarismos. Depois, se a regra definir uma lista fechada de números admitidos, o texto tem de coincidir com uma entrada dessa lista (ou a regra admite qualquer valor válido pelo critério anterior).
 
 ---
 
