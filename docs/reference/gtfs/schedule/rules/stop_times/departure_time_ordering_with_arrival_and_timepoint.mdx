@@ -13,7 +13,7 @@ description: departure_time_ordering_with_arrival_and_timepoint
 
 ## O que esta validação faz 
 
-O campo `departure_time` é a hora de partida do veículo da paragem para uma dada viagem, expressa no fuso horário da agência (`agency_timezone`, não o da paragem). No GTFS pode usar-se mais de 24 horas para tempos após a meia-noite do dia de serviço; quando chegada e partida são iguais, `arrival_time` e `departure_time` devem coincidir - o detalhe está na referência do feed.
+No ficheiro `stop_times`, o campo `departure_time` é a hora de partida do veículo da paragem para uma dada viagem, expressa no fuso horário da agência (`agency_timezone`, não o da paragem). No GTFS pode usar-se mais de 24 horas para tempos após a meia-noite do dia de serviço; quando chegada e partida são iguais, `arrival_time` e `departure_time` devem coincidir - o detalhe está na referência do feed.
 
 Esta verificação garante, em concreto: horário certo na paragem (`timepoint = 1`) implica partida preenchida e bem formatada; com janelas de pickup/drop-off definidas na linha, não deve existir partida fixa neste campo; qualquer valor preenchido deve ser um tempo válido. Pode ainda sinalizar ausência de partida quando o modo de validação não trata o campo como “apenas informativo”. 
 
