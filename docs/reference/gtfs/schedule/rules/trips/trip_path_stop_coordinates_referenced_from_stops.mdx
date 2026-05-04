@@ -17,7 +17,7 @@ description: trip_path_stop_coordinates_referenced_from_stops
 Partida: cada viagem em `trips.txt` tem um `trip_id`, um `shape_id` (nesta regra só interessa quando a viagem tem shape) e, em `stop_times.txt`, a lista de paragens por onde essa viagem passa.
 
 Passo 1 - Quais paragens?  
-Para essa viagem, o validador percorre os `stop_times` e recolhe os `stop_id` que aparecem no percurso (cada paragem só conta uma vez, mesmo que apareça em vários horários).
+Para essa viagem, a validação percorre os `stop_times` e recolhe os `stop_id` que aparecem no percurso (cada paragem só conta uma vez, mesmo que apareça em vários horários).
 
 Passo 2 - Onde estão as coordenadas?  
 Cada `stop_id` liga-se a um registo em `stops.txt`, onde estão `stop_lat` e `stop_lon`. É a posição da paragem que se usa como referência.
