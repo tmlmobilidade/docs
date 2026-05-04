@@ -1,7 +1,8 @@
 {
-  "pages": [
-    "index",
-    "modules",
-    "tools"
-  ]
+	"pages": [
+		"index",
+		"api",
+		"modules",
+		"tools"
+	]
 }
