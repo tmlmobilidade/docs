@@ -4,11 +4,21 @@ description: Descrição
 ---
 ## O que é a Monitorização
 
-Este módulo é responsável por transformar a informação contida nos GTFS estáticos em [circulações ou `rides`](/reference/glossary#circulação) e analisar cada uma individualmente, combinando as posições GPS dos veículos e as transações de bilhética APEX.
+Este módulo é responsável por transformar a informação contida nos GTFS estáticos em [circulações](/reference/glossary#circulação) e analisar cada uma individualmente, combinando as posições GPS dos veículos e as transações de bilhética APEX.
+
+Chamamos a uma circulação de `ride`, para diferenciar de `trip`. Todas as `rides` têm a mesma estrutura:
+- informações do GTFS estático (informação planeada como hora de início planeada, percurso, destino, etc.)
+- informações da componente em tempo real (hora de início observada, motorista, etc.)
+- informações da componente de bilhética (número de passageiros transportados, vendas a bordo, etc.)
+- resultado das análises (se chegou a horas, se serviu todas as paragens, etc.)
+
+
 
 // IMAGEM
 
 ## Dados disponíveis
+
+
 
 Conversão UNIX timestamp para hora - \[Célula com timestamp]/1000/86400 + DATE(1970,1,1)
 
