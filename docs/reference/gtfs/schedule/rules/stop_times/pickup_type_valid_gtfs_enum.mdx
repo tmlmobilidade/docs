@@ -29,8 +29,8 @@ Esta validação restringe `pickup_type` aos valores 0 a 3 quando o campo e
 
 ### Falha
 
-- Valor inválido: `pickup_type` fora de 0–3. _Correção:_ usar só códigos previstos na referência.
-- Proibido com janelas: há `start_pickup_drop_off_window` ou `end_pickup_drop_off_window` com valor e `pickup_type` é 0 ou 3. _Correção:_ mudar para 1 ou 2, ou rever janelas / modelo de serviço.
-- Fora da lista permitida: código válido no GTFS mas não admitido pela regra de opções. _Correção:_ escolher um código permitido.
-- Campo proibido com valor. _Correção:_ esvaziar `pickup_type`.
-- Ausência sinalizada como obrigatório ou recomendado. _Correção:_ preencher `pickup_type` ou rever a severidade.
+- Valor inválido: `pickup_type` fora de 0–3. 
+- Proibido com janelas: há `start_pickup_drop_off_window` ou `end_pickup_drop_off_window` com valor e `pickup_type` é 0 ou 3. 
+- Fora da lista permitida: código válido no GTFS mas não admitido pela regra de opções. 
+- Campo proibido com valor.
+- Ausência sinalizada como obrigatório ou recomendado. 
