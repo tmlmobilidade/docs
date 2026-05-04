@@ -1,9 +1,12 @@
-import type { TOCItemType } from 'fumadocs-core/toc';
+/* * */
 
 import { BlogArticle, BlogArticleLayout, BlogHeader } from '@/components/blog';
 import { sourceLab } from '@/lib/source';
 import { getMDXComponents } from '@/mdx-components';
+import { type TOCItemType } from 'fumadocs-core/toc';
 import { notFound } from 'next/navigation';
+
+/* * */
 
 export async function generateMetadata(props: { params: Promise<{ slug: string }> }) {
 	const params = await props.params;
@@ -16,11 +19,15 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
 	};
 }
 
+/* * */
+
 export async function generateStaticParams() {
 	return sourceLab.generateParams('slug').map(p => ({
 		slug: (p.slug ?? []).join('/'),
 	}));
 }
+
+/* * */
 
 export default async function Page(props: { params: Promise<{ slug: string }> }) {
 	const params = await props.params;
