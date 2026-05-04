@@ -13,7 +13,7 @@ description: path_type_valid_enum
 
 ## O que esta validação faz 
 
-No ficheiro `ro.txt`,  o campo `path_type` é uma regra da TML (não faz parte do GTFS standart), indica o tipo de percurso da rota para efeitos do operador. A documentação interna do feed associa normalmente aos valores 1, 2 e 3 a três tipos distintos de percurso.
+No ficheiro `routes.txt`,  o campo `path_type` é uma regra da TML (não faz parte do GTFS standart), indica o tipo de percurso da rota para efeitos do operador. A documentação interna do feed associa normalmente aos valores 1, 2 e 3 a três tipos distintos de percurso.
 
 A verificação trata o campo vazio como situação que pode merecer obrigatoriedade ou recomendação, conforme a severidade configurada - salvo quando essa verificação está em ignorar. Se o campo não é permitido no perfil de dados (proibido), qualquer valor preenchido incumpre.
 
