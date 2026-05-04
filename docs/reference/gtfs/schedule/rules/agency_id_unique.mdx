@@ -14,7 +14,7 @@ description: agency_id_unique
 
 ## O que esta validação faz 
 
-O campo `agency_id` este distingue o operador ou marca de transporte no conjunto de GTFS (num feed com várias operadoras, torna-se obrigatório para saber a que entidade pertencem rotas, viagens, etc.). Esta verificação confirma que o valor não falta quando o ficheiro de operadores tem mais do que uma linha, que cada identificador não se repete em linhas diferentes com o mesmo código e, quando a regra do projecto define uma lista fechada de identificadores admitidos, o valor pertence a esta lista. Quando só existe um operador no conjunto de dados, o campo continua opcional ao nível GTFS, mas a regra pode tratá-lo como obrigatório ou recomendado.
+O campo `agency_id` este distingue o operador ou marca de transporte no conjunto de GTFS (num feed com várias operadoras, torna-se obrigatório para saber a que entidade pertencem rotas, viagens, etc.). Esta verificação confirma que o valor não falta quando o ficheiro de operadores tem mais do que uma linha, que cada identificador não se repete em linhas diferentes com o mesmo código e, quando a regra do AAAA define uma lista fechada de identificadores admitidos, o valor pertence a esta lista. Quando só existe um operador no conjunto de dados, o campo continua opcional ao nível GTFS, mas a regra pode tratá-lo como obrigatório ou recomendado.
 
 ---
 

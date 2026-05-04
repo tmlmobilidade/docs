@@ -15,7 +15,7 @@ description: bicycles_rack_count_non_negative
 
 O campo indica, para cada veículo, se é permitido transportar bicicletas que não sejam dobráveis (o transporte de bicicletas dobráveis costuma ser tratado noutro quadro, como regra geral _permitida_). Só entram no domínio do valor as opções canónicas: não (0) e sim (1), ambas com significado de política de operação.
 
-A validação exige, portanto, o campo preenchido e, em seguida, que o número corresponda a uma dessas opções. Se o projecto tiver, nas regras, uma lista de opções explícita (por exemplo, só veículos que não levam bicicletas), o valor de cada registo também tem de cair nessa lista; uma opção especial de regras pode significar “aceitar qualquer valor válido” (0 ou 1), consoante a configuração.
+A validação exige, portanto, o campo preenchido e, em seguida, que o número corresponda a uma dessas opções. Se o AAAA tiver, nas regras, uma lista de opções explícita (por exemplo, só veículos que não levam bicicletas), o valor de cada registo também tem de cair nessa lista; uma opção especial de regras pode significar “aceitar qualquer valor válido” (0 ou 1), consoante a configuração.
 
 ---
 
@@ -29,4 +29,4 @@ A validação exige, portanto, o campo preenchido e, em seguida, que o número
 
 - Campo em falta – não se declara se o veículo transporta ou não bicicletas não dobráveis.
 - Valor fora do domínio – não é 0 nem 1, ou o número não mapeia para “não / sim” previstos.
-- Incoerência com as regras do projecto – a opção escolhida não é permitida na lista das regras, quando essa restrição está activa.
+- Incoerência com as regras do AAAA – a opção escolhida não é permitida na lista das regras, quando essa restrição está activa.

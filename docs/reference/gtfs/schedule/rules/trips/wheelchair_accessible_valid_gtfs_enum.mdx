@@ -12,7 +12,7 @@ description: wheelchair_accessible_valid_gtfs_enum
 
 ## O que esta validação faz 
 
-O campo indica, para a viagem, se há informação sobre acessibilidade para cadeira de rodas: sem informação, veículo que pode acolher pelo menos um utente em cadeira de rodas, ou viagem em que não é possível. No GTFS o campo é opcional; deixar o campo vazio é legítimo - significa não fornecer essa informação (equivalente em intenção ao 0 quando o valor vem preenchido). O validador aplica as regras do projecto sobre presença, proibição, valores permitidos (0, 1 ou 2) e, se existir, lista de opções permitidas.
+O campo indica, para a viagem, se há informação sobre acessibilidade para cadeira de rodas: sem informação, veículo que pode acolher pelo menos um utente em cadeira de rodas, ou viagem em que não é possível. No GTFS o campo é opcional; deixar o campo vazio é legítimo - significa não fornecer essa informação (equivalente em intenção ao 0 quando o valor vem preenchido). O validador aplica as regras do AAAA sobre presença, proibição, valores permitidos (0, 1 ou 2) e, se existir, lista de opções permitidas.
 
 ---
 
@@ -20,7 +20,7 @@ O campo indica, para a viagem, se há informação sobre acessibilidade para 
 
 - O valor vem preenchido e é 0, 1 ou 2 (significados previstos no enumerado).
 - O campo fica vazio e a regra dispensa a verificação (por exemplo, severidade de ignorar), sem exigir o preenchimento neste passo.
-- O valor está entre as opções permitidas pelas regras do projecto (ou a regra aceita todas as opções).
+- O valor está entre as opções permitidas pelas regras do AAAA (ou a regra aceita todas as opções).
 - O valor veio fornecido e o atributo não está proibido pelas regras.
 
 ---

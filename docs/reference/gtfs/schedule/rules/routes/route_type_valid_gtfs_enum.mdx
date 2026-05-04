@@ -13,7 +13,7 @@ description: route_type_valid_gtfs_enum
 
 ## O que esta validação faz 
 
-Indica o modo de transporte associado à rota, através de um código numérico obrigatório definido na referência GTFS (por exemplo elétrico ou metro ligeiro de superfície, metro ou comboio subterrâneo, comboio interurbano, autocarro, ferry, carro americano por cabo subterrâneo, teleférico ou gondola suspensa, funicular, trólei e monorail). Só são aceites os códigos que a especificação GTFS prevê para este campo. Se a regra do projecto limitar os modos admitidos, o código indicado tem de figurar nessa lista restrita (ou a regra tem de admitir explicitamente todos os valores válidos do GTFS).
+Indica o modo de transporte associado à rota, através de um código numérico obrigatório definido na referência GTFS (por exemplo elétrico ou metro ligeiro de superfície, metro ou comboio subterrâneo, comboio interurbano, autocarro, ferry, carro americano por cabo subterrâneo, teleférico ou gondola suspensa, funicular, trólei e monorail). Só são aceites os códigos que a especificação GTFS prevê para este campo. Se a regra do AAAA limitar os modos admitidos, o código indicado tem de figurar nessa lista restrita (ou a regra tem de admitir explicitamente todos os valores válidos do GTFS).
 
 ---
 
@@ -28,4 +28,4 @@ Indica o modo de transporte associado à rota, através de um código numéri
 
 - O campo está em falta.
 - O valor não corresponde a nenhum tipo de rota válido no GTFS.
-- O código é válido no GTFS mas não consta dos tipos permitidos pela regra do projecto, quando essa regra define uma lista fechada.
+- O código é válido no GTFS mas não consta dos tipos permitidos pela regra do AAAA, quando essa regra define uma lista fechada.
