@@ -18,7 +18,7 @@ Esta verificação garante:
 - Na primeira e na última paragem do trip (menor e maior `stop_sequence` desse `trip_id`), a chegada tem de estar preenchida, desde que o registo permita identificar a posição na sequência.
 - Com `timepoint = 1`, a chegada é obrigatória.
 - Se existirem janelas `start_pickup_drop_off_window` e/ou `end_pickup_drop_off_window` neste registo, não pode haver `arrival_time` fixo.
-- Qualquer valor preenchido tem de ser um tempo válido (`HH:MM:SS` admitido pelo validador).
+- Qualquer valor preenchido tem de ser um tempo válido (`HH:MM:SS`).
 
 Pode ainda reportar falta de chegada quando o modo de validação não trata o campo como silenciosamente opcional. Se o trip ou as sequências estiverem mal (viagem inexistente, sequências ilegíveis), a regra das extremidades pode falhar por dados de apoio inválidos.
 
