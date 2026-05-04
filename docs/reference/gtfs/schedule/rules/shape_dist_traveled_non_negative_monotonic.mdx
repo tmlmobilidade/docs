@@ -10,7 +10,7 @@ description: shape_dist_traveled_non_negative_monotonic
 
 ## O que esta validação faz 
 
-No ficheiro `agency.txt`,  o campo `shape_dist_traveled` indica a distância percorrida ao longo da forma desde o primeiro ponto até ao ponto desta linha, nas mesmas unidades que em `stop_times.shape_dist_traveled`, quando esse campo é usado. Serve para alinhar o traçado com planeamento e com laços ou reutilização do mesmo troço na mesma viagem.
+No ficheiro `shapes.txt`,  o campo `shape_dist_traveled` indica a distância percorrida ao longo da forma desde o primeiro ponto até ao ponto desta linha, nas mesmas unidades que em `stop_times.shape_dist_traveled`, quando esse campo é usado. Serve para alinhar o traçado com planeamento e com laços ou reutilização do mesmo troço na mesma viagem.
 
 Esta validação garante que `shape_dist_traveled`, quando preenchido, não é negativo. Pode sinalizar o campo vazio como obrigatório ou recomendado, consoante a severidade, ou omitir o aviso (por exemplo ignorar ou proibido que dispensa o texto de ausência). Pode recusar qualquer valor se o campo estiver interdito no perfil de dados.
 
