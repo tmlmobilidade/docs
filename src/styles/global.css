@@ -1,3 +1,5 @@
+/* stylelint-disable selector-class-pattern */
+
 @import 'tailwindcss';
 @import 'fumadocs-ui/css/black.css';
 @import 'fumadocs-ui/css/preset.css';
@@ -98,6 +100,10 @@ body {
 .prose li a:hover {
 	background-color: var(--color-brand-background);
 	opacity: 1;
+}
+
+.prose ul {
+	margin: 0;
 }
 
 .prose hr {
