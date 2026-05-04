@@ -12,7 +12,7 @@ description: stop_lon_valid_longitude_range
 
 ## O que esta validação faz 
 
-O `stop_lon` é a longitude (WGS84) do local, em par com a latitude. Para paragens e plataformas, o par de coordenadas deve assentar no postalete ou, em alternativa, no sítio de embarque do passageiro, e não na faixa de rodagem ou carril. A obrigatoriedade no GTFS segue o `location_type`: obrigatória para paragem/plataforma (0), estação (1) e entrada/saída (2); opcional para nó genérico (3) e área de embarque (4). O validador aplica ainda regras  com obrigatoriedade ou recomendação quando a longitude falta em tipos opcionais, e dispensa a verificação se a regra o permitir. Quando o valor existe, tem de ser uma longitude válida (intervalo de graus previsto na validação).
+No ficheiro `stops.txt`, o campo `stop_lon` é a longitude (WGS84) do local, em par com a latitude. Para paragens e plataformas, o par de coordenadas deve assentar no postalete ou, em alternativa, no sítio de embarque do passageiro, e não na faixa de rodagem ou carril. A obrigatoriedade no GTFS segue o `location_type`: obrigatória para paragem/plataforma (0), estação (1) e entrada/saída (2); opcional para nó genérico (3) e área de embarque (4). O validador aplica ainda regras  com obrigatoriedade ou recomendação quando a longitude falta em tipos opcionais, e dispensa a verificação se a regra o permitir. Quando o valor existe, tem de ser uma longitude válida (intervalo de graus previsto na validação).
 
 ---
 
