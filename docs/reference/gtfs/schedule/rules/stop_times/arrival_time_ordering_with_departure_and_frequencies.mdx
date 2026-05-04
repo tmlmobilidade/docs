@@ -22,6 +22,8 @@ Esta verificação garante:
 
 Pode ainda reportar falta de chegada quando o modo de validação não trata o campo como silenciosamente opcional. Se o trip ou as sequências estiverem mal (viagem inexistente, sequências ilegíveis), a regra das extremidades pode falhar por dados de apoio inválidos.
 
+---
+
 ### Passa
 
 - Primeira ou última paragem do trip com `arrival_time` preenchido e formato válido.
@@ -29,6 +31,8 @@ Pode ainda reportar falta de chegada quando o modo de validação não trata o c
 - Com janelas na linha: sem `arrival_time`; sem janelas: chegada permitida e válida se preenchida.
 - Paragem intermédia sem chegada quando o GTFS e esta lógica o permitem e não há exigência de mensagem.
 - Campo vazio quando o modo de validação não emite aviso por ausência.
+
+---
 
 ### Falha
 
@@ -39,6 +43,3 @@ Pode ainda reportar falta de chegada quando o modo de validação não trata o c
 - Trip ou sequências inconsistentes - corrigir `trip_id`, `stop_sequence` e o conjunto de linhas do mesmo trip.
 - Ausência reportada como obrigatório ou recomendado - preencher onde o feed o exige ou clarificar o nível de exigência com o operador.
 
----
-
-Se quiseres, no próximo campo podes dizer se preferes sem negrito nos nomes de campo ou só negrito no título/descrição - mantenho o mesmo padrão em todos.
