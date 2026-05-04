@@ -1,12 +1,14 @@
 {
-  "pages": [
-    "...(intro)",
-    "---GO---",
-    "...go",
-    "---GTFS---",
-    "...gtfs",
-    "---APEX---",
-    "...apex"
-  ],
-  "root": true
+	"pages": [
+		"...(intro)",
+		"---GO---",
+		"...go",
+		"---GTFS---",
+		"...gtfs",
+		"---APEX---",
+		"...apex",
+		"---Projetos---",
+		"...projects"
+	],
+	"root": true
 }
