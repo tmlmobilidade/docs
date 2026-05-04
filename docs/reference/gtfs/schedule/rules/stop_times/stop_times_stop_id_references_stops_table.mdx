@@ -10,7 +10,7 @@ description: stop_times_stop_id_references_stops_table
 
 ## O que esta validação faz 
 
-No `stop_times.txt`, o campo `stop_id` identifica a paragem (plataforma / paragem clássica) atendida neste ponto da viagem. Pelo GTFS, todas as paragens servidas ao longo do trip devem aparecer em linhas de `stop_times`; a paragem pode repetir-se no mesmo trip e várias viagens podem partilhar o mesmo `stop_id`.
+No `stop_times.txt`, o campo `stop_id` identifica a paragem (plataforma / paragem) atendida neste ponto da viagem. Pelo GTFS, todas as paragens servidas ao longo do trip devem aparecer em linhas de `stop_times`, a paragem pode repetir-se no mesmo trip e várias viagens podem partilhar o mesmo `stop_id`.
 
 Esta validação impede usar `stop_id` preenchido quando `location_group_id` ou `location_id` têm valor na mesma linha (só um modelo de localização de cada vez). Exige `stop_id` preenchido quando nem `location_group_id` nem `location_id` estão definidos. Nesse caso, confirma que o valor existe em `stops.txt` e que o `location_type` da paragem referida é 0 ou vazio (paragem/plataforma, não estação nem outro tipo).
 
@@ -25,7 +25,7 @@ Esta validação impede usar `stop_id` preenchido quando `location_group_i
 
 ### Falha
 
-- Proibido em conjunto: `stop_id` com valor e (`location_group_id` ou `location_id`) com valor. _Correção:_ manter só paragem ou só localização alternativa.
-- Obrigatório em falta: sem `location_group_id` e sem `location_id`, mas `stop_id` vazio. _Correção:_ preencher `stop_id` com a paragem servida.
+- Proibido em conjunto: `stop_id` com valor e (`location_group_id` ou `location_id`) com valor. 
+- Obrigatório em falta: sem `location_group_id` e sem `location_id`, mas `stop_id` vazio. 
 - Referência inexistente: `stop_id` não existe em `stops`. _Correção:_ alinhar com um `stop_id` válido ou criar a paragem.
-- Tipo de local inválido: a paragem em `stops` tem `location_type` diferente de 0 e não vazio. _Correção:_ usar uma paragem/plataforma (`location_type` 0) ou corrigir a entrada em `stops`.
+- Tipo de local inválido: a paragem em `stops` tem `location_type` diferente de 0 e não vazio. 
