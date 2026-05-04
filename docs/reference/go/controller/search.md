@@ -58,6 +58,7 @@ Os códigos operacionais indentificam a linha, a variante ou o percurso e podem 
 É possível filtrar diretamente por identificador do veículo através do prefixo `v:{vehicle_id}`. É possível ainda pesquisar por múltiplos veículos de uma só vez, separando os valores por virgulas.
 
 Exemplo: `v:1234` ou `v:1234,5678`
+
 #### Motorista associado
 
 É possível filtrar diretamente por identificador de motorista através do prefixo `d:{driver_id}`. É possível ainda pesquisar por múltiplos motoristas de uma só vez, separando os valores por virgulas.
