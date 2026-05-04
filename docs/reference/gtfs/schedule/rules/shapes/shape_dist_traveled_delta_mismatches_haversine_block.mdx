@@ -25,7 +25,7 @@ Dados de `shapes.txt`, por forma (`shape_id`):
 Dentro de cada bloco:
 
 - Entre vértices consecutivos com `shape_dist_traveled` definido nos dois e não nulo no par, calcula a distância em linha sobre a esfera (Haversine) e compara com o incremento de `shape_dist_traveled` entre esses dois pontos, convertido para metros (a conversão usa o máximo de `shape_dist_traveled` naquela forma para fixar a unidade).
-- Usa uma tolerância em metros (primeiro valor nas opções da regra `shape_distances`; se faltar ou for inválido → 20 m).
+- Usa uma tolerância em metros.
 
 Primeiro todos os segmentos relevantes têm de ficar dentro da tolerância. Só nesse caso soma as distâncias geodésicas desses segmentos e compara a soma com o `shape_dist_traveled` do último ponto do bloco (também em metros). Se a diferença absoluta for maior que a tolerância, obtém-se o incumprimento (regra `shape_dist_traveled_delta_mismatches_haversine_block`, mensagem `shape_distances_validation.invalid_distances`).
 
