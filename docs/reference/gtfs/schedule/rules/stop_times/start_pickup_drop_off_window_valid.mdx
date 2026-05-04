@@ -28,7 +28,7 @@ Esta validação proíbe que `start_pickup_drop_off_window` esteja preenchi
 
 ### Falha
 
-- Proibido com horário fixo: `arrival_time` ou `departure_time` com valor e `start_pickup_drop_off_window` também preenchido. _Correção:_ retirar o início da janela ou os horários fixos.
-- Obrigatório em falta: existe `end_pickup_drop_off_window` ou `location_group_id` / `location_id`, mas `start_pickup_drop_off_window` está vazio. _Correção:_ preencher o início da janela de forma coerente com o fim e com o local.
-- Tempo inválido em `start_pickup_drop_off_window`. _Correção:_ usar formato de hora admitido pela mesma regra que outros tempos em `stop_times`.
-- Ausência com obrigatório ou recomendado. _Correção:_ preencher `start_pickup_drop_off_window` ou rever a severidade.
+- Proibido com horário fixo: `arrival_time` ou `departure_time` com valor e `start_pickup_drop_off_window` também preenchido. 
+- Obrigatório em falta: existe `end_pickup_drop_off_window` ou `location_group_id` / `location_id`, mas `start_pickup_drop_off_window` está vazio. 
+- Tempo inválido em `start_pickup_drop_off_window`. 
+- Ausência com obrigatório ou recomendado. 
