@@ -12,7 +12,7 @@ description: trip_short_name_exclusivity
 
 ## O que esta validação faz 
 
-O campo é o nome curto ou código público que identifica a viagem perante o passageiro (por exemplo, número de comboio). No GTFS o campo é opcional; o standard recomenda vazio quando essa chave quase não se usa, e, quando preenchida, o texto não deve servir de destino nem de nota de serviço limitado, mas isso fica fora de desta função. Aqui trata-se apenas de regras  sobre o preenchimento: obrigatoriedade ou recomendação quando o valor falta, proibição quando o valor vem dado, ou dispensa da verificação. Não se testa, nesta verificação, formato, exclusividade com o `trip_headsign` ou unicidade por dia de serviço.
+No ficheiro `trips.txt`, o campo `trip_short_name` é o nome curto ou código público que identifica a viagem perante o passageiro (por exemplo, número de comboio). No GTFS o campo é opcional, o standard recomenda vazio quando essa chave quase não se usa, e, quando preenchida, o texto não deve servir de destino nem de nota de serviço limitado, mas isso fica fora de desta função. Aqui trata-se apenas de regras sobre o preenchimento obrigatório ou recomendado quando  valor falta, proibição quando o valor vem dado, ou dispensa da verificação. Não se testa, nesta verificação, formato, exclusividade com o `trip_headsign` ou unicidade por dia de serviço.
 
 ---
 
