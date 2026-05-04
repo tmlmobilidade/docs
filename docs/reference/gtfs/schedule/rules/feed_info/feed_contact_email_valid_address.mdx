@@ -13,7 +13,7 @@ description: feed_contact_email_valid_address
 
 ## O que esta validação faz 
 
-O GTFS prevê um endereço de correio electrónico facultativo em `feed_info.txt` para questões técnicas sobre o conjunto de dados e sobre como é publicado (não substitui o contacto de apoio ao utente do operador em `agency.txt`). Quando o valor existe e não é cadeia vazia, esta verificação confirma que tem formato de e-mail válido segundo as regras da aplicação. A ausência do campo pode ser tratada como obrigatória ou recomendada (excepto quando a verificação não se aplica a esta linha), e o campo pode ser proibido pela configuração. Se nenhuma severidade for indicada à função, a verificação assume por omissão nível de aviso para as mensagens geridas pelo contexto.
+O campo `feed_contact_email` prevê um endereço de correio electrónico facultativo em `feed_info.txt` para questões técnicas sobre o conjunto de dados e sobre como é publicado (não substitui o contacto de apoio ao utente do operador em `agency.txt`). Quando o valor existe e não é cadeia vazia, esta verificação confirma que tem formato de e-mail válido segundo as regras. A ausência do campo pode ser tratada como obrigatória ou recomendada (exceto quando a verificação não se aplica a esta linha), e o campo pode ser proibido pela configuração.
 
 ---
 
