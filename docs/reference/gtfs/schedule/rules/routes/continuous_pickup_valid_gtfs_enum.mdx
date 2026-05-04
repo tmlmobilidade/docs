@@ -13,7 +13,9 @@ description: continuous_pickup_valid_gtfs_enum
 
 ## O que esta validação faz 
 
-O campo indica se o utente pode embarcar em qualquer ponto ao longo do percurso do veículo (alinhado com a forma da linha), nas viagens dessa rota. No GTFS, campo vazio e o valor 1 significam o mesmo: sem embarque contínuo ao longo do trajecto. Os valores 0, 2 e 3 correspondem a outras políticas (paragem contínua, contacto prévio com o operador ou com o condutor).
+O campo indica se o utente pode embarcar em qualquer ponto ao longo do percurso do veículo (alinhado com a forma da linha), nas viagens dessa rota. 
+
+No GTFS, campo vazio e o valor 1 significam o mesmo: sem embarque contínuo ao longo do trajecto. Os valores 0, 2 e 3 correspondem a outras políticas (paragem contínua, contacto prévio com o operador ou com o condutor).
 
 Aspecto prático na verificação: apesar de vazio e 1 serem equivalentes no significado, o fluxo não é o mesmo. Com 1, a verificação termina e o caso fica válido. Com vazio (omitido ou cadeia vazia), entra-se no ramo que dependo da  severidade e do ignorar, pode ser obrigatório ou recomendado preencher, ou não gerar reporte, conforme a regra - não é o tratamento imediato dado a 1.
 
