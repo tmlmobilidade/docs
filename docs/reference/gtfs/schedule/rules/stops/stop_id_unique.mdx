@@ -8,9 +8,6 @@ description: stop_id_unique
 | ------------- | -------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `stop_id`     | ID único | Opcional | Identifica uma localização: parada/plataforma, estação, entrada/saída, nó genérico ou área de embarque (consulte location_type).<br><br>O ID deve ser único em todos os valores de stops.stop_id, locations.geojson_id e location_groups.location_group_id. |
 
-
-
-
 ## O que esta validação faz 
 
 No ficheiro `stops.txt`, o campo `stop_id` identifica, de forma única no feed, cada local em `stops.txt` (paragem, estação, entrada, nó ou área de embarque, consoante o tipo). No GTFS o campo é obrigatório e a identificação não se pode repetir: o mesmo id não pode servir paragens distintas (o referencial ainda alarga a exigência de unicidade global a outros ficheiros, como `locations` e `location_groups` - a verificação no conjunto de paragens reforça a coerência local). Se existir lista de opções nas regras , o identificador tem de pertencer a esse conjunto (ou a regra aceita todas as opções).
