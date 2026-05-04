@@ -2,7 +2,7 @@
 
 import { sourceReference } from '@/lib/source';
 // import { getGithubLastEdit } from 'fumadocs-core/content/github';
-import defaultMdxComponents from 'fumadocs-ui/mdx';
+import { getMDXComponents } from '@/mdx-components';
 import { DocsBody, DocsDescription, DocsPage, DocsTitle } from 'fumadocs-ui/page';
 import { notFound } from 'next/navigation';
 
