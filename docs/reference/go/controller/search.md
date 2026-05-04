@@ -30,7 +30,7 @@ A funcionalidade de pesquisa por texto permite localizar circulações de forma 
 
 A pesquisa pode ser utilizada tanto para consultas simples como para combinações mais avançadas.
 
-### Como Funciona
+#### Como Funciona
 
 Ao introduzir texto no campo de pesquisa, o sistema analisa cada termo individualmente e tenta associá-lo ao tipo de informação mais relevante, como por exemplo:
 
