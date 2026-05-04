@@ -9,9 +9,6 @@ description: agency_id_matched_with_agency_name
 | `agency_id`   | ID Único | Condicionalmente obrigatório | Identifica uma marca de transporte, que é geralmente sinónimo de agência de transporte. Note que, em alguns casos, como quando uma única agência opera vários serviços separados, as agências e as marcas são distintas. Este documento utiliza o termo "agência" em vez de "marca". Um conjunto de dados pode conter dados de várias agências. Condicionalmente obrigatório: - Obrigatório quando o conjunto de dados contém dados para várias agências de transporte. - Recomendado caso contrário. |
 | `agency_name` | Texto    | Obrigatório                  | Nome completo da agência de transporte.                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 
-
-
-
 ## O que esta validação faz 
 
 Confirma se o identificador do operador e o nome completo do operador formam um par reconhecido: quando a regra inclui uma lista de pares autorizados (cada identificador associado ao nome oficial esperado), o valor do conjunto GTFS tem de coincidir exactamente com uma dessas entradas. Se faltar o identificador ou o nome, não é possível fazer a conferência e a regra pode tratar a situação como obrigatória ou recomendada. O campo lógico também pode estar proibido pela configuração. Quando a regra não define essa lista de pares, a parte relativa à correspondência não aplica critério adicional além do restante fluxo (ausência, proibição, etc.).
