@@ -12,7 +12,7 @@ description: stop_timezone_valid
 
 ## O que esta validação faz 
 
- O `stop_timezone` indica o fuso horário do local, num formato reconhecido pelo validador (por exemplo identificador de fuso _IANA_). No GTFS o campo é opcional; a herança a partir de estação mãe ou de `agency.agency_timezone` não é reconstituída aqui - apenas se exige, quando preenchido, que o texto seja um fuso válido e, se existir, que conste da lista de opções das regras. As horas em `stop_times.txt` seguem a lógica global do feed (`agency_timezone`); isso fica fora desta verificação. O validador aplica ainda obrigatoriedade ou recomendação quando o campo fica vazio, proibição quando o valor vem fornecido, e dispensa consoante a severidade.
+ No ficheiro `stops.txt`, o campo `stop_timezone` indica o fuso horário do local, num formato reconhecido pelo validador (por exemplo identificador de fuso _IANA_). No GTFS o campo é opcional; a herança a partir de estação mãe ou de `agency.agency_timezone` não é reconstituída aqui - apenas se exige, quando preenchido, que o texto seja um fuso válido e, se existir, que conste da lista de opções das regras. As horas em `stop_times.txt` seguem a lógica global do feed (`agency_timezone`); isso fica fora desta verificação. O validador aplica ainda obrigatoriedade ou recomendação quando o campo fica vazio, proibição quando o valor vem fornecido, e dispensa consoante a severidade.
 
 ---
 
