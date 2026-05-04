@@ -12,7 +12,7 @@ description: trip_headsign_present_when_short_name_absent
 
 ## O que esta validação faz 
 
-O campo é o texto de destino apresentado nos painéis da viagem, para o passageiro identificar o percurso ou o sentido. No GTFS o campo é opcional; o validador aplica, em cima disso, as regras do AAAA: pode recomendar ou exigir o preenchimento, dispensar a verificação ou tratar o atributo como proibido quando o valor vem fornecido. A alteração do destino ao longo da viagem trata-se com `stop_headsign` em `stop_times`, o que fica fora deste ponto. Nesta verificação não se avalia o conteúdo do texto, apenas presença e a regra _forbidden_.
+O campo é o texto de destino apresentado nos painéis da viagem, para o passageiro identificar o percurso ou o sentido. No GTFS o campo é opcional; o validador aplica, em cima disso, as regras : pode recomendar ou exigir o preenchimento, dispensar a verificação ou tratar o atributo como proibido quando o valor vem fornecido. A alteração do destino ao longo da viagem trata-se com `stop_headsign` em `stop_times`, o que fica fora deste ponto. Nesta verificação não se avalia o conteúdo do texto, apenas presença e a regra _forbidden_.
 
 ---
 
@@ -26,5 +26,5 @@ O campo é o texto de destino apresentado nos painéis da viagem, para o pas
 
 ### Falha
 
-- Texto em falta - o destino não vem indicado, quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado (o standard admite vazio, mas a política de dados do AAAA exige a indicação).
+- Texto em falta - o destino não vem indicado, quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado (o standard admite vazio, mas a política de dados  exige a indicação).
 - Proibido - as regras definem que o `trip_headsign` não deve constar, mas o valor veio no mesmo fornecido.

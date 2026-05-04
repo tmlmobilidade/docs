@@ -14,7 +14,7 @@ description: typology_in_allowed_vehicle_types
 
 O campo descreve a tipologia do veículo: a família e, por vezes, a variação (por exemplo _light rail_ com tipos, _metro_, _ferroviário_, _autocarros_ em várias subcategorias urbanas ou interurbanas, _embarcações_, _funiculares_ ou _elevadores_, etc.), muitas vezes em códigos alfanuméricos do estilo _major.minor_ (p. ex. “3.2” com significado de “autocarro urbano”).
 
-A validação exige sempre que o valor exista (campo preenchido). A verificação de “é permitido neste _feed_ / neste operador” assenta, na prática, nas regras do AAAA: quando estão definidas opções, o texto da tipologia tem de figurar nessa lista; quando a configuração equivale a aceitar qualquer tipologia, não se aplica a restrição por lista. A gravidade do aviso obedece às regras, ou erro por omissão.
+A validação exige sempre que o valor exista (campo preenchido). A verificação de “é permitido neste _feed_ / neste operador” assenta, na prática, nas regras : quando estão definidas opções, o texto da tipologia tem de figurar nessa lista; quando a configuração equivale a aceitar qualquer tipologia, não se aplica a restrição por lista. A gravidade do aviso obedece às regras, ou erro por omissão.
 
 _(Com a lista ainda imcompleta vai por norma devolver um aviso mas ainda assim pode ser aprovado o plano. )_
 
@@ -29,9 +29,9 @@ _(Com a lista ainda imcompleta vai por norma devolver um aviso mas ainda assim p
 ### Falha
 
 - Campo em falta – a tipologia não é indicada.
-- Não permitida nas regras – a tipologia indicada não consta da lista de opções do AAAA, quando essa lista está activa (e não se trata de “aceitar tudo”).
+- Não permitida nas regras – a tipologia indicada não consta da lista de opções , quando essa lista está activa (e não se trata de “aceitar tudo”).
 
 ---
 
-Nota: Se a vossa publicação _exigir_ que só entrem códigos da tabela (p. ex. 3.1–3.7, 4.1…), isso tem de estar reflectido nas regras (opções) ou reactivar-se validação a um dicionário fixo no código, conforme a política do AAAA.
+Nota: Se a vossa publicação _exigir_ que só entrem códigos da tabela (p. ex. 3.1–3.7, 4.1…), isso tem de estar reflectido nas regras (opções) ou reactivar-se validação a um dicionário fixo no código, conforme a política .
 

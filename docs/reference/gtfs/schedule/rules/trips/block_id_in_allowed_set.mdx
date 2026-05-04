@@ -12,7 +12,7 @@ description: block_id_in_allowed_set
 
 ## O que esta validação faz 
 
-O campo liga a viagem a um bloco - a sequência de serviço em que a mesma unidade cumpre uma ou mais viagens encadeadas, conforme a modelação do GTFS. No standard o campo é opcional; o validador aplica, em cima disso, as regras do AAAA: pode recomendar ou exigir o preenchimento, ignorar a verificação ou tratar o campo como proibido quando o valor vem fornecido.
+O campo liga a viagem a um bloco - a sequência de serviço em que a mesma unidade cumpre uma ou mais viagens encadeadas, conforme a modelação do GTFS. No standard o campo é opcional; o validador aplica, em cima disso, as regras : pode recomendar ou exigir o preenchimento, ignorar a verificação ou tratar o campo como proibido quando o valor vem fornecido.
 
 ---
 
@@ -26,5 +26,5 @@ O campo liga a viagem a um bloco - a sequência de serviço em que a mesma u
 
 ### Falha
 
-- Valor em falta quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado (no standard o campo pode estar vazio, mas a regra de dados do AAAA exige o identificador do bloco).
+- Valor em falta quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado (no standard o campo pode estar vazio, mas a regra de dados  exige o identificador do bloco).
 - Proibido - as regras definem que o `block_id` não deve constar, mas o valor veio na mesma fornecido.

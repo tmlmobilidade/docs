@@ -12,7 +12,7 @@ description: parent_station_id_valid_for_stop_hierarchy
 
 ## O que esta validação faz 
 
-O `parent_station` liga local filho a local ascendente na hierarquia de `stops.txt` (paragem sob estação, entrada ou nó sob estação, área de embarque sob plataforma, etc.). O GTFS fixa requisitos em função do `location_type`: estação (1) não pode ter ascendente; entrada (2), nó genérico (3) e área de embarque (4) têm o ascendente obrigatório; paragem / plataforma (0) pode ter ou não ascendente, consoante o modelo. Quando o valor vem fornecido, tem de ser um `stop_id` que exista no mesmo ficheiro. O validador aplica ainda o preenchimento consoante a severidade e regras do AAAA, o caso proibido, e, se existir, opções permitidas para o identificador.
+O `parent_station` liga local filho a local ascendente na hierarquia de `stops.txt` (paragem sob estação, entrada ou nó sob estação, área de embarque sob plataforma, etc.). O GTFS fixa requisitos em função do `location_type`: estação (1) não pode ter ascendente; entrada (2), nó genérico (3) e área de embarque (4) têm o ascendente obrigatório; paragem / plataforma (0) pode ter ou não ascendente, consoante o modelo. Quando o valor vem fornecido, tem de ser um `stop_id` que exista no mesmo ficheiro. O validador aplica ainda o preenchimento consoante a severidade e regras , o caso proibido, e, se existir, opções permitidas para o identificador.
 
 ---
 
@@ -30,5 +30,5 @@ O `parent_station` liga local filho a local ascendente na hierarquia de `
 - Estação (tipo 1) com `parent_station` preenchido (o standard proíbe ascendente em estações).
 - Entrada, nó genérico ou área de embarque (2, 3 ou 4) com `parent_station` em falta.
 - Referência inválida - o `parent_station` indicado não corresponde a nenhum `stop_id` do feed.
-- Proibido ou fora do conjunto de opções permitido pelas regras do AAAA, quando aplica.
+- Proibido ou fora do conjunto de opções permitido pelas regras , quando aplica.
 - Valor em falta (ou política de obrigatoriedade / recomendação) quando, para a severidade e regras, o preenchimento do ascendente é exigido em situações em que a regra aplica essa exigência antes de outras regras de tipo (o comportamento exacto frente a cada `location_type` depende da severidade configurada).

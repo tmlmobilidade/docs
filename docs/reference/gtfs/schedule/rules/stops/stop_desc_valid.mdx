@@ -12,7 +12,7 @@ description: stop_desc_valid
 
 ## O que esta validação faz 
 
-O `stop_desc` é a descrição do local, pensada para informação útil ao passageiro, sem repetir o próprio `stop_name` - o GTFS desaconselha que descrição e nome sejam o mesmo texto. O campo é opcional; deixar o campo vazio é aceite - significa não fornecer descrição extra. O validador aplica as regras do AAAA sobre presença, proibição e opções permitidas. Quando `stop_desc` e `stop_name` são iguais, emite aviso (qualidade de dados, não erro de enum). Não se valida, nesta função, conteúdo longo ou estilo além do critério de duplicado com o nome.
+O `stop_desc` é a descrição do local, pensada para informação útil ao passageiro, sem repetir o próprio `stop_name` - o GTFS desaconselha que descrição e nome sejam o mesmo texto. O campo é opcional; deixar o campo vazio é aceite - significa não fornecer descrição extra. O validador aplica as regras  sobre presença, proibição e opções permitidas. Quando `stop_desc` e `stop_name` são iguais, emite aviso (qualidade de dados, não erro de enum). Não se valida, nesta função, conteúdo longo ou estilo além do critério de duplicado com o nome.
 
 ---
 

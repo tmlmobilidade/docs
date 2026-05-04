@@ -11,7 +11,7 @@ description: direction_id_valid_enum
 
 ## O que esta validação faz 
 
-O campo indica o sentido da viagem (por exemplo ida ou volta), para apoio a horários e separação de viagens por direcção; não é usado para o cálculo de itinerários no GTFS. No standard o campo é opcional. O validador trata a presença conforme as regras do AAAA, exige que o valor seja 0 ou 1 quando existe, pode marcar o campo como proibido e pode restringir a subconjuntos de opções nas regras.
+O campo indica o sentido da viagem (por exemplo ida ou volta), para apoio a horários e separação de viagens por direcção; não é usado para o cálculo de itinerários no GTFS. No standard o campo é opcional. O validador trata a presença conforme as regras , exige que o valor seja 0 ou 1 quando existe, pode marcar o campo como proibido e pode restringir a subconjuntos de opções nas regras.
 
 ---
 
@@ -19,14 +19,14 @@ O campo indica o sentido da viagem (por exemplo ida ou volta), para apoio a 
 
 - O valor vem preenchido e é 0 ou 1 (significados previstos no enumerado).
 - O campo fica vazio e a regra dispensa a verificação (por exemplo, severidade de ignorar ou fluxo em que a ausência não gera mensagem).
-- O valor 0 ou 1 está entre as opções permitidas pelas regras do AAAA (ou a regra aceita todas as opções).
+- O valor 0 ou 1 está entre as opções permitidas pelas regras  (ou a regra aceita todas as opções).
 - O valor veio fornecido e o atributo não está proibido pelas regras (evita falha imediata por “campo proibido”).
 
 ---
 
 ### Falha
 
-- Valor em falta quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado (no GTFS o campo pode ficar vazio, mas a regra de dados do AAAA exige o sentido).
+- Valor em falta quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado (no GTFS o campo pode ficar vazio, mas a regra de dados  exige o sentido).
 - Proibido - as regras não permitem o `direction_id`, mas o valor veio no mesmo fornecido.
 - Inválido - um número que não seja 0 nem 1.
 - Fora do permitido - 0 ou 1 são válidos no GTFS, mas o valor lido não consta do conjunto de opções definido nas regras (salvo quando a
