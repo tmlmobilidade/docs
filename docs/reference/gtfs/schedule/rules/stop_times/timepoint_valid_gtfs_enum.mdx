@@ -11,9 +11,10 @@ description: timepoint_valid_gtfs_enum
 
 ## O que esta validação faz 
 
-No `stop_times.txt`, o campo `timepoint` indica se os horários de chegada e partida neste registo devem ser tratados como rigorosos (o veículo deve cumpri-los de forma exacta) ou como aproximados / interpolados. O GTFS prevê 0 (aproximado) e 1 (exacto). Recomenda-se preencher `timepoint` quando `arrival_time` ou `departure_time` existem; se o campo faltar em todo o conjunto relevante, a especificação trata os tempos como exactos por omissão.
+No `stop_times.txt`, o campo `timepoint` indica se os horários de chegada e partida neste registo devem ser tratados como rigorosos (o veículo deve cumpri-los de forma exacta) ou como aproximados / interpolados. O GTFS prevê 0 (aproximado) e 1 (exacto). Recomenda-se preencher `timepoint` quando `arrival_time` ou `departure_time` existem, se o campo faltar em todo o conjunto relevante, a especificação trata os tempos como exactos por omissão.
 
-Esta validação limita `timepoint`, quando preenchido, a 0 ou 1; pode sinalizar o campo vazio como obrigatório ou recomendado, consoante a severidade; pode recusar qualquer valor se `timepoint` estiver interdito; e pode restringir a 0, a 1 ou ambos, através de uma lista de opções admitidas.
+Esta validação limita `timepoint`, quando preenchido, a 0 ou 1 pode sinalizar o campo vazio como obrigatório ou recomendado
+Esta validação limita `timepoint`, quando preenchido, a 0 ou 1 pode sinalizar campo vazio como obrigatório ou recomendado, consoante a severidade; pode recusar qualquer valor se `timepoint` estiver interdito; e pode restringir a 0, a 1 ou ambos, através de uma lista de opções admitidas.
 
 ---
 
