@@ -11,20 +11,26 @@ description: continuous_drop_off_valid_gtfs_enum
 
 ## O que esta validação faz 
 
-O campo `continuous_drop_off` indica se o utente pode desembarcar em qualquer ponto ao longo do percurso do veículo (conforme a forma da linha), nas viagens dessa rota. No GTFS, vazio e 1 equivalem semanticamente a “sem desembarque contínuo ao longo do trajecto”; 0, 2 e 3 correspondem a outras políticas (paragem contínua, contacto prévio com operador ou condutor). Importante: ainda que vazio e 1 sejam equivalentes no significado, esta verificação trata-os de forma distinta: se o valor é 1, a verificação termina e considera válido; se o campo está vazio (não preenchido), aplica-se a Severity configurada (e o modo skip): pode ser obrigatório preencher, recomendado ou não reportar, conforme a regra — não é o mesmo ramo que 1. Para valores outros que não sejam 1 nem vazio: se alguma viagem desta rota tiver janelas horárias de embarque/desembarque nas paragens, esse valor falha (o GTFS restringe neste caso); caso contrário, pode ainda aplicar-se uma lista de valores admitidos na regra.
+O campo `continuous_drop_off` indica se o utente pode desembarcar em qualquer ponto ao longo do percurso do veículo (alinhado com a forma da linha), nas viagens dessa rota.
+
+No GTFS, campo vazio e o valor 1 significam o mesmo: sem desembarque contínuo ao longo do trajecto. Os valores 0, 2 e 3 correspondem a outras políticas (paragem contínua, contacto prévio com o operador ou com o condutor).
+
+Aspecto prático na verificação: apesar de vazio e 1 serem equivalentes no significado, o fluxo não é o mesmo. Com 1, a verificação termina e o caso fica válido. Com vazio (omitido ou cadeia vazia), entra-se no ramo que depend da severidade e do ignorar (skip): pode ser obrigatório ou recomendado preencher, ou não gerar reporte, conforme a regra - não é o tratamento imediato dado a 1.
+
+Para qualquer valor não vazio e diferente de 1: se existirem janelas horárias de embarque ou desembarque nas paragens das viagens dessa rota, esse valor falha (restrição neste cenário); se não houver essas janelas, pode ainda aplicar-se uma lista fechada de valores admitidos na regra do projecto.
 
 ---
 
 ### Passa
 
-- O valor é “1”.
-- O campo está vazio ou omitido e a regra permite isso (incluindo ignorar a verificação), ou a mensagem de obrigatório/recomendado alinha com a severidade configurada.
-- O valor não é “1”, não está vazio, a rota não tem viagens com janelas horárias de embarque ou desembarque nos tempos de paragem, e o valor respeita a lista de opções da regra quando existir.
+- Valor 1.
+- Campo vazio quando a regra e o modo de ignorar permitem (sem reporte obrigatório ou conforme só aviso/recomendação, consoante a configuração).
+- Outro valor permitido pelo GTFS para o caso sem janelas horárias na rota e, se existir lista na regra, incluído nessa lista.
 
 ---
 
 ### Falha
 
-- O campo está em falta ou vazio quando a regra exige ou recomenda preencher (com a severidade configurada).
-- O valor não é “1”, está preenchido, e a rota tem pelo menos uma viagem com janelas horárias de embarque ou desembarque nos tempos de paragem.
-- O valor não consta das opções admitidas pela regra, quando essa lista é fechada e o fluxo chega a essa verificação.
+- Campo vazio quando a severidade da regra exige ou recomenda preenchimento e o caso não é ignorado (nota: semanticamente equivale a 1, mas a verificação não usa o mesmo ramo que 1).
+- Valor não vazio e ≠ 1 quando a rota tem janelas horárias nas paragens das viagens.
+- Valor fora da lista admitida pela regra, quando essa lista é fechada.
