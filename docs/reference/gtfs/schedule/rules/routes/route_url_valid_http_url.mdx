@@ -13,14 +13,14 @@ description: route_url_valid_http_url
 
 ## O que esta validação faz 
 
-O campo `route_url` aponta para uma página sobre aquela rota (não deve ser apenas a página institucional da operadora). Quando há endereço, este verificação confirma que tem forma de URL aceite pelo conjunto de regras usado na aplicação. Compara ainda com o URL da operadora referenciada: o GTFS recomenda que seja distinto do `agency_url`; se for igual, pode registar-se um aviso (recomendação), não necessariamente um bloqueio. Conforme a regra, o campo pode ser obrigatório, recomendado, opcional ou proibido, e pode existir uma lista fechada de URLs admitidas. Se no conjunto de dados existirem várias linhas de operadora com o mesmo identificador, a comparação com o URL da operadora deixa de ser fiável e esse caso é tratado como erro.
+O campo `route_url` aponta para uma página sobre aquela rota (não deve ser apenas a página institucional da operadora). Quando há endereço, este verificação confirma que tem forma de URL aceite pelo conjunto de regras usado na aplicação. Compara ainda com o URL da operadora referenciada, o GTFS recomenda que seja distinto do `agency_url` se for igual, pode registar-se um aviso (recomendação), não necessariamente um bloqueio. Conforme a regra, o campo pode ser obrigatório, recomendado, opcional ou proibido. Se no conjunto de dados existirem várias linhas de operadora com o mesmo identificador, a comparação com o URL da operadora deixa de ser fiável e esse caso é tratado como erro.
 
 ---
 
 ### Passa
 
 - O campo está vazio e a regra permite isso (incluindo quando a verificação não se aplica a esta linha).
-- O campo contém um URL válido; não está preenchido quando a regra o proíbe; e, se existir lista de endereços permitidos, o valor está nessa lista (ou a regra admite qualquer URL válido).
+- O campo contém um URL válido, não está preenchido quando a regra o proíbe.
 - O URL da rota é diferente do URL da operadora, ou coincide com ele mas apenas origina o aviso de boas práticas (conforme a política de avisos).
 
 ---
