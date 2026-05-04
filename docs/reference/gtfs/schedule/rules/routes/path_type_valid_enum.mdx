@@ -4,18 +4,18 @@ description: path_type_valid_enum
 ---
 ## Campos que serão validados nesta regra
 
-| Nome do Campo | Tipo | Presença | Descrição |
-| ------------- | ---- | -------- | --------- |
-|               |      |          |           |
+| Nome do Campo | Tipo | Presença | Descrição                                        |
+| ------------- | ---- | -------- | ------------------------------------------------ |
+| `path_type`   | Enum | Opcional | Indica o tipo de caminho de uma rota. <br/><br/> |
 
 
 
 
 ## O que esta validação faz 
 
-No `routes.txt`, o campo `path_type` é uma extensão TML (não faz parte do GTFS standart): indica o tipo de percurso da rota para efeitos do operador. A documentação interna do feed associa normalmente aos valores 1, 2 e 3 a três tipos distintos de percurso.
+O campo `path_type` é uma regra da TML (não faz parte do GTFS standart), indica o tipo de percurso da rota para efeitos do operador. A documentação interna do feed associa normalmente aos valores 1, 2 e 3 a três tipos distintos de percurso.
 
-A verficação trata o campo vazio como situação que pode merecer obrigatoriedade ou recomendação, conforme a severidade configurada - salvo quando essa verificação está em ignorar. Se o campo não é permitido no perfil de dados (proibido), qualquer valor preenchido incumpre. Quando existe lista de opções admitidas, o valor tem de pertencer a essa lista (ou a lista considerar “todas” as opções válidas).
+A verificação trata o campo vazio como situação que pode merecer obrigatoriedade ou recomendação, conforme a severidade configurada - salvo quando essa verificação está em ignorar. Se o campo não é permitido no perfil de dados (proibido), qualquer valor preenchido incumpre. Quando existe lista de opções admitidas, o valor tem de pertencer a essa lista (ou a lista considerar “todas” as opções válidas).
 
 ---
 
