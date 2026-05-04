@@ -12,7 +12,7 @@ description: vehicle_agency_id_references_agency_table
 
 ## O que esta validação faz 
 
-Cada registo de veículo tem de identificar, sem ambiguidade, a operadora a que pertence, através de um identificador que liga a `agency.txt` (GTFS).
+No ficheiro `vehicles.txt`, Cada registo de veículo tem de identificar, sem ambiguidade, o operador a que pertence, através do identificador (`agency_id`) que liga a tabela do `agency.txt` (GTFS).
 
 A validação verifica duas coisas, por ordem: que o identificador da operadora não está vazio, e que o valor apresentado corresponde a um registo existente nessa tabela de operadores. Assim, evitam-se veículos “órfãos” numa agência inexistente ou com identificador em falta.
 

@@ -12,7 +12,7 @@ description: typology_in_allowed_vehicle_types
 
 ## O que esta validação faz 
 
-No ficheiro `vehicles.txt`, o campo `typologgy` descreve a tipologia do veículo: a família e, por vezes, a variação (por exemplo _light rail_ com tipos, _metro_, _ferroviário_, _autocarros_ em várias subcategorias urbanas ou interurbanas, _embarcações_, _funiculares_ ou _elevadores_, etc.), muitas vezes em códigos alfanuméricos do estilo _major.minor_ (p. ex. “3.2” com significado de “autocarro urbano”).
+No ficheiro `vehicles.txt`, o campo `typology` descreve a tipologia do veículo: a família e, por vezes, a variação (por exemplo _light rail_ com tipos, _metro_, _ferroviário_, _autocarros_ em várias subcategorias urbanas ou interurbanas, _embarcações_, _funiculares_ ou _elevadores_, etc.), muitas vezes em códigos alfanuméricos do estilo _major.minor_ (p. ex. “3.2” com significado de “autocarro urbano”).
 
 A validação exige sempre que o valor exista (campo preenchido). A verificação de “é permitido neste _feed_ / neste operador” assenta, na prática, nas regras : quando estão definidas opções, o texto da tipologia tem de figurar nessa lista; quando a configuração equivale a aceitar qualquer tipologia, não se aplica a restrição por lista. A gravidade do aviso obedece às regras, ou erro por omissão.
 
