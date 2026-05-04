@@ -12,7 +12,7 @@ description: zone_id_valid
 
 ## O que esta validação faz 
 
-O `zone_id` identifica a zona tarifária da paragem, para ligação ao modelo de tarifas do feed. No GTFS o campo é opcional; para estação ou entrada/saída de estação o `zone_id` pode ser ignorado pelos consumidores de dados - o validador não dispensa automaticamente a verificação por `location_type`; aplica sempre as regras  sobre presença (obrigatório ou recomendado, quando a verificação não é dispensada), proibição quando o valor vem fornecido, e lista de opções permitidas. Não se verifica, nesta função, existência em `fare_zones.txt` nem chave estrangeira.
+No ficheiro `stops.txt`, o campo `zone_id` identifica a zona tarifária da paragem, para ligação ao modelo de tarifas do feed. No GTFS o campo é opcional; para estação ou entrada/saída de estação o `zone_id` pode ser ignorado pelos consumidores de dados - o validador não dispensa automaticamente a verificação por `location_type`; aplica sempre as regras  sobre presença (obrigatório ou recomendado, quando a verificação não é dispensada), proibição quando o valor vem fornecido, e lista de opções permitidas. Não se verifica, nesta função, existência em `fare_zones.txt` nem chave estrangeira.
 
 ---
 
