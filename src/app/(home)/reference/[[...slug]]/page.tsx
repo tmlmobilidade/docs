@@ -74,7 +74,7 @@ export default async function Page(props: { params: Promise<{ slug?: string[] }>
 				<DocsDescription className="text-md mb-4">{page.data.description}</DocsDescription>
 			</div>
 			<DocsBody>
-				<MDX components={{ ...defaultMdxComponents }} />
+				<MDX components={getMDXComponents()} />
 			</DocsBody>
 		</DocsPage>
 	);
