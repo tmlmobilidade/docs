@@ -39,7 +39,7 @@ Pode ainda reportar falta de chegada quando o modo de validação não trata o c
 - `timepoint = 1` sem chegada - preencher `arrival_time` (e alinhar com `departure_time` se fizer sentido).
 - Janelas definidas e chegada preenchida - retirar a chegada ou alterar o modelo (janelas vs tempos fixos).
 - Extremo do trip (primeira ou última paragem) sem chegada - preencher nos mínimos e máximos de `stop_sequence`; rever coerência de todos os `stop_times` do trip.
-- Tempo inválido - 
+- Tempo inválido - corrigir para `HH:MM:SS` válido (incluindo > 24 se aplicável).
 - Trip ou sequências inconsistentes - corrigir `trip_id`, `stop_sequence` e o conjunto de linhas do mesmo trip.
 - Ausência reportada como obrigatório ou recomendado - preencher onde o feed o exige ou clarificar o nível de exigência com o operador.
 
