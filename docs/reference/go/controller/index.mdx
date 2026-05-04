@@ -4,17 +4,11 @@ description: Descrição
 ---
 ## O que é a Monitorização
 
-Este módulo é responsável por transformar a informação contida nos GTFS estáticos em [circulações](/reference/glossary#circulação) e analisar cada uma individualmente, combinando as posições GPS dos veículos e as transações de bilhética APEX.
+Este módulo é responsável por transformar a informação contida nos GTFS estáticos em [circulações ou `rides`](/reference/glossary#circulação) e analisar cada uma individualmente, combinando as posições GPS dos veículos e as transações de bilhética APEX.
 
 // IMAGEM
 
-Todas as análises medem apenas um indicador e seguem a mesma estrutura:
-
-- **Grade** — Resultado do teste para a circulação.
-- **Reason** — Motivo pelo qual a circulação falhou ou passou no teste. O valor deste campo muda em função do tipo de análise e é tipificado (é possível fazer filtros com este campo).
-- **Message** — Informação adicional sobre a análise, que explica com mais detalhe o motivo de uma circulação ter passado ou falhado no teste. Por ser texto mais livre, não é aconselhado fazer filtros sobre este campo.
-- **Unit** — Descrição do que está a ser contabilizado no teste em análie (por exemplo: VEHICLE_EVENTS_QTY -> quantidade de eventos recebidos).
-- **Value** — Valor contabilizado (por exemplo: número de eventos recebidos).
+## Dados disponíveis
 
 Conversão UNIX timestamp para hora - \[Célula com timestamp]/1000/86400 + DATE(1970,1,1)
 
