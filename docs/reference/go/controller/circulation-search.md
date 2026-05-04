@@ -51,8 +51,7 @@ Um exemplo de um `id` de uma circulação é `O9AXB-41-20260302-1001_0_1_0700_07
 Os códigos operacionais indentificam a linha, a variante ou o percurso e podem ser separados individualmente. Por exemplo: `line_id: 1001`, `route_id: 1001_0`, `pattern_id: 1001_0_1`.
 #### Veículo associado
 
-É possível filtrar diretamente por identificador do veículo através do prefixo `v:{vehicle_id}`. É possível ainda pesquisar por múltiplos veículos de uma só vez, separando os valores por virgulas
-Como por exemplo `v:1603,2000`
+É possível filtrar diretamente por identificador do veículo através do prefixo `v:{vehicle_id}`. É possível ainda pesquisar por múltiplos veículos de uma só vez, separando os valores por virgulas.
 
 Exemplo: `v:1234` ou `v:1234,5678`
 #### Motorista associado
