@@ -8,9 +8,6 @@ description: has_tariffs_information_valid_enum
 | ------------------------- | ---- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `has_tariffs_information` | Enum | Opcional | Indica se na paragem existe informação sobre tarifas.<br/><br/><strong>Opções válidas:</strong><ul><li><code>0</code> — Não aplicável a esta paragem.</li><li><code>1</code> — Paragem sem informação sobre tarifas no local.</li><li><code>2</code> — Há informação sobre tarifas, mas em mau estado.</li><li><code>3</code> — Há informação sobre tarifas e está em bom estado.</li></ul> |
 
-
-
-
 ## O que esta validação faz 
 
 No ficheiro `stops.txt`, o campo `has_tariffs_information` descreve se a paragem dispõe de informação tarifária e em que situação: não aplicável, sem informação, com informação em mau estado ou com informação em bom estado. O campo é opcional; deixar o campo vazio é aceite no standard - significa não fornecer essa informação. O validador aplica as regras  sobre presença, proibição, valores permitidos (0 a 3) e, se existir, lista de opções permitidas.
