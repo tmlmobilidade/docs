@@ -13,14 +13,14 @@ description: agency_name_present
 
 ## O que esta validação faz 
 
-O GTFS exige o nome completo do operador de transportes (designação oficial utilizada nos dados). Esta verificação garante que o valor existe e, quando a regra do projecto define uma lista fechada de nomes admitidos, que o texto indicado pertence a essa lista (ou que a regra admite explicitamente qualquer nome). Se o nome estiver fora da lista, o reporte pode ser erro ou aviso, consoante a severidade configurada para esta regra; por omissão, a ausência do nome trata-se como erro.
+O campo `agency_name` exige o nome completo do operador de transportes (designação oficial utilizada nos dados). Esta verificação garante que o valor existe e, quando a regra define uma lista fechada de nomes admitidos, que o texto indicado pertence a essa lista. Se o nome estiver fora da lista, o reporte pode ser erro ou aviso, consoante a severidade desta regra, a ausência do nome trata-se como erro.
 
 ---
 
 ### Passa
 
 - O nome está definido e a regra não impõe lista restrita, ou o texto coincide com um dos valores permitidos na lista.
-- O nome não está na lista mas a configuração apenas gera aviso para esse caso (e não bloqueio).
+- O nome não está na lista mas a configuração apenas gera aviso para esse caso.
 
 ---
 
