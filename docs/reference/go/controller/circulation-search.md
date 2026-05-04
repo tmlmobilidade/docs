@@ -1,16 +1,18 @@
 ---
-title: Procura de circulações
-description: "-"
+title: Pesquisa de Circulações
+description: Técnicas avançadas para encontrares a circulação que procuras.
 ---
-Devido ao enorme volume de dados, é necessário necessário a aplicação de filtros na pesquisa circulações por sendo que o único filtro obrigatório é o "Intervalo de datas".
-
----
+Como cada Ride representa apenas uma circulação, o volume de dados é enorme. Só a Carris Metropolitana tem mais de 20.000 rides por dia. Por isso, é necessário aplicar filtros para conseguires encontrar as rides que procuras.
 ## Barra de Filtros
 
-Na parte superidor da nossa lista encontramos uma lista de vários menus que nos permitem filtara. informação por o filtro correspondente ao título desse botão.
+No início da página está disponível uma barra com todos os filtros possíveis de aplicar à pesquisa. O único filtro obrigatório, e que está sempre ativo, é o do intervalo de datas. Por defeito, a aplicação mostra as rides que estão ativas agora.
 
-Os filtros disponíveis são:
-- Intervalo de datas
+Por questões de performance, a lista não mostra mais do que 2.000 rides de cada vez, o que significa que se colocares um intervalo de datas muito grande só vais ver as primeiras 2.000 que resultarem da tua pesquisa com todos os filtros aplicados. Por exemplo, se colocares o intervalo de datas entre 1 Janeiro 2025 e 31 Janeiro 2025, vais ver apenas as primeiras 2.000 rides do dia 1 Jan. Mas se aplicares o filtro de Atraso, então vais ver as primeiras 2.000 rides nesse intervalo *que se atrasaram*, e aí já podes ter rides de outras datas.
+
+A funcionalidade de exportação não tem limite de resultados.
+
+**Os filtros disponíveis são:**
+- Intervalo de datas (obrigatório)
 - Operador
 - Estado
 - Atraso

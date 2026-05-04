@@ -36,7 +36,6 @@ export default async function Page(props: { params: Promise<{ slug: string }> })
 
 	const data = 'load' in page.data ? await page.data.load() : page.data;
 	const MDX = data.body;
-	const components = getMDXComponents();
 	const toc = (data.toc ?? []) as TOCItemType[];
 
 	return (
@@ -45,7 +44,7 @@ export default async function Page(props: { params: Promise<{ slug: string }> })
 			toc={toc}
 		>
 			<BlogArticle>
-				<MDX components={components} />
+				<MDX components={getMDXComponents()} />
 			</BlogArticle>
 		</BlogArticleLayout>
 	);
