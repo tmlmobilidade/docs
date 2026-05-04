@@ -11,4 +11,20 @@ description: continuous_drop_off_valid_gtfs_enum
 
 ## O que esta validação faz 
 
-checar validação
+O campo `continuous_drop_off` indica se, à escala da rota, há desembarque contínuo ao longo do trajecto definido pela forma (em alternativa ao modelo só-em-paragens fixas). Os valores seguem o conjunto previsto no GTFS (incluindo sem desembarque contínuo ou com paragem contínua, ou formas de combinar com operador ou motorista). O valor “1” é sempre aceite e encerra a verificação: não é confrontado com janelas horárias nem com a lista de opções da regra. Se o campo estiver vazio ou omitido, aplica-se apenas a política de obrigatório / recomendado / ignorar (sem avaliar uso de janelas). Para qualquer outro valor não vazio diferente de “1”, se existirem janelas horárias de embarque ou desembarque nos `stop_times` de alguma viagem desta rota (início ou fim de janela), o GTFS não admite esse código ao nível da rota e o caso falha. Nos restantes casos, pode aplicar-se uma lista fechada de valores permitidos na configuração do projecto.
+
+---
+
+### Passa
+
+- O valor é “1”.
+- O campo está vazio ou omitido e a regra permite isso (incluindo ignorar a verificação), ou a mensagem de obrigatório/recomendado alinha com a severidade configurada.
+- O valor não é “1”, não está vazio, a rota não tem viagens com janelas horárias de embarque ou desembarque nos tempos de paragem, e o valor respeita a lista de opções da regra quando existir.
+
+---
+
+### Falha
+
+- O campo está em falta ou vazio quando a regra exige ou recomenda preencher (com a severidade configurada).
+- O valor não é “1”, está preenchido, e a rota tem pelo menos uma viagem com janelas horárias de embarque ou desembarque nos tempos de paragem.
+- O valor não consta das opções admitidas pela regra, quando essa lista é fechada e o fluxo chega a essa verificação.
