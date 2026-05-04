@@ -12,7 +12,7 @@ description: parent_station_id_valid_for_stop_hierarchy
 
 ## O que esta validação faz 
 
-No ficheiro `stops.txt`, o campo `parent_station` liga local filho a local ascendente na hierarquia de `stops.txt` (paragem sob estação, entrada ou nó sob estação, área de embarque sob plataforma, etc.). O GTFS fixa requisitos em função do `location_type`: estação (1) não pode ter ascendente; entrada (2), nó genérico (3) e área de embarque (4) têm o ascendente obrigatório; paragem / plataforma (0) pode ter ou não ascendente, consoante o modelo. Quando o valor vem fornecido, tem de ser um `stop_id` que exista no mesmo ficheiro. O validador aplica ainda o preenchimento consoante a severidade e regras , o caso proibido, e, se existir, opções permitidas para o identificador.
+No ficheiro `stops.txt`, o campo `parent_station` liga local filho a local ascendente na hierarquia (paragem sob estação, entrada ou nó sob estação, área de embarque sob plataforma, etc.). O GTFS fixa requisitos em função do `location_type`: estação (1) não pode ter ascendente; entrada (2), nó genérico (3) e área de embarque (4) têm o ascendente obrigatório; paragem / plataforma (0) pode ter ou não ascendente, consoante o modelo. Quando o valor vem fornecido, tem de ser um `stop_id` que exista no mesmo ficheiro. O validador aplica ainda o preenchimento consoante a severidade e regras , o caso proibido, e, se existir, opções permitidas para o identificador.
 
 ---
 
