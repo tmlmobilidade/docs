@@ -15,7 +15,7 @@ description: drop_off_type_valid_gtfs_enum_and_rules
 
 ## O que esta validação faz 
 
-No ficheiro `stop_times.txt`, o campo `drop_off_type` define como é feita a descida do veículo nessa paragem da viagem.
+O campo `drop_off_type` define como é feita a descida do veículo nessa paragem da viagem.
 
 O GTFS admite apenas códigos válidos para esse enumerado e cruza o valor com o resto da linha: quando existem janelas de pickup/drop-off (`start_pickup_drop_off_window` e/ou `end_pickup_drop_off_window` com valor), não é permitido `drop_off_type` = 0 (descida regular num serviço programado à paragem), porque esse modelo colide com o uso de janelas em vez de tempos fixos de paragem para esse efeito.
 
