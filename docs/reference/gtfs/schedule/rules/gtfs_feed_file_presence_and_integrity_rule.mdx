@@ -15,8 +15,6 @@ Agrupa controlos ao nível do feed inteiro (não linha a linha dentro de um `
 - `feed_info.txt` com traduções: se `translations.txt` tiver linhas, `feed_info.txt` também tem de ter linhas; senão erro em `feed_info.txt`.
 - Rede nas rotas vs ficheiros de rede: se alguma rota tiver `network_id` preenchido, não pode haver dados em `networks.txt` nem em `route_networks.txt` (contagem de linhas > 0); se houver, erro no ficheiro correspondente.
 
-O método `Validate` devolve se, após estas verificações, aumentou o número total de erros no serviço de mensagens (avisos não alteram esse retorno para “há erro novo” nesta lógica — só `TotalErrors`).
-
 ---
 
 ### Passa
