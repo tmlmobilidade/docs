@@ -15,14 +15,10 @@ No ficheiro `fare_rules`, o campo `destination_id` indica a zona de destino�
 
 ### Passa
 
-- O campo está vazio e a regra está em ignorar ou em proibido sem exigir reporte de ausência neste ramo.
-- O campo está vazio e a severidade não exige incumprimento para o vosso caso ou o preenchimento está alinhado com obrigatório/recomendado após mensagem aceitável.
-- O valor está preenchido, não é proibido e corresponde a uma entrada reconhecida nas paragens do feed.
+- Se o ficheiro não tiver o campo `des`.
 
 ---
 
 ### Falha
 
-- Campo vazio com severidade recomendada ou obrigatória (mensagem respectiva), quando não se aplica ignorar nem o ramo proibido que silencia a ausência.
-- Valor preenchido com severidade proibido.
-- Valor preenchido sem correspondência válida em `stops.txt` segundo o índice usado pela aplicação.
+- Campo preenchido quando a regra marca o campo como proibido.
