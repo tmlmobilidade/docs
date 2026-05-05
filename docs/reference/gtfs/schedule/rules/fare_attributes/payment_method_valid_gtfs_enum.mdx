@@ -1,0 +1,26 @@
+---
+title: Momento de pagamento da tarifa
+description: payment_method_valid_gtfs_enum
+---
+## Campos que serão validados nesta regra
+
+| Nome do Campo    | Tipo | Presença    | Descrição                                                                                                                                                    |
+| ---------------- | ---- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `payment_method` | Enum | Obrigatório | Indica quando a tarifa deve ser paga. <br/>Opções válidas:<ul><li>`0` - Tarifa paga a bordo.</li><li>`1` - Tarifa deve ser paga antes do embarque.</li></ul> |
+
+## O que esta validação faz 
+
+No ficheiro `fare_attributes`, o campo `payment_method` indica quando a tarifa deve ser paga (a bordo ou antes de embarcar). O valor é obrigatório e tem de ser um dos códigos inteiros previstos no GTFS para este campo (0 paga-se no veículo, 1 paga-se antes de embarcar).
+
+---
+
+### Passa
+
+O campo está preenchido com 0 ou 1.
+
+---
+
+### Falha
+
+O campo vem vazio.  
+Ou o número indicado não é 0 nem 1.
