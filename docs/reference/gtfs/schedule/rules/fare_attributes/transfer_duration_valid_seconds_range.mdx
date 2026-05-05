@@ -1,0 +1,28 @@
+---
+title: teste
+description: transfer_duration_valid_seconds_range
+---
+## Campos que serão validados nesta regra
+
+| Nome do Campo       | Tipo                        | Presença | Descrição                                                                                                                                                                          |
+| ------------------- | --------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `transfer_duration` | Número inteiro não negativo | Opcional | Tempo em segundos antes do fim de uma transferência. <br/>Quando `transfers=0`, este campo pode ser utilizado para indicar a validade de um bilhete ou pode ser deixado em branco. |
+
+## O que esta validação faz 
+
+No ficheiro `fare_attributes`, o campo `transfer_duration` indica quantos segundos a contar de um ponto de referência a janela de transbordo (ou equivalente) deixa de ser válida, em segundos. No GTFS é opcional. Quando `transfers` vale 0, o campo pode servir para sugerir durante quanto tempo o título ou bilhete é válido, ou pode ficar vazio. Na implementação, se o valor não existir e o caso não está a ser ignorado, emite-se mensagem com a severidade. Se o campo está preenchido e a regra o proíbe, reporta-se o bloqueio. Se existe valor, não pode ser negativo.
+
+---
+
+### Passa
+
+O campo está vazio e a regra permite (por exemplo com ignorar activo).  
+Ou está preenchido com um inteiro maior ou igual a zero, sem conflito com proibido.
+
+---
+
+### Falha
+
+Valor numérico negativo.  
+Ou valor preenchido quando a regra o proíbe.  
+Ou campo vazio quando a configuração não ignora e a severidade exige reporte
