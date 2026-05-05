@@ -1,0 +1,26 @@
+---
+title: Preço da tarifa
+description: fare_price_valid_non_negative_decimal
+---
+## Campos que serão validados nesta regra
+
+| Nome do Campo | Tipo                        | Presença    | Descrição                                                     |
+| ------------- | --------------------------- | ----------- | ------------------------------------------------------------- |
+| `price`       | Número decimal não negativo | Obrigatório | Preço da tarifa, na unidade especificada por `currency_type`. |
+
+## O que esta validação faz 
+
+No ficheiro `fare_attributes`, o campo `price` indica o valor da tarifa, na unidade monetária definida em `currency_type`. O campo é obrigatório e o número tem de ser maior ou igual a zero (não são admitidos preços negativos).
+
+---
+
+### Passa
+
+O preço está preenchido e é zero ou positivo.
+
+---
+
+### Falha
+
+O campo vem vazio.  
+Ou o valor numérico é negativo.
