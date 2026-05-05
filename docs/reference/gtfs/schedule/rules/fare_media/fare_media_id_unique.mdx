@@ -1,0 +1,27 @@
+---
+title: dentificador do suporte tarifário
+description: fare_media_id_unique
+---
+## Campos que serão validados nesta regra
+
+| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
+| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
+
+## O que esta validação faz 
+
+No ficheiro `fare_media`, o campo `fare_media_id` identifica de forma única cada suporte ou meio tarifário (cartão, título magnético, aplicação, etc., conforme o modelo do operador). O valor é obrigatório e não pode repetir-se em mais do que uma linha do mesmo ficheiro.
+
+---
+
+### Passa
+
+- O identificador está preenchido e só aparece uma vez entre todas as linhas de `fare_media` com esse valor.
+
+---
+
+### Falha
+
+- O identificador está em falta.
+- O mesmo identificador surge em mais do que uma linha de `fare_media`.
+
+
