@@ -4,17 +4,13 @@ description: fare_media_type_valid
 ---
 ## Campos que serão validados nesta regra
 
-| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
-| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
-
-
-
+| Nome do Campo     | Tipo | Presença    | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| ----------------- | ---- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `fare_media_type` | Enum | Obrigatório | Tipo de suporte ou meio tarifário.<br/><br/><strong>Opções válidas:</strong><ul><li><code>0</code> — Nenhum. Sem meio físico ou digital associado (por exemplo numerário ao motorista ou cobrador sem bilhete impresso).</li><li><code>1</code> — Bilhete em papel com viagens pré-pagas ou período fixo.</li><li><code>2</code> — Cartão físico com títulos, passes ou valor armazenado.</li><li><code>3</code> — cEMV (contactless) como suporte em circuito aberto para títulos baseados em conta.</li><li><code>4</code> — Aplicação móvel com cartão virtual, bilhetes, passes ou valor armazenado.</li></ul> |
 
 ## O que esta validação faz 
 
 No ficheiro `fare_media`, o campo `fare_media_type` indica que tipo de meio se usa para comprar ou validar a tarifa. O valor é obrigatório e tem de ser um dos códigos 0 a 4 previstos no GTFS.
-
-Quando a regra do projecto define uma lista fechada de tipos admitidos, o código indicado tem de pertencer a essa lista ou a regra tem de admitir explicitamente todos os valores GTFS válidos.
 
 ---
 
