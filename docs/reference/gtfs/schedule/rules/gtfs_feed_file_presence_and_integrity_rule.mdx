@@ -21,7 +21,7 @@ O método `Validate` devolve se, após estas verificações, aumentou o núm
 
 ### Passa
 
-- Nenhum ficheiro proibido pela regra está presente; os obrigatórios (fixos + regra) estão presentes; `stops` ou `locations` satisfazem a condição; existe calendário ou excepções; `levels` existe quando há elevador em `pathways`; `feed_info` existe quando há `translations`; e não há mistura proibida entre `network_id` nas rotas e tabelas `networks` / `route_networks`.
+- Nenhum ficheiro proibido pela regra está presente; os obrigatórios (fixos + regra) estão presentes; `stops` ou `locations` satisfazem a condição; existe calendário ou exceções; `levels` existe quando há elevador em `pathways`; `feed_info` existe quando há `translations`; e não há mistura proibida entre `network_id` nas rotas e tabelas `networks` / `route_networks`.
 
 ---
 
@@ -38,4 +38,4 @@ O método `Validate` devolve se, após estas verificações, aumentou o núm
 
 ### Avisos (sem ser “falha” de erro)
 
-- Ficheiro na lista de “aviso se em falta” ausente — gera aviso, não erro, conforme `addWarning`.
+- Ficheiro na lista de “aviso se em falta” ausente — gera aviso mas ainda pode ser aprovado .
