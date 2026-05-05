@@ -1,0 +1,30 @@
+---
+title: Operador associado à tarifa
+description: fare_attributes_agency_id_references_agency_table
+---
+## Campos que serão validados nesta regra
+
+| Nome do Campo | Tipo                                             | Presença                     | Descrição                                                                                                                                                                                                            |
+| ------------- | ------------------------------------------------ | ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `agency_id`   | ID estrangeiro que referencia `agency.agency_id` | Condicionalmente obrigatório | Identifica a agência relevante para uma tarifa. <br/><br/>**Condicionalmente obrigatório**:<ul><li>Obrigatório se várias agências estiverem definidas em `agency.txt`.</li><li>Recomendado caso contrário.</li></ul> |
+
+
+
+
+## O que esta validação faz 
+
+No ficheiro `fare_attributes.txt`, o campo `agency_id` identifica que operador se aplica àquela linha de atributos de tarifa. No GTFS, com várias operadoras no feed, o campo torna-se obrigatório; com uma só, é recomendado poder ficar implícito. Esta verificação: exige o preenchimento quando existem mais do que uma linha em `agency.txt`; com uma operadora, trata a ausência com obrigatório/recomendado consoante a regra e sem ignorar o caso; quando o identificador está preenchido, confirma que existe em `agency.txt`. A severidade base segue a regra do projecto; se não estiver definida, usa-se aviso como nível padrão do contexto.
+
+---
+
+### Passa
+
+- O identificador está preenchido e corresponde a uma operadora existente no feed, ou está em falta mas o caso é aceite pela regra (incluindo feed monoperador quando assim configurado).
+
+---
+
+### Falha
+
+- Identificador em falta quando o feed tem mais do que uma operadora.
+- Identificador em falta reportado como erro ou recomendação consoante a regra, quando não se ignora a verificação e há uma só operadora (fluxo de mensagem do contexto).
+- Identificador preenchido mas inexistente em `agency.txt`.
