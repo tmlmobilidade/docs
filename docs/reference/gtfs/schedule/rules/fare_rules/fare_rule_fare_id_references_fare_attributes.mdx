@@ -9,21 +9,17 @@ description: fare_rule_fare_id_references_fare_attributes
 
 ## O que esta validação faz 
 
-
-
+No ficheiro `fare_rules`, o campo `fare_id` identifica a classe tarifária a que a regra se aplica. Tem de existir em todas as linhas e de corresponder a um `fare_id` definido em `fare_attributes.txt`. Incumprimentos são tratados como erro.
 
 ---
 
 ### Passa
 
-
+- O `fare_id` está preenchido e coincide com uma entrada de `fare_attributes` no mesmo conjunto de dados.
 
 ---
 
 ### Falha
 
-
-
-
-
-
+- O campo está em falta.
+- O valor não existe em `fare_attributes.txt` para o feed em causa.
