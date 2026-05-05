@@ -1,32 +1,26 @@
 ---
-title: teste
+title: Identificador da tarifa
 description: fare_id_unique
 ---
 ## Campos que serão validados nesta regra
 
-| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
-| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
-
-
-
+| Nome do Campo | Tipo     | Presença    | Descrição                        |
+| ------------- | -------- | ----------- | -------------------------------- |
+| `fare_id`     | ID único | Obrigatório | Identifica uma classe tarifária. |
 
 ## O que esta validação faz 
 
-
-
+No ficheiro `fare_attributes`, o campo `fare_id` identifica a tarifa (a “classe” ou produto tarifário associado a este registo de atributos). O valor é obrigatório. A implementação trata ainda de duplicados de forma específica. Consulta o ficheiro `fare_rules` e, para o mesmo `fare_id`, se encontrar mais do que uma linha, reporta duplicado. (Num feed GTFS típico, `fare_rules` pode ter várias linhas por `fare_id` com regras diferentes. Se o teu modelo de dados assumir no máximo uma linha em `fare_rules` por `fare_id`, esta regra faz sentido: caso contrário, vale alinhar código e documentação.)
 
 ---
 
 ### Passa
 
-
+O `fare_id` está preenchido e, segundo a regra implementada, não há mais do que uma entrada em `fare_rules` com esse identificador.
 
 ---
 
 ### Falha
 
-
-
-
-
-
+O campo vem vazio.  
+Ou o mesmo `fare_id` aparece em mais do que uma linha de `fare_rules` e esta verificação dispara o erro de duplicado.
