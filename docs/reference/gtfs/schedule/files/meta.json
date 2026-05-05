@@ -11,7 +11,10 @@
 		"shapes",
 		"fare_attributes",
 		"fare_rules",
+		"rider_categories",
+		"fare_media",
 		"vehicles"
+
 	],
 	"title": "Especificação"
 }
