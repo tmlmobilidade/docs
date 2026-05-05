@@ -11,7 +11,7 @@ description: at_most_one_default_fare_category
 
 No ficheiro `rider_categories`, o campo `is_default_fare_category` indica se aquela categoria de utente é a categoria por omissão a mostrar (por exemplo “Adulto” ou “Tarifa normal”) quando há várias categorias no conjunto. No GTFS costuma usar-se 0 ou vazio para “não é a omissão” e 1 para “é a omissão”. Quando várias categorias são elegíveis para o mesmo produto tarifário (`fare_product_id`), a especificação exige exactamente uma com valor 1 entre essas elegíveis.
 
-Na implementação actual, o campo é tratado como obrigatório a nível de valor definido (não aceita ausência sem erro). O inteiro tem de ser 0 ou 1. Pode ainda haver uma lista fechada de valores na regra do projecto. A severidade por omissão no contexto é aviso, salvo outra definição na regra.
+Na implementação actual, o campo é tratado como obrigatório a nível de valor definido (não aceita ausência sem erro). O inteiro tem de ser 0 ou 1. Pode ainda haver uma lista fechada de valores na regra. A severidade por omissão no contexto é aviso, salvo outra definição na regra.
 
 O identificador interno da regra fala em no máximo uma categoria omissão, mas este ficheiro não verifica unicidade global nem o cruzamento com `fare_product_id` só pela lógica aqui mostrada.
 
