@@ -8,9 +8,9 @@ Agrupa controlos ao nível do feed inteiro (não linha a linha dentro de um `
 
 - Proibidos (regra): ficheiros marcados como proibidos na configuração; se a tabela correspondente existir no conjunto, regista-se erro.
 - Avisos (regra): ficheiros marcados como “aviso se em falta”; se a tabela não existir, regista-se aviso.
-- Obrigatórios: um conjunto mínimo fixo (`agency.txt`, `routes.txt`, `trips.txt`, `stop_times.txt`) mais outros ficheiros obrigatórios vindos da regra, sem duplicados; se a tabela não existir, devolve uerro.
+- Obrigatórios: um conjunto mínimo fixo (`agency.txt`, `routes.txt`, `trips.txt`, `stop_times.txt`) mais outros ficheiros obrigatórios vindos da regra, sem duplicados; se a tabela não existir, devolve um erro.
 - `stops.txt` condicional: se não existir `locations.txt` (tabela `locations`), é obrigatório existir `stops.txt`.
-- Calendário: tem de existir pelo menos um de `calendar.txt` ou `calendar_dates.txt`; se faltarem ambos, erro.
+- Calendário: tem de existir pelo menos um de `calendar.txt` ou `calendar_dates.txt`; se faltarem ambos, devolve erro.
 - `levels.txt` com elevadores: se existir `pathways.txt` e algum percurso tiver modo 5 (elevador), a tabela `levels` tem de existir; caso contrário erro em `levels.txt`.
 - `feed_info.txt` com traduções: se `translations.txt` tiver linhas, `feed_info.txt` também tem de ter linhas; senão erro em `feed_info.txt`.
 - Rede nas rotas vs ficheiros de rede: se alguma rota tiver `network_id` preenchido, não pode haver dados em `networks.txt` nem em `route_networks.txt` (contagem de linhas > 0); se houver, erro no ficheiro correspondente.
