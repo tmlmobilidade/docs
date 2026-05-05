@@ -4,8 +4,9 @@ description: fare_rule_origin_id_references_zones_stops
 ---
 ## Campos que serão validados nesta regra
 
-| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
-| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
+| Nome do Campo | Tipo                                          | Presença | Descrição                                                                                                                                                                                                                                                                                                                                                                                                             |
+| ------------- | --------------------------------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `origin_id`   | ID estrangeiro que referencia `stops.zone_id` | Opcional | Identifica uma zona de origem. Se uma classe tarifária tiver várias zonas de origem, crie um registo em `fare_rules.txt` para cada `origin_id`. <br/><br/><u>Exemplo</u>: Se a classe tarifária "b" for válida para todas as viagens com origem na zona "2" ou na zona "8", o ficheiro `fare_rules.txt` conterá estes registos para a classe tarifária: <br/><br/>`fare_id,...,origin_id`<br/>`b,...,2`<br/>`b,...,8` |
 
 
 
