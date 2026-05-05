@@ -1,0 +1,26 @@
+---
+title: Número de transbordos permitidos
+description: transfers_valid_gtfs_enum
+---
+## Campos que serão validados nesta regra
+
+| Nome do Campo | Tipo | Presença    | Descrição                                                                                                                                                                                                                                                                                                                                  |
+| ------------- | ---- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `transfers`   | Enum | Obrigatório | Indica o número de transferências permitidas nesta tarifa. <br/>Opções válidas:<ul><li>`0` - Nenhuma transferência permitida nesta tarifa.</li><li>`1` - Os passageiros podem fazer uma transferência.</li><li>`2` - Os passageiros podem fazer duas transferências.</li><li>`empty` - São permitidas transferências ilimitadas.</li></ul> |
+
+## O que esta validação faz 
+
+No ficheiro `fare_attributes`, o campo `transfers` indica quantos transbordos esta tarifa permite (nenhum, um, dois, ou ilimitado quando o valor não é fixado). Na especificação GTFS, vazio costuma significar transbordos ilimitados. Nesta implementação, valor não definido (`nil`) não gera verificação adicional e o fluxo termina (há um comentário TODO alinhando cabeçalho obrigatório com corpo opcional). Quando o valor está definido, tem de ser o inteiro 0, 1 ou 2. Qualquer outro inteiro gera erro.
+
+---
+
+### Passa
+
+- O campo não está instanciado na estrutura usada (`nil`), tratando-se como caso não verificado neste ponto (equivalente conceptual a ilimitado no GTFS quando o feed representa assim).
+- O valor é 0, 1 ou 2.
+
+---
+
+### Falha
+
+- Valor inteiro preenchido diferente de 0, 1 e 2.
