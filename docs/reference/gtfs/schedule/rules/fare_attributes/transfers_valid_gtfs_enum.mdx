@@ -10,7 +10,9 @@ description: transfers_valid_gtfs_enum
 
 ## O que esta validação faz 
 
-No ficheiro `fare_attributes`, o campo `transfers` indica quantos transbordos esta tarifa permite (nenhum, um, dois, ou ilimitado quando o valor não é fixado). Na especificação GTFS, vazio costuma significar transbordos ilimitados. Nesta implementação, valor não definido (`nil`) não gera verificação adicional e o fluxo termina (há um comentário TODO alinhando cabeçalho obrigatório com corpo opcional). Quando o valor está definido, tem de ser o inteiro 0, 1 ou 2. Qualquer outro inteiro gera erro.
+No ficheiro `fare_attributes`, o campo `transfers` indica quantas transferências a tarifa permite durante a utilização do título. Pode significar nenhuma, uma, duas, ou sem limite quando o valor não está fixado de forma numérica (no GTFS costuma corresponder a vazio para ilimitado). Esta verificação só aceita valores numéricos fora do conjunto admitido 0, 1 e 2 quando um número é mesmo indicado.
+
+Esta verificação só valores numéricos fora do conjunto admitido 0, 1 e 2 quando um número é mesmo indicado.
 
 ---
 
