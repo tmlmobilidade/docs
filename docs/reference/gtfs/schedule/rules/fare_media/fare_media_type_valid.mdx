@@ -1,0 +1,32 @@
+---
+title: teste
+description: fare_media_type_valid
+---
+## Campos que serão validados nesta regra
+
+| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
+| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
+
+
+
+
+## O que esta validação faz 
+
+No ficheiro `fare_media`, o campo `fare_media_type` indica que tipo de meio se usa para comprar ou validar a tarifa. O valor é obrigatório e tem de ser um dos códigos 0 a 4 previstos no GTFS.
+
+Quando a regra do projecto define uma lista fechada de tipos admitidos, o código indicado tem de pertencer a essa lista ou a regra tem de admitir explicitamente todos os valores GTFS válidos.
+
+---
+
+### Passa
+
+- O tipo está preenchido com 0, 1, 2, 3 ou 4 e, se existir lista restrita na regra, o valor está nessa lista.
+
+---
+
+### Falha
+
+- O campo está em falta.
+- O número não é um dos cinco valores válidos do GTFS.
+- O tipo é válido no GTFS mas não está entre os tipos permitidos pela regra, quando essa lista é fechada.
+

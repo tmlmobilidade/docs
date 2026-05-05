@@ -1,0 +1,27 @@
+---
+title: Nome do suporte tarifário
+description: fare_media_name_non_empty
+---
+## Campos que serão validados nesta regra
+
+| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
+| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
+
+## O que esta validação faz 
+
+No ficheiro `fare_media`, o campo `fare_media_name` é o nome público do suporte ou meio tarifário. No GTFS o campo é opcional, mas para cartão (`fare_media_type` 2) ou aplicação móvel (`fare_media_type` 4) o nome deve existir e coincidir com a designação que o utente vê nos canais do operador. Quando o suporte é cartão ou aplicação e o nome falta, esta verificação pode emitir aviso (não só erro). Conforme a regra do projecto, o campo pode ser obrigatório, recomendado, ignorado na verificação ou proibido quando preenchido.
+
+---
+
+### Passa
+
+- O nome está definido e a regra não o veda.
+- O nome pode estar em falta quando a regra permite (incluindo ignorar), desde que não se caia em aviso obrigatório pelos tipos cartão ou aplicação, ou o resultado é aceitável para o editor após aviso nesses dois tipos.
+
+---
+
+### Falha
+
+- Texto presente quando a regra proíbe valores neste campo.
+- Nome em falta em suportes que não são cartão nem aplicação móvel, quando a regra trata a ausência como incumprimento com severidade de falha (e sem ignorar o caso).
+
