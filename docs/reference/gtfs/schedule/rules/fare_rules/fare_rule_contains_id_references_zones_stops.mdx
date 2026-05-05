@@ -12,8 +12,6 @@ description: fare_rule_contains_id_references_zones_stops
 
 No ficheiro `fare_rules`, o campo `contains_id` identifica zonas pela referência usada no conjunto de dados (no GTFS associa-se a `zone_id` em `stops.txt`). Serve para indicar por que zonas o utente pode circular dentro da mesma classe tarifária. Para uma dada combinação `fare_id` / regra, costuma ser necessário cumprir todas as zonas listadas em linhas com o mesmo critério para essa tarifa se aplicar (exemplo clássico três zonas na regra e o percurso só usar duas não aplica essa classe).
 
-A severidade vem da regra. Se estiver em ignorar, ausência do valor não é reportada. Se estiver em proibido, não deve haver valor (presença ou ausência conforme o ramo proibido descrito abaixo). Entre outros casos, ausência pode ser recomendada ou obrigatória conforme a severidade. Quando há valor, este tem de existir no modelo de dados carregado para paragens (referência cruzada com a tabela de paragens do feed).
-
 ---
 
 ### Passa
