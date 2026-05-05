@@ -64,3 +64,27 @@ Exemplo: `v:1234` ou `v:1234,5678`
 É possível filtrar diretamente por identificador de motorista através do prefixo `d:{driver_id}`. É possível ainda pesquisar por múltiplos motoristas de uma só vez, separando os valores por virgulas.
 
 Exemplo: `d:1234` ou `d:1234,5678`
+
+Aqui tens uma versão mais clara e direta, com melhor estrutura e precisão:
+
+#### Pesquisa de `trip_id` com Pattern Matching
+É possível pesquisar `trip_id` utilizando *pattern matching* com o delimitador `%%`, permitindo encontrar múltiplos valores que partilham um padrão comum.
+Isto é especialmente útil quando os `trip_id` seguem convenções estruturadas, como a inclusão de horários ou identificadores parciais.
+
+**Exemplo 1 — Filtrar por padrão (hora)**
+Dado o conjunto de `trip_id`:
+- `2141_0_2|120|1|1430`
+- `3536_1_2_1430_1459_0_ESC_DU`
+- `1230_0_1_1430_1459_0_1`
+  
+Para obter todos os `trip_id` que contêm o padrão `1430` (ex: hora 14:30), pode-se usar: `%%1430%%`
+
+**Exemplo 2 — Ignorar segmentos variáveis**
+Dado o conjunto:
+- `4404_0_3|3000|1430`
+- `4404_0_3|3100|1430`
+- `4404_0_3|400|1430`
+  
+Se apenas a parte intermédia varia, é possível usar: `4404_0_3|%%|1430`
+
+Este padrão permite ignorar qualquer valor entre os delimitadores fixos, capturando todas as variações relevantes.
