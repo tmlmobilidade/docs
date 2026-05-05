@@ -4,8 +4,9 @@ description: fare_rule_route_id_references_routes
 ---
 ## Campos que serão validados nesta regra
 
-| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
-| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
+| Nome do Campo | Tipo                                            | Presença | Descrição                                                                                                                                                                                                                                                                                                                                                                                   |
+| ------------- | ----------------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `route_id`    | ID estrangeiro que referencia `routes.route_id` | Opcional | Identifica uma rota associada à classe tarifária. Se existirem várias rotas com os mesmos atributos tarifários, crie um registo em `fare_rules.txt` para cada rota. <br/><br/><u>Exemplo</u>: Se a classe tarifária "b" for válida nas rotas "TSW" e "TSE", o ficheiro `fare_rules.txt` conterá estes registos para a classe tarifária:<br/><br/>`fare_id,route_id`<br/>`b,TSW`<br/>`b,TSE` |
 
 
 
