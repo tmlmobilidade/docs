@@ -8,9 +8,6 @@ description: fare_rule_origin_id_references_zones_stops
 | ------------- | --------------------------------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `origin_id`   | ID estrangeiro que referencia `stops.zone_id` | Opcional | Identifica uma zona de origem. Se uma classe tarifária tiver várias zonas de origem, crie um registo em `fare_rules.txt` para cada `origin_id`. <br/><br/><u>Exemplo</u>: Se a classe tarifária "b" for válida para todas as viagens com origem na zona "2" ou na zona "8", o ficheiro `fare_rules.txt` conterá estes registos para a classe tarifária: <br/><br/>`fare_id,...,origin_id`<br/>`b,...,2`<br/>`b,...,8` |
 
-
-
-
 ## O que esta validação faz 
 
 No ficheiro `fare_rules`, o campo `origin_id` indica a zona de origem do percurso abrangido pela regra (no GTFS associa-se a `zone_id` em `stops.txt`). Se uma mesma classe tarifária admitir várias zonas de partida, deve existir uma linha em `fare_rules.txt` por cada `origin_id` pertinente (combinando com `destination_id`, `route_id` ou outros campos, consoante o modelo).
