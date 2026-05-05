@@ -1,5 +1,5 @@
 ---
-title: teste
+title: Duração de transbordo
 description: transfer_duration_valid_seconds_range
 ---
 ## Campos que serão validados nesta regra
@@ -16,13 +16,13 @@ No ficheiro `fare_attributes`, o campo `transfer_duration` indica quantos se
 
 ### Passa
 
-O campo está vazio e a regra permite (por exemplo com ignorar activo).  
-Ou está preenchido com um inteiro maior ou igual a zero, sem conflito com proibido.
+- O valor é um inteiro não negativo e o campo não está proibido quando preenchido.
+- O campo está vazio e o caso é ignorado pela regra, ou está vazio sem disparar falha segundo a severidade das mensagens do contexto.
 
 ---
 
 ### Falha
 
-Valor numérico negativo.  
-Ou valor preenchido quando a regra o proíbe.  
-Ou campo vazio quando a configuração não ignora e a severidade exige reporte
+- Valor numérico negativo.
+- Campo preenchido quando a regra o proíbe.
+- Campo vazio com a verificação sem modo ignorar e mensgem reportada como incumprimento consoante a severidade configurada (chave `transfers_validation.required` no i18n).
