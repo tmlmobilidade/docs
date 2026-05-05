@@ -12,7 +12,7 @@ description: level_id_valid_id
 
 ## O que esta validação faz 
 
-No ficheiro `stops.txt`, o campo `level_id` associa a paragem a um nível (andar, plataforma ou estrato de um espaço multi-nível), tal como definido em `levels.txt`. No GTFS o campo é opcional; o mesmo nível pode servir várias estações sem ligação directa entre si. O validador exige, conforme as regras, presença do identificador quando aplicável, proibição quando o AAAA não admite o campo preenchido, existência do valor em `levels.txt` (chave estrangeira) e, se existir lista de opções nas regras, que o identificador pertence a esse conjunto permitido.
+O campo associa a paragem a um nível (andar, plataforma ou estrato de um espaço multi-nível), tal como definido em `levels.txt`. No GTFS o campo é opcional; o mesmo nível pode servir várias estações sem ligação directa entre si. O validador exige, conforme as regras, presença do identificador quando aplicável, proibição quando não admite o campo preenchido, existência do valor em `levels.txt` (chave estrangeira) e, se existir lista de opções nas regras, que o identificador pertence a esse conjunto permitido.
 
 ---
 
