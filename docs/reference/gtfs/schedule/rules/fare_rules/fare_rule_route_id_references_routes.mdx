@@ -12,21 +12,19 @@ description: fare_rule_route_id_references_routes
 
 ## O que esta validação faz 
 
-
-
+No ficheiro `fare_rules`, o campo `route_id` limita a regra a uma linha concreta (`routes.txt`). No GTFS é opcional. Se a mesma classe tarifária se aplicar a várias linhas, deve haver uma linha em `fare_rules.txt` por cada `route_id` (com o mesmo `fare_id` e demais campos coerentes). Ausência de `route_id` não é alvo de mensagens nesta verificação. Quando o campo está preenchixo, com severidade proibido na regra, o preenchimento falha. Caso contrário, o valor tem de existir em `routes.txt`.
 
 ---
 
 ### Passa
 
-
+- O campo está vazio (a regra vale para todo o conjunto segundo o resto dos campos, sem restrição explícita a uma linha).
+- O campo está preenchido, não é proibido e corresponde a um `route_id` existente em `routes.txt`.
 
 ---
 
 ### Falha
 
-
-
-
-
+- Valor preenchido quando a regra marca o campo como proibido.
+- Valor preenchido sem correspondência em `routes.txt` (erro).
 
