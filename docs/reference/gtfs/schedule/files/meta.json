@@ -1,20 +1,19 @@
 {
 	"pages": [
-		"feed_info",
 		"agency",
-		"stops",
-		"trips",
-		"routes",
 		"calendar",
 		"calendar_dates",
-		"stop_times",
-		"shapes",
 		"fare_attributes",
-		"fare_rules",
-		"rider_categories",
 		"fare_media",
+		"fare_rules",
+		"feed_info",
+		"rider_categories",
+		"routes",
+		"shapes",
+		"stops",
+		"stop_times",
+		"trips",
 		"vehicles"
-
 	],
 	"title": "Especificação"
 }
