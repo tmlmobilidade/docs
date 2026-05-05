@@ -8,9 +8,6 @@ description: fare_rule_route_id_references_routes
 | ------------- | ----------------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `route_id`    | ID estrangeiro que referencia `routes.route_id` | Opcional | Identifica uma rota associada à classe tarifária. Se existirem várias rotas com os mesmos atributos tarifários, crie um registo em `fare_rules.txt` para cada rota. <br/><br/><u>Exemplo</u>: Se a classe tarifária "b" for válida nas rotas "TSW" e "TSE", o ficheiro `fare_rules.txt` conterá estes registos para a classe tarifária:<br/><br/>`fare_id,route_id`<br/>`b,TSW`<br/>`b,TSE` |
 
-
-
-
 ## O que esta validação faz 
 
 No ficheiro `fare_rules`, o campo `route_id` limita a regra a uma linha concreta (`routes.txt`). No GTFS é opcional. Se a mesma classe tarifária se aplicar a várias linhas, deve haver uma linha em `fare_rules.txt` por cada `route_id` (com o mesmo `fare_id` e demais campos coerentes). Ausência de `route_id` não é alvo de mensagens nesta verificação. Quando o campo está preenchido, com severidade proibido na regra, o preenchimento falha. Caso contrário, o valor tem de existir em `routes.txt`.
