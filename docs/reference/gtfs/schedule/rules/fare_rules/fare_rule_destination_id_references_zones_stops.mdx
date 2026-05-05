@@ -9,21 +9,20 @@ description: fare_rule_destination_id_references_zones_stops
 
 ## O que esta validação faz 
 
-
-
+No ficheiro `fare_rules`, o campo `destination_id` indica a zona de destino associada à regra (no GTFS liga-se a `zone_id` em `stops.txt`). Se uma mesma classe tarifária tiver vários destinos possíveis, o feed deve ter uma linha em `fare_rules.txt` para cada `destination_id` (combinando com `origin_id` ou outros campos da regra, consoante o modelo). A severidade vem da regra do projecto; por omissão costuma ser ignorar, pelo que nada é reportado. Em proibido, o campo não deve estar preenchido. Nos restantes níveis, ausência pode ser tratada como recomendada ou obrigatória. Com valor, é verificada a existência da referência no conjunto de dados de paragens.
 
 ---
 
 ### Passa
 
-
+- O campo está vazio e a regra está em ignorar ou em proibido sem exigir reporte de ausência neste ramo.
+- O campo está vazio e a severidade não exige incumprimento para o vosso caso ou o preenchimento está alinhado com obrigatório/recomendado após mensagem aceitável.
+- O valor está preenchido, não é proibido e corresponde a uma entrada reconhecida nas paragens do feed.
 
 ---
 
 ### Falha
 
-
-
-
-
-
+- Campo vazio com severidade recomendada ou obrigatória (mensagem respectiva), quando não se aplica ignorar nem o ramo proibido que silencia a ausência.
+- Valor preenchido com severidade proibido.
+- Valor preenchido sem correspondência válida em `stops.txt` segundo o índice usado pela aplicação.
