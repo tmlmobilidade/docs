@@ -6,10 +6,10 @@ description: Descrever os diferentes meios de pagamento que podem ser utilizados
 **Chave primária**: fare_media_id
 ### Campos GTFS Standard
 
-| Nome do Campo   | Tipo | Presença    | Descrição                               |
-| --------------- | ---- | ----------- | --------------------------------------- |
-| `fare_media_id` | ID   | Obrigatório | Identifica o suporte ou meio tarifário. |
-|                 |      |             |                                         |
-|                 |      |             |                                         |
+| Nome do Campo     | Tipo  | Presença    | Descrição                                                                                                                                                                                                                                                                                                            |
+| ----------------- | ----- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `fare_media_id`   | ID    | Obrigatório | Identifica o suporte ou meio tarifário.                                                                                                                                                                                                                                                                              |
+| `fare_media_name` | Texto | Opcional    | Nome do suporte ou meio tarifário.<br/><br/>Para meios que são cartões de transporte (`fare_media_type` 2) ou aplicações móveis (`fare_media_type` 4), o `fare_media_name` deve estar preenchido e coincidir com a designação voltada ao utente que as entidades que os emitam ou promovem utilizam nos seus canais. |
+|                   |       |             |                                                                                                                                                                                                                                                                                                                      |
 
 
