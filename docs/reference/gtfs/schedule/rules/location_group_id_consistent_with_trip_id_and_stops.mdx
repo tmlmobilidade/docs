@@ -11,7 +11,7 @@ description: location_group_id_consistent_with_trip_id_and_stops
 
 ## O que esta validação faz 
 
-No `stop_times.txt`, o campo `location_group_id` aponta para um grupo de localizações (tabela `location_groups`) que define onde o serviço à pedido pode incluir embarque e desembarque nesse ponto da sequência da viagem, em alternativa a uma paragem clássica ou a um único local GeoJSON.
+No ficheiro `stop_times.txt`, o campo `location_group_id` aponta para um grupo de localizações (tabela `location_groups`) que define onde o serviço à pedido pode incluir embarque e desembarque nesse ponto da sequência da viagem, em alternativa a uma paragem clássica ou a um único local GeoJSON.
 
 A validação impede que `location_group_id` venha preenchido na mesma linha em que existe `stop_id` ou `location_id` com valor: o registo deve escolher um modelo de localização, não vários em simultâneo. Quando `location_group_id` está preenchido e não há esse conflito, confirma que o identificador existe em `location_groups`. Não emite avisos separados por campo vazio; o foco é incompatibilidade entre identificadores e referência inválida.
 

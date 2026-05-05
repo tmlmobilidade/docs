@@ -10,7 +10,7 @@ description: stop_times_stop_id_references_stops_table
 
 ## O que esta validação faz 
 
-No `stop_times.txt`, o campo `stop_id` identifica a paragem (plataforma / paragem) atendida neste ponto da viagem. Pelo GTFS, todas as paragens servidas ao longo do trip devem aparecer em linhas de `stop_times`, a paragem pode repetir-se no mesmo trip e várias viagens podem partilhar o mesmo `stop_id`.
+No ficheiro `stop_times.txt`, o campo `stop_id` identifica a paragem (plataforma / paragem) atendida neste ponto da viagem. Pelo GTFS, todas as paragens servidas ao longo do trip devem aparecer em linhas de `stop_times`, a paragem pode repetir-se no mesmo trip e várias viagens podem partilhar o mesmo `stop_id`.
 
 Esta validação impede usar `stop_id` preenchido quando `location_group_id` ou `location_id` têm valor na mesma linha (só um modelo de localização de cada vez). Exige `stop_id` preenchido quando nem `location_group_id` nem `location_id` estão definidos. Nesse caso, confirma que o valor existe em `stops.txt` e que o `location_type` da paragem referida é 0 ou vazio (paragem/plataforma, não estação nem outro tipo).
 

@@ -12,7 +12,7 @@ description: pickup_type_valid_gtfs_enum
 
 ## O que esta validação faz 
 
-No `stop_times.txt`, o campo `pickup_type` indica como se faz o embarque na paragem deste ponto da viagem: regular, impossível, por marcação com a operadora ou a combinar com o motorista. Os códigos admitidos estão na referência GTFS do campo.
+No ficheiro `stop_times.txt`, o campo `pickup_type` indica como se faz o embarque na paragem deste ponto da viagem: regular, impossível, por marcação com a operadora ou a combinar com o motorista. Os códigos admitidos estão na referência GTFS do campo.
 
 Esta validação restringe `pickup_type` aos valores 0 a 3 quando o campo está preenchido; proíbe `pickup_type` igual a 0 ou 3 na mesma linha em que `start_pickup_drop_off_window` ou `end_pickup_drop_off_window` têm valor (modelo de janela horária incompatível com “embarque regular programado” ou com “combinação direta com o motorista”, nos termos desses códigos); pode obrigar ou recomendar o preenchimento quando `pickup_type` está vazio, consoante a severidade; pode proibir qualquer valor se o campo estiver interdito; e pode limitar quais códigos são aceites para além do conjunto GTFS.
 

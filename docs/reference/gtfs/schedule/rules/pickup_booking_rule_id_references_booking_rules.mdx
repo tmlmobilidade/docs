@@ -11,7 +11,7 @@ description: pickup_booking_rule_id_references_booking_rules
 
 ## O que esta validação faz 
 
-No `stop_times.txt`, o campo `pickup_booking_rule_id` aponta para a regra de reserva aplicável ao embarque neste ponto da sequência. O valor, se existir, deve coincidir com um `booking_rule_id` presente em `booking_rules.txt`. Pelo GTFS, o campo é opcional e é recomendável quando o tipo de embarque obriga contacto prévio com a operadora (`pickup_type = 2`).
+No ficheiro `stop_times.txt`, o campo `pickup_booking_rule_id` aponta para a regra de reserva aplicável ao embarque neste ponto da sequência. O valor, se existir, deve coincidir com um `booking_rule_id` presente em `booking_rules.txt`. Pelo GTFS, o campo é opcional e é recomendável quando o tipo de embarque obriga contacto prévio com a operadora (`pickup_type = 2`).
 
 Esta verificação garante a existência da referência em `booking_rules` quando `pickup_booking_rule_id` está preenchido; impede o uso do campo quando este se encontra proibido no perfil de dados; permite restringir quais identificadores são aceites para além de existirem na tabela; e pode sinalizar o campo vazio como obrigatório ou recomendado, consoante a severidade definida para esta regra.
 

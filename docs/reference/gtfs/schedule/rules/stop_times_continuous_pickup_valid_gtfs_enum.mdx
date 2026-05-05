@@ -15,7 +15,7 @@ description: stop_times_continuous_pickup_valid_gtfs_enum
 
 ## O que esta validação faz 
 
-No `stop_times.txt`, o `continuous_pickup` indica se o passageiro pode embarcar em qualquer ponto do troço entre esta paragem e a seguinte, segundo o percurso (por exemplo o definido em `shapes.txt`). Valor preenchido prevalece sobre o definido na rota; vazio herda o comportamento da rota.
+No ficheiro `stop_times.txt`, o `continuous_pickup` indica se o passageiro pode embarcar em qualquer ponto do troço entre esta paragem e a seguinte, segundo o percurso (por exemplo o definido em `shapes.txt`). Valor preenchido prevalece sobre o definido na rota; vazio herda o comportamento da rota.
 
 Com janelas de pickup/drop-off com valor na mesma linha, o GTFS não admite paragem contínua para embarque (nem contacto com operadora/motorista nesse modo) só faz sentido “sem embarque contínuo neste registo” - no enumerado, código 1, ou o campo sem valor.
 

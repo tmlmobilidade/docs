@@ -12,7 +12,7 @@ description: start_pickup_drop_off_window_valid
 
 ## O que esta validação faz 
 
-No `stop_times.txt`, o campo `start_pickup_drop_off_window` indica o momento em que começa a janela horária em que o serviço flexível (embarque e desembarque à pedido) está disponível para o local associado ao registo - paragem, grupo de localizações ou identificador de local, conforme o GTFS.
+No ficheiro `stop_times.txt`, o campo `start_pickup_drop_off_window` indica o momento em que começa a janela horária em que o serviço flexível (embarque e desembarque à pedido) está disponível para o local associado ao registo - paragem, grupo de localizações ou identificador de local, conforme o GTFS.
 
 Esta validação proíbe que `start_pickup_drop_off_window` esteja preenchido na mesma linha em que `arrival_time` ou `departure_time` têm valor (horário fixo incompatível com este modelo). Exige o início da janela quando `location_group_id` ou `location_id` vêm preenchidos ou quando `end_pickup_drop_off_window` tem valor (é preciso definir ambos os extremos da janela). Quando `start_pickup_drop_off_window` tem valor, verifica o formato de tempo. Quando o campo falta fora destes casos obrigatórios, pode registar-se obrigatoriedade ou recomendação, salvo severidade ignorar.
 

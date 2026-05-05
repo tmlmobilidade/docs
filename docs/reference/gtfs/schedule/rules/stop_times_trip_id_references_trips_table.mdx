@@ -12,7 +12,7 @@ description: stop_times_trip_id_references_trips_table
 
 ### O que esta validação faz 
 
-No `stop_times.txt`, o campo `trip_id` liga cada linha à viagem (`trips`) a que esse instante da sequência pertence: horários, paragens, ordem e restantes atributos ficam agrupados sob o mesmo identificador de viagem.
+No ficheiro `stop_times.txt`, o campo `trip_id` liga cada linha à viagem (`trips`) a que esse instante da sequência pertence: horários, paragens, ordem e restantes atributos ficam agrupados sob o mesmo identificador de viagem.
 
 Esta validação exige que `trip_id` esteja preenchido e que o valor exist em `trips.txt`. Não aplica severidades opcionais nem listas de valores: ou o identificador é válido e presente, ou a linha não cumpre a regra.
 

@@ -12,7 +12,7 @@ description: stop_times_shape_dist_traveled_non_decreasing_on_trip
 
 ## O que esta validação faz 
 
-No `stop_times.txt`, o campo `shape_dist_traveled` indica a distância real percorrida ao longo da forma (`shape`) associada à viagem, desde o início da forma até ao ponto deste registo, nas mesmas unidades que em `shapes.txt`. Serve para descrever quanto do traçado corresponde ao troço entre paragens.
+No ficheiro `stop_times.txt`, o campo `shape_dist_traveled` indica a distância real percorrida ao longo da forma (`shape`) associada à viagem, desde o início da forma até ao ponto deste registo, nas mesmas unidades que em `shapes.txt`. Serve para descrever quanto do traçado corresponde ao troço entre paragens.
 
 Esta validação garante que `shape_dist_traveled`, quando está preenchido, não é negativo. Pode sinalizar o campo vazio como obrigatório ou recomendado, consoante a severidade, ou silenciar essa ausência (severidade ignorar ou regra proibida que dispensa o aviso). Pode recusar qualquer valor se o campo estiver interdito no perfil de dados.
 
