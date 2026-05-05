@@ -12,21 +12,19 @@ description: rider_category_id_unique
 
 ## O que esta validação faz 
 
-
-
+No ficheiro `rider_categories`, o campo `rider_category_id` identifica de forma única cada categoria de utente (por exemplo adulto, estudante, maior, etc.). O valor é obrigatório e não pode repetir-se em mais do que uma linha do mesmo ficheiro.
 
 ---
 
 ### Passa
 
-
+- O identificador está preenchido e só surge uma vez em `rider_categories.txt` com esse valor.
 
 ---
 
 ### Falha
 
-
-
-
+- O identificador está em falta.
+- O mesmo identificador aparece em mais do que uma linha de `rider_categories.txt`.
 
 
