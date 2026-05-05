@@ -1,0 +1,41 @@
+---
+title: Presença e coerência dos ficheiros do conjunto GTFS
+description: gtfs_feed_file_presence_and_integrity_rule
+---
+## O que esta validação faz 
+
+Agrupa controlos ao nível do feed inteiro (não linha a linha dentro de um `.txt`). Em sequência:
+
+- Proibidos (regra): ficheiros marcados como proibidos na configuração; se a tabela correspondente existir no conjunto, regista-se erro.
+- Avisos (regra): ficheiros marcados como “aviso se em falta”; se a tabela não existir, regista-se aviso.
+- Obrigatórios: um conjunto mínimo fixo (`agency.txt`, `routes.txt`, `trips.txt`, `stop_times.txt`) mais outros ficheiros obrigatórios vindos da regra, sem duplicados; se a tabela não existir, devolve uerro.
+- `stops.txt` condicional: se não existir `locations.txt` (tabela `locations`), é obrigatório existir `stops.txt`.
+- Calendário: tem de existir pelo menos um de `calendar.txt` ou `calendar_dates.txt`; se faltarem ambos, erro.
+- `levels.txt` com elevadores: se existir `pathways.txt` e algum percurso tiver modo 5 (elevador), a tabela `levels` tem de existir; caso contrário erro em `levels.txt`.
+- `feed_info.txt` com traduções: se `translations.txt` tiver linhas, `feed_info.txt` também tem de ter linhas; senão erro em `feed_info.txt`.
+- Rede nas rotas vs ficheiros de rede: se alguma rota tiver `network_id` preenchido, não pode haver dados em `networks.txt` nem em `route_networks.txt` (contagem de linhas > 0); se houver, erro no ficheiro correspondente.
+
+O método `Validate` devolve se, após estas verificações, aumentou o número total de erros no serviço de mensagens (avisos não alteram esse retorno para “há erro novo” nesta lógica — só `TotalErrors`).
+
+---
+
+### Passa
+
+- Nenhum ficheiro proibido pela regra está presente; os obrigatórios (fixos + regra) estão presentes; `stops` ou `locations` satisfazem a condição; existe calendário ou excepções; `levels` existe quando há elevador em `pathways`; `feed_info` existe quando há `translations`; e não há mistura proibida entre `network_id` nas rotas e tabelas `networks` / `route_networks`.
+
+---
+
+### Falha
+
+- Falta um ficheiro obrigatório ou está presente um ficheiro proibido pela regra.
+- Falta `stops.txt` quando falta também `locations.txt`.
+- Faltam ambos `calendar.txt` e `calendar_dates.txt`.
+- Falta `levels.txt` quando `pathways` inclui modo elevador (5).
+- Falta `feed_info.txt` com conteúdo quando `translations.txt` tem linhas.
+- Uma rota usa `network_id` e mesmo assim existem linhas em `networks.txt` ou `route_networks.txt`.
+
+---
+
+### Avisos (sem ser “falha” de erro)
+
+- Ficheiro na lista de “aviso se em falta” ausente — gera aviso, não erro, conforme `addWarning`.
