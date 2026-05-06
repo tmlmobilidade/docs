@@ -16,7 +16,7 @@ description: trip_headsign_consistent_for_all_patterns_in_trips
 
 No ficheiro `trips.txt`, o destino anunciado na viagem (`trip_headsign`) tem de ser coerente para todas as viagens que partilham o mesmo padrão de percurso (`pattern_id`).
 
-A validação trata “não informado” e “texto vazio” da mesma forma: ambos representam “sem destino explícito”. O problema começa quando, no mesmo `pattern_id`, umas viagens estão nesse estado e outras têm um texto concreto, ou quando aparecem dois (ou mais) textos concretos diferentes. Isso significa “no mesmo padrão, o passageiro veria coisas diferentes (ou nada e algo ao mesmo tempo)”, o que a regra rejeita.
+A validação trata “não informado” e “texto vazio” da mesma forma: ambos representam “sem destino explícito”. O problema começa quando, no mesmo `pattern_id`, umas viagens estão neste estado e outras têm um texto concreto, ou quando aparecem dois (ou mais) textos concretos diferentes. Isso significa “no mesmo padrão, o passageiro veria coisas diferentes (ou nada e algo ao mesmo tempo)”, o que a regra rejeita.
 
 ---
 
