@@ -72,6 +72,7 @@ Aqui tens uma versão mais clara e direta, com melhor estrutura e precisão:
 Isto é especialmente útil quando os `trip_id` seguem convenções estruturadas, como a inclusão de horários ou identificadores parciais.
 
 **Exemplo 1 — Filtrar por padrão (hora)**
+
 Dado o conjunto de `trip_id`:
 - `2141_0_2|120|1|1430`
 - `3536_1_2_1430_1459_0_ESC_DU`
@@ -80,6 +81,7 @@ Dado o conjunto de `trip_id`:
 Para obter todos os `trip_id` que contêm o padrão `1430` (ex: hora 14:30), pode-se usar: `%%1430%%`
 
 **Exemplo 2 — Ignorar segmentos variáveis**
+
 Dado o conjunto:
 - `4404_0_3|3000|1430`
 - `4404_0_3|3100|1430`
