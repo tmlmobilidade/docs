@@ -232,6 +232,8 @@ export function MapOverlayVehicles({ presentBeforeId, showCounter, vehiclesData 
 							['to-string', ['get', 'agency_id']],
 							'4',
 							'ttsl-boat-regular',
+							'3',
+							'ttsl-boat-regular',
 							'1',
 							'carris-bus-regular',
 							'21',
