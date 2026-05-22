@@ -105,16 +105,31 @@ Se precisas de aceder ao histórico da oferta de todos os operadores, então enc
 | `/v1`  | `/plans/gtfs`    | Ficheiro GTFS unificado de todos os planos de operação ativos, para todos os operadores de transporte.                                                                      | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/plans/gtfs)    |
 | `/v1`  | `/plans/gtfs/cm` | Ficheiro GTFS unificado de todos os planos de operação ativos, para os operadores da Carris Metropolitana.                                                                  | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/plans/gtfs/cm) |
 
-### Operação
+### Rede
 Informação da rede de transportes em JSON. Muito útil para construir aplicações sem ser necessário um grande investimento em servidores ou código para o processamento de ficheiros GTFS. Estes endpoints são também utilizados nos suportes de informação ao público do navegante®.
 
-| Versão | Path                     | Descrição                                                                                                                                               | URL                                                                   |
-| ------ | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
-| `/v1`  | `/operation/stops`       | Todas as paragens de todos os operadores. Este endpoint pode devolver paragens de zonas que não são apenas da AML.                                      | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/operation/stops)       |
-| `/v1`  | `/operation/stops/:id`   | Detalhe de uma paragem específica, com informação adicional.                                                                                            | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/operation/stops/000)   |
-| `/v1`  | `/operation/lines`       | Todas as linhas de todos os operadores em operação num determinado momento.                                                                             | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/operation/lines)       |
-| `/v1`  | `/operation/vehicles`    | Todos os veículos de todos os operadores em operação num determinado momento, em JSON. Sugerimos uma atualização a cada 3 segundos para dados recentes. | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/operation/vehicles)    |
-| `/v1`  | `/operation/vehicles.pb` | Todos os veículos de todos os operadores em operação num determinado momento, em Protobuf e no formato standard GTFS-RT Vehicle Positions.              | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/operation/vehicles.pb) |
+| Versão | Path                 | Descrição                                                                                                   | URL                                                                 |
+| ------ | -------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| `/v1`  | `/network/stops`     | Todas as paragens de todos os operadores. Este endpoint pode devolver paragens de zonas que não são da AML. | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/operation/stops)     |
+| `/v1`  | `/network/stops/:id` | Detalhe de uma paragem específica, com informação adicional.                                                | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/operation/stops/000) |
+| `/v1`  | `/network/lines`     | Todas as linhas de todos os operadores em operação num determinado momento.                                 | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/operation/lines)     |
+
+### Tempo Real
+Informação em tempo real da rede de transportes. Dispomos também
+
+| Versão | Path                    | Descrição                                                                                                                                               | URL                                                                   |
+| ------ | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| `/v1`  | `/realtime/vehicles`    | Todos os veículos de todos os operadores em operação num determinado momento, em JSON. Sugerimos uma atualização a cada 3 segundos para dados recentes. | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/operation/vehicles)    |
+| `/v1`  | `/realtime/vehicles.pb` | Todos os veículos de todos os operadores em operação num determinado momento, em Protobuf e no formato standard GTFS-RT Vehicle Positions.              | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/operation/vehicles.pb) |
+
+### Localizações
+Informação da rede de transportes em JSON. Muito útil para construir aplicações sem ser necessário um grande investimento em servidores ou código para o processamento de ficheiros GTFS. Estes endpoints são também utilizados nos suportes de informação ao público do navegante®.
+
+| Versão | Path                 | Descrição                                                                                                   | URL                                                                 |
+| ------ | -------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| `/v1`  | `/network/stops`     | Todas as paragens de todos os operadores. Este endpoint pode devolver paragens de zonas que não são da AML. | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/operation/stops)     |
+| `/v1`  | `/network/stops/:id` | Detalhe de uma paragem específica, com informação adicional.                                                | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/operation/stops/000) |
+| `/v1`  | `/network/lines`     | Todas as linhas de todos os operadores em operação num determinado momento.                                 | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/operation/lines)     |
 
 ### Debug
 Endpoints para debugging do sistema. Uma vez que utilizamos estes endpoints nos suportes de informação ao público, como o [site](https://carrismetropolitana.pt) e [app da Carris Metropolitana](https://carrismetropolitana.pt/app) e [app navegante®](https://carrismetropolitana.pt/app-navegante), é importante garantir que o sistema está online e a funcionar.
