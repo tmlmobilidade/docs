@@ -18,7 +18,7 @@ Está disponível um [repositório no Github](https://github.com/carrismetropoli
 
 ## Projetos que gostamos 💛
 
-The following are projects that use our open data and that we find very interesting! Take a look and explore the problems they're solving.
+Estes são alguns dos projetos que utilizam os nossos dados abertos e que achamos extremamente interessantes!
 
 <Cards>
     <Card title="Text-to-Speech (TTS)" href="https://github.com/carrismetropolitana/tts">
@@ -78,17 +78,41 @@ A utilização de uma linguagem tipificada é fortemente recomendada. Para utili
 
 ## Endpoints disponíveis
 
-**URL base:** `https://go.tmlmobilidade.pt/hub/api`
+Uma vez que o GO toca em vários temas de uma operação de transportes, e que está desenvolvido por módulos, agrupámos os endpoints para estruturar a informação que cada um disponibiliza.
 
-| Grupo    | Versão | Path               | Descrição                                                                                                                                                                   | URL                                                            |
-| -------- | ------ | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| Alertas  | `/v1`  | `/alerts`          | Todos os alertas de serviço publicados no GO, em JSON.                                                                                                                      | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/alerts)         |
-| Alertas  | `/v1`  | `/alerts.rss`      | Todos os alertas de serviço publicados no GO, no formato RSS.                                                                                                               | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/alerts.rss)     |
-| Alertas  | `/v1`  | `/alerts/gtfs`     | Todos os alertas de serviço publicados no GO, em JSON, mas no formato GTFS-RT.                                                                                              | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/alerts/gtfs)    |
-| Alertas  | `/v1`  | `/alerts/gtfs.pb`  | Todos os alertas de serviço publicados no GO, em Protobuf e no formato GTFS-RT.                                                                                             | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/alerts/gtfs.pb) |
-| Planos   | `/v1`  | `/plans`           | Histórico de ficheiros GTFS (planos de operação) para todos os operadores. A propriedade `operation_file_url` permite fazer o download do ficheiro GTFS.zip correspondente. | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/plans)          |
-| Planos   | `/v1`  | `/plans/gtfs`      | Ficheiro GTFS unificado de todos os planos de operação ativos, para todos os operadores de transporte.                                                                      | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/plans/gtfs)     |
-| Operação | `/v1`  | `/operation/lines` | Todas as linhas, de todos os operadores, em operação num determinado momento.                                                                                               | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/plans/gtfs)     |
-|          |        |                    |                                                                                                                                                                             |                                                                |
-| Debug    | `/v1`  | `/debug/time`      | Timestamps internos dos sistema. Útil para despistar problemas de stale data causados por caching, por exemplo.                                                             | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/debug/time)     |
+**URL base:** `https://go.tmlmobilidade.pt/hub/api/:version/:path`
 
+### Alertas
+Com estes endpoints consegues ir buscar informação de desvios, supressões, alterações de oferta, novos horários, etc. que os vários operadores de transporte publicam ao público. Em muitos casos, são estes endpoints que são disponibilizados às aplicações de planeamento, como Google Maps, Transit, CityMapper, etc.
+
+| Versão | Path              | Descrição                                                                       | URL                                                            |
+| ------ | ----------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| `/v1`  | `/alerts`         | Todos os alertas de serviço publicados no GO, em JSON.                          | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/alerts)         |
+| `/v1`  | `/alerts.rss`     | Todos os alertas de serviço publicados no GO, no formato RSS.                   | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/alerts.rss)     |
+| `/v1`  | `/alerts/gtfs`    | Todos os alertas de serviço publicados no GO, em JSON, mas no formato GTFS-RT.  | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/alerts/gtfs)    |
+| `/v1`  | `/alerts/gtfs.pb` | Todos os alertas de serviço publicados no GO, em Protobuf e no formato GTFS-RT. | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/alerts/gtfs.pb) |
+
+### Planos
+Se precisas de aceder ao histórico da oferta de todos os operadores, então encontraste os endpoints que procuras. Dependendo dos operadores, tens mais ou menos histórico, mas no geral consegues todos estão disponíveis desde o início de 2026. O formato de publicação desta informação é através de ficheiros [GTFS](/reference/gtfs), que é o standard internacional para comunicar informação planeada para uma rede de transportes. Consegues também fazer o download de um GTFS unificado para todos os operadores de transporte, que é essencialmente uma agregação dos planos de operação que estão ativos num determinado momento.
+
+| Versão | Path             | Descrição                                                                                                                                                                   | URL                                                           |
+| ------ | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| `/v1`  | `/plans`         | Histórico de ficheiros GTFS (planos de operação) para todos os operadores. A propriedade `operation_file_url` permite fazer o download do ficheiro GTFS.zip correspondente. | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/plans)         |
+| `/v1`  | `/plans/gtfs`    | Ficheiro GTFS unificado de todos os planos de operação ativos, para todos os operadores de transporte.                                                                      | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/plans/gtfs)    |
+| `/v1`  | `/plans/gtfs/cm` | Ficheiro GTFS unificado de todos os planos de operação ativos, para os operadores da Carris Metropolitana.                                                                  | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/plans/gtfs/cm) |
+
+### Operação
+Informação de rede planeada em 
+
+| Versão | Path                     | Descrição                                                                                                                                               | URL                                                                   |
+| ------ | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| `/v1`  | `/operation/lines`       | Todas as linhas de todos os operadores em operação num determinado momento.                                                                             | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/operation/lines)       |
+| `/v1`  | `/operation/vehicles`    | Todos os veículos de todos os operadores em operação num determinado momento, em JSON. Sugerimos uma atualização a cada 3 segundos para dados recentes. | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/operation/vehicles)    |
+| `/v1`  | `/operation/vehicles.pb` | Todos os veículos de todos os operadores em operação num determinado momento, no formato standard GTFS-RT Vehicle Positions.                            | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/operation/vehicles.pb) |
+
+### Debug
+Endpoints para debugging do sistema. Uma vez que utilizamos estes endpoints nos suportes de informação ao público, como o [site](https://carrismetropolitana.pt) e [app da Carris Metropolitana](https://carrismetropolitana.pt/app) e [app navegante®](https://carrismetropolitana.pt/app-navegante), é importante garantir que o sistema está online e a funcionar.
+
+| Versão | Path          | Descrição                                                                                                       | URL                                                        |
+| ------ | ------------- | --------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| `/v1`  | `/debug/time` | Timestamps internos dos sistema. Útil para despistar problemas de stale data causados por caching, por exemplo. | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/debug/time) |
