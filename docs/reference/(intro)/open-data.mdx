@@ -49,6 +49,7 @@ Todos os endpoints públicos do GO são versionados pois destinam-se a consumo e
 Uma vez que todas as respostas são JSON, adicionar novas propriedades aos endpoints não é considerado uma alteração significativa, pois estas propriedades podem ser ignoradas com segurança pelos consumidores. Portanto, nesses casos, a versão pode não ser alterada. Esta abordagem parece-nos equilibrada pois permite-nos introduzir melhorias mais rapidamente enquanto minimizamos o impacto nas integrações existentes.
 
 Os restantes endpoints autenticados do GO não são versionados. Esta é uma decisão controversa que tomámos para permitir maior agilidade no desenvolvimento dos sistemas. A grande maioria dos endpoints requer autenticação e é utilizada apenas para a própria aplicação de frontend. A estrutura em monorepo, preview environments, deploys automáticos, kubernetes, e a própria natureza web do projeto, permite-nos manter o frontend e o backend sincronizados e atualizados.
+
 ## Estrutura uniforme da resposta
 
 Todas as respostas do API seguem a mesma estrutura padronizada, que garante a consistência em todos os endpoints e fornece uma framework para incluir informações adicionais de debugging quando necessário.
