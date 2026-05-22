@@ -40,11 +40,14 @@ Em caso de erros, este formato oferece uma forma clara e estruturada para descre
 
 A utilização de uma linguagem tipificada é fortemente recomendada. Para utilizadores de Typescript, fornecemos um [pacote no NPM](https://www.npmjs.com/package/@tmlmobilidade/types) com tipos para todas as estruturas utilizadas. Decidimos utilizar Calendar Versioning para este pacote, pelo que apenas garantimos compatibilidade com a versão mais recente do API.
 
-## Endpoints Disponíveis
+## Endpoints disponíveis
 
-### URL de base: `https://go.tmlmobilidade.pt/hub/api`
+**URL de base: `https://go.tmlmobilidade.pt/hub/api`**
 
-| Módulo  | Versão | Path      | Descrição                                     |
-| ------- | ------ | --------- | --------------------------------------------- |
-| Alertas | `/v1`  | `/alerts` | Todos os alertas de serviço publicados no GO. |
-|         |        |           |                                               |
+| Módulo  | Versão | Path           | Descrição                                                                      |
+| ------- | ------ | -------------- | ------------------------------------------------------------------------------ |
+| Alertas | `/v1`  | `/alerts`      | Todos os alertas de serviço publicados no GO, em JSON.                         |
+| Alertas | `/v1`  | `/alerts/gtfs` | Todos os alertas de serviço publicados no GO, em JSON, mas no formato GTFS-RT. |
+|         |        |                |                                                                                |
+|         |        |                |                                                                                |
+|         |        |                |                                                                                |
