@@ -16,7 +16,6 @@ Existem claro determinados dados que requerem autenticação, pela sua natureza 
 
 Está disponível um [repositório no Github](https://github.com/carrismetropolitana/datasets) que contém coleções de dados interessantes e de utilização livre, como BD georeferenciada de escolas, lojas navegante®, entre outros. As coleções são atualizadas de vez em quando, consoante a necessidade.
 
-
 ## Projetos que gostamos 💛
 
 The following are projects that use our open data and that we find very interesting! Take a look and explore the problems they're solving.
@@ -38,3 +37,57 @@ The following are projects that use our open data and that we find very interest
            Um bot do Discord que te avisa dos mais recentes Alertas de Serviço publicados pela Carris Metropolitana.
     </Card>
 </Cards>
+
+## Rotas disponíveis
+
+O GO tem um módulo dedicado aos dados abertos, chamado `hub`, com o objetivo de facilitar o acesso à informação da rede de transportes. O objetivo é ir adicionando mais endpoints públicos, sempre que possível, para cumprir a nossa promessa de transparência. No entanto, devido à enorme quantidade de dados, por vezes torna-se complexo disponibilizar toda esta informação em endpoints sem autenticação — não é que a informação seja confidencial, mas o volume de dados exige mais controlo para evitar sobrecargas nos sistemas. Por exemplo, temos todo o histórico das posições de veículos, facilmente consultáveis. São mais de 4 milhões de posições por dia. Se existir um endpoint onde é possível extrair esta quantidade de informação livremente, certamente o sistema não será capaz de dar resposta. Estamos a explorar formas de resolver esta questão, e se tiveres alguma sugestão [entra em contacto connosco](/reference/team).
+
+## Versões
+
+Todos os endpoints públicos do GO são versionados pois destinam-se a consumo externo, permitindo o desenvolvimento de novas funcionalidades sem comprometer a compatibilidade com sistemas que dependem das estruturas de dados de versões anteriores.
+
+Uma vez que todas as respostas são JSON, adicionar novas propriedades aos endpoints não é considerado uma alteração significativa, pois estas propriedades podem ser ignoradas com segurança pelos consumidores. Portanto, nesses casos, a versão pode não ser alterada. Esta abordagem parece-nos equilibrada pois permite-nos introduzir melhorias mais rapidamente enquanto minimizamos o impacto nas integrações existentes.
+
+Os restantes endpoints autenticados do GO não são versionados. Esta é uma decisão controversa que tomámos para permitir maior agilidade no desenvolvimento dos sistemas. A grande maioria dos endpoints requer autenticação e é utilizada apenas para a própria aplicação de frontend. A estrutura em monorepo, preview environments, deploys automáticos, kubernetes, e a própria natureza web do projeto, permite-nos manter o frontend e o backend sincronizados e atualizados.
+## Estrutura uniforme da resposta
+
+Todas as respostas do API seguem a mesma estrutura padronizada, que garante a consistência em todos os endpoints e fornece uma framework para incluir informações adicionais de debugging quando necessário.
+
+Em caso de erros, este formato oferece uma forma clara e estruturada para descrever o que correu mal e, quando possível, como o problema poderá ser resolvido.
+
+```json title="Success Response"
+{
+	status: "success",
+	timestamp: 1721023200,
+	data: [ ... ] or { ... } // The requested data
+}
+```
+
+```json title="Error Response"
+{
+	status: "error",
+	timestamp: 1721023200,
+	message: "Unable to communicate with database"
+}
+```
+
+## TypeScript
+
+A utilização de uma linguagem tipificada é fortemente recomendada. Para utilizadores de Typescript, fornecemos um [pacote no NPM](https://www.npmjs.com/package/@tmlmobilidade/types) com tipos para todas as estruturas utilizadas. Decidimos utilizar Calendar Versioning para este pacote, pelo que apenas garantimos compatibilidade com a versão mais recente do API.
+
+## Endpoints disponíveis
+
+**URL base:** `https://go.tmlmobilidade.pt/hub/api`
+
+| Grupo    | Versão | Path               | Descrição                                                                                                                                                                   | URL                                                            |
+| -------- | ------ | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| Alertas  | `/v1`  | `/alerts`          | Todos os alertas de serviço publicados no GO, em JSON.                                                                                                                      | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/alerts)         |
+| Alertas  | `/v1`  | `/alerts.rss`      | Todos os alertas de serviço publicados no GO, no formato RSS.                                                                                                               | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/alerts.rss)     |
+| Alertas  | `/v1`  | `/alerts/gtfs`     | Todos os alertas de serviço publicados no GO, em JSON, mas no formato GTFS-RT.                                                                                              | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/alerts/gtfs)    |
+| Alertas  | `/v1`  | `/alerts/gtfs.pb`  | Todos os alertas de serviço publicados no GO, em Protobuf e no formato GTFS-RT.                                                                                             | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/alerts/gtfs.pb) |
+| Planos   | `/v1`  | `/plans`           | Histórico de ficheiros GTFS (planos de operação) para todos os operadores. A propriedade `operation_file_url` permite fazer o download do ficheiro GTFS.zip correspondente. | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/plans)          |
+| Planos   | `/v1`  | `/plans/gtfs`      | Ficheiro GTFS unificado de todos os planos de operação ativos, para todos os operadores de transporte.                                                                      | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/plans/gtfs)     |
+| Operação | `/v1`  | `/operation/lines` | Todas as linhas, de todos os operadores, em operação num determinado momento.                                                                                               | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/plans/gtfs)     |
+|          |        |                    |                                                                                                                                                                             |                                                                |
+| Debug    | `/v1`  | `/debug/time`      | Timestamps internos dos sistema. Útil para despistar problemas de stale data causados por caching, por exemplo.                                                             | [Abrir](https://go.tmlmobilidade.pt/hub/api/v1/debug/time)     |
+

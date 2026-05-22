@@ -1,7 +1,7 @@
 {
 	"pages": [
 		"index",
-		"api",
+		"hub",
 		"alerts",
 		"ferramentas",
 		"controller",
