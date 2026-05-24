@@ -108,19 +108,13 @@ Se precisas de aceder ao histórico da oferta de todos os operadores, então enc
 ### Rede de Transportes
 Informação da rede de transportes em JSON. Muito útil para construir aplicações sem ser necessário um grande investimento em servidores ou código para o processamento de ficheiros GTFS. Estes endpoints são também utilizados nos suportes de informação ao público do navegante®.
 
-| Path                                                                                | Descrição                                                                                                   |
-| ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| [`/v1/network/stops`](https://go.tmlmobilidade.pt/hub/api/v1//network/stops)        | Todas as paragens de todos os operadores. Este endpoint pode devolver paragens de zonas que não são da AML. |
-| [`/v1/network/stops/:id`](https://go.tmlmobilidade.pt/hub/api/v1/network/stops/000) | Detalhe de uma paragem específica, com informação adicional.                                                |
-| [`/v1/network/stops.csv`](https://go.tmlmobilidade.pt/hub/api/v1/network/stops.csv) | Todas as paragens no formato `.csv` (semelhante ao ficheiro `stops.txt` do GTFS).                           |
-
-### Horários
-Informação de horários da rede de transportes em JSON. Muito útil para construir aplicações sem ser necessário investir em servidores ou código para o processamento de ficheiros GTFS. Estes endpoints são também utilizados nos suportes de informação ao público do navegante®.
-
-| Path                                                                                   | Descrição                                                                   |
-| -------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| [`/v1/schedules/lines`](https://go.tmlmobilidade.pt/hub/api/v1/operation/lines)        | Todas as linhas de todos os operadores em operação num determinado momento. |
-| [`/v1/schedules/patterns/:id`](https://go.tmlmobilidade.pt/hub/api/v1/operation/lines) | Todas as linhas de todos os operadores em operação num determinado momento. |
+| Path                                                                                           | Descrição                                                                                                   |
+| ---------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| [`/v1/network/stops`](https://go.tmlmobilidade.pt/hub/api/v1//network/stops)                   | Todas as paragens de todos os operadores. Este endpoint pode devolver paragens de zonas que não são da AML. |
+| [`/v1/network/stops/:id`](https://go.tmlmobilidade.pt/hub/api/v1/network/stops/000)            | Detalhe de uma paragem específica, com informação adicional.                                                |
+| [`/v1/network/stops.csv`](https://go.tmlmobilidade.pt/hub/api/v1/network/stops.csv)            | Todas as paragens no formato `.csv` (semelhante ao ficheiro `stops.txt` do GTFS).                           |
+| [`/v1/network/lines`](https://go.tmlmobilidade.pt/hub/api/v1/network/lines)                    | Todas as linhas de todos os operadores em operação num determinado momento.                                 |
+| [`/v1/network/patterns/:id`](https://go.tmlmobilidade.pt/hub/api/v1/network/patterns/1001_0_1) | Todas as linhas de todos os operadores em operação num determinado momento.                                 |
 
 ### Tempo Real
 Informação em tempo real da rede de transportes, como posições de veículos e estimativas de chegada. O estimador de horários ainda está em fase experimental, pelo que deve ser utilizado com algum cuidado.
