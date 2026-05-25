@@ -61,7 +61,8 @@ Em caso de erros, este formato oferece uma forma clara e estruturada para descre
 ```json title="Success Response"
 {
 	status: "success",
-	timestamp: 1721023200,
+timestamp: 1721023200,
+	message: null,
 	data: [ ... ] or { ... } // The requested data
 }
 ```
@@ -70,7 +71,8 @@ Em caso de erros, este formato oferece uma forma clara e estruturada para descre
 {
 	status: "error",
 	timestamp: 1721023200,
-	message: "Unable to communicate with database"
+	message: "Unable to communicate with database",
+	data: null
 }
 ```
 
