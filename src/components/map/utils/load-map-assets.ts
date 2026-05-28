@@ -10,16 +10,18 @@ const MAP_LOAD_ASSETS = [
 	{ name: 'map-line-direction-offset', sdf: true, url: `/map/map-line-direction-offset.png` },
 	{ name: 'map-line-direction-offset-padding', sdf: true, url: `/map/map-line-direction-offset-padding.png` },
 	/* * */
-	{ name: 'cmet-bus-delay', sdf: false, url: `/map/bus-delay.png` },
-	{ name: 'cmet-bus-regular', sdf: false, url: `/map/bus-regular.png` },
-	{ name: 'cmet-bus-cut', sdf: false, url: `/map/bus-cut.png` },
-	{ name: 'cmet-bus-error', sdf: false, url: `/map/bus-error.png` },
+	{ name: 'bus-cmet-delay', sdf: false, url: `/map/bus-delay.png` },
+	{ name: 'bus-cmet-regular', sdf: false, url: `/map/bus-regular.png` },
+	{ name: 'bus-cmet-cut', sdf: false, url: `/map/bus-cut.png` },
+	{ name: 'bus-cmet-error', sdf: false, url: `/map/bus-error.png` },
+	{ name: 'bus-carris-regular', sdf: false, url: `/map/bus-carris.png` },
+	{ name: 'bus-mobi-regular', sdf: false, url: `/map/bus-mobi.png` },
+	{ name: 'bus-tcb-regular', sdf: false, url: `/map/bus-tcb.png` },
 	/* * */
-	{ name: 'ttsl-boat-regular', sdf: false, url: `/map/boat-regular.png` },
+	{ name: 'boat-ttsl', sdf: false, url: `/map/boat-regular.png` },
 	/* * */
-	{ name: 'carris-bus-regular', sdf: false, url: `/map/bus-carris.png` },
-	/* * */
-	{ name: 'mobi-bus-regular', sdf: false, url: `/map/bus-mobi.png` },
+	{ name: 'train-cp-regular', sdf: false, url: `/map/train-cp.png` },
+	{ name: 'train-fertagus-regular', sdf: false, url: `/map/train-fertagus.png` },
 ];
 
 /**
