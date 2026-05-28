@@ -3,6 +3,7 @@
 /* * */
 
 import { LiveIcon } from '@/components/brand/LiveIcon';
+import { vehicleDelayIconImage, vehicleIconImage, vehicleIconSize } from '@/components/map/utils/load-map-assets';
 import { getBaseGeoJsonFeatureCollection } from '@tmlmobilidade/geo';
 import { Layer, Source } from '@vis.gl/react-maplibre';
 import { useEffect, useRef, useState } from 'react';
@@ -190,7 +191,7 @@ export function MapOverlayVehicles({ presentBeforeId, showCounter, vehiclesData 
 						'icon-allow-overlap': true,
 						'icon-anchor': 'center',
 						'icon-ignore-placement': true,
-						'icon-image': 'cmet-bus-delay',
+						'icon-image': vehicleDelayIconImage,
 						'icon-offset': [0, 0],
 						'icon-rotate': ['get', 'bearing'],
 						'icon-rotation-alignment': 'map',
@@ -227,44 +228,11 @@ export function MapOverlayVehicles({ presentBeforeId, showCounter, vehiclesData 
 						'icon-allow-overlap': true,
 						'icon-anchor': 'center',
 						'icon-ignore-placement': true,
-						'icon-image': [
-							'match',
-							['to-string', ['get', 'agency_id']],
-							'4',
-							'ttsl-boat-regular',
-							'3',
-							'ttsl-boat-regular',
-							'1',
-							'carris-bus-regular',
-							'21',
-							'mobi-bus-regular',
-							'cmet-bus-regular',
-						],
+						'icon-image': vehicleIconImage,
 						'icon-offset': [0, 0],
 						'icon-rotate': ['get', 'bearing'],
 						'icon-rotation-alignment': 'map',
-						'icon-size': ['interpolate',
-							['linear'],
-							['zoom'],
-							10,
-							['match',
-								['to-string', ['get', 'agency_id']],
-								'1',
-								0.0475,
-								'21',
-								0.0475,
-								0.05,
-							],
-							20,
-							['match',
-								['to-string', ['get', 'agency_id']],
-								'1',
-								0.1425,
-								'21',
-								0.1425,
-								0.15,
-							],
-						],
+						'icon-size': vehicleIconSize,
 						'symbol-placement': 'point',
 					}}
 					paint={{
