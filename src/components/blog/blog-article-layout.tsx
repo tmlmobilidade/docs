@@ -1,7 +1,7 @@
 import type { TOCItemType } from 'fumadocs-core/toc';
 
+import { TOCProvider, TOCScrollArea } from 'fumadocs-ui/components/toc';
 import { TOCItems } from 'fumadocs-ui/components/toc/clerk';
-import { TOCProvider, TOCScrollArea } from 'fumadocs-ui/components/toc/index';
 
 interface BlogArticleLayoutProps {
 	children: React.ReactNode

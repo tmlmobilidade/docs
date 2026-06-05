@@ -61,8 +61,7 @@ export function Tabs({
 }: TabsProps) {
 	const tabsRef = useRef<HTMLDivElement>(null);
 	const valueToIdMap = useMemo(() => new Map<string, string>(), []);
-	const [value, setValue]
-    = _value === undefined ? useState(defaultValue) : [_value, useEffectEvent((v: string) => _onValueChange?.(v))];
+	const [value, setValue] = _value === undefined ? useState(defaultValue) : [_value, useEffectEvent((v: string) => _onValueChange?.(v))];
 
 	useLayoutEffect(() => {
 		if (!groupId) return;

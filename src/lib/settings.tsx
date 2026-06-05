@@ -2,7 +2,7 @@
 
 import { GoLogo } from '@/components/brand/GoLogo';
 import { LoginButton } from '@/components/brand/LoginButton';
-import { type LinkItemType } from 'fumadocs-ui/utils/link-item';
+import { LinkItemType } from 'fumadocs-ui/layouts/shared';
 
 import { getCurrentEnvironment } from './environment';
 
