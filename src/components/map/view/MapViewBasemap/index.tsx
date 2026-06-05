@@ -2,8 +2,8 @@
 
 /* * */
 
-import { FullscreenControl, GeolocateControl, Map, type MapLayerMouseEvent, type MapWheelEvent, NavigationControl, ScaleControl, type ViewStateChangeEvent } from '@vis.gl/react-maplibre';
-import { type CSSProperties, type PropsWithChildren, useCallback, useMemo } from 'react';
+import { FullscreenControl, GeolocateControl, Map, type MapLayerMouseEvent, type MapWheelEvent, NavigationControl, type ViewStateChangeEvent } from '@vis.gl/react-maplibre';
+import { type CSSProperties, type PropsWithChildren, useCallback } from 'react';
 
 import styles from './styles.module.css';
 
