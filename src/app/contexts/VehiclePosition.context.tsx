@@ -32,8 +32,8 @@ export function useVehiclePositionContext() {
 /* * */
 
 export const VehiclePositionContextProvider = ({ children }: PropsWithChildren) => {
-	const { data: vehicleData } = useSWR<Vehicle[], Error>('https://go.tmlmobilidade.pt/fleet/api/vehicles', { refreshInterval: 5000 });
-	const { data: fetchedVehiclePositionData, error, isLoading } = useSWR<SimplifiedVehicleEvent[], Error>('https://go.tmlmobilidade.pt/fleet/api/vehicles/positions', { refreshInterval: 5000 });
+	const { data: vehicleData } = useSWR<Vehicle[], Error>('https://go.tmlmobilidade.pt/hub/api/v1/realtime/vehicles/metadata', { refreshInterval: 5000 });
+	const { data: fetchedVehiclePositionData, error, isLoading } = useSWR<SimplifiedVehicleEvent[], Error>('https://go.tmlmobilidade.pt/hub/api/v1/realtime/vehicles/positions', { refreshInterval: 5000 });
 
 	const vehiclesGeoJsonFeatureCollection: GeoJSON.FeatureCollection<GeoJSON.Point, GeoJSON.GeoJsonProperties> | undefined = useMemo(() => {
 		//

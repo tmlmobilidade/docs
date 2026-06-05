@@ -8,7 +8,7 @@ import useSWR from 'swr';
 
 /* * */
 
-const VEHICLES_API_URL = 'https://api.carrismetropolitana.pt/v2/vehicles';
+const VEHICLES_API_URL = 'https://go.tmlmobilidade.pt/hub/api/v1/realtime/vehicles/metadata';
 const MAX_AGE_SECONDS = 2 * 60; // 2 minutes
 
 const fetcher = (url: string): Promise<Vehicle[]> =>
