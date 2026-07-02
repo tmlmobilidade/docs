@@ -1,0 +1,62 @@
+---
+title: Velocidade Comercial
+description: Descrição o Cálculo da Velocidade Comercial dos veículos da Carris Metropolitana
+---
+
+# Commercial Speed
+
+**Definição**  
+A **velocidade comercial** para a Carris Metropolitana corresponde à velocidade média observada de uma viagem (_ride_), calculada com base na extensão planeada e no tempo total de viagem observado.
+
+**Método de cálculo**
+
+A velocidade comercial observada (speed_observed) é calculada para cada viagem (ride_id) através da seguinte expressão:
+
+[  
+\text{speed_observed} = \frac{\text{extension_scheduled} \times 1000}{(\text{end_time_observed} - \text{start_time_observed}) / 3,600,000}  
+]
+
+Onde:
+
+- **extension_scheduled** – extensão programada da viagem (m);
+- **start_time_observed** – milisegundo observado de início da viagem;
+- **end_time_observed** – milisegundo observado de fim da viagem.
+
+O resultado é expresso em **km/h**.
+
+**Critérios de elegibilidade das viagens**
+
+O indicador é calculado apenas para viagens efetivamente executadas durante o período em análise, considerando as que cumpram pelo menos um dos seguintes critérios:
+
+- passaram no teste dos três momentos (three_vehicle_events_grade = 'pass'); ou
+- registaram validações de bilhética (passengers_observed > 0).
+
+**Tratamento e limpeza de dados**
+
+Antes do cálculo do indicador, são excluídas as viagens que apresentem qualquer uma das seguintes condições:
+
+- ausência de hora de início observada (start_time_observed);
+- ausência de hora de fim observada (end_time_observed);
+- duração da viagem nula ou negativa (end_time_observed ≤ start_time_observed);
+- duração da viagem considerada _outlier_, utilizando o critério de **1,5 × Intervalo Interquartil (IQR)**.
+
+Após o cálculo da velocidade comercial, são ainda removidas as viagens com valores considerados implausíveis:
+
+- velocidade inferior a **2 km/h**;
+- velocidade superior a **100 km/h**.
+
+**Critérios para remoção de outliers de velocidade**
+
+Foi avaliada a utilização dos métodos de remoção de outliers baseados em **1,5 × IQR** e **3 × IQR** aplicados diretamente à distribuição das velocidades. No entanto:
+
+- o critério de **3 × IQR** revelou-se pouco restritivo, mantendo viagens com velocidades superiores a **1000 km/h**;
+- o critério de **1,5 × IQR** revelou-se excessivamente restritivo, excluindo viagens com velocidades superiores a aproximadamente **55 km/h**.
+
+Face a estes resultados, optou-se pela aplicação de limites absolutos de **2 km/h** e **100 km/h**, considerados mais adequados para garantir a qualidade e plausibilidade dos dados.
+
+**Considerações metodológicas**
+
+A distribuição da velocidade comercial não segue uma distribuição normal (gaussiana) [Fig.1]. Ainda assim, para efeitos de análise agregada, reporte e comunicação dos resultados, a **média aritmética** é utilizada como medida de síntese principal, por facilitar a interpretação e comparação entre diferentes períodos, linhas ou operadores.
+
+![[distribuicao_velocidade_cleaned_2025 1.png]]
+Fig.1 - Distribuição das velocidades médias das viagens da Carris Metropolitana de 2025, após tratamento e limpeza de dados.
