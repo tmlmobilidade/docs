@@ -3,6 +3,8 @@
 import { defineCollections, defineConfig, defineDocs, frontmatterSchema, metaSchema } from 'fumadocs-mdx/config';
 import { readVaultFiles } from 'fumadocs-obsidian';
 import { remarkObsidian, RemarkObsidianOptions } from 'fumadocs-obsidian/mdx';
+import rehypeKatex from 'rehype-katex';
+import remarkMath from 'remark-math';
 import { type ElementContent } from 'hast';
 import path from 'node:path';
 import { type ShikiTransformer } from 'shiki';
@@ -64,7 +66,9 @@ export default defineConfig({
 				},
 				transformers: [transformerEscape()],
 			},
+			rehypePlugins: plugins => [rehypeKatex, ...plugins],
 			remarkPlugins: plugins => [
+				remarkMath,
 				[
 					remarkObsidian,
 					{ files } satisfies RemarkObsidianOptions,

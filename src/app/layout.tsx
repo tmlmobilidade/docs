@@ -3,6 +3,7 @@
 import '@/styles/font.css';
 import '@/styles/color.css';
 import '@/styles/global.css';
+import 'katex/dist/katex.css';
 
 /* * */
 
