@@ -4,15 +4,18 @@ description: drop_off_type_valid_gtfs_enum
 ---
 ## Campos que serão validados nesta regra
 
-| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
-| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
+| Nome do Campo   | Tipo | Presença                  | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| --------------- | ---- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `drop_off_type` | Enum | Proibido Condicionalmente | Indica o método de entrega.<br/>**Opções válidas:**<ul><li>`0` ou `vazio` - Entrega agendada regularmente.</li><li>`1` - Sem entrega disponível.</li><li>`2` - É necessário ligar para a agência para agendar a entrega.</li><li>`3` - É necessário coordenar com o motorista para agendar a entrega.</li></ul>**Proibido Condicionalmente**:<ul><li>`0` **proibido** se `start_pickup_drop_off_window` ou `end_pickup_drop_off_window` estiverem definidos.</li><li>Opcional caso contrário.</li></ul> |
 
 
 
 
-## O que esta validação faz 
+## O que esta validação faz
 
+Esta validação confirma que `drop_off_type`, no ficheiro `stop_times.txt`, usa um dos valores GTFS permitidos: `0`, `1`, `2` ou `3`.
 
+Também valida a regra condicional do GTFS: quando `start_pickup_drop_off_window` ou `end_pickup_drop_off_window` estão preenchidos, `drop_off_type=0` é proibido.
 
 
 ---
