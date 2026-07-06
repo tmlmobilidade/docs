@@ -1,0 +1,37 @@
+---
+title: teste
+description: id
+---
+## Campos que serão validados nesta regra
+
+| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
+| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
+
+
+
+
+## O que esta validação faz 
+
+
+
+
+---
+
+### Passa
+
+- `drop_off_type` está vazio ou tem um valor dentro do enumerado GTFS: `0`, `1`, `2` ou `3`.
+- `drop_off_type=0` só é usado quando `start_pickup_drop_off_window` e `end_pickup_drop_off_window` estão vazios.
+- Com `start_pickup_drop_off_window` ou `end_pickup_drop_off_window` preenchido, `drop_off_type` usa um valor diferente de `0`, por exemplo `1`, `2` ou `3`.
+- Se a regra tiver opções configuradas para o feed, `drop_off_type` está incluído nessas opções.
+
+
+---
+
+### Falha
+
+- Valor inválido - `drop_off_type` tem um número fora do enumerado GTFS, ou seja, não é `0`, `1`, `2` nem `3`.
+- Proibido com janelas - `drop_off_type=0` é usado quando `start_pickup_drop_off_window` ou `end_pickup_drop_off_window` estão preenchidos.
+- Valor não admitido - `drop_off_type` é válido no GTFS, mas não está incluído nas opções configuradas para o feed.
+- Ausência com obrigatoriedade ou recomendação - `drop_off_type` está vazio quando a regra está configurada para reportar presença obrigatória ou recomendada.
+
+

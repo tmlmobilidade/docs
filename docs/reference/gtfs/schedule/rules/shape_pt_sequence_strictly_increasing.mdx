@@ -1,0 +1,56 @@
+---
+title: teste
+description: id
+---
+## Campos que serão validados nesta regra
+
+| Nome do Campo       | Tipo                        | Presença    | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| ------------------- | --------------------------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `shape_pt_sequence` | Número inteiro não negativo | Obrigatório | Sequência em que os pontos da forma se ligam para formar a forma. <br/>Os valores devem aumentar ao longo do percurso, mas não têm de ser consecutivos. <br/><br/><u>Exemplo</u>: Se a forma "`A_shp`" tiver três pontos na sua definição, o ficheiro `shapes.txt` pode conter estes registos para definir a forma:<br/>`shape_id,shape_pt_lat,shape_pt_lon,shape_pt_sequence`<br/>`A_shp,37.6195 6,-122.48161,0`<br/>`A_shp,37.64430,-122.41070,6`<br/>`A_shp,37.65863,-122.30839,11` |
+
+
+
+
+## O que esta validação faz
+
+Esta validação confirma que, dentro de cada `shape_id`, os valores de `shape_pt_sequence` aumentam sempre em relação ao ponto anterior.
+
+Se um ponto tiver um `shape_pt_sequence` menor ou igual ao ponto anterior da mesma shape, a regra falha. Os valores não precisam de ser consecutivos, mas têm de ser crescentes.
+
+---
+
+### Passa
+
+- Para o mesmo `shape_id`, os registos têm `shape_pt_sequence` em ordem crescente.
+- Cada registo tem `shape_pt_sequence` maior do que o `shape_pt_sequence` do registo anterior da mesma shape.
+- `shape_pt_sequence` pode ter saltos entre valores, desde que nunca repita nem diminua dentro do mesmo `shape_id`.
+- A correção deve manter a ordem real dos pontos da geometria refletida no valor de `shape_pt_sequence`.
+
+```csv
+shape_id,shape_pt_lat,shape_pt_lon,shape_pt_sequence
+A_shp,38.707750,-9.136592,1
+A_shp,38.708200,-9.137100,2
+A_shp,38.708650,-9.137800,3
+A_shp,38.709100,-9.138300,4
+```
+
+Neste exemplo, os pontos da shape seguem a ordem crescente de `shape_pt_sequence`: `1`, `2`, `3` e `4`.
+
+---
+
+### Falha
+
+- Para o mesmo `shape_id`, dois registos têm `shape_pt_sequence` repetido quando deveriam identificar posições diferentes da shape.
+- Um registo tem `shape_pt_sequence` menor do que o `shape_pt_sequence` do registo anterior da mesma shape.
+- A ordem dos pontos fica incoerente porque `shape_pt_sequence` deixa de aumentar dentro do mesmo `shape_id`.
+- A correção deve alterar o `shape_pt_sequence` do ponto fora de ordem, ou reordenar os pontos se a geometria tiver sido carregada na ordem errada.
+
+```csv
+shape_id,shape_pt_lat,shape_pt_lon,shape_pt_sequence
+A_shp,38.707750,-9.136592,1
+A_shp,38.708200,-9.137100,2
+A_shp,38.708650,-9.137800,3
+A_shp,38.709100,-9.138300,2
+```
+
+Neste exemplo, o último ponto falha porque `shape_pt_sequence` volta para `2` depois de já ter chegado a `3`. A sequência deixa de seguir a ordem crescente dentro do mesmo `shape_id`.
