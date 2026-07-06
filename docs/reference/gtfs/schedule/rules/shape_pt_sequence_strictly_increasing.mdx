@@ -35,12 +35,3 @@ Se um ponto tiver um `shape_pt_sequence` menor ou igual ao ponto anterior da mes
 - A ordem dos pontos fica incoerente porque `shape_pt_sequence` deixa de aumentar dentro do mesmo `shape_id`.
 - A correção deve alterar o `shape_pt_sequence` do ponto fora de ordem, ou reordenar os pontos se a geometria tiver sido carregada na ordem errada.
 
-```csv
-shape_id,shape_pt_lat,shape_pt_lon,shape_pt_sequence
-A_shp,38.707750,-9.136592,1
-A_shp,38.708200,-9.137100,2
-A_shp,38.708650,-9.137800,3
-A_shp,38.709100,-9.138300,2
-```
-
-Neste exemplo, o último ponto falha porque `shape_pt_sequence` volta para `2` depois de já ter chegado a `3`. A sequência deixa de seguir a ordem crescente dentro do mesmo `shape_id`.
