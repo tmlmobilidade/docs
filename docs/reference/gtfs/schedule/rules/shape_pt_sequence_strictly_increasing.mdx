@@ -26,16 +26,6 @@ Se um ponto tiver um `shape_pt_sequence` menor ou igual ao ponto anterior da mes
 - `shape_pt_sequence` pode ter saltos entre valores, desde que nunca repita nem diminua dentro do mesmo `shape_id`.
 - A correção deve manter a ordem real dos pontos da geometria refletida no valor de `shape_pt_sequence`.
 
-```csv
-shape_id,shape_pt_lat,shape_pt_lon,shape_pt_sequence
-A_shp,38.707750,-9.136592,1
-A_shp,38.708200,-9.137100,2
-A_shp,38.708650,-9.137800,3
-A_shp,38.709100,-9.138300,4
-```
-
-Neste exemplo, os pontos da shape seguem a ordem crescente de `shape_pt_sequence`: `1`, `2`, `3` e `4`.
-
 ---
 
 ### Falha
