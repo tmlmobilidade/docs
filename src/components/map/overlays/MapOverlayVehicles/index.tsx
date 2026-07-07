@@ -26,7 +26,7 @@ interface Props {
 
 const baseGeoJsonFeatureCollection = getBaseGeoJsonFeatureCollection<GeoJSON.Point, unknown>();
 
-const ANIMATION_DURATION = 800; // ms
+const ANIMATION_DURATION = 5_000; // ms
 
 function ease(t: number): number {
 	return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
