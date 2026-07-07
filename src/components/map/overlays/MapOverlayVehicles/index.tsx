@@ -3,7 +3,6 @@
 /* * */
 
 import { LiveIcon } from '@/components/brand/LiveIcon';
-import { vehicleDelayIconImage, vehicleIconImage, vehicleIconSize } from '@/components/map/utils/load-map-assets';
 import { getBaseGeoJsonFeatureCollection } from '@tmlmobilidade/geo';
 import { Layer, Source } from '@vis.gl/react-maplibre';
 import { useEffect, useRef, useState } from 'react';
@@ -111,7 +110,7 @@ function interpolateProps(startFeature: GeoJSON.Feature<GeoJSON.Point> | undefin
 
 /* * */
 
-export function MapOverlayVehicles({ presentBeforeId, showCounter, vehiclesData = baseGeoJsonFeatureCollection }: Props) {
+export function MapOverlayVehicles({ showCounter, vehiclesData = baseGeoJsonFeatureCollection }: Props) {
 	//
 
 	//
@@ -183,44 +182,6 @@ export function MapOverlayVehicles({ presentBeforeId, showCounter, vehiclesData 
 			<Source data={animatedData} id="default-source-vehicles" type="geojson">
 
 				<Layer
-					beforeId={presentBeforeId}
-					id="default-layer-vehicles-delay"
-					source="default-source-vehicles"
-					type="symbol"
-					layout={{
-						'icon-allow-overlap': true,
-						'icon-anchor': 'center',
-						'icon-ignore-placement': true,
-						'icon-image': vehicleDelayIconImage,
-						'icon-offset': [0, 0],
-						'icon-rotate': ['get', 'bearing'],
-						'icon-rotation-alignment': 'map',
-						'icon-size': ['interpolate',
-							['linear'],
-							['zoom'],
-							10,
-							0.05,
-							20,
-							0.15,
-						],
-						'symbol-placement': 'point',
-					}}
-					paint={{
-						'icon-opacity': [
-							'interpolate',
-							['linear'],
-							['get',
-								'delay'],
-							20,
-							0,
-							40,
-							1,
-						],
-					}}
-				/>
-
-				<Layer
-					beforeId="default-layer-vehicles-delay"
 					id="default-layer-vehicles-regular"
 					source="default-source-vehicles"
 					type="symbol"
@@ -228,11 +189,35 @@ export function MapOverlayVehicles({ presentBeforeId, showCounter, vehiclesData 
 						'icon-allow-overlap': true,
 						'icon-anchor': 'center',
 						'icon-ignore-placement': true,
-						'icon-image': vehicleIconImage,
+						'icon-image': [
+							'match',
+							['to-string', ['get', 'agency_id']],
+							'1', 'map-vehicle-ccfl-bus',
+							'2', 'map-vehicle-ml-train',
+							'3', 'map-vehicle-cp-train',
+							'4', 'map-vehicle-ttsl-boat',
+							'8', 'map-vehicle-tcb-bus',
+							'15', 'map-vehicle-fertagus-train',
+							'16', 'map-vehicle-mts-tram',
+							'21', 'map-vehicle-mobi-bus',
+							'41', 'map-vehicle-cmet-bus',
+							'42', 'map-vehicle-cmet-bus',
+							'43', 'map-vehicle-cmet-bus',
+							'44', 'map-vehicle-cmet-bus',
+							'map-vehicle-cmet-bus',
+						],
 						'icon-offset': [0, 0],
 						'icon-rotate': ['get', 'bearing'],
 						'icon-rotation-alignment': 'map',
-						'icon-size': vehicleIconSize,
+						'icon-size': [
+							'interpolate',
+							['linear'],
+							['zoom'],
+							10,
+							0.05,
+							30,
+							0.5,
+						],
 						'symbol-placement': 'point',
 					}}
 					paint={{
