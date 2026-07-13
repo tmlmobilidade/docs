@@ -11,32 +11,32 @@ Venda a bordo é um evento referente a uma compra de um título de viagem já a 
 Campos que caracterizam um evento do tipo APEX on-board_sales:
 
 | Nome do campo         | Tipo de dado | Descrição                                                                                                                                                                    |
-|-----------------------|--------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| --------------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | _id                   | GUID         | Identificador único da transação de venda.                                                                                                                                   |
-| agency_id             |              | Identificador único do Operador.                                                                                                                                             |
-| apex_version          |              | Versão do protocolo APEX utilizado para comunicar a transação.                                                                                                               |
-| block_id              |              | Identificação do plano de trabalho de um veículo. Placa - Conjunto de Circulações, Deslocações em Vazio e Tempos de Reserva cumpridos por um mesmo veículo.                  |
+| agency_id             | STRING       | Identificador único do Operador.                                                                                                                                             |
+| apex_version          | STRING       | Versão do protocolo APEX utilizado para comunicar a transação.                                                                                                               |
+| block_id              | STRING       | Identificação do plano de trabalho de um veículo. Placa - Conjunto de Circulações, Deslocações em Vazio e Tempos de Reserva cumpridos por um mesmo veículo.                  |
 | card_physical_type    | ENUM         | Tipo de suporte físico do cartão do passageiro.                                                                                                                              |
-| card_serial_number    |              | Número de série identificador do cartão associado à transação.                                                                                                               |
-| created_at            |              | UNIX Timestamp em milisegundos do momento em que a transação foi criada no equipamento local.                                                                                |
+| card_serial_number    | STRING       | Número de série identificador do cartão associado à transação.                                                                                                               |
+| created_at            | INTEGER      | UNIX Timestamp em milisegundos do momento em que a transação foi criada no equipamento local.                                                                                |
 | device_id             | GUID         | Identificador único do equipamento que regista a transação APEX de venda.                                                                                                    |
-| duty_id               |              | Identificação do plano de trabalho de um motorista/maquinista. Chapa - Conjunto de Circulações, Deslocações em Vazio e Tempos de Reserva em que intervém um mesmo motorista. |
+| duty_id               | STRING       | Identificação do plano de trabalho de um motorista/maquinista. Chapa - Conjunto de Circulações, Deslocações em Vazio e Tempos de Reserva em que intervém um mesmo motorista. |
 | is_passenger          | BOL          | Classifica a venda como válida ou inválida. ('true' = válida)                                                                                                                |
-| line_id               |              | Identificador da linha em que ocorreu a transação.                                                                                                                           |
-| mac_ase_counter_value |              | Valor no contador de transações/eventos APEX feitos pelo cartão SAM que se encontra no equipamento que regista a venda.                                                      |
-| mac_sam_serial_number |              | Número de série do cartão SAM que se encontra no equipamento que regista a venda.                                                                                            |
-| on_board_refund_id    |              | Identificador único do evento de reembolso associado a esta venda.                                                                                                           |
-| pattern_id            | ENUM         | Código de identificação do percurso de viagem associado à venda.                                                                                                             |
-| payment_method        |              | Modo de pagamento do título.                                                                                                                                                 |
+| line_id               | STRING       | Identificador da linha em que ocorreu a transação.                                                                                                                           |
+| mac_ase_counter_value | INTEGER      | Valor no contador de transações/eventos APEX feitos pelo cartão SAM que se encontra no equipamento que regista a venda.                                                      |
+| mac_sam_serial_number | INTEGER      | Número de série do cartão SAM que se encontra no equipamento que regista a venda.                                                                                            |
+| on_board_refund_id    | GUID         | Identificador único do evento de reembolso associado a esta venda.                                                                                                           |
+| pattern_id            | STRING       | Código de identificação do percurso de viagem associado à venda.                                                                                                             |
+| payment_method        | ENUM         | Modo de pagamento do título.                                                                                                                                                 |
 | price                 | STRING       | Preço em céntimos de EUR, associado à transação.                                                                                                                             |
 | product_long_id       | NUM          | Identificador do produto, ou seja, do tipo de título da viagem que está a ser vendido.                                                                                       |
-| product_quantity      |              | Número de unidades vendidas/carregadas no cartão referntes a esta transação.                                                                                                 |
-| received_at           |              | UNIX Timestamp em milisegundos do momento em que a transação foi recebida na central de base de dados.                                                                       |
-| stop_id               |              | Identificador único da paragem.                                                                                                                                              |
-| trip_id               |              | Identificador único da trip de um determinado plano de operação de um determinado operador.                                                                                  |
-| updated_at            |              | UNIX Timestamp em milisegundos da última atualização dessa venda.                                                                                                            |
-| validation_id         |              | Identificador único da validação.                                                                                                                                            |
-| vehicle_id            |              | Identificador do veículo, unívoco por operador.                                                                                                                              |
+| product_quantity      | INTEGER      | Número de unidades vendidas/carregadas no cartão referntes a esta transação.                                                                                                 |
+| received_at           | INTEGER      | UNIX Timestamp em milisegundos do momento em que a transação foi recebida na central de base de dados.                                                                       |
+| stop_id               | STRING       | Identificador único da paragem.                                                                                                                                              |
+| trip_id               | STRING       | Identificador único da trip de um determinado plano de operação de um determinado operador.                                                                                  |
+| updated_at            | INTEGER      | UNIX Timestamp em milisegundos da última atualização dessa venda.                                                                                                            |
+| validation_id         | GUID         | Identificador único da validação.                                                                                                                                            |
+| vehicle_id            | INTEGER      | Identificador do veículo, unívoco por operador.                                                                                                                              |
 
 # Tudo são transações
 
