@@ -1,20 +1,10 @@
 /* * */
 
-import { getLLMText } from '@/lib/get-llm-text';
-import { sourceReference } from '@/lib/source';
+import { NextResponse } from 'next/server';
 
 /* * */
 
-// cached forever
-export const revalidate = false;
-
-/* * */
-
-export const GET = async () => {
-	const scanned = await Promise.all(sourceReference.getPages().map(getLLMText));
-	return new Response(scanned.join('\n\n'), {
-		headers: {
-			'Content-Type': 'text/plain; charset=utf-8',
-		},
-	});
+// Root path is not exposed in production (docs live under /reference)
+export const GET = (request: Request) => {
+	return NextResponse.redirect(new URL('/reference/llms-full.txt', request.url), 308);
 };

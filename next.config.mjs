@@ -25,9 +25,14 @@ const config = {
 	async rewrites() {
 		return [
 			{
+				source: '/reference/index.md',
+				destination: '/llms.mdx/reference',
+			},
+			{
 				source: '/reference/:path*.md',
 				destination: '/llms.mdx/reference/:path*',
 			},
+			// local / direct access; prod ingress only exposes /reference/*
 			{
 				source: '/reference.md',
 				destination: '/llms.mdx/reference',
