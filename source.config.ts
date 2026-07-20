@@ -1,12 +1,13 @@
 /* * */
 
-import { defineCollections, defineConfig, defineDocs, frontmatterSchema, metaSchema } from 'fumadocs-mdx/config';
+import { metaSchema, pageSchema } from 'fumadocs-core/source/schema';
+import { defineCollections, defineConfig, defineDocs } from 'fumadocs-mdx/config';
 import { readVaultFiles } from 'fumadocs-obsidian';
 import { remarkObsidian, RemarkObsidianOptions } from 'fumadocs-obsidian/mdx';
-import rehypeKatex from 'rehype-katex';
-import remarkMath from 'remark-math';
 import { type ElementContent } from 'hast';
 import path from 'node:path';
+import rehypeKatex from 'rehype-katex';
+import remarkMath from 'remark-math';
 import { type ShikiTransformer } from 'shiki';
 import { visit } from 'unist-util-visit';
 import { z } from 'zod';
@@ -20,7 +21,7 @@ export const reference = defineDocs({
 		postprocess: {
 			includeProcessedMarkdown: true,
 		},
-		schema: frontmatterSchema,
+		schema: pageSchema,
 	},
 	meta: {
 		schema: metaSchema,
@@ -83,7 +84,7 @@ export default defineConfig({
 export const lab = defineCollections({
 	async: true,
 	dir: 'docs/lab',
-	schema: frontmatterSchema.extend({
+	schema: pageSchema.extend({
 		author: z.string(),
 		cover: z.string(),
 		date: z.iso.date().or(z.date()),

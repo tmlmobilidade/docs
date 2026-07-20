@@ -22,6 +22,18 @@ const config = {
 	},
 	output: 'standalone',
 	reactStrictMode: true,
+	async rewrites() {
+		return [
+			{
+				source: '/reference/:path*.md',
+				destination: '/llms.mdx/reference/:path*',
+			},
+			{
+				source: '/reference.md',
+				destination: '/llms.mdx/reference',
+			},
+		];
+	},
 };
 
 export default createMDX()(config);
