@@ -14,6 +14,7 @@ interface MapLoadAsset {
 const MAP_LOAD_ASSETS: MapLoadAsset[] = [
 	{ name: 'map-vehicle-ccfl-bus', sdf: false, url: '/assets/map/vehicles/map-vehicle-ccfl-bus.png' },
 	{ name: 'map-vehicle-cmet-bus', sdf: false, url: '/assets/map/vehicles/map-vehicle-cmet-bus.png' },
+	{ name: 'map-vehicle-unir-bus', sdf: false, url: '/assets/map/vehicles/map-vehicle-unir-bus.png' },
 	{ name: 'map-vehicle-cp-train', sdf: false, url: '/assets/map/vehicles/map-vehicle-cp-train.png' },
 	{ name: 'map-vehicle-fertagus-train', sdf: false, url: '/assets/map/vehicles/map-vehicle-fertagus-train.png' },
 	{ name: 'map-vehicle-ml-train', sdf: false, url: '/assets/map/vehicles/map-vehicle-ml-train.png' },
