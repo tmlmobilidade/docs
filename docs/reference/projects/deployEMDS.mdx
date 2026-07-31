@@ -36,7 +36,7 @@ For Reference 'Planned', let i=1,…,N index all ride observations for a given r
 ![[Pasted image 20260715034152.png]]
 
 where:
-- median⁡​(⋅) is computed over all N ride observations.
+- median⁡​(.) is computed over all N ride observations.
 
 
 ### Reference - 'Freeflow'
@@ -50,23 +50,23 @@ For Reference 'Freeflow', let i=1,…,N index all ride observations for a given 
 where:
 
 - i=1,…,Ni=1,\ldots,Ni=1,…,N indexes all ride observations traversing the roadlink during the aggregation period (e.g., one month).
-- median⁡i=1,…,N(⋅)\operatorname{median}_{i=1,\ldots,N}(\cdot)mediani=1,…,N​(⋅) is the median observed roadlink duration over those NNN rides.
-- Q1(⋅)shapeQ_1(\cdot)_{\mathrm{shape}}Q1​(⋅)shape​ is the **first quartile (25th percentile)** of the observed roadlink durations computed across all rides belonging to the same **shape** (pattern), where a shape is defined by the combination of the stop pair and the corresponding shape extension in metres.
-- The value Q1(⋅)shapeQ_1(\cdot)_{\mathrm{shape}}Q1​(⋅)shape​ is used as the **Freeflow reference travel time**.
+- median⁡i=1,…,N(.)\operatorname{median}_{i=1,\ldots,N}(\cdot)mediani=1,…,N​(.) is the median observed roadlink duration over those NNN rides.
+- Q1(.)shapeQ_1(\cdot)_{\mathrm{shape}}Q1​(⋅)shape​ is the **first quartile (25th percentile)** of the observed roadlink durations computed across all rides belonging to the same **shape** (pattern), where a shape is defined by the combination of the stop pair and the corresponding shape extension in metres.
+- The value Q1(.)shapeQ_1(\cdot)_{\mathrm{shape}}Q1​(.)shape​ is used as the **Freeflow reference travel time**.
 
 ### Disturbance classification
 
 The duration_deviation_median_pct is a relative deviations (R.D.).
 The relative deviations in travel time between stops are then reclassified based on this table:
 
-| **Disturbance Class** | **Disturbance Index** | **Relative Deviation Interval** | **Interpretation**                                                    |
-| --------------------- | :-------------------: | ------------------------------- | --------------------------------------------------------------------- |
-| **Severely Early**    |          -2           | R.D. < -0.20                    | Observed duration is 20% or more below the reference duration.        |
-| **Early**             |          -1           | -0.20 ≤ R.D. < -0.05            | Observed duration is between 5% and 20% below the reference duration. |
-| **On Time**           |           0           | -0.05 ≤ R.D. ≤ 0.05             | Observed duration is within ±5% of the reference duration.            |
-| **Late**              |           1           | 0.05 < R.D. < 0.20              | Observed duration is between 5% and 20% above the reference duration. |
-| **Severely Late**     |           2           | R.D. ≥ 0.20                     | Observed duration is 20% or more above the reference duration.        |
-| **Unknown**           |         NULL          | N/A                             | Insufficient data to determine the disturbance class.                 |
+| **Disturbance Class** | **Disturbance Index** | **Interpretation**                                                    |
+| --------------------- | --------------------- | --------------------------------------------------------------------- |
+| **Severely Early**    | R.D. < -0.20          | Observed duration is 20% or more below the reference duration.        |
+| **Early**             | -0.20 ≤ R.D. < -0.05  | Observed duration is between 5% and 20% below the reference duration. |
+| **On Time**           | -0.05 ≤ R.D. ≤ 0.05   | Observed duration is within ±5% of the reference duration.            |
+| **Late**              | 0.05 < R.D. < 0.20    | Observed duration is between 5% and 20% above the reference duration. |
+| **Severely Late**     | R.D. ≥ 0.20           | Observed duration is 20% or more above the reference duration.        |
+| **Unknown**           | N/A                   | Insufficient data to determine the disturbance class.                 |
 
 
 
