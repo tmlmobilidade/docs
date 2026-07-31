@@ -12,6 +12,7 @@ The project includes **16 use cases across nine European countries**, supporting
 
 
 # TML use case
+
 As part of the project, **TML** is responsible for developing one of the use cases for the Lisbon region. The title and focus of this use case is **Increasing the schedule reliability and/ or commercial speed of buses**.
 
 Among the objectives of the software solution is to provide end users with a visual representation of bus traffic disturbances through interactive maps and dashboards.
@@ -19,10 +20,11 @@ Among the objectives of the software solution is to provide end users with a vis
 
 # Concepts
 
+**_Roadlink:_**
+A roadlink is the segment of a public transport route between two consecutive stops of a trip, representing the path traversed by a vehicle from the departure at the upstream stop to the arrival at the downstream stop. It is the fundamental spatial unit used to measure and analyse travel times and their deviations from a reference.
 
-**Roadlink:**
-A roadlink is the segment of a public transport route between two consecutive stops, representing the path traversed by a vehicle from the departure at the upstream stop to the arrival at the downstream stop. It is the fundamental spatial unit used to measure and analyse travel times and their deviations from a reference.
-
+**_Trip:_**
+A trip is a single scheduled journey of a vehicle along a specific route, defined by a direction and a sequence of stops (_shape_) and an associated timetable. Trips are typically repeated on specific dates according to a predefined service calendar.
 
 # Bus Traffic Disturbance Index
 
@@ -33,10 +35,39 @@ The planned reference travel time is the scheduled travel time for a roadlink, c
 
 For Reference 'Planned', let i=1,…,N index all ride observations for a given roadlink of a trip in the aggregation period (month). Then
 
-![[Pasted image 20260715034152.png]]
+
+$$
+\text{Disturbance Index}_{\text{Planned}}
+=
+\frac{
+\operatorname{median}_{i=1,\ldots,N}
+\left(
+\text{stop\_observed\_time\_end}^{(i)}
+-
+\text{stop\_observed\_time\_start}^{(i)}
+\right)
+-
+\operatorname{median}_{i=1,\ldots,N}
+\left(
+\text{stop\_plan\_departure\_time\_end}^{(i)}
+-
+\text{stop\_plan\_departure\_time\_start}^{(i)}
+\right)
+}{
+\operatorname{median}_{i=1,\ldots,N}
+\left(
+\text{stop\_plan\_departure\_time\_end}^{(i)}
+-
+\text{stop\_plan\_departure\_time\_start}^{(i)}
+\right)
+}
+$$
+
 
 where:
-- median⁡​(.) is computed over all N ride observations.
+
+- **i** indexes all ride observations traversing the roadlink during the aggregation period (**i = 1, ..., N**).
+- **median()** denotes the median computed over all **N** ride observations.
 
 
 ### Reference - 'Freeflow'
@@ -45,19 +76,44 @@ The freeflow reference travel time is the first quartile (25th percentile) of th
 
 For Reference 'Freeflow', let i=1,…,N index all ride observations for a given roadlink of a trip in the aggregation period (month). Then
 
-![[Pasted image 20260715033822.png]]
+$$
+\text{Disturbance Index}_{\text{Freeflow}}
+=
+\frac{
+\operatorname{median}_{i=1,\ldots,N}
+\left(
+\text{stop\_observed\_time\_end}^{(i)}
+-
+\text{stop\_observed\_time\_start}^{(i)}
+\right)
+-
+Q_{1,\mathrm{shape}}
+\left(
+\text{stop\_observed\_time\_end}
+-
+\text{stop\_observed\_time\_start}
+\right)
+}{
+Q_{1,\mathrm{shape}}
+\left(
+\text{stop\_observed\_time\_end}
+-
+\text{stop\_observed\_time\_start}
+\right)
+}
+$$
 
 where:
 
-- i=1,…,Ni=1,\ldots,Ni=1,…,N indexes all ride observations traversing the roadlink during the aggregation period (e.g., one month).
-- median⁡i=1,…,N(.)\operatorname{median}_{i=1,\ldots,N}(\cdot)mediani=1,…,N​(.) is the median observed roadlink duration over those NNN rides.
-- Q1(.)shapeQ_1(\cdot)_{\mathrm{shape}}Q1​(⋅)shape​ is the **first quartile (25th percentile)** of the observed roadlink durations computed across all rides belonging to the same **shape** (pattern), where a shape is defined by the combination of the stop pair and the corresponding shape extension in metres.
-- The value Q1(.)shapeQ_1(\cdot)_{\mathrm{shape}}Q1​(.)shape​ is used as the **Freeflow reference travel time**.
+- **i** indexes all ride observations traversing the roadlink during the aggregation period (e.g., one month) (**i = 1, ..., N**).
+- **median()** denotes the median computed over all **N** ride observations.
+- **Q₁shape()** denotes the first quartile (25th percentile) of the observed roadlink durations computed across all rides belonging to the same **shape** (pattern). This value is used as the **Freeflow reference**.
+- A **shape** is defined by the combination of the stop pair and the corresponding shape extension in metres.
 
 ### Disturbance classification
 
-The duration_deviation_median_pct is a relative deviations (R.D.).
-The relative deviations in travel time between stops are then reclassified based on this table:
+The Disturbance Index is a relative deviation.
+The relative deviations in duration (travel time) between stops are then reclassified based on this table:
 
 | **Disturbance Class** | **Disturbance Index** | **Interpretation**                                                    |
 | --------------------- | --------------------- | --------------------------------------------------------------------- |
@@ -75,14 +131,6 @@ The relative deviations in travel time between stops are then reclassified based
 Bus Traffic Disturbance Dashboard is available [here]([Microsoft Power BI](https://app.powerbi.com/view?r=eyJrIjoiMTMwYzY1NTMtNDM2MC00NWNiLWIyMjUtM2ZlYTA5M2ZkYjBkIiwidCI6IjgzMGQ2OWExLWQxMGUtNGJjOC04NzQyLTFmNTY3YmJkMjEyNiIsImMiOjl9)).
 
 
-
-
-
-
-
-| ...                   | ...    | ...                                                                                                                                                                          |
-| --------------------- | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ...                   | ...    | ...                                                                                                                                                                          |
 
 
 
