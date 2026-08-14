@@ -14,13 +14,21 @@ O [GTFS Real Time](/reference/gtfs/realtime) é um pouco mais complexo pois util
 
 Quem produz o GTFS são as agências de transporte público, e quase todas têm pelo menos a versão planeada.
 
-## O GTFS da TML
+## GTFS versão 30
 
-A TML tomou a decisão de utilizar o GTFS como o formato standard para comunicar a sua operação de transportes, e por isso desenvolveu vários sistemas à sua volta que exigem informações adicionais que não estão na especificação base. Desta forma, foi criada uma extensão ao GTFS Schedule para suportar estes campos adicionais. Isto é uma prática comum na indústria. Os campos adicionais são ignorados por quem não precisar deles, como por exemplo o Google Maps, mantendo o GTFS válido de acordo com o standard.
+A TML utiliza o **GTFS como formato standard para comunicar a sua operação de transportes públicos**. A versão 30 define uma estrutura comum para os diferentes operadores, utilizando os campos previstos no GTFS Standard.
 
-Ter tudo mapeado em GTFS permite simplificar vários processos e reduzir o custo dos desenvolvimentos, pois grande parte das ferramentas já dispõem da função de importação/exportação neste formato.
+A informação necessária aos sistemas TML e à APEX é obtida através da leitura dos campos existentes no GTFS, não sendo necessário acrescentar campos específicos da APEX ao ficheiro fornecido pelos operadores.
 
-Os operadores de transporte público que suportam o sistema navegante® devem produzir um ficheiro GTFS seguindo esta especificação da TML, pois é este formato que permite a configuração dos sistemas APEX. **O GTFS-TML é um requisito obrigatório para a APEX.** A TML também recomenda esta especificação para todos os operadores de transporte do país.
+Para a identificação da **linha**, o campo `route_short_name` passa a ser **obrigatório** no GTFS versão 30. O seu valor é utilizado directamente como `LineLongID` na APEX. Desta forma, deixa de ser necessário utilizar um campo adicional `line_id` para representar a linha.
+
+Para a identificação do **percurso**, o campo `pattern_id` é eliminado. O `shape_id` passa a ser definido através da combinação do `route_id` com o `direction_id`:
+
+**`shape_id = route_id + direction_id`**
+
+O `shape_id` passa a ser utilizado como identificador do percurso e é mapeado directamente para `PatternLongID` na APEX. O mesmo `shape_id` deve ser utilizado de forma consistente em `trips.txt` e `shapes.txt`, garantindo a correspondência entre as viagens e a geometria do percurso.
+
+Desta forma, a versão 30 mantém uma estrutura comum baseada no **GTFS Standard**, sem necessidade de campos adicionais como `line_id` ou `pattern_id`. A informação necessária à APEX é obtida através dos campos standard e das regras de utilização definidas para o GTFS versão 30.
 
 ## Ferramentas úteis
 
