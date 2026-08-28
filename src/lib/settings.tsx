@@ -14,7 +14,7 @@ export const BASE_OPTIONS = {
 
 	github_url: 'https://github.com/tmlmobilidade',
 
-	go_url: getCurrentEnvironment() === 'development' ? 'http://localhost:51000/auth/login' : '/auth/login',
+	go_url: getCurrentEnvironment() === 'development' ? 'http://localhost:51000/core/login' : '/core/login',
 
 	title: <GoLogo />,
 
