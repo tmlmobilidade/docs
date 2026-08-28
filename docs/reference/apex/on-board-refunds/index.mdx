@@ -4,7 +4,7 @@ description: Descrição dos campos associados a um evento de Reembolso de um t�
 ---
 # O que é um Reembolso?
 
-Reembolso é um evento referente a uma devolução de uma compra 
+Reembolso é um evento referente a uma devolução de uma compra
 de um título de bordo de uma viagem. Esse evento é transmitido como transação APEX do tipo refund, com um conjunto de campos próprios que caracterizam um evento desse tipo.
 
 # Estrutura
@@ -36,7 +36,7 @@ Campos que caracterizam um evento do tipo APEX on-board-refund:
 | trip_id               |              | Identificador único da trip de um determinado plano de operação de um determinado operador.                                                                                  |
 | updated_at            |              | UNIX Timestamp em milisegundos da última atualização deste refund.                                                                                                           |
 | validation_id         |              | Identificador único da validação.                                                                                                                                            |
-| vehicle_id            |              | Identificador do veículo, unívoco por operador.                                                                                                                              |
+| vehicle_id            | STRING       | Identificador do veículo, unívoco por operador.                                                                                                                              |
 
 
 ## Exemplo
