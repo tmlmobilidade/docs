@@ -1,22 +1,20 @@
 ---
 title: calendar_dates
-description: Exceções para os serviços definidos no ficheiro calendar.txt
+description: Define alterações ao funcionamento dos serviços em dias específicos.
 ---
-**Presença**: <u>Condicionalmente Obrigatório</u><br/>
-- **Obrigatório**: se `calendar.txt` for omitido. Nesse caso, `calendar_dates.txt` deve conter todas as datas de serviço.<br/>
-- **Opcional**: caso contrário.<br/>
-**Chave primária**: `service_id`
+**Presença**: Condicionalmente Obrigatório
+- **Obrigatório**, exceto quando todas as datas de serviço estão definidas em `calendar_dates.txt`.
 
----
-
-A tabela `calendar_dates.txt` activa ou desactiva explicitamente o serviço por data. Pode ser usada de duas maneiras.
-
-**Recomendado**: Utilize `calendar_dates.txt` em conjunto com `calendar.txt` para definir exceções aos padrões de serviço padrão definidos em `calendar.txt`. Se o serviço for geralmente regular, com algumas alterações em datas específicas (por exemplo, para acomodar serviços de eventos especiais ou o calendário escolar), esta é uma boa abordagem. Neste caso, `calendar_dates.service_id` é um ID externo que faz referência a `calendar.service_id`.
-
-**Alternativa**: Omita `calendar.txt` e especifique cada data de serviço em `calendar_dates.txt`. Isto permite uma variação considerável no serviço e acomoda serviços sem horários semanais regulares. Neste caso, `service_id` é um ID.
+**Chave primária**: `service_id`, `date`
 
 ---
 
+A tabela <code>calendar_dates.txt</code> define explicitamente, para cada data, se um serviço está ativo ou inativo. Pode ser utilizada de duas formas:
+<strong>Recomendado:</strong> Utilizar <code>calendar_dates.txt</code> em conjunto com <code>calendar.txt</code> para definir exceções aos padrões de funcionamento predefinidos em <code>calendar.txt</code>. Esta abordagem é adequada quando o serviço é geralmente regular, mas existem algumas alterações em datas específicas (por exemplo, para acomodar serviços especiais durante eventos ou horários escolares). Neste caso, <code>calendar_dates.service_id</code> é um ID externo que referencia <code>calendar.service_id</code>.
+
+<strong>Alternativa:</strong> Omitir <code>calendar.txt</code> e especificar cada dia de funcionamento em <code>calendar_dates.txt</code>. Esta abordagem permite uma maior variação dos serviços e acomoda serviços que não seguem horários semanais regulares. Neste caso, <code>service_id</code> é um ID.
+
+---
 ### Campos GTFS Standard
 
 | Nome do Campo    | Tipo                                                         | Presença    | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |

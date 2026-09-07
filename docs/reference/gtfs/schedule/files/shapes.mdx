@@ -1,12 +1,18 @@
 ---
 title: shapes
-description: As shapes descrevem o caminho percorrido por um veículo ao longo de um alinhamento de percurso
+description: Define os percursos geográficos das viagens, através de uma sequência de pontos que representam o trajeto do veículo.
 ---
-Os formatos estão associados às viagens e consistem numa sequência de pontos pelos quais o veículo passa por ordem. Os formatos não necessitam de interceptar a localização exata das paragens, mas todas as paragens numa viagem devem estar a uma pequena distância do formato dessa viagem, ou seja, próximas de segmentos de linha reta que ligam os pontos do formato. O ficheiro shapes.txt deve ser incluído para todos os serviços baseados em rotas (não para serviços on-demand baseados em zonas).
+**Presença**: Opcional
 
-**Presença**: Opcional<br/>
-**Chave primária**: não há
+**Chave primária**: `shape_id`, `shape_pt_sequence`
 
+---
+
+Os percursos descrevem o trajeto que um veículo percorre ao longo do alinhamento de uma rota e são definidos no ficheiro <code>shapes.txt</code>. Os percursos estão associados a viagens e são constituídos por uma sequência de pontos pelos quais o veículo passa, pela ordem indicada.
+Os percursos não têm de coincidir exatamente com a localização das paragens, mas todas as paragens de uma viagem devem estar a uma pequena distância do percurso correspondente, ou seja, próximas dos segmentos de linha reta que ligam os pontos do percurso.
+O ficheiro <code>shapes.txt</code> deve ser incluído para todos os serviços baseados em rotas (não se aplica a serviços de transporte a pedido).
+
+---
 ### Campos GTFS Standard 
 
 | Nome do Campo         | Tipo                        | Presença    | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |                |          |             |                                                                                                                           |
