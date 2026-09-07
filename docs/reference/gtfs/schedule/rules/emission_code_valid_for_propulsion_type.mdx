@@ -10,23 +10,23 @@ description: emission_code_valid_for_propulsion_type
 
 
 
-## O que esta validação faz 
+## O que esta validação faz
 
-No ficheiro `vehicles.txt`, o campo `emission` identifica a classe de emissões do veículo (poluentes), normalmente alinhada com a norma Euro ou outro esquema numérico definido no vosso dicionário de dados. Os valores válidos são códigos inteiros que mapeiam para estes níveis (no esquema habitual, por exemplo de Euro I a Euro VI, ƒ podem existir códigos extra para “sem classificação”, “não aplicável” ou extensões do feed, conforme a documentação interna).
+No ficheiro `vehicles.txt`, o campo `emission` identifica a classe de emissões do veículo (poluentes), normalmente alinhada com a norma Euro ou outro esquema numérico definido no vosso dicionário de dados. Os valores válidos são códigos inteiros que mapeiam para estes níveis (no esquema habitual, por exemplo de Euro I a Euro VI, ƒ podem existir códigos extra para “sem classificação”, “não aplicável” ou extensões do feed, conforme a documentação interna).
 
 ---
 
 ### Passa
 
-- Campo preenchido, código reconhecido no conjunto permitido pelo validador e, havendo lista restritiva nas regras, valor autorizado (ou regras que abrangem todas as opções válidas).
+- Campo preenchido, código reconhecido no conjunto permitido pelo validador e, havendo lista restritiva nas regras, valor autorizado (ou regras que abrangem todas as opções válidas).
 
 ---
 
 ### Falha
 
-- Campo em falta – não se indica a classe de emissão do veículo.
-- Código inválido – o número não corresponde a nenhuma classe de emissão admitida (fora do domínio previsto).
-- Incoerência com as regras  – o código é válido no dicionário geral mas não é permitido pela lista das regras, quando essa restrição está activa.
+- Campo em falta – não se indica a classe de emissão do veículo.
+- Código inválido – o número não corresponde a nenhuma classe de emissão admitida (fora do domínio previsto).
+- Incoerência com as regras  – o código é válido no dicionário geral mas não é permitido pela lista das regras, quando essa restrição está activa.
 
 
 

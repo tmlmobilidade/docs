@@ -7,24 +7,24 @@ description: shape_id_needs_to_be_the_same_as_pattern_id
 | Nome do Campo | Tipo                                        | Presença                     | Descrição                                                                                                                                                                                                                                                                                                             |
 | ------------- | ------------------------------------------- | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `shape_id`    | ID externo que referencia `shapes.shape_id` | Condicionalmente obrigatório | Identifica uma forma geoespacial que descreve o trajeto do veículo para uma viagem. <br/><br/>**Condicionalmente obrigatório**:<ul><li>Obrigatório se a viagem tiver um comportamento contínuo de embarque ou desembarque definido em `routes.txt` ou em `stop_times.txt`.</li><li>Opcional caso contrário.</li></ul> |
-| `pattern_id`  | ID                                          | Obrigatório                  | Indica a variante de serviço em que a viagem opera na linha. <br/><br/>Não faz parte do GTFS standart, mas é obrigatório para nós TML.                                                                                                                                                                                |
+| `pattern_id`  | ID                                          | Obrigatório                  | Indica a variante de serviço em que a viagem opera na linha. <br/><br/>Não faz parte do GTFS standart, mas é obrigatório para nós TML.                                                                                                                                                                                |
 
 
 ## O que esta validação faz
 
-No ficheiro `trips.txt`, a regra exclusiva da TML diz que quando `shape_id` e `pattern_id` vêm ambos preenchidos, o valor de `shape_id` tem de ser igual ao de `pattern_id` (comparação de strings, carácter a carácter).
+No ficheiro `trips.txt`, a regra exclusiva da TML diz que quando `shape_id` e `pattern_id` vêm ambos preenchidos, o valor de `shape_id` tem de ser igual ao de `pattern_id` (comparação de strings, carácter a carácter).
 
 ---
 
 ### Passa
 
-- Se os dois existem e `shape_id == pattern_id`.
-- Se `shape_id` ou `pattern_id` for nulo (qualquer um em falta) não será realizada for insuficiência de valores.
+- Se os dois existem e `shape_id == pattern_id`.
+- Se `shape_id` ou `pattern_id` for nulo (qualquer um em falta) não será realizada for insuficiência de valores.
 
 ---
 
 ### Falha
 
-- Se os dois campos estão preenchidos e os textos diferem. Porquê: no perfil do projeto, o mesmo identificador deve servir de chave coerente para o padrão e para a shape; valores diferentes indicam inconsistência entre `trips.shape_id` e `trips.pattern_id`.
+- Se os dois campos estão preenchidos e os textos diferem. Porquê: no perfil do projeto, o mesmo identificador deve servir de chave coerente para o padrão e para a shape; valores diferentes indicam inconsistência entre `trips.shape_id` e `trips.pattern_id`.
 
 

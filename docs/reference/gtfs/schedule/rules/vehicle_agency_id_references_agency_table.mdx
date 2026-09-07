@@ -10,24 +10,24 @@ description: vehicle_agency_id_references_agency_table
 
 
 
-## O que esta validação faz 
+## O que esta validação faz
 
-No ficheiro `vehicles.txt`, Cada registo de veículo tem de identificar, sem ambiguidade, o operador a que pertence, através do identificador (`agency_id`) que liga a tabela do `agency.txt` (GTFS).
+No ficheiro `vehicles.txt`, Cada registo de veículo tem de identificar, sem ambiguidade, o operador a que pertence, através do identificador (`agency_id`) que liga a tabela do `agency.txt` (GTFS).
 
-A validação verifica duas coisas, por ordem: que o identificador da operadora não está vazio, e que o valor apresentado corresponde a um registo existente nessa tabela de operadores. Assim, evitam-se veículos “órfãos” numa agência inexistente ou com identificador em falta.
+A validação verifica duas coisas, por ordem: que o identificador da operadora não está vazio, e que o valor apresentado corresponde a um registo existente nessa tabela de operadores. Assim, evitam-se veículos “órfãos” numa agência inexistente ou com identificador em falta.
 
 ---
 
 ### Passa
 
-- Quando o identificador da operadora está preenchido e existe na lista de operadoras do feed.
+- Quando o identificador da operadora está preenchido e existe na lista de operadoras do feed.
 
 ---
 
 ### Falha
 
-- Campo em falta – quando o identificador não é indicado, impedindo a ligação a uma operadora.
-- Referência inválida – quando o valor indicado não encontra nenhum registo de operadora correspondente; o dado fica desligado de qualquer definição real de agência no conjunto de ficheiros.
+- Campo em falta – quando o identificador não é indicado, impedindo a ligação a uma operadora.
+- Referência inválida – quando o valor indicado não encontra nenhum registo de operadora correspondente; o dado fica desligado de qualquer definição real de agência no conjunto de ficheiros.
 
 
 

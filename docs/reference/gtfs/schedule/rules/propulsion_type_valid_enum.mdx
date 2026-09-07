@@ -10,22 +10,22 @@ description: propulsion_type_valid_enum
 
 
 
-## O que esta validação faz 
+## O que esta validação faz
 
-No ficheiro `vehicles.txt`,  campo `propulsion` descreve o tipo de propulsão do veículo sendo a fonte de energia ou combinação usada (por exemplo gasolina, gasóleo, GPL automóvel, mistura, biodiesel, electricidade, híbrido ou gás natural), codificada por números de 1 a 8 conforme o dicionário do feed.
+No ficheiro `vehicles.txt`,  campo `propulsion` descreve o tipo de propulsão do veículo sendo a fonte de energia ou combinação usada (por exemplo gasolina, gasóleo, GPL automóvel, mistura, biodiesel, electricidade, híbrido ou gás natural), codificada por números de 1 a 8 conforme o dicionário do feed.
 
-A validação exige o valor preenchido e que o número pertença a esse conjunto de códigos. A gravidade do erro obedece às regras.
+A validação exige o valor preenchido e que o número pertença a esse conjunto de códigos. A gravidade do erro obedece às regras.
 
 ---
 
 ### Passa
 
-- Campo preenchido, código válido entre 1 e 8 e, havendo lista restritiva, opção autorizada pelas regras (ou regras que abrangem todas as opções válidas).
+- Campo preenchido, código válido entre 1 e 8 e, havendo lista restritiva, opção autorizada pelas regras (ou regras que abrangem todas as opções válidas).
 
 ---
 
 ### Falha
 
-- Campo em falta – não se indica o tipo de propulsão.
-- Valor inválido – o número não corresponde a nenhum dos tipos de propulsão previstos (fora de 1–8).
-- Incoerência com as regras  – o código é válido no dicionário geral mas não é permitido pela lista das regras, quando essa restrição está activa.
+- Campo em falta – não se indica o tipo de propulsão.
+- Valor inválido – o número não corresponde a nenhum dos tipos de propulsão previstos (fora de 1–8).
+- Incoerência com as regras  – o código é válido no dicionário geral mas não é permitido pela lista das regras, quando essa restrição está activa.

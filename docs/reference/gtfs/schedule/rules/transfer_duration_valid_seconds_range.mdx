@@ -8,21 +8,21 @@ description: transfer_duration_valid_seconds_range
 | ------------------- | --------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `transfer_duration` | Número inteiro não negativo | Opcional | Tempo em segundos antes do fim de uma transferência. <br/>Quando `transfers=0`, este campo pode ser utilizado para indicar a validade de um bilhete ou pode ser deixado em branco. |
 
-## O que esta validação faz 
+## O que esta validação faz
 
-No ficheiro `fare_attributes`, o campo `transfer_duration` indica quantos segundos a contar de um ponto de referência a janela de transbordo (ou equivalente) deixa de ser válida, em segundos. No GTFS é opcional. Quando `transfers` vale 0, o campo pode servir para sugerir durante quanto tempo o título ou bilhete é válido, ou pode ficar vazio. Na implementação, se o valor não existir e o caso não está a ser ignorado, emite-se mensagem com a severidade. Se o campo está preenchido e a regra o proíbe, reporta-se o bloqueio. Se existe valor, não pode ser negativo.
+No ficheiro `fare_attributes`, o campo `transfer_duration` indica quantos segundos a contar de um ponto de referência a janela de transbordo (ou equivalente) deixa de ser válida, em segundos. No GTFS é opcional. Quando `transfers` vale 0, o campo pode servir para sugerir durante quanto tempo o título ou bilhete é válido, ou pode ficar vazio. Na implementação, se o valor não existir e o caso não está a ser ignorado, emite-se mensagem com a severidade. Se o campo está preenchido e a regra o proíbe, reporta-se o bloqueio. Se existe valor, não pode ser negativo.
 
 ---
 
 ### Passa
 
-- O valor é um inteiro não negativo e o campo não está proibido quando preenchido.
-- O campo está vazio e o caso é ignorado pela regra, ou está vazio sem disparar falha segundo a severidade das mensagens do contexto.
+- O valor é um inteiro não negativo e o campo não está proibido quando preenchido.
+- O campo está vazio e o caso é ignorado pela regra, ou está vazio sem disparar falha segundo a severidade das mensagens do contexto.
 
 ---
 
 ### Falha
 
-- Valor numérico negativo.
-- Campo preenchido quando a regra o proíbe.
-- Campo vazio com a verificação sem modo ignorar e mensgem reportada como incumprimento consoante a severidade configurada (chave `transfers_validation.required` no i18n).
+- Valor numérico negativo.
+- Campo preenchido quando a regra o proíbe.
+- Campo vazio com a verificação sem modo ignorar e mensgem reportada como incumprimento consoante a severidade configurada (chave `transfers_validation.required` no i18n).

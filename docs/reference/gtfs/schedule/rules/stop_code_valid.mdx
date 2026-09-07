@@ -8,21 +8,21 @@ description: stop_code_valid
 | ------------- | ----- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `stop_code`   | Texto | Opcional | Texto curto ou número que identifica a localização para os passageiros.<br/><br/>Esses códigos são frequentemente usados ​​em sistemas de informação de transporte público via celular ou impressos em placas para facilitar o acesso dos passageiros às informações sobre um determinado local.<br/><br/>O `stop_code` pode ser o mesmo que o `stop_id` se a placa for de acesso público.<br/><br/>Este campo deve ser deixado em branco para locais que não possuem um código apresentado aos passageiros. |
 
-## O que esta validação faz 
+## O que esta validação faz
 
-No ficheiro `stops.txt`, o campo `stop_code` é o código curto (texto ou número) apresentado ao passageiro para identificar o local (por exemplo em linhas de informação telefónica ou na sinalética). Pode coincidir com o `stop_id` quando o identificador é de facto público. No GTFS o campo é opcional; o standard recomenda vazio quando o local não tem código voltado para o utente. O validador aplica regras  sobre presença (obrigatório ou recomendado, quando a verificação não é dispensada), proibição, e opções permitidas. Pode ainda levantar aviso se o mesmo `stop_code` se repetir em mais do que uma paragem (o passageiro deixa de ter um código inequívoco). Não se aplica, nesta função, outro critério de formato além do texto não vazio.
+No ficheiro `stops.txt`, o campo `stop_code` é o código curto (texto ou número) apresentado ao passageiro para identificar o local (por exemplo em linhas de informação telefónica ou na sinalética). Pode coincidir com o `stop_id` quando o identificador é de facto público. No GTFS o campo é opcional; o standard recomenda vazio quando o local não tem código voltado para o utente. O validador aplica regras  sobre presença (obrigatório ou recomendado, quando a verificação não é dispensada), proibição, e opções permitidas. Pode ainda levantar aviso se o mesmo `stop_code` se repetir em mais do que uma paragem (o passageiro deixa de ter um código inequívoco). Não se aplica, nesta função, outro critério de formato além do texto não vazio.
 
 ---
 
 ### Passa
 
-- O `stop_code` vem preenchido com texto não vazio e o atributo não está proibido pelas regras, e o valor figura entre os permitidos pelas regras (ou a regra aceita todas as opções), e a verificação de código duplicado não gera aviso (ou deixa de aplicar-se no fluxo de validação), conforme o caso.
-- O campo fica vazio e a regra dispensa a verificação (por exemplo, severidade de ignorar), alinhado com paragens sem código público.
+- O `stop_code` vem preenchido com texto não vazio e o atributo não está proibido pelas regras, e o valor figura entre os permitidos pelas regras (ou a regra aceita todas as opções), e a verificação de código duplicado não gera aviso (ou deixa de aplicar-se no fluxo de validação), conforme o caso.
+- O campo fica vazio e a regra dispensa a verificação (por exemplo, severidade de ignorar), alinhado com paragens sem código público.
 
 ---
 
 ### Falha
 
-- Valor em falta - o campo fica vazio, quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado (o standard admite vazio, mas a política de dados exige o código).
-- Proibido - as regras não permitem o `stop_code`, mas o valor veio no mesmo fornecido.
-- Fora do permitido - o texto existe, mas não consta do conjunto de opções definido nas regras (salvo quando a regra abrange todas as opções).
+- Valor em falta - o campo fica vazio, quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado (o standard admite vazio, mas a política de dados exige o código).
+- Proibido - as regras não permitem o `stop_code`, mas o valor veio no mesmo fornecido.
+- Fora do permitido - o texto existe, mas não consta do conjunto de opções definido nas regras (salvo quando a regra abrange todas as opções).

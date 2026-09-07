@@ -8,9 +8,9 @@ description: fare_rule_destination_id_references_zones_stops
 | ---------------- | --------------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `destination_id` | ID estrangeiro que referencia `stops.zone_id` | Opcional | Identifica uma zona de destino. Se uma classe tarifária tiver várias zonas de destino, crie um registo em `fare_rules.txt` para cada `destination_id`. <br/><br/><u>Exemplo</u>: Os campos origin_id e destination_id podem ser utilizados em conjunto para especificar que a classe tarifária "b" é válida para viagens entre as zonas 3 e 4 e, para viagens entre as zonas 3 e 5, o ficheiro `fare_rules.txt` conteria estes registos para a classe tarifária:<br/><br/>`fare_id,...,origin_id,destination_id`<br/>`b,...,3,4`<br/>`b,...,3,5` |
 
-## O que esta validação faz 
+## O que esta validação faz
 
-No ficheiro `fare_rules`, o campo `destination_id` indica a zona de destino associada à regra (no GTFS liga-se a `zone_id` em `stops.txt`). Se uma mesma classe tarifária tiver vários destinos possíveis, o feed deve ter uma linha em `fare_rules.txt` para cada `destination_id` (combinando com `origin_id` ou outros campos da regra, consoante o modelo). 
+No ficheiro `fare_rules`, o campo `destination_id` indica a zona de destino associada à regra (no GTFS liga-se a `zone_id` em `stops.txt`). Se uma mesma classe tarifária tiver vários destinos possíveis, o feed deve ter uma linha em `fare_rules.txt` para cada `destination_id` (combinando com `origin_id` ou outros campos da regra, consoante o modelo).
 
 ---
 
@@ -22,4 +22,4 @@ No ficheiro `fare_rules`, o campo `destination_id` indica a zona de destino�
 
 ### Falha
 
-- Campo preenchido quando a regra marca o campo como proibido.
+- Campo preenchido quando a regra marca o campo como proibido.

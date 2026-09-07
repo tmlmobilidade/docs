@@ -13,28 +13,28 @@ description: stop_times_continuous_drop_off_valid_gtfs_enum
 
 
 
-## O que esta validação faz 
+## O que esta validação faz
 
-No ficheiro `stop_times.txt`, o `continuous_drop_off` indica se o passageiro pode descer em qualquer ponto do troço entre esta paragem e a seguinte, segundo o percurso (por exemplo o de `shapes.txt`). Valor preenchido prevalece sobre o da rota, vazio herda o da rota.
+No ficheiro `stop_times.txt`, o `continuous_drop_off` indica se o passageiro pode descer em qualquer ponto do troço entre esta paragem e a seguinte, segundo o percurso (por exemplo o de `shapes.txt`). Valor preenchido prevalece sobre o da rota, vazio herda o da rota.
 
-Com janelas de pickup/drop-off com valor na mesma linha, o GTFS não admite desembarque contínuo nem os modos associados a contacto com operadora ou motorista nesse registo só é admissível “sem desembarque contínuo neste stop_time” - no enumerado, código 1, ou campo vazio.
+Com janelas de pickup/drop-off com valor na mesma linha, o GTFS não admite desembarque contínuo nem os modos associados a contacto com operadora ou motorista nesse registo só é admissível “sem desembarque contínuo neste stop_time” - no enumerado, código 1, ou campo vazio.
 
-Fora deste caso, o valor tem de cumprir o enumerado GTFS. Um código válido na referência pode ainda ser recusado se o feed não o incluir nas opções aceites.
+Fora deste caso, o valor tem de cumprir o enumerado GTFS. Um código válido na referência pode ainda ser recusado se o feed não o incluir nas opções aceites.
 
 ---
 
 #### Passa
 
-- Código válido para o enumerado ou campo vazio, quando isso é aceite no fluxo aplicado.
-- Com janelas preenchidas: apenas 1 ou ausência de valor (não usar 0, 2 nem 3 nesse contexto).
-- Código permitido para o vosso feed, ou política que não restringe o enumerado.
-- Campo vazio sem aviso de presença, quando o modo de validação assim o prevê.
+- Código válido para o enumerado ou campo vazio, quando isso é aceite no fluxo aplicado.
+- Com janelas preenchidas: apenas 1 ou ausência de valor (não usar 0, 2 nem 3 nesse contexto).
+- Código permitido para o vosso feed, ou política que não restringe o enumerado.
+- Campo vazio sem aviso de presença, quando o modo de validação assim o prevê.
 
 ---
 
 #### Falha
 
-- Valor inválido - fora do enumerado. 
-- Proibido com janelas - janelas com valor e código ≠ 1. 
-- Valor não admitido - válido no GTFS mas não autorizado no feed. 
-- Ausência com obrigatoriedade ou recomendação. 
+- Valor inválido - fora do enumerado.
+- Proibido com janelas - janelas com valor e código ≠ 1.
+- Valor não admitido - válido no GTFS mas não autorizado no feed.
+- Ausência com obrigatoriedade ou recomendação.

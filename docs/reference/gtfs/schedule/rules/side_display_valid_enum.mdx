@@ -10,20 +10,20 @@ description: side_display_valid_enum
 
 
 
-## O que esta validação faz 
+## O que esta validação faz
 
-No ficheiro `vehicles.txt`, o campo `side_display` descreve, para cada veículo, a existência de painel de destino no lado direito exterior (painel informativo de linha ou destino na lateral). A convenção do feed tem três opções: não (0), sim (1) e não aplicável (2) - por exemplo, quando a tipologia de veículo ou o alinhamento do serviço torna a pergunta irrelevante.
+No ficheiro `vehicles.txt`, o campo `side_display` descreve, para cada veículo, a existência de painel de destino no lado direito exterior (painel informativo de linha ou destino na lateral). A convenção do feed tem três opções: não (0), sim (1) e não aplicável (2) - por exemplo, quando a tipologia de veículo ou o alinhamento do serviço torna a pergunta irrelevante.
 
 ---
 
 ### Passa
 
-- Campo preenchido, valor 0, 1 ou 2 e, havendo lista restritiva, opção autorizada pelas regras (ou regras que abrangem todas as opções válidas).
+- Campo preenchido, valor 0, 1 ou 2 e, havendo lista restritiva, opção autorizada pelas regras (ou regras que abrangem todas as opções válidas).
 
 ---
 
 ### Falha
 
-- Campo em falta – não se indica a situação do painel de destino lateral direito.
-- Valor inválido – não é 0, 1 nem 2.
-- Incoerência com as regras  – a opção escolhida não é permitida na lista das regras, quando essa restrição está activa.
+- Campo em falta – não se indica a situação do painel de destino lateral direito.
+- Valor inválido – não é 0, 1 nem 2.
+- Incoerência com as regras  – a opção escolhida não é permitida na lista das regras, quando essa restrição está activa.

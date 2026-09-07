@@ -8,27 +8,27 @@ description: Regra
 | --------------- | ---- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `location_type` | Enum | Opcional | Tipo de localização.<br/><br/><strong>Opções válidas:</strong><ul><li><code>0</code> (ou vazio) — Parada (ou plataforma). Local onde os passageiros embarcam ou desembarcam de um veículo de transporte público. É chamada de plataforma quando definida dentro de uma estação principal (<code>parent_station</code>).</li><li><code>1</code> — Estação. Estrutura física ou área que contém uma ou mais plataformas.</li><li><code>2</code> — Entrada/saída. Local onde os passageiros podem entrar ou sair de uma estação a partir da rua. Se uma entrada/saída pertencer a várias estações, poderá ser vinculada por caminhos a ambas, mas o provedor de dados deve escolher uma delas como principal.</li><li><code>3</code> — Nó genérico. Local dentro de uma estação que não corresponde a nenhum outro tipo de localização e que pode ser usado para ligar caminhos definidos em <code>pathways.txt</code>.</li><li><code>4</code> — Área de embarque. Local específico numa plataforma onde os passageiros podem embarcar e/ou desembarcar de veículos.</li></ul> |
 
-## O que esta validação faz 
+## O que esta validação faz
 
-No ficheiro `stops.txt`, o campo `location_type` classifica o tipo de local no modelo de paragens do GTFS: paragem (ou plataforma), estação, entrada/saída, nó genérico para percursos, ou área de embarque, conforme os códigos 0 a 4. No standard o campo é opcional; deixar o campo vazio é legítimo e corresponde, em termos de informação, à situação “paragem / plataforma” (o mesmo significado atribuível ao 0 quando o valor vem preenchido). O validador aplica as regras  sobre presença (recomendado ou obrigatório, quando a verificação não é dispensada), proibição, códigos válidos nesse intervalo e, se existir, lista de opções permitidas.
+No ficheiro `stops.txt`, o campo `location_type` classifica o tipo de local no modelo de paragens do GTFS: paragem (ou plataforma), estação, entrada/saída, nó genérico para percursos, ou área de embarque, conforme os códigos 0 a 4. No standard o campo é opcional; deixar o campo vazio é legítimo e corresponde, em termos de informação, à situação “paragem / plataforma” (o mesmo significado atribuível ao 0 quando o valor vem preenchido). O validador aplica as regras  sobre presença (recomendado ou obrigatório, quando a verificação não é dispensada), proibição, códigos válidos nesse intervalo e, se existir, lista de opções permitidas.
 
 ---
 
 ### Passa
 
-- O valor vem preenchido e é 0, 1, 2, 3 ou 4, alinhado com o tipo de local previsto.
-- O campo fica vazio e a regra dispensa a verificação (por exemplo, severidade de ignorar), sem exigir o tipo de local neste passo.
-- O valor está entre as opções permitidas pelas regras (ou a regra aceita todas as opções).
-- O valor veio fornecido e o atributo não está proibido pelas regras.
+- O valor vem preenchido e é 0, 1, 2, 3 ou 4, alinhado com o tipo de local previsto.
+- O campo fica vazio e a regra dispensa a verificação (por exemplo, severidade de ignorar), sem exigir o tipo de local neste passo.
+- O valor está entre as opções permitidas pelas regras (ou a regra aceita todas as opções).
+- O valor veio fornecido e o atributo não está proibido pelas regras.
 
 ---
 
 ### Falha
 
-- Valor em falta - o campo fica vazio, quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado (o standard admite vazio, mas a política de dados exige a classificação).
-- Proibido - as regras não permitem o `location_type`, mas o valor veio no mesmo fornecido.
-- Inválido - um valor que não seja 0, 1, 2, 3 nem 4.
-- Fora do permitido - o código é válido no GTFS, mas não consta do conjunto de opções definido nas regras (salvo quando a regra abrange todas as opções).
+- Valor em falta - o campo fica vazio, quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado (o standard admite vazio, mas a política de dados exige a classificação).
+- Proibido - as regras não permitem o `location_type`, mas o valor veio no mesmo fornecido.
+- Inválido - um valor que não seja 0, 1, 2, 3 nem 4.
+- Fora do permitido - o código é válido no GTFS, mas não consta do conjunto de opções definido nas regras (salvo quando a regra abrange todas as opções).
 
 
 

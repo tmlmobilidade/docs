@@ -8,23 +8,23 @@ description: shape_id_required
 | ------------- | ---- | ----------- | ---------------------- |
 | `shape_id`    | ID   | Obrigatório | Identifica um formato. |
 
-## O que esta validação faz 
+## O que esta validação faz
 
-No ficheiro `shapes.txt`,  o campo `shape_id` é o identificador de cada linha, define um vértice da forma (latitude, longitude, sequência, etc.) e pertence a uma forma concreta identificada por `shape_id`. Sem `shape_id`, os pontos não podem ser agrupados num único traçado.
+No ficheiro `shapes.txt`,  o campo `shape_id` é o identificador de cada linha, define um vértice da forma (latitude, longitude, sequência, etc.) e pertence a uma forma concreta identificada por `shape_id`. Sem `shape_id`, os pontos não podem ser agrupados num único traçado.
 
-Esta validação exige que `shape_id` esteja preenchido em cada registo. 
+Esta validação exige que `shape_id` esteja preenchido em cada registo.
 
 ---
 
 ### Passa
 
-- `shape_id` preenchido na linha.
+- `shape_id` preenchido na linha.
 
 ---
 
 ### Falha
 
-- `shape_id` vazio ou ausente. _Correção:_ indicar o identificador da forma (`shape_id`) coerente com o conjunto de pontos do mesmo traçado.
+- `shape_id` vazio ou ausente. _Correção:_ indicar o identificador da forma (`shape_id`) coerente com o conjunto de pontos do mesmo traçado.
 
 
 

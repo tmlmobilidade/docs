@@ -14,41 +14,41 @@ description: shape_dist_traveled_delta_mismatches_haversine_block
 
 
 
-## O que esta validação faz 
+## O que esta validação faz
 
-Dados de `shapes.txt`, por forma (`shape_id`):
+Dados de `shapes.txt`, por forma (`shape_id`):
 
-1. Junta os pontos que têm `shape_id`, `shape_pt_sequence`, `shape_pt_lat` e `shape_pt_lon` preenchidos.
-2. Ordena os pontos pela sequência ao longo do percurso.
-3. Parte a forma em blocos: cada bloco começa num ponto com `shape_dist_traveled = 0` e vai até ao último ponto antes do próximo 0 (ou até ao fim da lista).
+1. Junta os pontos que têm `shape_id`, `shape_pt_sequence`, `shape_pt_lat` e `shape_pt_lon` preenchidos.
+2. Ordena os pontos pela sequência ao longo do percurso.
+3. Parte a forma em blocos: cada bloco começa num ponto com `shape_dist_traveled = 0` e vai até ao último ponto antes do próximo 0 (ou até ao fim da lista).
 
-Dentro de cada bloco:
+Dentro de cada bloco:
 
-- Entre vértices consecutivos com `shape_dist_traveled` definido nos dois e não nulo no par, calcula a distância em linha sobre a esfera (Haversine) e compara com o incremento de `shape_dist_traveled` entre esses dois pontos, convertido para metros (a conversão usa o máximo de `shape_dist_traveled` naquela forma para fixar a unidade).
-- Usa uma tolerância em metros.
+- Entre vértices consecutivos com `shape_dist_traveled` definido nos dois e não nulo no par, calcula a distância em linha sobre a esfera (Haversine) e compara com o incremento de `shape_dist_traveled` entre esses dois pontos, convertido para metros (a conversão usa o máximo de `shape_dist_traveled` naquela forma para fixar a unidade).
+- Usa uma tolerância em metros.
 
-Primeiro todos os segmentos relevantes têm de ficar dentro da tolerância. Só nesse caso soma as distâncias geodésicas desses segmentos e compara a soma com o `shape_dist_traveled` do último ponto do bloco (também em metros). Se a diferença absoluta for maior que a tolerância, obtém-se o incumprimento (regra `shape_dist_traveled_delta_mismatches_haversine_block`, mensagem `shape_distances_validation.invalid_distances`).
+Primeiro todos os segmentos relevantes têm de ficar dentro da tolerância. Só nesse caso soma as distâncias geodésicas desses segmentos e compara a soma com o `shape_dist_traveled` do último ponto do bloco (também em metros). Se a diferença absoluta for maior que a tolerância, obtém-se o incumprimento (regra `shape_dist_traveled_delta_mismatches_haversine_block`, mensagem `shape_distances_validation.invalid_distances`).
 
 ---
 
 ### O que o erro indica
 
-A mensagem aponta uma forma e valores (esperado vs. soma geodésica vs. diferença). Significa: num bloco entre dois reinícios em zero, as distâncias acumuladas declaradas não estão consistentes com a geometria dos pontos - já depois de cada troço ter sido aceite dentro da tolerância, o total ainda não fecha com o declarado no fim do bloco.
+A mensagem aponta uma forma e valores (esperado vs. soma geodésica vs. diferença). Significa: num bloco entre dois reinícios em zero, as distâncias acumuladas declaradas não estão consistentes com a geometria dos pontos - já depois de cada troço ter sido aceite dentro da tolerância, o total ainda não fecha com o declarado no fim do bloco.
 
 ---
 
 ### Passa
 
-- Para um bloco dado: todos os segmentos testados ≤ tolerância e |soma geodésica − total declarado no último ponto| ≤ tolerância.
-- Registos sem dados mínimos para entrar no agrupamento (`shape_id` vazio ou falta de coordenadas), não avaliados por esta regra nesse critério.
-- Situações em que não há bloco processável até ao teste do total (por exemplo, sem início de bloco em `0`, ou a lógica nunca acumula distância para o total): não surge o erro de total.
+- Para um bloco dado: todos os segmentos testados ≤ tolerância e |soma geodésica − total declarado no último ponto| ≤ tolerância.
+- Registos sem dados mínimos para entrar no agrupamento (`shape_id` vazio ou falta de coordenadas), não avaliados por esta regra nesse critério.
+- Situações em que não há bloco processável até ao teste do total (por exemplo, sem início de bloco em `0`, ou a lógica nunca acumula distância para o total): não surge o erro de total.
 
 ---
 
 ### Falha
 
-- Total do bloco fora da tolerância: os segmentos passaram um a um, mas a soma das distâncias geodésicas diverge do `shape_dist_traveled` final do bloco além do limiar. 
-- Segmento fora da tolerância: não se chega ao teste do total e não aparece esta mensagem de discrepância global - o problema está nos incrementos entre pares de vértices. 
+- Total do bloco fora da tolerância: os segmentos passaram um a um, mas a soma das distâncias geodésicas diverge do `shape_dist_traveled` final do bloco além do limiar.
+- Segmento fora da tolerância: não se chega ao teste do total e não aparece esta mensagem de discrepância global - o problema está nos incrementos entre pares de vértices.
 
 
 

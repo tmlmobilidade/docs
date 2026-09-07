@@ -13,27 +13,27 @@ description: drop_off_type_valid_gtfs_enum_and_rules
 
 
 
-## O que esta validação faz 
+## O que esta validação faz
 
-No ficheiro `stop_times.txt`, o campo `drop_off_type` define como é feita a descida do veículo nessa paragem da viagem.
+No ficheiro `stop_times.txt`, o campo `drop_off_type` define como é feita a descida do veículo nessa paragem da viagem.
 
-O GTFS admite apenas códigos válidos para esse enumerado e cruza o valor com o resto da linha: quando existem janelas de pickup/drop-off (`start_pickup_drop_off_window` e/ou `end_pickup_drop_off_window` com valor), não é permitido 
- `drop_off_type` = 0 (descida regular num serviço programado à paragem), porque esse modelo colide com o uso de janelas em vez de tempos fixos de paragem para esse efeito.
+O GTFS admite apenas códigos válidos para esse enumerado e cruza o valor com o resto da linha: quando existem janelas de pickup/drop-off (`start_pickup_drop_off_window` e/ou `end_pickup_drop_off_window` com valor), não é permitido
+ `drop_off_type` = 0 (descida regular num serviço programado à paragem), porque esse modelo colide com o uso de janelas em vez de tempos fixos de paragem para esse efeito.
 
 ---
 
 ### Passa
 
-- O valor é um dos códigos permitidos pelo enumerado, ou o campo está vazio (se for aceitável para o conjunto de dados, nos termos da mesma referência).
-- Com janelas preenchidas na mesma linha, o tipo de descida não é 0; deve corresponder ao modo real de descida através de outro código admissível, ou o modelo da linha (janelas _versus_ paragem fixa) deve ser revisto para ficar coerente.
+- O valor é um dos códigos permitidos pelo enumerado, ou o campo está vazio (se for aceitável para o conjunto de dados, nos termos da mesma referência).
+- Com janelas preenchidas na mesma linha, o tipo de descida não é 0; deve corresponder ao modo real de descida através de outro código admissível, ou o modelo da linha (janelas _versus_ paragem fixa) deve ser revisto para ficar coerente.
 
 ---
 
 ### Falha
 
-- Valor inválido - número fora do conjunto definido para este campo. Correção: usar apenas os valores previstos na referência GTFS para `drop_off_type`.
-- Proibido com janelas - existem janelas de pickup/drop-off com valor e o tipo de descida é 0. 
+- Valor inválido - número fora do conjunto definido para este campo. Correção: usar apenas os valores previstos na referência GTFS para `drop_off_type`.
+- Proibido com janelas - existem janelas de pickup/drop-off com valor e o tipo de descida é 0.
 
---- 
+---
 
-Se utilizar janelas, é preferível preencher sempre explicitamente um tipo de descida adequado, em vez de depender do vazio (no GTFS, equivalente ao modo “regular”), para evitar ambiguidade neste contexto.
+Se utilizar janelas, é preferível preencher sempre explicitamente um tipo de descida adequado, em vez de depender do vazio (no GTFS, equivalente ao modo “regular”), para evitar ambiguidade neste contexto.

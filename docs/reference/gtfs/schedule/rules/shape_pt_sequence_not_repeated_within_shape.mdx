@@ -9,24 +9,24 @@ description: shape_pt_sequence_not_repeated_within_shape
 | `shape_pt_sequence` | Número inteiro não negativo | Obrigatório | Sequência em que os pontos da forma se ligam para formar a forma. <br/>Os valores devem aumentar ao longo do percurso, mas não têm de ser consecutivos. <br/><br/><u>Exemplo</u>: Se a forma "`A_shp`" tiver três pontos na sua definição, o ficheiro `shapes.txt` pode conter estes registos para definir a forma:<br/>`shape_id,shape_pt_lat,shape_pt_lon,shape_pt_sequence`<br/>`A_shp,37.6195 6,-122.48161,0`<br/>`A_shp,37.64430,-122.41070,6`<br/>`A_shp,37.65863,-122.30839,11` |
 
 
-## O que esta validação faz 
+## O que esta validação faz
 
-No ficheiro `shapes.txt`,  o campo `shape_pt_sequence` define a ordem em que os pontos da mesma forma se ligam ao longo do percurso. Pelo GTFS, os valores devem aumentar ao longo da viagem mas não precisam de ser consecutivos (ex.: 0, 6, 11).
+No ficheiro `shapes.txt`,  o campo `shape_pt_sequence` define a ordem em que os pontos da mesma forma se ligam ao longo do percurso. Pelo GTFS, os valores devem aumentar ao longo da viagem mas não precisam de ser consecutivos (ex.: 0, 6, 11).
 
-Esta validação exige que `shape_pt_sequence` exista e que seja um inteiro ≥ 0. Não verifica aqui se o mesmo número se repete noutra linha da mesma `shape_id`, nem se a ordem é estritamente crescente ao longo da forma.
+Esta validação exige que `shape_pt_sequence` exista e que seja um inteiro ≥ 0. Não verifica aqui se o mesmo número se repete noutra linha da mesma `shape_id`, nem se a ordem é estritamente crescente ao longo da forma.
 
 ---
 
 ### Passa
 
-- `shape_pt_sequence` preenchido com 0 ou inteiro positivo.
+- `shape_pt_sequence` preenchido com 0 ou inteiro positivo.
 
 ---
 
 ### Falha
 
-- `shape_pt_sequence` ausente.
-- `shape_pt_sequence` negativo.
+- `shape_pt_sequence` ausente.
+- `shape_pt_sequence` negativo.
 
 
 

@@ -11,23 +11,23 @@ description: network_id_references_networks_table
 
 
 
-## O que esta validação faz 
+## O que esta validação faz
 
-No `routes.txt`, o campo `network_id` identifica a rede à qual a rota pertence (várias linhas podem partilhar o mesmo identificador). Segundo o GTFS, quando o feed inclui `route_networks.txt`, não se deve usar `network_id` em `routes.txt` para esse fim.
+No `routes.txt`, o campo `network_id` identifica a rede à qual a rota pertence (várias linhas podem partilhar o mesmo identificador). Segundo o GTFS, quando o feed inclui `route_networks.txt`, não se deve usar `network_id` em `routes.txt` para esse fim.
 
-A validação trata a ausência de `network_id` como situação a sinalizar (obrigatoriedade ou recomendação), exceto quando a regra está em modo ignorar. Recusa `network_id` preenchido se o conjunto de dados tiver entradas em `route_networks`. Pode ainda limitar quais identificadores são aceites através da política de opções definida para o feed.
+A validação trata a ausência de `network_id` como situação a sinalizar (obrigatoriedade ou recomendação), exceto quando a regra está em modo ignorar. Recusa `network_id` preenchido se o conjunto de dados tiver entradas em `route_networks`. Pode ainda limitar quais identificadores são aceites através da política de opções definida para o feed.
 
 ---
 
 ### Passa
 
-- `network_id` vazio e a política não exige mensagem por falta de valor.
-- `network_id` preenchido sem ficheiro `route_networks` populado (ou equivalente vazio no feed), e o valor integra as opções admitidas, quando essa lista existe.
+- `network_id` vazio e a política não exige mensagem por falta de valor.
+- `network_id` preenchido sem ficheiro `route_networks` populado (ou equivalente vazio no feed), e o valor integra as opções admitidas, quando essa lista existe.
 
 ---
 
 ### Falha
 
-- `network_id` preenchido com `route_networks` presente no feed. 
-- Identificador fora do conjunto permitido.
-- Ausência de `network_id` quando a política exige obrigatório ou recomendado. 
+- `network_id` preenchido com `route_networks` presente no feed.
+- Identificador fora do conjunto permitido.
+- Ausência de `network_id` quando a política exige obrigatório ou recomendado.

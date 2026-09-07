@@ -8,19 +8,19 @@ description: transfers_valid_gtfs_enum
 | ------------- | ---- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `transfers`   | Enum | Obrigatório | Indica o número de transferências permitidas nesta tarifa. <br/>Opções válidas:<ul><li>`0` - Nenhuma transferência permitida nesta tarifa.</li><li>`1` - Os passageiros podem fazer uma transferência.</li><li>`2` - Os passageiros podem fazer duas transferências.</li><li>`empty` - São permitidas transferências ilimitadas.</li></ul> |
 
-## O que esta validação faz 
+## O que esta validação faz
 
-No ficheiro `fare_attributes`, o campo `transfers` indica quantas transferências a tarifa permite durante a utilização do título. Pode significar nenhuma, uma, duas, ou sem limite quando o valor não está fixado de forma numérica (no GTFS costuma corresponder a vazio para ilimitado). Esta verificação só aceita valores numéricos fora do conjunto admitido 0, 1 e 2 quando um número é mesmo indicado.
+No ficheiro `fare_attributes`, o campo `transfers` indica quantas transferências a tarifa permite durante a utilização do título. Pode significar nenhuma, uma, duas, ou sem limite quando o valor não está fixado de forma numérica (no GTFS costuma corresponder a vazio para ilimitado). Esta verificação só aceita valores numéricos fora do conjunto admitido 0, 1 e 2 quando um número é mesmo indicado.
 
 ---
 
 ### Passa
 
-- O campo não está instanciado na estrutura usada (`nil`), tratando-se como caso não verificado neste ponto (equivalente conceptual a ilimitado no GTFS quando o feed representa assim).
-- O valor é 0, 1 ou 2.
+- O campo não está instanciado na estrutura usada (`nil`), tratando-se como caso não verificado neste ponto (equivalente conceptual a ilimitado no GTFS quando o feed representa assim).
+- O valor é 0, 1 ou 2.
 
 ---
 
 ### Falha
 
-- Valor inteiro preenchido diferente de 0, 1 e 2.
+- Valor inteiro preenchido diferente de 0, 1 e 2.

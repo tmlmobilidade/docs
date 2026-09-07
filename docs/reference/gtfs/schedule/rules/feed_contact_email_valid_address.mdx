@@ -11,16 +11,16 @@ description: feed_contact_email_valid_address
 
 
 
-## O que esta validação faz 
+## O que esta validação faz
 
-O campo `feed_contact_email` prevê um endereço de correio electrónico facultativo em `feed_info.txt` para questões técnicas sobre o conjunto de dados e sobre como é publicado (não substitui o contacto de apoio ao utente do operador em `agency.txt`). Quando o valor existe e não é cadeia vazia, esta verificação confirma que tem formato de e-mail válido segundo as regras. A ausência do campo pode ser tratada como obrigatória ou recomendada (exceto quando a verificação não se aplica a esta linha), e o campo pode ser proibido pela configuração.
+O campo `feed_contact_email` prevê um endereço de correio electrónico facultativo em `feed_info.txt` para questões técnicas sobre o conjunto de dados e sobre como é publicado (não substitui o contacto de apoio ao utente do operador em `agency.txt`). Quando o valor existe e não é cadeia vazia, esta verificação confirma que tem formato de e-mail válido segundo as regras. A ausência do campo pode ser tratada como obrigatória ou recomendada (exceto quando a verificação não se aplica a esta linha), e o campo pode ser proibido pela configuração.
 
 ---
 
 ### Passa
 
 - O campo está vazio e a regra permite isso (incluindo quando a verificação não se aplica).
-- O endereço está preenchido, passa na validação de formato, e não viola a regra de proibição.
+- O endereço está preenchido, passa na validação de formato, e não viola a regra de proibição.
 
 ---
 

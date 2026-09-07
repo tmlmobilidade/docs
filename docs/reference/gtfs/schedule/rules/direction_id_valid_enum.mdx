@@ -9,27 +9,27 @@ description: direction_id_valid_enum
 | `direction_id` | Enum | Opcional | Indica o sentido da viagem. Este campo não deve ser utilizado no encaminhamento; fornece uma forma de separar as viagens por sentido ao publicar tabelas de horários. <br/><br/>Opções válidas:<br/>`0` - Viagem num sentido (por exemplo, viagem de ida).<br/>`1` - Viagem no sentido oposto (por exemplo, viagem de regresso). <br/><br/>Exemplo: Os campos `trip_headsign` e `direction_id` podem ser utilizados em conjunto para atribuir um nome à viagem em cada sentido para um conjunto de viagens. Um ficheiro `trips.txt` poderia conter estes registos para utilização em tabelas de horários: `trip_id`,...,`trip_headsign`,`direction_id` 1234,...,Airport,0 1505,...,Downtown,1 |
 
 
-## O que esta validação faz 
+## O que esta validação faz
 
-No ficheiro `trips.txt`, o campo `direction_id` indica o sentido da viagem (por exemplo ida ou volta), para apoio a horários e separação de viagens por direcção; não é usado para o cálculo de itinerários no GTFS. No standard o campo é opcional. A regra exige que o valor seja 0 ou 1 quando existe, pode marcar o campo como proibido e pode restringir a subconjuntos de opções nas regras.
+No ficheiro `trips.txt`, o campo `direction_id` indica o sentido da viagem (por exemplo ida ou volta), para apoio a horários e separação de viagens por direcção; não é usado para o cálculo de itinerários no GTFS. No standard o campo é opcional. A regra exige que o valor seja 0 ou 1 quando existe, pode marcar o campo como proibido e pode restringir a subconjuntos de opções nas regras.
 
 ---
 
 ### Passa
 
-- O valor vem preenchido e é 0 ou 1 (significados previstos no enumerado).
-- O campo fica vazio e a regra dispensa a verificação (por exemplo, severidade de ignorar ou fluxo em que a ausência não gera mensagem).
-- O valor 0 ou 1 está entre as opções permitidas pelas regras  (ou a regra aceita todas as opções).
-- O valor veio fornecido e o atributo não está proibido pelas regras (evita falha imediata por “campo proibido”).
+- O valor vem preenchido e é 0 ou 1 (significados previstos no enumerado).
+- O campo fica vazio e a regra dispensa a verificação (por exemplo, severidade de ignorar ou fluxo em que a ausência não gera mensagem).
+- O valor 0 ou 1 está entre as opções permitidas pelas regras  (ou a regra aceita todas as opções).
+- O valor veio fornecido e o atributo não está proibido pelas regras (evita falha imediata por “campo proibido”).
 
 ---
 
 ### Falha
 
-- Valor em falta quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado (no GTFS o campo pode ficar vazio, mas a regra de dados  exige o sentido).
-- Proibido - as regras não permitem o `direction_id`, mas o valor veio no mesmo fornecido.
-- Inválido - um número que não seja 0 nem 1.
-- Fora do permitido - 0 ou 1 são válidos no GTFS, mas o valor lido não consta do conjunto de opções definido nas regras (salvo quando a
+- Valor em falta quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado (no GTFS o campo pode ficar vazio, mas a regra de dados  exige o sentido).
+- Proibido - as regras não permitem o `direction_id`, mas o valor veio no mesmo fornecido.
+- Inválido - um número que não seja 0 nem 1.
+- Fora do permitido - 0 ou 1 são válidos no GTFS, mas o valor lido não consta do conjunto de opções definido nas regras (salvo quando a
 
 
 

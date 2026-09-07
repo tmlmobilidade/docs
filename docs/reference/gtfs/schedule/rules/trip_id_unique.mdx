@@ -10,20 +10,20 @@ description: trip_id_unique
 
 
 
-## O que esta validação faz 
+## O que esta validação faz
 
- No ficheiro `trips.txt`, o campo `trip_id` identifica, de forma única no feed, cada viagem. No GTFS o campo é obrigatório e não pode repetir-se: cada identificador deve corresponder a no máximo um registo.
+ No ficheiro `trips.txt`, o campo `trip_id` identifica, de forma única no feed, cada viagem. No GTFS o campo é obrigatório e não pode repetir-se: cada identificador deve corresponder a no máximo um registo.
 
 ---
 
 ### Passa
 
-- O identificador da viagem vem preenchido.
-- Esse identificador não se repete - não existe mais do que uma linha com o mesmo `trip_id` no conjunto de dados.
+- O identificador da viagem vem preenchido.
+- Esse identificador não se repete - não existe mais do que uma linha com o mesmo `trip_id` no conjunto de dados.
 
 ---
 
 ### Falha
 
-- Identificador em falta - o `trip_id` não vem fornecido.
-- Duplicado - o mesmo `trip_id` aparece em mais do que um registo; deixa de ser possível referenciar a viagem de forma inequívoca.
+- Identificador em falta - o `trip_id` não vem fornecido.
+- Duplicado - o mesmo `trip_id` aparece em mais do que um registo; deixa de ser possível referenciar a viagem de forma inequívoca.

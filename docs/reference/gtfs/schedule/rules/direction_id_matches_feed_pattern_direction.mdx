@@ -7,32 +7,32 @@ description: direction_id_matches_feed_pattern_direction
 | Nome do Campo  | Tipo | Presença    | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | -------------- | ---- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `direction_id` | Enum | Opcional    | Indica o sentido da viagem. Este campo não deve ser utilizado no encaminhamento; fornece uma forma de separar as viagens por sentido ao publicar tabelas de horários. <br/><br/>Opções válidas:<br/>`0` - Viagem num sentido (por exemplo, viagem de ida).<br/>`1` - Viagem no sentido oposto (por exemplo, viagem de regresso). <br/><br/>Exemplo: Os campos `trip_headsign` e `direction_id` podem ser utilizados em conjunto para atribuir um nome à viagem em cada sentido para um conjunto de viagens. Um ficheiro `trips.txt` poderia conter estes registos para utilização em tabelas de horários: `trip_id`,...,`trip_headsign`,`direction_id` 1234,...,Airport,0 1505,...,Downtown,1 |
-| `pattern_id`   | ID   | Obrigatório | Indica a variante de serviço em que a viagem opera na linha. <br/><br/>Não faz parte do GTFS standart, mas é obrigatório para nós TML.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `pattern_id`   | ID   | Obrigatório | Indica a variante de serviço em que a viagem opera na linha. <br/><br/>Não faz parte do GTFS standart, mas é obrigatório para nós TML.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 
 
-## O que esta validação faz (agrupado por pattern_id)
+## O que esta validação faz (agrupado por pattern_id)
 
-No ficheiro `trips.txt`, a regra por linha em `trips.txt` o `direction_id` da viagem tem de coincidir com o segmento de direção codificado no `pattern_id`, no formato esperado pelo perfil do feed (`route_direção_variante` em três partes separadas por `_`). 
+No ficheiro `trips.txt`, a regra por linha em `trips.txt` o `direction_id` da viagem tem de coincidir com o segmento de direção codificado no `pattern_id`, no formato esperado pelo perfil do feed (`route_direção_variante` em três partes separadas por `_`).
 
-Convenção: o `pattern_id` deve ter exatamente três segmentos ao fazer `split` por `_` (ex.: `1001_0_1` → rota `1001`, direção `0`, variante `1`). O segundo segmento é interpretado como inteiro e só é aceite se for `0` ou `1`; esse valor tem de ser igual ao `direction_id` da mesma linha.
+Convenção: o `pattern_id` deve ter exatamente três segmentos ao fazer `split` por `_` (ex.: `1001_0_1` → rota `1001`, direção `0`, variante `1`). O segundo segmento é interpretado como inteiro e só é aceite se for `0` ou `1`; esse valor tem de ser igual ao `direction_id` da mesma linha.
 
 ---
 
 ### Passa
 
-- Se `pattern_id` tem três partes, o segundo segmento é um inteiro 0 ou 1, e `direction_id` da viagem é exatamente esse valor. Porquê: a direção declarada na viagem está alinhada com a direção embutida no identificador do padrão.
+- Se `pattern_id` tem três partes, o segundo segmento é um inteiro 0 ou 1, e `direction_id` da viagem é exatamente esse valor. Porquê: a direção declarada na viagem está alinhada com a direção embutida no identificador do padrão.
 
 ---
 
 ### Falha
 
-- `direction_pattern_id_match.required` - `pattern_id` ou `direction_id` em falta. Porquê: sem os dois campos não dá para verificar a correspondência.
-- `direction_pattern_id_match.invalid_pattern_id` - o `pattern_id` não se divide em três partes por `_`. Porquê: o formato não segue o esquema `X_Y_Z` esperado para extrair a direção.
-- `direction_pattern_id_match.invalid_direction_id` - o segundo segmento não é um inteiro válido ou está fora do intervalo 0–1. Porquê: só `0` e `1` são direções válidas nesta convenção.
-- `direction_pattern_id_match.not_matching` - o `direction_id` da viagem diferente do número obtido do `pattern_id`. Porquê: a viagem diz uma direção e o `pattern_id` codifica outra.
+- `direction_pattern_id_match.required` - `pattern_id` ou `direction_id` em falta. Porquê: sem os dois campos não dá para verificar a correspondência.
+- `direction_pattern_id_match.invalid_pattern_id` - o `pattern_id` não se divide em três partes por `_`. Porquê: o formato não segue o esquema `X_Y_Z` esperado para extrair a direção.
+- `direction_pattern_id_match.invalid_direction_id` - o segundo segmento não é um inteiro válido ou está fora do intervalo 0–1. Porquê: só `0` e `1` são direções válidas nesta convenção.
+- `direction_pattern_id_match.not_matching` - o `direction_id` da viagem diferente do número obtido do `pattern_id`. Porquê: a viagem diz uma direção e o `pattern_id` codifica outra.
 
 ---
 
 ### Nota
 
-- Isto não valida o formato completo do `pattern_id` (ex. comprimento do primeiro segmento); outras regras podem tratar disso. Aqui só importa três partes, segundo segmento 0 ou 1, e igualdade com `direction_id`.
+- Isto não valida o formato completo do `pattern_id` (ex. comprimento do primeiro segmento); outras regras podem tratar disso. Aqui só importa três partes, segundo segmento 0 ou 1, e igualdade com `direction_id`.

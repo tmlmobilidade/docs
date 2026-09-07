@@ -8,45 +8,45 @@ description: wheelchair_boarding_valid_enum
 | --------------------- | ---- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `wheelchair_boarding` | Enum | Opcional | Indica se o embarque com cadeira de rodas é possível a partir da localização.<br/><br/><strong>Opções válidas:</strong><br/><br/><strong>Paragens sem estação-mãe:</strong><ul><li><code>0</code> ou vazio — Sem informação de acessibilidade para esta paragem.</li><li><code>1</code> — Alguns veículos nesta paragem podem ser embarcados por utentes em cadeira de rodas.</li><li><code>2</code> — Embarque com cadeira de rodas não é possível nesta paragem.</li></ul><strong>Paragens filhas (com estação-mãe):</strong><ul><li><code>0</code> ou vazio — A paragem herda o comportamento de <code>wheelchair_boarding</code> da estação-mãe, se definido no pai.</li><li><code>1</code> — Existe algum percurso acessível desde o exterior da estação até esta paragem ou plataforma.</li><li><code>2</code> — Não existe percurso acessível desde o exterior da estação até esta paragem ou plataforma.</li></ul><strong>Entradas ou saídas de estação:</strong><ul><li><code>0</code> ou vazio — A entrada herda o comportamento da estação-mãe, se definido no pai.</li><li><code>1</code> — A entrada da estação é acessível para cadeiras de rodas.</li><li><code>2</code> — Não há percurso acessível desde a entrada até às paragens ou plataformas.</li></ul> |
 
-## O que esta validação faz 
+## O que esta validação faz
 
-No ficheiro `stops.txt`, o campo `wheelchair_boarding` indica se o embarque de utilizadores de cadeira de rodas é possível a partir do local. O significado dos códigos 0, 1 e 2 depende de a paragem ser isolada, filha de estação ou entrada/saída de estação; vazio alinha, em muitos casos, com herança a partir da estação, quando a especificação do GTFS o prevê.
+No ficheiro `stops.txt`, o campo `wheelchair_boarding` indica se o embarque de utilizadores de cadeira de rodas é possível a partir do local. O significado dos códigos 0, 1 e 2 depende de a paragem ser isolada, filha de estação ou entrada/saída de estação; vazio alinha, em muitos casos, com herança a partir da estação, quando a especificação do GTFS o prevê.
 
 Paragem sem estação mãe (parentless):
 
-- 0 ou vazio - Sem informação de acessibilidade para a paragem.
-- 1 - Alguns veículos nesta paragem podem ser usados com embarque por quem se desloca em cadeira de rodas.
-- 2 - Não é possível embarque em cadeira de rodas nesta paragem.
+- 0 ou vazio - Sem informação de acessibilidade para a paragem.
+- 1 - Alguns veículos nesta paragem podem ser usados com embarque por quem se desloca em cadeira de rodas.
+- 2 - Não é possível embarque em cadeira de rodas nesta paragem.
 
-Paragem filha de estação (com `parent_station`):
+Paragem filha de estação (com `parent_station`):
 
-- 0 ou vazio - A paragem herda o comportamento de `wheelchair_boarding` da estação, se este estiver definido na estação.
-- 1 - Existe percurso acessível desde fora da estação até à paragem/plataforma em questão.
-- 2 - Não existe percurso acessível desde fora da estação até a essa paragem/plataforma.
+- 0 ou vazio - A paragem herda o comportamento de `wheelchair_boarding` da estação, se este estiver definido na estação.
+- 1 - Existe percurso acessível desde fora da estação até à paragem/plataforma em questão.
+- 2 - Não existe percurso acessível desde fora da estação até a essa paragem/plataforma.
 
-Entradas e saídas de estação (`location_type` entrada/saída):
+Entradas e saídas de estação (`location_type` entrada/saída):
 
-- 0 ou vazio - A entrada herda o comportamento da estação mãe, se este estiver definido nessa estação.
-- 1 - A entrada é acessível a utilizadores de cadeira de rodas.
-- 2 - Não há percurso acessível da entrada da estação até às paragens/plataformas.
+- 0 ou vazio - A entrada herda o comportamento da estação mãe, se este estiver definido nessa estação.
+- 1 - A entrada é acessível a utilizadores de cadeira de rodas.
+- 2 - Não há percurso acessível da entrada da estação até às paragens/plataformas.
 
 ---
 
 ### Passa
 
-- `wheelchair_boarding` com valor 0, 1 ou 2 (únicos códigos numéricos aceites quando o campo vem preenchido).
-- Campo vazio e o modo de validação não exige alteração (trata a ausência como neutra ou ignora esta verificação).
-- Código incluído na lista de valores permitidos para o feed, quando essa lista existe no validador.
-- Combinações 0 / vazio / 1 / 2 coerentes com o tipo de local da paragem (`location_type`) e com existência ou não de `parent_station`, à luz da referência GTFS que descreveste acima _nota: o validador não valida sozinho essa coerência semântica; só os valores e a política do feed._
+- `wheelchair_boarding` com valor 0, 1 ou 2 (únicos códigos numéricos aceites quando o campo vem preenchido).
+- Campo vazio e o modo de validação não exige alteração (trata a ausência como neutra ou ignora esta verificação).
+- Código incluído na lista de valores permitidos para o feed, quando essa lista existe no validador.
+- Combinações 0 / vazio / 1 / 2 coerentes com o tipo de local da paragem (`location_type`) e com existência ou não de `parent_station`, à luz da referência GTFS que descreveste acima _nota: o validador não valida sozinho essa coerência semântica; só os valores e a política do feed._
 ---
 
 ### Falha
 
-- Valor inválido: qualquer número que não seja 0, 1 ou 2. _Correção:_ corrigir `wheelchair_boarding` para um destes três códigos ou deixar vazio se for aceitável no teu feed.
-- Campo proibido: `wheelchair_boarding` preenchido quando o feed ou o validador não admite o campo. _Correção:_ remover o valor ou rever a política de publicação.
-- Código não permitido: 0, 1 ou 2 válido no GTFS mas fora da lista de opções admitidas. _Correção:_ usar um código permitido ou ajustar a lista.
-- Ausência com mensagem de obrigatoriedade ou recomendação. _Correção:_ preencher `wheelchair_boarding` com o código adequado à paragem (isolada, filha de estação ou entrada/saída) ou confirmar se o operador exige o campo.
+- Valor inválido: qualquer número que não seja 0, 1 ou 2. _Correção:_ corrigir `wheelchair_boarding` para um destes três códigos ou deixar vazio se for aceitável no teu feed.
+- Campo proibido: `wheelchair_boarding` preenchido quando o feed ou o validador não admite o campo. _Correção:_ remover o valor ou rever a política de publicação.
+- Código não permitido: 0, 1 ou 2 válido no GTFS mas fora da lista de opções admitidas. _Correção:_ usar um código permitido ou ajustar a lista.
+- Ausência com mensagem de obrigatoriedade ou recomendação. _Correção:_ preencher `wheelchair_boarding` com o código adequado à paragem (isolada, filha de estação ou entrada/saída) ou confirmar se o operador exige o campo.
 
---- 
+---
 
-Para além do standard, o validador aplica regras(presença, proibição, e lista de códigos permitidos) e só aceita 0, 1 ou 2 quando o valor vem fornecido; não reconstitui sozinho a herança entre ficheiros ou linhas.
+Para além do standard, o validador aplica regras(presença, proibição, e lista de códigos permitidos) e só aceita 0, 1 ou 2 quando o valor vem fornecido; não reconstitui sozinho a herança entre ficheiros ou linhas.

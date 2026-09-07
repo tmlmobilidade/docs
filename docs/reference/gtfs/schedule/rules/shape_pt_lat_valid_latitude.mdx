@@ -9,24 +9,24 @@ description: shape_pt_lat_valid_latitude
 | `shape_pt_lat` | Latitude | Obrigatório | Latitude de um ponto da forma. |
 
 
-## O que esta validação faz 
+## O que esta validação faz
 
-No ficheiro `shapes.txt`,  o campo `shape_pt_lat` é a latitude (coordenada norte–sul) do vértice da forma naquele registo. Cada linha descreve um ponto do traçado.
+No ficheiro `shapes.txt`,  o campo `shape_pt_lat` é a latitude (coordenada norte–sul) do vértice da forma naquele registo. Cada linha descreve um ponto do traçado.
 
-Esta validação exige que `shape_pt_lat` exista e que o valor seja uma latitude valida. Não há severidade configurável nem campo opcional ou o valor é válido, ou a linha incumpre.
+Esta validação exige que `shape_pt_lat` exista e que o valor seja uma latitude valida. Não há severidade configurável nem campo opcional ou o valor é válido, ou a linha incumpre.
 
 ---
 
 ### Passa
 
-- `shape_pt_lat` preenchido e reconhecido como latitude válida.
+- `shape_pt_lat` preenchido e reconhecido como latitude válida.
 
 ---
 
 ### Falha
 
-- `shape_pt_lat` ausente. 
-- `shape_pt_lat` não cumprir com os valores dentro de [-90, 90] 
+- `shape_pt_lat` ausente.
+- `shape_pt_lat` não cumprir com os valores dentro de [-90, 90]
 
 
 

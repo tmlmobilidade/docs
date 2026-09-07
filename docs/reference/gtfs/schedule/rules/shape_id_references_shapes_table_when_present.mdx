@@ -10,23 +10,23 @@ description: shape_id_references_shapes_table_when_present
 
 
 
-## O que esta validação faz 
+## O que esta validação faz
 
- No ficheiro `trips.txt`, o campo `shape_id` associa a viagem a um traçado geográfico (percurso no mapa) em `shapes.txt`. O campo em condições normais torna-se obrigatório quando existe embarque ou desembarque contínuo definido na própria rota ou nas paragens da viagem (`stop_times`), noutros casos pode ficar vazio. Para além do standard, pode exigir ou recomendar o `shape_id`, ou dispensar a verificação consoante a severidade das regras. Quando o valor vem indicado, tem de corresponder a um identificador existente no conjunto de formas.
+ No ficheiro `trips.txt`, o campo `shape_id` associa a viagem a um traçado geográfico (percurso no mapa) em `shapes.txt`. O campo em condições normais torna-se obrigatório quando existe embarque ou desembarque contínuo definido na própria rota ou nas paragens da viagem (`stop_times`), noutros casos pode ficar vazio. Para além do standard, pode exigir ou recomendar o `shape_id`, ou dispensar a verificação consoante a severidade das regras. Quando o valor vem indicado, tem de corresponder a um identificador existente no conjunto de formas.
 
 ---
 
 ### Passa
 
-- Embarque ou desembarque contínuo na rota ou ao longo da viagem e o `shape_id` vem preenchido, fornecendo o traçado exigido nessa situação.
-- Sem esse comportamento contínuo e o campo pode ficar vazio conforme o standard e as regras não obrigam nem recomendam o preenchimento (ou dispensam a verificação).
-- O `shape_id` vem preenchido e o identificador existe na tabela de formas do feed.
-- O valor em falta só é aceite quando as regras ativas permitem omitir o traçado sem mensagem.
+- Embarque ou desembarque contínuo na rota ou ao longo da viagem e o `shape_id` vem preenchido, fornecendo o traçado exigido nessa situação.
+- Sem esse comportamento contínuo e o campo pode ficar vazio conforme o standard e as regras não obrigam nem recomendam o preenchimento (ou dispensam a verificação).
+- O `shape_id` vem preenchido e o identificador existe na tabela de formas do feed.
+- O valor em falta só é aceite quando as regras ativas permitem omitir o traçado sem mensagem.
 
 ---
 
 ### Falha
 
-- Comportamento contínuo na rota ou em `stop_times`, mas sem `shape_id` - o traçado é necessário para representar o percurso quando há embarque ou desembarque contínuo.
-- Valor em falta quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado (fora ou para além da regra GTFS do pickup contínuo).
-- Referência inválida - o `shape_id` indicado não existe entre as formas publicadas no feed (incluindo situações em que a rota da viagem não se consegue resolver de forma inequívoca para concluir a verificação).
+- Comportamento contínuo na rota ou em `stop_times`, mas sem `shape_id` - o traçado é necessário para representar o percurso quando há embarque ou desembarque contínuo.
+- Valor em falta quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado (fora ou para além da regra GTFS do pickup contínuo).
+- Referência inválida - o `shape_id` indicado não existe entre as formas publicadas no feed (incluindo situações em que a rota da viagem não se consegue resolver de forma inequívoca para concluir a verificação).

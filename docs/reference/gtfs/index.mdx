@@ -22,7 +22,7 @@ A informação necessária aos sistemas TML e à APEX é obtida através da leit
 
 Para a identificação da **linha**, o campo `route_short_name` passa a ser **obrigatório** no GTFS versão 30. O seu valor é utilizado diretamente como `LineLongID` na APEX. Desta forma, deixa de ser necessário utilizar um campo adicional `line_id` para representar a linha.
 
-Para a identificação do **percurso**, o campo `pattern_id` é eliminado. Recomenda-se que o `shape_id` seja definido através da combinação do `route_id` com o `direction_id`:
+Para a identificação do **percurso**, o campo `pattern_id` é eliminado. Recomenda-se que o `shape_id` seja definido através da combinação do `route_id` com o `direction_id`:
 
 **`shape_id = route_id + direction_id`**
 

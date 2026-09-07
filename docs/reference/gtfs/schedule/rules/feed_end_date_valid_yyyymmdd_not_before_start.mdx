@@ -11,9 +11,9 @@ description: feed_end_date_valid_yyyymmdd_not_before_start
 
 
 
-## O que esta validação faz 
+## O que esta validação faz
 
-No ficheiro `feed_info.txt`,  o campo `feed_end_date` recomenda indicar o intervalo em que o conjunto de dados se considera completo e fiável, a data de início à data de fim (este campo é o último dia incluído nesse período). As duas datas podem ficar vazias quando não estão disponíveis. Quando `feed_end_date` tem valor não vazio, esta verificação confirma que corresponde a uma data de serviço válida. A ausência do valor pode ser reportada como obrigatória ou recomendada consoante a configuração.
+No ficheiro `feed_info.txt`,  o campo `feed_end_date` recomenda indicar o intervalo em que o conjunto de dados se considera completo e fiável, a data de início à data de fim (este campo é o último dia incluído nesse período). As duas datas podem ficar vazias quando não estão disponíveis. Quando `feed_end_date` tem valor não vazio, esta verificação confirma que corresponde a uma data de serviço válida. A ausência do valor pode ser reportada como obrigatória ou recomendada consoante a configuração.
 
 ---
 
@@ -27,7 +27,7 @@ No ficheiro `feed_info.txt`,  o campo `feed_end_date` recomenda indicar o inter
 ### Falha
 
 - A data de fim está em falta quando a regra exige ou recomenda preenchimento (com a severidade configurada).
-- O valor não representa uma data de serviço válida (quando há texto não vazio a validar).
+- O valor não representa uma data de serviço válida (quando há texto não vazio a validar).
 
 
 

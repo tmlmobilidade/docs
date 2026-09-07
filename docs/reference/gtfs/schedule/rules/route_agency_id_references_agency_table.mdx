@@ -11,32 +11,32 @@ description: route_agency_id_references_agency_table
 
 
 
-## O que esta validação faz 
+## O que esta validação faz
 
-No `routes.txt`, o campo `agency_id` indica a agência (operadora) a que a rota pertence. É uma chave para `agency.txt`.
+No `routes.txt`, o campo `agency_id` indica a agência (operadora) a que a rota pertence. É uma chave para `agency.txt`.
 
-A severidade base vem da regra `AgencyId` quando existe; caso contrário usa-se aviso por omissão.
+A severidade base vem da regra `AgencyId` quando existe; caso contrário usa-se aviso por omissão.
 
 Comportamento:
 
-- Se `agency_id` está preenchido, o valor tem de existir em `agency` (chave estrangeira).
-- Se o feed tem mais do que uma linha em `agency`, `agency_id` na rota é obrigatório (não pode ficar vazio).
-- Se existe no máximo uma agência, `agency_id` vazio pode gerar mensagem de obrigatoriedade ou recomendação, conforme a severidade da regra - exceto quando a severidade é ignorar (não emite esse aviso).
+- Se `agency_id` está preenchido, o valor tem de existir em `agency` (chave estrangeira).
+- Se o feed tem mais do que uma linha em `agency`, `agency_id` na rota é obrigatório (não pode ficar vazio).
+- Se existe no máximo uma agência, `agency_id` vazio pode gerar mensagem de obrigatoriedade ou recomendação, conforme a severidade da regra - exceto quando a severidade é ignorar (não emite esse aviso).
 
-O número de agências obtém-se por contagem da tabela `agency`, com recurso aos dados em memória se a contagem falhar.
+O número de agências obtém-se por contagem da tabela `agency`, com recurso aos dados em memória se a contagem falhar.
 
 ---
 
 ### Passa
 
-- `agency_id` preenchido e presente em `agency`.
-- `agency_id` vazio com uma única agência no feed e a regra não exige mensagem por ausência
-- Mais do que uma agência e `agency_id` preenchido e válido.
+- `agency_id` preenchido e presente em `agency`.
+- `agency_id` vazio com uma única agência no feed e a regra não exige mensagem por ausência
+- Mais do que uma agência e `agency_id` preenchido e válido.
 
 ---
 
 ### Falha
 
-- `agency_id` preenchido inexistente em `agency.txt`. 
-- Várias agências no feed e `agency_id` vazio na rota.
-- Uma (ou zero na prática de contagens) agência e `agency_id` vazio com severidade que exige texto de ausência. 
+- `agency_id` preenchido inexistente em `agency.txt`.
+- Várias agências no feed e `agency_id` vazio na rota.
+- Uma (ou zero na prática de contagens) agência e `agency_id` vazio com severidade que exige texto de ausência.

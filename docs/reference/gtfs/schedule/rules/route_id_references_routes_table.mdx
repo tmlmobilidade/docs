@@ -10,22 +10,22 @@ description: route_id_references_routes_table
 
 
 
-## O que esta validação faz 
+## O que esta validação faz
 
-No ficheiro `trips.txt`, o campo `route_id`  identifica a rota a que a viagem pertence. No GTFS o campo é obrigatório e deve corresponder a um identificador que exista em `routes.txt`, ou seja, a viagem tem de apontar para uma rota realmente definida no feed.
+No ficheiro `trips.txt`, o campo `route_id`  identifica a rota a que a viagem pertence. No GTFS o campo é obrigatório e deve corresponder a um identificador que exista em `routes.txt`, ou seja, a viagem tem de apontar para uma rota realmente definida no feed.
 
 ---
 
 ### Passa
 
-- O `route_id` vem preenchido.
-- Esse identificador existe em `routes.txt` (a referência é válida no conjunto de dados).
+- O `route_id` vem preenchido.
+- Esse identificador existe em `routes.txt` (a referência é válida no conjunto de dados).
 
 ---
 
 ### Falha
 
-- Identificador em falta - o `route_id` não vem fornecido na viagem.
-- Referência inválida - o valor indicado não corresponde a nenhuma rota no ficheiro de rotas (identificador inexistente ou incoerente com o resto do feed).
+- Identificador em falta - o `route_id` não vem fornecido na viagem.
+- Referência inválida - o valor indicado não corresponde a nenhuma rota no ficheiro de rotas (identificador inexistente ou incoerente com o resto do feed).
 
 
