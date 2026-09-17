@@ -1,11 +1,11 @@
 {
 	"pages": [
 		"index",
-		"alerts",
-		"ferramentas",
-		"controller",
+		"hub",
 		"offer",
-		"plans",
+		"operation",
+		"infrastructure",
+		"dates",
 		"performance",
 		"tools"
 	]
