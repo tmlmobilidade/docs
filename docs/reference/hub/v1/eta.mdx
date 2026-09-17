@@ -1,6 +1,18 @@
 ---
 title: ETA
-description: O que é um alerta, para que serve, como criar um alerta e que visibilidade tem após publicação.
+description: Estimativas de chegada (ETA) para todas as viagens/paragens em operação, em JSON simplificado.
 ---
 
-## ETA
+Informação em tempo real da rede de transportes, como posições de veículos e estimativas de chegada. O estimador de horários ainda está em fase experimental, pelo que deve ser utilizado com algum cuidado.
+
+| Path                                                                                                                    | Descrição                                                                                                                                                    |
+| ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [`/v1/eta/gtfs.pb`](https://go.tmlmobilidade.pt/hub/api/v1/eta/gtfs.pb)                               | Estimativas de chegada (ETA) para todas as viagens/paragens em operação, no formato GTFS-RT TripUpdates (Protobuf).                                          |
+| [`/v1/eta/gtfs`](https://go.tmlmobilidade.pt/hub/api/v1/eta/gtfs)                                     | Estimativas de chegada (ETA) para todas as viagens/paragens em operação, no formato GTFS-RT TripUpdates (JSON).                                              |
+| [`/v1/eta`](https://go.tmlmobilidade.pt/hub/api/v1/eta)                                               | Estimativas de chegada (ETA) para todas as viagens/paragens em operação, em JSON simplificado.                                                               |
+| [`/v1/eta/by-trip/:id/gtfs.pb`](https://go.tmlmobilidade.pt/hub/api/v1/eta/by-trip/:id/gtfs.pb)       | Estimativas de chegada (ETA) para uma viagem específica (`:id`), em formato GTFS-RT TripUpdates (Protobuf).                                                  |
+| [`/v1/eta/by-trip/:id/gtfs`](https://go.tmlmobilidade.pt/hub/api/v1/eta/by-trip/:id/gtfs)             | Estimativas de chegada (ETA) para uma viagem específica (`:id`), em formato GTFS-RT TripUpdates (JSON).                                                      |
+| [`/v1/eta/by-trip/:id`](https://go.tmlmobilidade.pt/hub/api/v1/eta/by-trip/:id)                       | Estimativas de chegada (ETA) para uma viagem específica (`:id`), em JSON simplificado.                                                                       |
+| [`/v1/eta/by-stop/:id/gtfs.pb`](https://go.tmlmobilidade.pt/hub/api/v1/eta/by-stop/:id/gtfs.pb)       | Estimativas de chegada (ETA) para uma paragem específica (`:id`), em formato GTFS-RT TripUpdates (Protobuf).                                                 |
+| [`/v1/eta/by-stop/:id/gtfs`](https://go.tmlmobilidade.pt/hub/api/v1/eta/by-stop/:id/gtfs)             | Estimativas de chegada (ETA) para uma paragem específica (`:id`), em formato GTFS-RT TripUpdates (JSON).                                                     |
+| [`/v1/eta/by-stop/:id`](https://go.tmlmobilidade.pt/hub/api/v1/eta/by-stop/:id)                       | Estimativas de chegada (ETA) para uma paragem específica (`:id`), em JSON simplificado.                                                                      |

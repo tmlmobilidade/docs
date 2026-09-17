@@ -24,35 +24,53 @@ Este passo de normalização é automático e pode ser alterado a qualquer momen
 Conseguimos garantir apenas que o plano é válido de acordo com o standard do GTFS, contendo, no mínimo, as principais
 colunas obrigatórias dos principais ficheiros obrigatórios.
 
+| Passo de Normalização                                                                                                                                                                                  |      Ficheiros alterados      |    Estado    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :---------------------------: | :----------: |
+| Igualar a coluna `shape_id` à coluna `pattern_id`, caso o plano original disponibilize a coluna `pattern_id`.                                                                                          |    `trips.txt` `shapes.txt`   | Implementado |
+| Adicionar a coluna `pattern_id`, igual à coluna `shape_id`, caso o plano original não disponibilize a coluna `pattern_id`.                                                                             |    `trips.txt` `shapes.txt`   | Implementado |
+| Recriar o ficheiro `agency.txt` de acordo com as informações do operador na base de dados do GO.                                                                                                       |          `agency.txt`         | Implementado |
+| Recriar o ficheiro `feed_info.txt` de acordo com as informações do respetivo plano na base de dados do GO.                                                                                             |        `feed_info.txt`        | Implementado |
+| Adicionar as colunas `district_id`, `district_name`, `municipality_id`, `municipality_name`, `parish_id`, `parish_name`, `locality_id` e `locality_name` de acordo com as coordenadas de cada paragem. |          `stops.txt`          |  *Em breve*  |
+| Converter as extensões dos percursos para metros, caso o plano original utilize outra escala.                                                                                                          | `shapes.txt` `stop_times.txt` |  *Em breve*  |
+| Produzir o ficheiro de afetação APEX base caso o plano original não o disponibilize.                                                                                                                   |         `afetacao.txt`        |  *Em breve*  |
+
+<Callout type="success" title="Integridade do ficheiro original">
+  O passo de normalização é não-destrutivo, ou seja, não há qualquer alteração ao conteúdo do ficheiro original submetido pelo operador.
+</Callout>
+
+<Callout type="idea" title="Deteção de alterações a planos">
+  A adição de passos de normalização produz um ficheiro GTFS diferente do anterior, o que naturalmente provoca uma alteração ao valor da propriedade `hash` do plano. Para detetar diferenças significativas a possíveis alterações ao conteúdo dos ficheiros GTFS de cada plano, sugerimos que o consumidor dos dados produza um hash, ou uma concatenação de strings por exemplo, através das propriedades:
+
+  `_id` `active_from` `active_until` `operation_gtfs_original_id`
+</Callout>
 
 ### Estrutura de um plano
 
 No Hub, um plano é representado por um objeto JSON com as seguintes propriedades:
 
-| Propriedades                    | Tipo                       | Descrição                                                                                                                               |
-| ------------------------------- | -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| `_id`                           | String                     | ID único do plano.                                                                                                                      |
-| `active_from`                   | OperationalDate (Integer)  | Data de início do plano (inclusive).                                                                                                     |
-| `active_until`                  | OperationalDate (Integer)  | Data de fim do plano (inclusive).                                                                                                       |
-| `agency_code`                   | String                     | Código do operador associado ao plano.                                                                                                  |
-| `agency_id`                     | String                     | ID único do operador associado ao plano.                                                                                                |
-| `agency_name`                   | String                     | Nome do operador associado ao plano.                                                                                                    |
-| `hash`                          | String                     | Hash do plano, que identifica inequívocamente a versão deste plano. Este hash depende dos ficheiros GTFS em si e das datas de ativação. |
-| `is_active`                     | Boolean                    | Indica se o plano está ativo no momento do pedido HTTP.                                                                                 |
-| `operation_gtfs_original_id`    | String                     | ID do ficheiro GTFS original tal como submetido pelo operador.                                                                          |
-| `operation_gtfs_original_url`   | URL                        | URL para descarregar o ficheiro GTFS original.                                                                                          |
-| `operation_gtfs_normalized_id`  | String                     | ID do ficheiro GTFS normalizado gerado pelo GO.                                                                                         |
-| `operation_gtfs_normalized_url` | URL                        | URL para descarregar o ficheiro GTFS normalizado.                                                                                       |
+| Propriedades                    |            Tipo            | Descrição                                                                                                                               |
+| ------------------------------- | :------------------------: | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `_id`                           |           String           | ID único do plano.                                                                                                                      |
+| `active_from`                   |  OperationalDate (Integer) | Data de início do plano (inclusive).                                                                                                    |
+| `active_until`                  |  OperationalDate (Integer) | Data de fim do plano (inclusive).                                                                                                       |
+| `agency_code`                   |           String           | Código do operador associado ao plano.                                                                                                  |
+| `agency_id`                     |           String           | ID único do operador associado ao plano.                                                                                                |
+| `agency_name`                   |           String           | Nome do operador associado ao plano.                                                                                                    |
+| `hash`                          |           String           | Hash do plano, que identifica inequívocamente a versão deste plano. Este hash depende dos ficheiros GTFS em si e das datas de ativação. |
+| `is_active`                     |           Boolean          | Indica se o plano está ativo no momento do pedido HTTP.                                                                                 |
+| `operation_gtfs_original_id`    |           String           | ID do ficheiro GTFS original tal como submetido pelo operador.                                                                          |
+| `operation_gtfs_original_url`   |        URL (String)        | URL para descarregar o ficheiro GTFS original.                                                                                          |
+| `operation_gtfs_normalized_id`  |           String           | ID do ficheiro GTFS normalizado gerado pelo GO.                                                                                         |
+| `operation_gtfs_normalized_url` |        URL (String)        | URL para descarregar o ficheiro GTFS normalizado.                                                                                       |
 | `created_at`                    | UnixMilliseconds (Integer) | Data de publicação do plano.                                                                                                            |
-| `updated_at`                    | UnixMilliseconds (Integer) | Data de última atualização do plano.                                                                                                    |
-
+| `updated_at`                    | UnixMilliseconds (Integer) | Data da última atualização do plano.                                                                                                    |
 
 ### Endpoints disponíveis
 
 Base path: `https://go.tmlmobilidade.pt/hub/api`
 
-| Path                                                                        | Tipo           | Descrição                                                                                                                                                                   |
-| --------------------------------------------------------------------------- | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`/v1/plans`](https://go.tmlmobilidade.pt/hub/api/v1/plans)                 | `HubV1ApiPlan` | Histórico de ficheiros GTFS (planos de operação) para todos os operadores. A propriedade `operation_file_url` permite fazer o download do ficheiro GTFS.zip correspondente. |
-| [`/v1/plans/gtfs`](https://go.tmlmobilidade.pt/hub/api/v1/plans/gtfs)       | File Download  | Ficheiro GTFS unificado de todos os planos de operação ativos, para todos os operadores de transporte.                                                                      |
-| [`/v1/plans/gtfs/cm`](https://go.tmlmobilidade.pt/hub/api/v1/plans/gtfs/cm) | File Download  | Ficheiro GTFS unificado de todos os planos de operação ativos, para os operadores da Carris Metropolitana.                                                                  |
+| Path                                                                        | Tipo           | Descrição                                                                                                                                                         |
+| --------------------------------------------------------------------------- | -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`/v1/plans`](https://go.tmlmobilidade.pt/hub/api/v1/plans)                 | `HubV1ApiPlan` | Todos os planos de operação publicados no GO.                                                                                                                     |
+| [`/v1/plans/gtfs`](https://go.tmlmobilidade.pt/hub/api/v1/plans/gtfs)       | File Download  | Ficheiro GTFS unificado de todos os planos de operação ativos, para todos os operadores de transporte. Nem todos os planos são incluídos nesta geração unificada. |
+| [`/v1/plans/gtfs/cm`](https://go.tmlmobilidade.pt/hub/api/v1/plans/gtfs/cm) | File Download  | Ficheiro GTFS unificado de todos os planos de operação ativos, para os operadores da Carris Metropolitana.                                                        |
