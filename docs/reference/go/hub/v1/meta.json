@@ -1,0 +1,10 @@
+{
+	"pages": [
+		"agencies",
+		"plans",
+		"alerts",
+		"vehicles",
+		"eta",
+		"debug"
+	]
+}

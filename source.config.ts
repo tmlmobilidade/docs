@@ -2,8 +2,6 @@
 
 import { metaSchema, pageSchema } from 'fumadocs-core/source/schema';
 import { defineCollections, defineConfig, defineDocs } from 'fumadocs-mdx/config';
-import { readVaultFiles } from 'fumadocs-obsidian';
-import { remarkObsidian, RemarkObsidianOptions } from 'fumadocs-obsidian/mdx';
 import { type ElementContent } from 'hast';
 import path from 'node:path';
 import rehypeKatex from 'rehype-katex';
@@ -57,7 +55,7 @@ function remarkRewriteWikilinkUrls() {
 
 export default defineConfig({
 	mdxOptions: async () => {
-		const files = await readVaultFiles({ dir: 'docs' });
+		// const files = await readVaultFiles({ dir: 'docs' });
 		return {
 			addLanguageClass: true,
 			rehypeCodeOptions: {
@@ -70,10 +68,7 @@ export default defineConfig({
 			rehypePlugins: plugins => [rehypeKatex, ...plugins],
 			remarkPlugins: plugins => [
 				remarkMath,
-				[
-					remarkObsidian,
-					{ files } satisfies RemarkObsidianOptions,
-				],
+				// [remarkObsidian, { files } satisfies RemarkObsidianOptions],
 				remarkRewriteWikilinkUrls,
 				...plugins,
 			],
