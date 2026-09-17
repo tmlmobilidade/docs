@@ -2,6 +2,7 @@
 title: Introdução
 description: Descobre como podes usar o API para construir aplicações com dados de transportes em tempo real.
 ---
+
 ## Comprometidos em ser abertos
 
 Estamos profundamente comprometidos com a transparência. A maior parte do código produzido no âmbito do desenvolvimento da [Carris Metropolitana](https://github.com/carrismetropolitana) e do [GO](https://github.com/tmlmobilidade/go) está publicado no Github. Agradecemos o teu feedback, comentários ou PRs! Também são regularmente publicados dados sobre a nossa operação rodoviária, o que inclui grandes números (ex. total de passageiros transportados) e outras informações mais detalhadas (ex. qualidade do serviço prestado para cada linha).
@@ -12,54 +13,36 @@ Esta estratégia permite simplificar a nossa stack técnica e melhorar a qualida
 
 Existem claro determinados dados que requerem autenticação, pela sua natureza mais sensível ou impossibilidade técnica. Estamos disponíveis para avaliar cada caso, e para isso basta [entrar em contacto](/reference/team) connosco.
 
+
 ## Projetos que gostamos 💛
 
 Estes são alguns dos projetos que utilizam os nossos dados abertos e que achamos extremamente interessantes!
 
 <Cards>
-	<Card title="Datasets" href="https://github.com/carrismetropolitana/datasets">
-           Repositório no Github com coleções de dados interessantes e de utilização livre, como BDs georeferenciadas de escolas, hospitais, lojas navegante®, entre outros. As coleções são atualizadas de vez em quando, consoante a necessidade.
-    </Card>
-    <Card title="Text-to-Speech (TTS)" href="https://github.com/carrismetropolitana/tts">
-           Este projeto tem como objetivo desambiguar, em texto, as abreviaturas mais comuns de toponímia e de pontos de interesse na área de Lisboa (e, de forma indireta, produzir o áudio falado). É o que alimenta os anúncios sonoros a bordo dos nossos autocarros.
-    </Card>
-    <Card title="Intermodal" href="https://intermodal.pt/sobre">
-           Este ambicioso projeto open-source disponibiliza uma enorme quantidade de dados de alta qualidade, livres para explorar, sobre paragens de autocarro em Portugal. A base de dados de paragens da Carris Metropolitana é alimentada pelo Intermodal, garantindo que a espinha dorsal da nossa rede é precisa e fiável.
-    </Card>
-    <Card title="GTFShift" href="https://u-shift.github.io/GTFShift">
-           Explore and Analyse General Transit Feed Specification (GTFS) Files With a Focus on Urban Mobility
-    </Card>
-    <Card title="Horários LX" href="https://github.com/Horarios-LX/horarios-lx.github.io">
-        ...
-    </Card>
-    <Card title="Discord Bot" href="https://github.com/carrismetropolitana/discord-bot">
-           Um bot do Discord que te avisa dos mais recentes Alertas de Serviço publicados pela Carris Metropolitana.
-    </Card>
+  <Card title="Datasets" href="https://github.com/carrismetropolitana/datasets">
+    Repositório no Github com coleções de dados interessantes e de utilização livre, como BDs georeferenciadas de escolas, hospitais, lojas navegante®, entre outros. As coleções são atualizadas de vez em quando, consoante a necessidade.
+  </Card>
+  <Card title="Text-to-Speech (TTS)" href="https://github.com/carrismetropolitana/tts">
+    Este projeto tem como objetivo desambiguar, em texto, as abreviaturas mais comuns de toponímia e de pontos de interesse na área de Lisboa (e, de forma indireta, produzir o áudio falado). É o que alimenta os anúncios sonoros a bordo dos nossos autocarros.
+  </Card>
+  <Card title="Intermodal" href="https://intermodal.pt/sobre">
+    Este ambicioso projeto open-source disponibiliza uma enorme quantidade de dados de alta qualidade, livres para explorar, sobre paragens de autocarro em Portugal. A base de dados de paragens da Carris Metropolitana é alimentada pelo Intermodal, garantindo que a espinha dorsal da nossa rede é precisa e fiável.
+  </Card>
+  <Card title="GTFShift" href="https://u-shift.github.io/GTFShift">
+    Explore and Analyse General Transit Feed Specification (GTFS) Files With a Focus on Urban Mobility
+  </Card>
+  <Card title="Horários LX" href="https://github.com/Horarios-LX/horarios-lx.github.io">
+    ...
+  </Card>
+  <Card title="Discord Bot" href="https://github.com/carrismetropolitana/discord-bot">
+    Um bot do Discord que te avisa dos mais recentes Alertas de Serviço publicados pela Carris Metropolitana.
+  </Card>
 </Cards>
 
-## Endpoints disponíveis
+## Licença de utilização dos dados
 
-O GO tem um módulo dedicado aos dados abertos, chamado `hub`, com o objetivo de facilitar o acesso à informação da rede de transportes. O objetivo é ir adicionando mais endpoints públicos, sempre que possível, para cumprir a nossa promessa de transparência.
+Os dados disponibilizados no GO Hub API seguem a [recomendação da ARTE](https://dados.gov.pt/pt/recursos/como-usar-o-portal/licencas) e da [União Europeia](https://data.europa.eu/en/academy/open-data-licensing) em matéria de dados abertos, sendo por isso aplicada a licença [**CC BY 4.0 – Creative Commons Attribution 4.0**](https://creativecommons.org/licenses/by/4.0), excepto quando explicitamente indicado o contrário.
 
-Uma vez que o GO toca em vários temas de uma operação de transportes, e que está desenvolvido por módulos, agrupámos os endpoints para estruturar a informação que cada um disponibiliza. Podes utilizar qualquer um destes endpoints diretamente nos teus frontends sem te preocupares com limites ou muitos utilizadores. Temos políticas de cache agressivas que permitem responder rapidamente a um elevado número de clientes, mas pedimos respeito e bom senso para que todos possam usufruir de um API estável.
+A licença CC BY 4.0 permite que os dados sejam livremente partilhados e adaptados para qualquer finalidade, incluindo fins comerciais, desde que seja feita a devida atribuição da fonte, seja disponibilizada uma ligação para a licença e sejam indicadas quaisquer alterações efetuadas aos dados.
 
-**URL base:** `https://go.tmlmobilidade.pt/hub/api/:version/:path`
-
-### Tempo Real
-Informação em tempo real da rede de transportes, como posições de veículos e estimativas de chegada. O estimador de horários ainda está em fase experimental, pelo que deve ser utilizado com algum cuidado.
-
-| Path                                                                                                                    | Descrição                                                                                                                                                    |
-| ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [`/v1/realtime/vehicles/metadata`](https://go.tmlmobilidade.pt/hub/api/v1/realtime/vehicles/metadata)                   | Metadados da maior parte dos veículos em operação, como modelo, matrícula, lugares disponíveis, entre outros.                                                |
-| [`/v1/realtime/vehicles/positions`](https://go.tmlmobilidade.pt/hub/api/v1/realtime/vehicles/positions)                 | Todos os veículos de todos os operadores em operação num determinado momento, em JSON. Sugerimos uma atualização a cada 3 segundos para melhores resultados. |
-| [`/v1/realtime/vehicles/positions/gtfs`](https://go.tmlmobilidade.pt/hub/api/v1/realtime/vehicles/positions/gtfs)       | Todos os veículos de todos os operadores em operação num determinado momento, em JSON mas no formato standard GTFS-RT Vehicle Positions.                     |
-| [`/v1/realtime/vehicles/positions/gtfs.pb`](https://go.tmlmobilidade.pt/hub/api/v1/realtime/vehicles/positions/gtfs.pb) | Todos os veículos de todos os operadores em operação num determinado momento, em Protobuf e no formato standard GTFS-RT Vehicle Positions.                   |
-| [`/v1/realtime/eta/gtfs.pb`](https://go.tmlmobilidade.pt/hub/api/v1/realtime/eta/gtfs.pb)                               | Estimativas de chegada (ETA) para todas as viagens/paragens em operação, no formato GTFS-RT TripUpdates (Protobuf).                                          |
-| [`/v1/realtime/eta/gtfs`](https://go.tmlmobilidade.pt/hub/api/v1/realtime/eta/gtfs)                                     | Estimativas de chegada (ETA) para todas as viagens/paragens em operação, no formato GTFS-RT TripUpdates (JSON).                                              |
-| [`/v1/realtime/eta`](https://go.tmlmobilidade.pt/hub/api/v1/realtime/eta)                                               | Estimativas de chegada (ETA) para todas as viagens/paragens em operação, em JSON simplificado.                                                               |
-| [`/v1/realtime/eta/by-trip/:id/gtfs.pb`](https://go.tmlmobilidade.pt/hub/api/v1/realtime/eta/by-trip/:id/gtfs.pb)       | Estimativas de chegada (ETA) para uma viagem específica (`:id`), em formato GTFS-RT TripUpdates (Protobuf).                                                  |
-| [`/v1/realtime/eta/by-trip/:id/gtfs`](https://go.tmlmobilidade.pt/hub/api/v1/realtime/eta/by-trip/:id/gtfs)             | Estimativas de chegada (ETA) para uma viagem específica (`:id`), em formato GTFS-RT TripUpdates (JSON).                                                      |
-| [`/v1/realtime/eta/by-trip/:id`](https://go.tmlmobilidade.pt/hub/api/v1/realtime/eta/by-trip/:id)                       | Estimativas de chegada (ETA) para uma viagem específica (`:id`), em JSON simplificado.                                                                       |
-| [`/v1/realtime/eta/by-stop/:id/gtfs.pb`](https://go.tmlmobilidade.pt/hub/api/v1/realtime/eta/by-stop/:id/gtfs.pb)       | Estimativas de chegada (ETA) para uma paragem específica (`:id`), em formato GTFS-RT TripUpdates (Protobuf).                                                 |
-| [`/v1/realtime/eta/by-stop/:id/gtfs`](https://go.tmlmobilidade.pt/hub/api/v1/realtime/eta/by-stop/:id/gtfs)             | Estimativas de chegada (ETA) para uma paragem específica (`:id`), em formato GTFS-RT TripUpdates (JSON).                                                     |
-| [`/v1/realtime/eta/by-stop/:id`](https://go.tmlmobilidade.pt/hub/api/v1/realtime/eta/by-stop/:id)                       | Estimativas de chegada (ETA) para uma paragem específica (`:id`), em JSON simplificado.                                                                      |
+A presente licença não concede quaisquer direitos sobre marcas, logótipos, dados pessoais ou materiais de terceiros que possam estar contidos nos conjuntos de dados ou a eles associados.

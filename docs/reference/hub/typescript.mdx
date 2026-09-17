@@ -6,12 +6,9 @@ description: A utilização de uma linguagem tipificada é fortemente recomendad
 Para utilizadores de Typescript, fornecemos vários pacotes no [npm](https://www.npmjs.com/org/tmlmobilidade)
 com a tipificação de todos os conceitos utilizados nos módulos do GO (ex: APEX, GTFS, APIs públicos, etc.)
 
-Estes pacotes são atualizados frequentemente e utilizam Calendar Versioning. Temos consciência que é mais complexo
-garantir a estabilidade de versões, e distinguir entre patch, minor e major updates, mas é um trade-off que consideramos aceitável,
-fundamental para aumentar a rapidez do desenvolvimento do GO.
+Estes pacotes são atualizados frequentemente e utilizam Calendar Versioning. Temos consciência que é mais complexo garantir a estabilidade de versões, e distinguir entre patch, minor e major updates, mas é um trade-off que consideramos aceitável, fundamental para manter a rapidez no desenvolvimento do GO.
 
-Os pacotes seguem na sua maioria a lógica de módulos do GO, pelo que é recomendado instalar apenas os pacotes
-necessários para consumir os dados do API público:
+Recomendamos instalar apenas os pacotes necessários para consumir os dados do API público:
 
 | Nome do pacote                                                                                     | Descrição                                                                                                                                                                                                                                                                      |
 | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -21,4 +18,4 @@ necessários para consumir os dados do API público:
 | [`@tmlmobilidade/go-types-gtfs-rt`](https://www.npmjs.com/package/@tmlmobilidade/go-types-gtfs-rt) | Implementação em Typescript dos tipos do standard GTFS-RT como especificado na documentação oficial em [gtfs.org](https://gtfs.org/documentation/realtime/reference)                                                                                                           |
 | [`@tmlmobilidade/go-utils-dates`](https://www.npmjs.com/package/@tmlmobilidade/go-utils-dates)     | Conjunto de funções para trabalhar com datas. Facilita a geração de conceitos como datas operacionais (24h+), conversão de fusos horários, entre outros. É recomendado utilizar em conjunto com os dados do API pois facilita a transformação minimizando erros de compilação. |
 
-Temos mais pacotes, incluindo utilitários para importar GTFS, descodificar Protbuf, entre outros, mas consideramos que são mais específicos à utilização do GO em si.
+Temos mais pacotes, incluindo utilitários para importar GTFS, descodificar Protbuf, entre outros, mas consideramos que são mais específicos à utilização do GO em si, pelo que não recomendamos a sua utilização sob o risco de alterações inesperadas ao seu funcionamento entre versões.
