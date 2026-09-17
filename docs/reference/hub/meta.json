@@ -1,8 +1,8 @@
 {
 	"pages": [
+		"versions",
 		"typescript",
 		"responses",
-		"versions",
 		"v1"
 	]
 }
