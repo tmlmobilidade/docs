@@ -2,9 +2,11 @@
 	"pages": [
 		"agencies",
 		"plans",
+		"network",
 		"alerts",
 		"vehicles",
 		"eta",
 		"debug"
-	]
+	],
+	"title": "API v1"
 }

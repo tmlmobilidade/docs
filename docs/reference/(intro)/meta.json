@@ -1,11 +1,10 @@
 {
-  "pages": [
-    "index",
-    "open-data",
-    "coverage",
-    "glossary",
-    "bugs",
-    "team"
-  ],
-  "root": true
+	"pages": [
+		"index",
+		"coverage",
+		"glossary",
+		"bugs",
+		"team"
+	],
+	"root": true
 }

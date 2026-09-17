@@ -1,0 +1,13 @@
+---
+title: Alertas
+description: O que é um alerta, para que serve, como criar um alerta e que visibilidade tem após publicação.
+---
+
+Com estes endpoints consegues ir buscar informação de desvios, supressões, alterações de oferta, novos horários, etc. que os vários operadores de transporte publicam ao público. Em muitos casos, são estes endpoints que são disponibilizados às aplicações de planeamento, como Google Maps, Transit, CityMapper, etc.
+
+| Path                                                                          | Descrição                                                                                      |
+| ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| [`/v1/alerts`](https://go.tmlmobilidade.pt/hub/api/v1/alerts)                 | Todos os alertas de serviço publicados no GO, em JSON.                                         |
+| [`/v1/alerts.rss`](https://go.tmlmobilidade.pt/hub/api/v1/alerts.rss)         | Todos os alertas de serviço publicados no GO, no formato RSS.                                  |
+| [`/v1/alerts/gtfs`](https://go.tmlmobilidade.pt/hub/api/v1/alerts/gtfs)       | Todos os alertas de serviço publicados no GO, em JSON, mas no formato GTFS-RT Service Alerts.  |
+| [`/v1/alerts/gtfs.pb`](https://go.tmlmobilidade.pt/hub/api/v1/alerts/gtfs.pb) | Todos os alertas de serviço publicados no GO, em Protobuf e no formato GTFS-RT Service Alerts. |

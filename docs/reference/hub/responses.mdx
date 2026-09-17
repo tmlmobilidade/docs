@@ -1,0 +1,38 @@
+---
+title: Respostas Uniformes
+description: Utilizamos uma estrutura comum para todas as repostas JSON do API.
+---
+
+Todas as respostas do API seguem a mesma estrutura padronizada, que garante a consistência em todos os endpoints e fornece uma framework para incluir informações adicionais de debugging quando necessário.
+
+Em caso de erros, este formato oferece uma forma clara e estruturada para descrever o que correu mal e, quando possível, como o problema poderá ser resolvido.
+
+```typescript title="API Response"
+type ApiResponseSuccess<T> = {
+	data: T;
+	error: null;
+	generated_at: UnixMilliseconds | null;
+	status_code: '200' | '201' | '204';
+	timestamp: UnixMilliseconds
+};
+
+type ApiResponseError = {
+	data: null,
+	error: string,
+	status_code: '400' | '401' | '403' | '404' | '500',
+	timestamp: UnixMilliseconds
+}
+
+type ApiResponse<T> = ApiResponseError | ApiResponseSuccess<T>
+```
+
+```typescript title="Exemplo de utilização com TypeScript"
+import { type ApiResponse } from "@tmlmobilidade/go-types-shared";
+import { type HubV1ApiPlan } from "@tmlmobilidade/go-types-hub";
+
+const plansResponse = await fetch("https://go.tmlmobilidade.pt/hub/api/v1/plans")
+	.then(response => response.json())
+	.then(json => json as ApiResponse<HubV1ApiPlan[]>);
+
+console.log(plansResponse.data); // Array of HubV1ApiPlan
+```
