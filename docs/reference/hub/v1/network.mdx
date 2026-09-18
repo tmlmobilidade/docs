@@ -5,13 +5,43 @@ description: O que é um alerta, para que serve, como criar um alerta e que visi
 
 Nestes endpoints são disponibilizados os dados de oferta de transporte, em JSON, para todos os operadores que estão incluídos na exportação do GTFS global.
 
-O sistema que converte os dados para JSON tem por base o mesmo GTFS que é disponibilizado ao público, incluindo às aplicações de planeamento de viagens como o Transit, Citymapper, Moovit, Google Maps, Apple Maps, entre outros.
+O sistema que converte os dados para JSON tem por base o mesmo GTFS que é disponibilizado ao público, incluindo às aplicações de planeamento de viagens como o Transit, Citymapper, Moovit, Google Maps, Apple Maps, entre outros. É possível construir aplicações de planeamento sem ser necessário investimento em servidores ou código complexo para o processamento de ficheiros GTFS.
 
 Estes endpoints são utilizados nos suportes de informação da TML, como o site da Carris Metropolitana, a app navegante®, os painéis nas paragens (PIPs), MUPIs, etc. Fazemos questão de utilizar a mesma base para garantir que a informação é consistente e de qualidade independentemente de onde os passageiros a prefiram consultar.
 
-A utilização da informação disponibilizada nestes endpoints é livre e não requer nenhum pedido de permissão antecipado, estando sujeita apenas a ao bom senso em termos de carga nos sistemas.
+A utilização da informação disponibilizada nestes endpoints é livre e não requer nenhum pedido de permissão antecipado, estando sujeita apenas a ao bom senso em termos de carga nos sistemas. Mesmo assim, estamos sempre curiosos para conhecer novos projetos que utilizam os nossos dados.
 
-Informação da rede de transportes em JSON. Muito útil para construir aplicações sem ser necessário um grande investimento em servidores ou código para o processamento de ficheiros GTFS. Estes endpoints são também utilizados nos suportes de informação ao público do navegante®.
+## Organização da Rede
+
+As redes de transporte público no mundo estão organizadas, na sua maioria, na lógica de linhas, rotas e percursos. Uma linha pode ter inúmeras rotas (também chamadas de base e variantes) e uma rota pode ter, no máximo, dois percursos (o de ida e o de volta).
+
+A linha define a intenção do serviço, enquanto que cada percuso define o caminho exato que será percorrido pelo veículo, e a sequência de paragens que serão servidas em determinados horários.
+
+Por este motivo, decidimos formalizar esta hierarquia no API para que fique totalmente adaptado à forma como os passageiros esperam consultar a informação. Estes conceitos são quase universais, fundamentais ao planeamento das redes, e aplicáveis aos suportes de informação digitais e físicos. Consideramos que as exceções encontradas a esta lógica devem ser tratadas como erros a ser corrigidos, pois vão contra as expetativas dos passageiros.
+
+## Linhas, Rotas e Percursos
+
+### Linhas
+
+No Hub, uma linha é representada por um objeto JSON com as seguintes propriedades:
+
+| Propriedade                     |            Tipo            | Descrição                                                                                                                               |
+| ------------------------------- | :------------------------: | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `_id`                           |           String           | ID único do plano.                                                                                                                      |
+| `active_from`                   |  OperationalDate (Integer) | Data de início do plano (inclusive).                                                                                                    |
+| `active_until`                  |  OperationalDate (Integer) | Data de fim do plano (inclusive).                                                                                                       |
+| `agency_code`                   |           String           | Código do operador associado ao plano.                                                                                                  |
+| `agency_id`                     |           String           | ID único do operador associado ao plano.                                                                                                |
+| `agency_name`                   |           String           | Nome do operador associado ao plano.                                                                                                    |
+| `hash`                          |           String           | Hash do plano, que identifica inequívocamente a versão deste plano. Este hash depende dos ficheiros GTFS em si e das datas de ativação. |
+| `is_active`                     |           Boolean          | Indica se o plano está ativo no momento do pedido HTTP.                                                                                 |
+| `operation_gtfs_original_id`    |           String           | ID do ficheiro GTFS original tal como submetido pelo operador.                                                                          |
+| `operation_gtfs_original_url`   |        URL (String)        | URL para descarregar o ficheiro GTFS original.                                                                                          |
+| `operation_gtfs_normalized_id`  |           String           | ID do ficheiro GTFS normalizado gerado pelo GO.                                                                                         |
+| `operation_gtfs_normalized_url` |        URL (String)        | URL para descarregar o ficheiro GTFS normalizado.                                                                                       |
+| `created_at`                    | UnixMilliseconds (Integer) | Data de publicação do plano.                                                                                                            |
+| `updated_at`                    | UnixMilliseconds (Integer) | Data da última atualização do plano.                                                                                                    |
+
 
 | Path                                                                                           | Descrição                                                                                                   |
 | ---------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
