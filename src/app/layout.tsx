@@ -9,6 +9,7 @@ import 'katex/dist/katex.css';
 
 import { BaseProvider } from '@/providers/BaseProvider';
 import { RootProvider } from 'fumadocs-ui/provider/next';
+import DefaultSearchDialog from '@/components/mdx/search';
 import { type PropsWithChildren } from 'react';
 
 /* * */
@@ -24,7 +25,7 @@ export default function Layout({ children }: PropsWithChildren) {
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<body className="flex flex-col min-h-screen">
-				<RootProvider>
+				<RootProvider search={{SearchDialog: DefaultSearchDialog}}>
 					<BaseProvider>
 						{children}
 					</BaseProvider>

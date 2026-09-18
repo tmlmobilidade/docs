@@ -10,9 +10,9 @@ export const revalidate = false;
 
 /* * */
 
-export const GET = () => {
-	const index = llms(sourceReference)
-		.index()
+export const GET = async () => {
+	const index = (await llms(sourceReference)
+		.index())
 		// Prefer Markdown URLs under /reference/* (prod ingress path)
 		.replace(/\]\((\/reference\/[^)#]+)\)/g, ']($1.md)')
 		.replace(/\]\(\/reference\)/g, '](/reference/index.md)');
