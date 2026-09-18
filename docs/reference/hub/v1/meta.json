@@ -2,12 +2,12 @@
 	"pages": [
 		"agencies",
 		"plans",
-		"equipment",
 		"network",
 		"alerts",
 		"vehicles",
 		"eta",
 		"metrics",
+		"equipment",
 		"debug"
 	],
 	"title": "Hub API v1"
