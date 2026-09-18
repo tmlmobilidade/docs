@@ -9,32 +9,30 @@ Os IDs de cada operador são acompanhados também com um código (agency\_code) 
 
 ### Estrutura de dados
 
-No Hub, um plano é representado por um objeto JSON com as seguintes propriedades:
+No Hub, um operador é representado por um objeto JSON com as seguintes propriedades:
 
-| Propriedades                    |            Tipo            | Descrição                                                                                                                               |
-| ------------------------------- | :------------------------: | --------------------------------------------------------------------------------------------------------------------------------------- |
-| `_id`                           |           String           | ID único do plano.                                                                                                                      |
-| `active_from`                   |  OperationalDate (Integer) | Data de início do plano (inclusive).                                                                                                    |
-| `active_until`                  |  OperationalDate (Integer) | Data de fim do plano (inclusive).                                                                                                       |
-| `agency_code`                   |           String           | Código do operador associado ao plano.                                                                                                  |
-| `agency_id`                     |           String           | ID único do operador associado ao plano.                                                                                                |
-| `agency_name`                   |           String           | Nome do operador associado ao plano.                                                                                                    |
-| `hash`                          |           String           | Hash do plano, que identifica inequívocamente a versão deste plano. Este hash depende dos ficheiros GTFS em si e das datas de ativação. |
-| `is_active`                     |           Boolean          | Indica se o plano está ativo no momento do pedido HTTP.                                                                                 |
-| `operation_gtfs_original_id`    |           String           | ID do ficheiro GTFS original tal como submetido pelo operador.                                                                          |
-| `operation_gtfs_original_url`   |        URL (String)        | URL para descarregar o ficheiro GTFS original.                                                                                          |
-| `operation_gtfs_normalized_id`  |           String           | ID do ficheiro GTFS normalizado gerado pelo GO.                                                                                         |
-| `operation_gtfs_normalized_url` |        URL (String)        | URL para descarregar o ficheiro GTFS normalizado.                                                                                       |
-| `created_at`                    | UnixMilliseconds (Integer) | Data de publicação do plano.                                                                                                            |
-| `updated_at`                    | UnixMilliseconds (Integer) | Data da última atualização do plano.                                                                                                    |
-
+| Propriedades                      |   Tipo  | Descrição                                                                                             |
+| --------------------------------- | :-----: | ----------------------------------------------------------------------------------------------------- |
+| `_id`                             |  String | ID único do operador.                                                                                 |
+| `code`                            |  String | Código do operador noutros sistemas de informação.                                                    |
+| `name`                            |  String | Nome do operador.                                                                                     |
+| `short_name`                      |  String | Nome abreviado.                                                                                       |
+| `website_url`                     |  String | URL do website.                                                                                       |
+| `fare_url`                        |  String | URL para informação de tarifas.                                                                       |
+| `email`                           |  String | Email de contacto público.                                                                            |
+| `phone`                           |  String | Contacto telefónico do operador.                                                                      |
+| `primary_language`                |  String | Idioma principal.                                                                                     |
+| `timezone`                        |  String | Fuso horário da operação.                                                                             |
+| `services`                        |  Object | Serviços do GO Hub ativos para este operador.                                                         |
+| `services.eta_enabled`            | Boolean | Indica se estão a ser geradas estimativas de chegada em tempo real com base nas posições de veículos. |
+| `services.gtfs_enabled`           | Boolean | Indica se os planos deste operador estão a ser incluídos na exportação do GTFS global.                |
+| `services.positions_enabled`      | Boolean | Indica se estão a ser publicadas posições de veículos em tempo real para este operador.               |
+| `services.service_alerts_enabled` | Boolean | Indica se estão a ser publicados alertas de serviço para este operador.                               |
 
 ### Endpoints disponíveis
 
 Base path: `https://go.tmlmobilidade.pt/hub/api`
 
-| Path                                                                        | Tipo           | Descrição                                                                                                                                                         |
-| --------------------------------------------------------------------------- | -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`/v1/plans`](https://go.tmlmobilidade.pt/hub/api/v1/plans)                 | `HubV1ApiPlan` | Todos os planos de operação publicados no GO.                                                                                                                     |
-| [`/v1/plans/gtfs`](https://go.tmlmobilidade.pt/hub/api/v1/plans/gtfs)       | File Download  | Ficheiro GTFS unificado de todos os planos de operação ativos, para todos os operadores de transporte. Nem todos os planos são incluídos nesta geração unificada. |
-| [`/v1/plans/gtfs/cm`](https://go.tmlmobilidade.pt/hub/api/v1/plans/gtfs/cm) | File Download  | Ficheiro GTFS unificado de todos os planos de operação ativos, para os operadores da Carris Metropolitana.                                                        |
+| Path                                                              | Tipo             | Descrição                                            |
+| ----------------------------------------------------------------- | ---------------- | ---------------------------------------------------- |
+| [`/v1/agencies`](https://go.tmlmobilidade.pt/hub/api/v1/agencies) | `HubV1ApiAgency` | Todos os operadores de transporte disponíveis no GO. |
