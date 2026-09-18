@@ -2,10 +2,10 @@
 	"pages": [
 		"index",
 		"hub",
-		"offer",
-		"operation",
 		"infrastructure",
 		"dates",
+		"offer",
+		"operation",
 		"performance",
 		"tools"
 	]
