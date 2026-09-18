@@ -30,6 +30,7 @@ export const NAVBAR_LINKS: LinkItemType[] = [
 	// },
 	{
 		active: 'nested-url',
+		on: 'nav',
 		text: 'Documentação',
 		url: '/reference',
 	},
