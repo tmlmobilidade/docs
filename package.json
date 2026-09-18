@@ -5,6 +5,7 @@
 	"scripts": {
 		"build": "next build",
 		"dev": "next dev -p 50000",
+		"edit": "npx --yes @fumadocs-editor/studio --root ./docs",
 		"lint": "eslint ./src && tsc --noEmit",
 		"lint:fix": "eslint ./src --fix",
 		"postinstall": "fumadocs-mdx",
