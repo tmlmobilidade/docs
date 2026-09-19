@@ -9,13 +9,27 @@ O sistema que converte os dados para JSON tem por base o mesmo GTFS que é dispo
 
 Estes endpoints são utilizados nos suportes de informação da TML, como o site da Carris Metropolitana, a app navegante®, os painéis nas paragens (PIPs), MUPIs, etc. Fazemos questão de utilizar a mesma base para garantir que a informação é consistente e de qualidade independentemente de onde os passageiros a prefiram consultar.
 
-A utilização da informação disponibilizada nestes endpoints é livre e não requer nenhum pedido de permissão antecipado, estando sujeita apenas a ao bom senso em termos de carga nos sistemas. Mesmo assim, estamos sempre curiosos para conhecer novos projetos que utilizam os nossos dados.
+A utilização da informação disponibilizada nestes endpoints é livre e não requer nenhum pedido de permissão antecipado, estando sujeita apenas ao bom senso em termos de carga nos sistemas. Mesmo assim, estamos sempre curiosos para conhecer novos projetos que utilizam os nossos dados.
 
 ## Organização da Rede
 
 As redes de transporte público no mundo estão organizadas, na sua maioria, na lógica de linhas, rotas e percursos. Uma linha pode ter inúmeras rotas (também chamadas de base e variantes) e uma rota pode ter, no máximo, dois percursos (o de ida e o de volta).
 
 A linha define a intenção do serviço, enquanto que cada percuso define o caminho exato que será percorrido pelo veículo, e a sequência de paragens que serão servidas em determinados horários.
+
+Um exemplo é a linha Amarela do Metro de Lisboa. Esta linha tem duas rotas e cada rota tem dois sentidos:
+
+- **A. Linha Amarela** `line`
+  - A.1. Rato - Odivelas `route`
+    - A.1.1. Rato - Odivelas `pattern`
+    - A.1.2. Odivelas - Rato `pattern`
+  - A.2. Rato - Campo Grande `route`
+    - A.2.1. Rato - Campo Grande `pattern`
+    - A.2.2. Campo Grande - Rato `pattern`
+- **B. Linha Vermelha** `line`
+  - etc...
+
+Cada um destes sentidos é um percurso, ou `pattern`, e é a este nível que são definidos os horários e os caminhos dos veículos (`shapes`, `path` e `trips`).
 
 Por este motivo, decidimos formalizar esta hierarquia no API para que fique totalmente adaptado à forma como os passageiros esperam consultar a informação. Estes conceitos são quase universais, fundamentais ao planeamento das redes, e aplicáveis aos suportes de informação digitais e físicos. Consideramos que as exceções encontradas a esta lógica devem ser tratadas como erros a ser corrigidos, pois vão contra as expetativas dos passageiros.
 
@@ -25,23 +39,124 @@ Por este motivo, decidimos formalizar esta hierarquia no API para que fique tota
 
 No Hub, uma linha é representada por um objeto JSON com as seguintes propriedades:
 
-| Propriedade                     |            Tipo            | Descrição                                                                                                                               |
-| ------------------------------- | :------------------------: | --------------------------------------------------------------------------------------------------------------------------------------- |
-| `_id`                           |           String           | ID único do plano.                                                                                                                      |
-| `active_from`                   |  OperationalDate (Integer) | Data de início do plano (inclusive).                                                                                                    |
-| `active_until`                  |  OperationalDate (Integer) | Data de fim do plano (inclusive).                                                                                                       |
-| `agency_code`                   |           String           | Código do operador associado ao plano.                                                                                                  |
-| `agency_id`                     |           String           | ID único do operador associado ao plano.                                                                                                |
-| `agency_name`                   |           String           | Nome do operador associado ao plano.                                                                                                    |
-| `hash`                          |           String           | Hash do plano, que identifica inequívocamente a versão deste plano. Este hash depende dos ficheiros GTFS em si e das datas de ativação. |
-| `is_active`                     |           Boolean          | Indica se o plano está ativo no momento do pedido HTTP.                                                                                 |
-| `operation_gtfs_original_id`    |           String           | ID do ficheiro GTFS original tal como submetido pelo operador.                                                                          |
-| `operation_gtfs_original_url`   |        URL (String)        | URL para descarregar o ficheiro GTFS original.                                                                                          |
-| `operation_gtfs_normalized_id`  |           String           | ID do ficheiro GTFS normalizado gerado pelo GO.                                                                                         |
-| `operation_gtfs_normalized_url` |        URL (String)        | URL para descarregar o ficheiro GTFS normalizado.                                                                                       |
-| `created_at`                    | UnixMilliseconds (Integer) | Data de publicação do plano.                                                                                                            |
-| `updated_at`                    | UnixMilliseconds (Integer) | Data da última atualização do plano.                                                                                                    |
+| Propriedade          |        Tipo       | Descrição                                                                                                       |
+| -------------------- | :---------------: | --------------------------------------------------------------------------------------------------------------- |
+| `_id`                |       String      | ID único da linha.                                                                                              |
+| `agency_id`          |       String      | ID único do operador ao qual a linha pertence.                                                                  |
+| `color`              | HexColor (String) | Cor da linha, em formato hexadecimal, com o prefixo `#`.                                                        |
+| `text_color`         |       String      | Cor do texto da linha, em formato hexadecimal, com o prefixo `#`.                                               |
+| `short_name`         |       String      | Identificador principal da linha para os passageiros.                                                           |
+| `long_name`          |       String      | Nome da linha, que normalmente é a origem-destino da rota base ou um resumo do serviço efetuado (ex: Circular). |
+| `tts_name`           |       String      | Nome da linha adaptado para leitores de ecrã.                                                                   |
+| `pattern_ids`        |     String\[]     | IDs dos percursos que pertencem a esta linha.                                                                   |
+| `route_ids`          |     String\[]     | IDs das rotas que pertencem a esta linha.                                                                       |
+| `stop_ids`           |     String\[]     | IDs das paragens que pertencem a esta linha.                                                                    |
+| `district_ids`       |     String\[]     | IDs de todos os distritos por onde todos os percursos desta linha passam (códigos DICOFRE).                     |
+| `district_names`     |     String\[]     | Nomes dos distritos por onde todos os percursos desta linha passam (CAOP).                                      |
+| `municipality_ids`   |     String\[]     | IDs de todas as municipalidades por onde todos os percursos desta linha passam.                                 |
+| `municipality_names` |     String\[]     | Nomes das municipalidades por onde todos os percursos desta linha passam.                                       |
+| `parish_ids`         |     String\[]     | IDs de todas as freguesias por onde todos os percursos desta linha passam.                                      |
+| `parish_names`       |     String\[]     | Nomes das freguesias por onde todos os percursos desta linha passam.                                            |
+| `locality_ids`       |     String\[]     | IDs de todas as localidades por onde todos os percursos desta linha passam.                                     |
+| `locality_names`     |     String\[]     | Nomes das localidades por onde todos os percursos desta linha passam.                                           |
+| `facilities`         |     String\[]     | Instalações de utilidade pública que esta linha serve (Escolas, Hospitais, etc.). *Em desenvolvimento.*         |
 
+### Rotas
+
+No Hub, uma rota é descendente de uma linha e é representada por um objeto JSON com as seguintes propriedades:
+
+| Propriedade          |        Tipo       | Descrição                                                                                              |
+| -------------------- | :---------------: | ------------------------------------------------------------------------------------------------------ |
+| `_id`                |       String      | ID único da rota.                                                                                      |
+| `agency_id`          |       String      | ID único do operador ao qual a rota pertence.                                                          |
+| `color`              | HexColor (String) | Cor da rota, em formato hexadecimal, com o prefixo `#`.                                                |
+| `text_color`         |       String      | Cor do texto da rota, em formato hexadecimal, com o prefixo `#`.                                       |
+| `short_name`         |       String      | Identificador principal da rota para os passageiros.                                                   |
+| `long_name`          |       String      | Nome da rota, que normalmente é a origem-destino ou um resumo do serviço efetuado (ex: Circular).      |
+| `tts_name`           |       String      | Nome da rota adaptado para leitores de ecrã.                                                           |
+| `line_id`            |       String      | ID da linha a que a rota pertence.                                                                     |
+| `pattern_ids`        |     String\[]     | IDs dos percursos que pertencem a esta rota.                                                           |
+| `stop_ids`           |     String\[]     | IDs das paragens que pertencem a esta rota.                                                            |
+| `district_ids`       |     String\[]     | IDs de todos os distritos por onde todos os percursos desta rota passam (códigos DICOFRE).             |
+| `district_names`     |     String\[]     | Nomes dos distritos por onde todos os percursos desta rota passam (CAOP).                              |
+| `municipality_ids`   |     String\[]     | IDs de todas as municipalidades por onde todos os percursos desta rota passam.                         |
+| `municipality_names` |     String\[]     | Nomes das municipalidades por onde todos os percursos desta rota passam.                               |
+| `parish_ids`         |     String\[]     | IDs de todas as freguesias por onde todos os percursos desta rota passam.                              |
+| `parish_names`       |     String\[]     | Nomes das freguesias por onde todos os percursos desta rota passam.                                    |
+| `locality_ids`       |     String\[]     | IDs de todas as localidades por onde todos os percursos desta rota passam.                             |
+| `locality_names`     |     String\[]     | Nomes das localidades por onde todos os percursos desta rota passam.                                   |
+| `facilities`         |     String\[]     | Instalações de utilidade pública que esta rota serve (Escolas, Hospitais, etc.). *Em desenvolvimento.* |
+
+### Percursos
+
+No Hub, um percurso (ou `pattern`) é descendente de uma rota e contém a informação relevante sobre o serviço de transporte disponibilizado.
+Para ser possível apresentar alterações antecipadas, e manter o serviço atual, o endpoint dos patterns retorna uma array. Enquanto que o ID do percurso é único,
+podem existir várias versões do mesmo percurso, identificadas pela propriedade `version` e com uma determinada validade temporal.
+
+Um percurso é representado por um objeto JSON com as seguintes propriedades:
+
+| Propriedade          |             Tipo             | Descrição                                                                                               |
+| -------------------- | :--------------------------: | ------------------------------------------------------------------------------------------------------- |
+| `_id`                |            String            | ID único do percurso.                                                                                   |
+| `agency_id`          |            String            | ID único do operador ao qual o percurso pertence.                                                       |
+| `version_id`         |            String            | Hash do conteúdo do percurso que identifica a sua versão, válida num determinado período temporal.      |
+| `valid_on`           |      OperationalDate\[]      | Datas de validade da versão do percurso.                                                                |
+| `color`              |       HexColor (String)      | Cor do percurso, em formato hexadecimal, com o prefixo `#`.                                             |
+| `text_color`         |       HexColor (String)      | Cor do texto do percurso, em formato hexadecimal, com o prefixo `#`.                                    |
+| `short_name`         |            String            | Identificador principal do percurso para os passageiros.                                                |
+| `headsign`           |            String            | Destino do percurso para os passageiros. Também conhecido como Bandeira.                                |
+| `direction_id`       |  GtfsTripDirection (Integer) | Indica se o percurso é de Ida ou de Volta.                                                              |
+| `line_id`            |            String            | ID da linha a que o percurso pertence.                                                                  |
+| `route_id`           |            String            | ID da rota a que o percurso pertence.                                                                   |
+| `shape_id`           |            String            | ID da forma do percurso.                                                                                |
+| `shape_extension`    | NonNegativeInteger (Integer) | Extensão do percurso, em metros.                                                                        |
+| `shape_polyline`     |   EncodedPolyline (String)   | Polilinha do percurso, em formato de codificação de polilinha.                                          |
+| `path`               |             Array            | Pontos do percurso, com as coordenadas geográficas e o horário de passagem.                             |
+| `trips`              |             Array            | Viagens que o percurso serve.                                                                           |
+| `tts_headsign`       |            String            | Nome do percurso adaptado para leitores de ecrã.                                                        |
+| `district_ids`       |             Array            | IDs de todos os distritos por onde o percurso passa (códigos DICOFRE).                                  |
+| `district_names`     |             Array            | Nomes dos distritos por onde o percurso passa (CAOP).                                                   |
+| `municipality_ids`   |             Array            | IDs de todas as municipalidades por onde o percurso passa.                                              |
+| `municipality_names` |             Array            | Nomes das municipalidades por onde o percurso passa.                                                    |
+| `parish_ids`         |             Array            | IDs de todas as freguesias por onde o percurso passa.                                                   |
+| `parish_names`       |             Array            | Nomes das freguesias por onde o percurso passa.                                                         |
+| `locality_ids`       |             Array            | IDs de todas as localidades por onde o percurso passa.                                                  |
+| `locality_names`     |             Array            | Nomes das localidades por onde o percurso passa.                                                        |
+| `facilities`         |             Array            | Instalações de utilidade pública que o percurso serve (Escolas, Hospitais, etc.). *Em desenvolvimento.* |
+
+```ts
+export const HubV1ApiPatternSchema = z.object({
+	_id: z.string(),
+	agency_id: z.string(),
+	color: HexColorSchema,
+	direction_id: GtfsTripDirectionSchema,
+	district_ids: z.array(z.string()).default([]),
+	district_names: z.array(z.string()).default([]),
+	facilities: z.array(z.string()).default([]),
+	headsign: z.string(),
+	line_id: z.string(),
+	locality_ids: z.array(z.string()).default([]),
+	locality_names: z.array(z.string()).default([]),
+	long_name: z.string(),
+	municipality_ids: z.array(z.string()).default([]),
+	municipality_names: z.array(z.string()).default([]),
+	parish_ids: z.array(z.string()).default([]),
+	parish_names: z.array(z.string()).default([]),
+	path: z.array(HubV1ApiPatternWaypointSchema),
+	route_id: z.string(),
+	shape_extension: NonNegativeIntegerSchema,
+	shape_id: z.string(),
+	shape_polyline: EncodedPolylineSchema,
+	short_name: z.string(),
+	text_color: HexColorSchema,
+	trips: z.array(HubV1ApiPatternTripSchema),
+	tts_headsign: z.string(),
+	valid_on: z.array(OperationalDateIntSchema).default([]),
+	version_id: z.string(),
+});
+```
+
+## Endpoints disponíveis
 
 | Path                                                                                           | Descrição                                                                                                   |
 | ---------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
