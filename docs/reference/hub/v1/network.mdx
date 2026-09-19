@@ -1,6 +1,6 @@
 ---
 title: Rede de Transportes
-description: O que é um alerta, para que serve, como criar um alerta e que visibilidade tem após publicação.
+description: Explora como utilizar o API para construir aplicações de planeamento de viagens.
 ---
 
 Nestes endpoints são disponibilizados os dados de oferta de transporte, em JSON, para todos os operadores que estão incluídos na exportação do GTFS global.
@@ -157,15 +157,16 @@ Uma `trip` é representada por um objeto JSON com as seguintes propriedades:
 | `service_ids` |               Array\<String>              | IDs originais dos calendários do GTFS associados aos `trip_ids` desta viagem.                    |
 | `schedule`    |          Array\<ScheduledArrival>         | Horários de passagem em todas as paragens desta viagem.                                          |
 
-```ts lineNumbers
-export const HubV1ApiPatternTripSchema = z.object({
-	version_id: z.string(),
-	valid_on: z.array(OperationalDateIntSchema),
-	trip_ids: z.array(z.string()),
-	service_ids: z.array(z.string()),
-	schedule: z.array(HubV1ApiScheduledArrivalSchema),
-});
-```
+#### Schedule Arrival
+
+Uma `arrival` é representado por um objeto JSON com as seguintes propriedades:
+
+| Propriedade        |  Tipo  | Descrição                                                   |
+| ------------------ | :----: | ----------------------------------------------------------- |
+| `stop_id`          | String | ID da paragem servida.                                      |
+| `stop_sequence`    | String | Índice de sequência da paragem no percurso.                 |
+| `arrival_time`     | String | Horário de chegada à paragem no formato operacional (24h+). |
+| `arrival_time_24h` | String | Horário de chegada à paragem, em formato 24h.               |
 
 ## Endpoints disponíveis
 
