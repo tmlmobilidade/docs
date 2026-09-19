@@ -3,6 +3,52 @@ title: Alertas
 description: Descobre o que é um alerta de serviço de uma operação de transportes públicos.
 ---
 
+Um Alerta de Serviço são mensagens que os operadores de transporte disponibilizam ao público para informar de alterações programadas, desvios inesperados, cancelamentos, atrasos, etc. São fundamentais para garantir que os utilizadores de transporte se possam organizar com antecedência ou encontrar alternativas em caso de imprevistos pontuais.
+
+Os alertas referenciam objetos da rede de transporte, como paragens, linhas ou viagens, afetando-as com uma causa e um efeito. No GO Hub seguimos a especificação do GTFS-RT Service Alerts para tipificar um alerta. Adicionalmente, o GO Hub disponibiliza propriedades que podem ser úteis para tornar a informação mais intuitiva e legível.
+
+### Estrutura de um alerta
+
+No Hub, um alerta é representado por um objeto JSON com as seguintes propriedades:
+
+| Propriedade                |              Tipo              | Descrição                                                     |
+| -------------------------- | :----------------------------: | ------------------------------------------------------------- |
+| `_id`                      |             String             | ID único do alerta.                                           |
+| `agency_id`                |             String             | ID único do operador associado ao alerta.                     |
+| `title`                    |             String             | Título do alerta.                                             |
+| `description`              |             String             | Descrição do alerta.                                          |
+| `cause`                    |             String             | Causa do alerta de acordo com a especificação do GTFS-RT.     |
+| `effect`                   |             String             | Efeito do alerta de acordo com a especificação do GTFS-RT.    |
+| `coordinates`              | \[Latitude, Longitude] \| null | Coordenadas do alerta.                                        |
+| `active_period_start_date` |   UnixMilliseconds (Integer)   | Data de início do período de atividade do alerta (inclusive). |
+| `active_period_end_date`   |   UnixMilliseconds (Integer)   | Data de fim do período de atividade do alerta (inclusive).    |
+| `image_url`                |             String             | URL da imagem do alerta.                                      |
+| `info_url`                 |             String             | URL da informação do alerta.                                  |
+| `municipality_ids`         |             String             | IDs dos municípios associados ao alerta.                      |
+| `reference_type`           |             String             | Tipo de referência do alerta.                                 |
+| `references`               |             String             | Referências do alerta.                                        |
+
+```ts
+export const HubV1ApiAlertSchema = z.object({
+	_id: z.string(),
+	agency_id: z.string(),
+	title: z.string(),
+	description: z.string(),
+	cause: GtfsRtCauseSchema,
+	effect: GtfsRtEffectSchema,
+	coordinates: z.tuple([z.number(), z.number()]).nullable().default(null),
+	active_period_start_date: UnixMillisecondsSchema,
+	active_period_end_date: UnixMillisecondsSchema.nullable().default(null),
+	image_url: z.string().nullable().default(null),
+	info_url: z.union([z.string().url(), z.literal('')]).nullable().default(null),
+	municipality_ids: z.array(z.string()).default([]),
+	reference_type: AlertReferenceTypeSchema,
+	references: z.array(AlertReferenceSchema).default([]),
+});
+```
+
+### Endpoints disponíveis
+
 Com estes endpoints consegues ir buscar informação de desvios, supressões, alterações de oferta, novos horários, etc. que os vários operadores de transporte publicam ao público. Em muitos casos, são estes endpoints que são disponibilizados às aplicações de planeamento, como Google Maps, Transit, CityMapper, etc.
 
 | Path                                                                          | Descrição                                                                                      |
