@@ -15,11 +15,23 @@ O [GTFS Real Time](/reference/gtfs/realtime) é um pouco mais complexo pois util
 
 Quem produz o GTFS são os operadores de transporte público, e quase todos têm pelo menos a versão planeada.
 
+### Exemplo de ficheiro GTFS
+
+Disponibilizamos um GTFS de exemplo simplificado para a Linha Amarela do Metro de Lisboa, apenas com as colunas necessárias e 4 horários. Explora as relações entre os ficheiros para compreender a lógica subjacente ao standard GTFS.
+
+[**Descarregar GTFS de Exemplo**](#) // TODO
+
+### Como posso abrir/ler um GTFS?
+
+Podes descompactar o arquivo GTFS e abrir cada ficheiro em ferramentas como o Microsoft Excel ou o Google Sheets. Pode ser necessário alterar a extensão de cada ficheiro de `.txt` para `.csv`.
+
+Alguns destes ficheiros podem ser demasiado grandes, o que pode exceder os limites destes programas. Nestes casos, é melhor utilizar ferramentas automatizadas concebidas para lidar com dados GTFS. Embora os ficheiros GTFS sejam legíveis por humanos, destinam-se ao processamento por sistemas automatizados para gerir e manipular eficientemente os dados neles armazenados.
+
 ## GTFS v30
 
 Como o GTFS foi inicialmente pensado apenas para comunicar horários e percursos às aplicações de planeamento, existem algumas informações que a TML considera essenciais que não estão mapeadas no standard. Ainda, o GTFS permite mapear informações de diferentes formas tornando mais complexo o seu entendimento e processamento.
 
-A TML utiliza o **GTFS como formato standard para comunicar as operações de transporte com os operadores e com o público**. Tal como acontece com várias autoridades de transporte no mundo, a TML decidiu expandir o standard para que os ficheiros GTFS possam incluir informações adicionais que são essenciais para configurar outros sistemas, como o sistema de bilhética APEX. Ao longo do tempo, esta extensão tem evoluído para responder ao feedback dos operadores e às evoluções tecnológicas dos sistemas de informação ao público e de bilhética.
+**A TML utiliza o GTFS como formato standard para comunicar as operações de transporte com os operadores e com o público.** Tal como acontece com várias autoridades de transporte no mundo, a TML decidiu expandir o standard para que os ficheiros GTFS possam incluir informações adicionais que são essenciais para configurar outros sistemas, como o sistema de bilhética APEX. Ao longo do tempo, esta extensão tem evoluído para responder ao feedback dos operadores e às evoluções tecnológicas dos sistemas de informação ao público e de bilhética.
 
 Atualmente, estamos na **versão 30** desta extensão. Esta atualização, introduzida em Setembro de 2026, define uma estrutura comum para todos os operadores de transporte sem acrescentar nenhuma coluna obrigatória adicional às que já estão presentes no standard. No entanto, para garantir a consistência da informação e simplificar o processo de configuração da APEX, a TML exige que algumas colunas que já existem no standard sejam obrigatoriamente preenchidas.
 
