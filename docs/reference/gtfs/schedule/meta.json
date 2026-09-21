@@ -1,6 +1,7 @@
 {
 	"pages": [
-		"files",
+		"...files",
 		"rules"
-	]
+	],
+	"title": "GTFS Schedule"
 }

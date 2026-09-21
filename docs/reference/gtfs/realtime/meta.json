@@ -2,5 +2,6 @@
 	"pages": [
 		"vehicle-positions",
 		"service-alerts"
-	]
+	],
+	"title": "GTFS Realtime"
 }
