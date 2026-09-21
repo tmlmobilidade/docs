@@ -1,6 +1,16 @@
 {
 	"pages": [
-		"agency"
+		"agency",
+		"feed-info",
+		"routes",
+		"trips",
+		"calendar",
+		"calendar-dates",
+		"stops",
+		"stop-times",
+		"shapes",
+		"vehicles",
+		"apex-network"
 	],
 	"title": "GTFS Schedule"
 }
