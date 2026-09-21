@@ -2,15 +2,16 @@
 title: Introdução
 description: Um poderoso e versátil sistema de bilhética.
 ---
-# O que é a APEX?
+
+## O que é a APEX?
 
 A APEX é o sistema de bilhética utilizado pela Carris Metropolitana, e que está a ser implementado em todos os operadores da AML. É o que suporta todas as funcionalidades do cartão navegante® — compra e carregamentos de títulos em cartões físicos e digitais, gestão de perfis de cliente, ativação de descontos e muitas outras funcionalidades fundamentais à bilhética dos transportes públicos.
 
-# A bilhética no GO
+## A bilhética no GO
 
 O GO está intimamente relacionado com a APEX, permitindo uma enorme agilidade no consumo de todas as informações que um sistema de bilhética unificado torna possível. A APEX descreve o catálogo de "produtos" disponíveis num sistema de transportes: a analogia mais simples será a de uma loja online, onde é possível adquirir um enorme número de itens, cada um com uma configuração específica. Aqui o processo é exato, mas me vez de t-shirts com múltiplas utilizações, foram criadas várias estruturas de dados simplificadas, que aqui documentamos, para permitir ainda mais agilidade na disponibilização de relatórios e cálculos operacionais. Estas estruturas têm as propriedades essenciais de cada um dos tipos de transações para permitir uma rápida extração de informações sobre a procura do sistema de transportes — passageiros transportados, consolidação de valores, pressão sobre determinados percursos, e muitos outros.
 
-# Tudo são transações
+## Tudo são transações
 
 A APEX é uma biblioteca de software que é instalada nos softwares dos validadores. É um API local que "descodifica" as mensagens que são trocadas entre os cartões navegante® e o leitor NFC do validador. A biblioteca APEX implementa o standard internacional Calypso que define o tipo de comunicações, assim como as estruturas dos dados que ficam guardados nos cartões e são processados pelos validadores.
 
@@ -18,7 +19,7 @@ Sempre que um cartão navegante® se encosta a um validador, é gerada uma trans
 
 Aqui está um exemplo de uma transação de validação APEX:
 
-```json
+```json lineNumbers title="Exemplo de uma transação de validação APEX"
 {
 	"transactionInfo": {
 		"apexTransactionType": 11,
