@@ -9,10 +9,10 @@
 		"...gtfs",
 		"---APEX---",
 		"...apex",
-		"---GO---",
-		"...go",
 		"---Projetos---",
-		"...projects"
+		"...projects",
+		"---GO---",
+		"...go"
 	],
 	"root": true
 }
