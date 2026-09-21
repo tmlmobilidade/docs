@@ -1,0 +1,38 @@
+---
+title: Vendas
+description: Uma venda regista o acto de compra de um produto.
+---
+
+## O que são transações de venda?
+
+Uma venda é um evento referente à aquisição de um produto (bilhete de bordo, passe mensal, etc.). Na APEX uma venda é uma transação do tipo `3`. No GO focamo-nos apenas em vendas de títulos de bordo.
+
+# Estrutura Simplificada
+
+| Propriedade              |   Tipo  | Descrição                                                                                                                                                                    |
+| ------------------------ | :-----: | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| \_id                     |   GUID  | Identificador único da transação de venda.                                                                                                                                   |
+| agency\_id               |  STRING | Identificador único do Operador.                                                                                                                                             |
+| apex\_version            |  STRING | Versão do protocolo APEX utilizado para comunicar a transação.                                                                                                               |
+| block\_id                |  STRING | Identificação do plano de trabalho de um veículo. Placa - Conjunto de Circulações, Deslocações em Vazio e Tempos de Reserva cumpridos por um mesmo veículo.                  |
+| card\_physical\_type     |   ENUM  | Tipo de suporte físico do cartão do passageiro.                                                                                                                              |
+| card\_serial\_number     |  STRING | Número de série identificador do cartão associado à transação.                                                                                                               |
+| created\_at              | INTEGER | UNIX Timestamp em milisegundos do momento em que a transação foi criada no equipamento local.                                                                                |
+| device\_id               |   GUID  | Identificador único do equipamento que regista a transação APEX de venda.                                                                                                    |
+| duty\_id                 |  STRING | Identificação do plano de trabalho de um motorista/maquinista. Chapa - Conjunto de Circulações, Deslocações em Vazio e Tempos de Reserva em que intervém um mesmo motorista. |
+| is\_passenger            |   BOL   | Classifica a venda como válida ou inválida. ('true' = válida)                                                                                                                |
+| line\_id                 |  STRING | Identificador da linha em que ocorreu a transação.                                                                                                                           |
+| mac\_ase\_counter\_value | INTEGER | Valor no contador de transações/eventos APEX feitos pelo cartão SAM que se encontra no equipamento que regista a venda.                                                      |
+| mac\_sam\_serial\_number | INTEGER | Número de série do cartão SAM que se encontra no equipamento que regista a venda.                                                                                            |
+| on\_board\_refund\_id    |   GUID  | Identificador único do evento de reembolso associado a esta venda.                                                                                                           |
+| pattern\_id              |  STRING | Código de identificação do percurso de viagem associado à venda.                                                                                                             |
+| payment\_method          |   ENUM  | Modo de pagamento do título.                                                                                                                                                 |
+| price                    |  STRING | Preço em céntimos de EUR, associado à transação.                                                                                                                             |
+| product\_long\_id        |   NUM   | Identificador do produto, ou seja, do tipo de título da viagem que está a ser vendido.                                                                                       |
+| product\_quantity        | INTEGER | Número de unidades vendidas/carregadas no cartão referntes a esta transação.                                                                                                 |
+| received\_at             | INTEGER | UNIX Timestamp em milisegundos do momento em que a transação foi recebida na central de base de dados.                                                                       |
+| stop\_id                 |  STRING | Identificador único da paragem.                                                                                                                                              |
+| trip\_id                 |  STRING | Identificador único da trip de um determinado plano de operação de um determinado operador.                                                                                  |
+| updated\_at              | INTEGER | UNIX Timestamp em milisegundos da última atualização dessa venda.                                                                                                            |
+| validation\_id           |   GUID  | Identificador único da validação.                                                                                                                                            |
+| vehicle\_id              |  STRING | Identificador do veículo, unívoco por operador.                                                                                                                              |

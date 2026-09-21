@@ -1,53 +1,28 @@
 ---
 title: Localização
-description: Simplified APEX Locations
+description: Uma transação de localização permite verificar o correto funcionamento dos equipamentos de validação.
 ---
-# O que são as transações de localização ?
 
-Correspondem a um dos tipos de transações utilizadas no sistema APEX, e são geradas pelos equipamentos embarcados dos veículos (através de cartão SAM) sempre que muda o contexto - paragem associada - de um determinado percurso. Assim, de forma simplificada, a cada circulação devem estar associadas um número de transações de localização igual ao número de paragens do seu percurso.
+## O que são transações de localização?
 
-Estas transações permitem registar e validar a posição geográfica do veículo, e a estrutura de dados simplificada utilizada no GO encontra-se descrita nesta secção.
+As transações do tipo `19` são geradas pelos validadores embarcados sempre que se altera o contexto de validação - linha, percurso, circulação, paragem atual. Assim, de forma simplificada, a cada circulação devem estar associadas um número de transações de localização igual ou superior ao número de paragens do seu percurso.
 
-Estas transações permitem, entre outras operações, a monitorização da realização de todo o percurso de uma circulação ou, através da análise de sequencialidade das mesmas em conjunto com os restantes tipos de transações, a deteção de períodos de downtime dos equipamentos embarcados que as enviam.
+Estas transações permitem, entre outras operações, perceber se os equipamentos de validação estiveram a funcionar corretamente durante toda a viagem, assim como a monitorização da realização de todo o percurso de uma circulação pelo operador.
 
-# A estrutura
+## Estrutura Simplificada
 
-Por forma a serem corretamente contabilizadas/utilizadas, são essenciais para este tipo de transações os seguintes campos:
-
-| Nome do Campo         | Tipo de dado | Descrição                                                                                                                                                                           |
-| --------------------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| id                    | GUID         | identificador único da transação                                                                                                                                                    |
-| agency_id             | STRING       | código do Operador de transporte                                                                                                                                                    |
-| apex_version          | STRING       | versão da APEX em utilização                                                                                                                                                        |
-| created_at            | INTEGER      | _timestamp_ (data+hora) da geração da transação                                                                                                                                     |
-| device_id             | STRING       | identificador do equipamento embarcado que gerou a transação                                                                                                                        |
-| line_id               | STRING       | código identificador da linha                                                                                                                                                       |
-| pattern_id            | STRING       | código identificador do percurso                                                                                                                                                    |
-| trip_id               | STRING       | código identificador da circulação                                                                                                                                                  |
-| stop_id               | STRING       | código identificador da paragem                                                                                                                                                     |
-| vehicle_id            | STRING       | identificador do veículo                                                                                                                                                            |
-| updated_at            | INTEGER      | _timestamp_ (data+hora) da integração da transação nos sistemas da TML                                                                                                              |
-| mac_sam_serial_number | INTEGER      | identificador do número de série do cartão SAM que gerou a transação                                                                                                                |
-| mac_ase_counter_value | INTEGER      | número de contador incremental associado à transação, atribuído pelo equipamento embarcado, que permite a avaliação da sequencialidade das transações geradas por aquele cartão SAM |
-
-
-Em seguida apresenta-se um exemplo de uma transação de localização de acordo com a estrutura de dados simplificada:
-
-```json
-{
-  "_id": "68B05DBA-0082-40AE-B930-C8256404B879",
-  "agency_id": "42",
-  "apex_version": "3.2.0",
-  "created_at": 1756388794000,
-  "device_id": "sibelius_35400000302",
-  "line_id": "2016",
-  "mac_ase_counter_value": 309369,
-  "mac_sam_serial_number": 0000000000,
-  "pattern_id": "2016_0_1",
-  "received_at": 1756388980213,
-  "stop_id": "070474",
-  "trip_id": "2016_0_1|140|3|1430",
-  "updated_at": 1756388980213,
-  "vehicle_id": 1186
-}
-```
+| Propriedade              |   Tipo  | Descrição                                                                                                                                                                           |
+| ------------------------ | :-----: | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| \_id                     |   GUID  | identificador único da transação                                                                                                                                                    |
+| agency\_id               |  STRING | código do Operador de transporte                                                                                                                                                    |
+| apex\_version            |  STRING | versão da APEX em utilização                                                                                                                                                        |
+| created\_at              | INTEGER | *timestamp* (data+hora) da geração da transação                                                                                                                                     |
+| device\_id               |  STRING | identificador do equipamento embarcado que gerou a transação                                                                                                                        |
+| line\_id                 |  STRING | código identificador da linha                                                                                                                                                       |
+| pattern\_id              |  STRING | código identificador do percurso                                                                                                                                                    |
+| trip\_id                 |  STRING | código identificador da circulação                                                                                                                                                  |
+| stop\_id                 |  STRING | código identificador da paragem                                                                                                                                                     |
+| vehicle\_id              |  STRING | identificador do veículo                                                                                                                                                            |
+| updated\_at              | INTEGER | *timestamp* (data+hora) da integração da transação nos sistemas da TML                                                                                                              |
+| mac\_sam\_serial\_number | INTEGER | identificador do número de série do cartão SAM que gerou a transação                                                                                                                |
+| mac\_ase\_counter\_value | INTEGER | número de contador incremental associado à transação, atribuído pelo equipamento embarcado, que permite a avaliação da sequencialidade das transações geradas por aquele cartão SAM |

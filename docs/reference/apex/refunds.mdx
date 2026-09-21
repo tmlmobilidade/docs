@@ -1,0 +1,37 @@
+---
+title: Reembolsos
+description: Um reembolso regista o acto de devolução de uma compra.
+---
+
+## O que é são transações de reembolso?
+
+Reembolso é um evento referente a uma devolução de uma compra de um produto (bilhete de bordo, passe mensal, etc.). Na APEX um reembolso é uma transação do tipo `6`. No GO focamo-nos apenas em reembolsos de títulos de bordo.
+
+## Estrutura Simplificada
+
+| Propriedade              |  Tipo  | Descrição                                                                                                                                                                    |
+| ------------------------ | :----: | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| \_id                     |  GUID  | Identificador único da transação de reembolso.                                                                                                                               |
+| agency\_id               |        | Identificador único do Operador.                                                                                                                                             |
+| apex\_version            |        | Versão do protocolo APEX utilizado para comunicar a transação.                                                                                                               |
+| block\_id                |        | Identificação do plano de trabalho de um veículo. Placa - Conjunto de Circulações, Deslocações em Vazio e Tempos de Reserva cumpridos por um mesmo veículo.                  |
+| card\_physical\_type     |  ENUM  | Tipo de suporte físico do cartão do passageiro.                                                                                                                              |
+| card\_serial\_number     |        | Número de série identificador do cartão associado à transação.                                                                                                               |
+| created\_at              |        | UNIX Timestamp em milisegundos do momento em que a transação foi criada no equipamento local.                                                                                |
+| device\_id               |  GUID  | Identificador único do equipamento que regista a transação APEX de reembolso.                                                                                                |
+| duty\_id                 |        | Identificação do plano de trabalho de um motorista/maquinista. Chapa - Conjunto de Circulações, Deslocações em Vazio e Tempos de Reserva em que intervém um mesmo motorista. |
+| line\_id                 |        | Identificador da linha em que ocorreu a transação.                                                                                                                           |
+| mac\_ase\_counter\_value |        | Valor no contador de transações APEX feitos pelo cartão SAM que se encontra no equipamento que regista a venda.                                                              |
+| mac\_sam\_serial\_number |        | Número de série do cartão SAM que se encontra no equipamento que regista a venda.                                                                                            |
+| on\_board\_sale\_id      |        | Identificador da venda do título de bordo a que o reembolso está associado.                                                                                                  |
+| pattern\_id              |        | Código de identificação do percurso de viagem associado ao reembolso.                                                                                                        |
+| payment\_method          |  ENUM  | Modo de pagamento do reembolso.                                                                                                                                              |
+| price                    |        | Preço em céntimos de EUR, associado à transação. O valor é negativo devido a ser uma operação de reembolso.                                                                  |
+| product\_long\_id        | STRING | Identificador do produto, ou seja, do tipo de título da viagem que está a ser reembolsada.                                                                                   |
+| product\_quantity        |   NUM  | Número de unidades vendidas/carregadas no cartão reembolsadas.                                                                                                               |
+| received\_at             |        | UNIX Timestamp em milisegundos do momento em que a transação foi recebida na central de base de dados.                                                                       |
+| stop\_id                 |        | Identificador único da paragem.                                                                                                                                              |
+| trip\_id                 |        | Identificador único da trip de um determinado plano de operação de um determinado operador.                                                                                  |
+| updated\_at              |        | UNIX Timestamp em milisegundos da última atualização deste refund.                                                                                                           |
+| validation\_id           |        | Identificador único da validação.                                                                                                                                            |
+| vehicle\_id              | STRING | Identificador do veículo, unívoco por operador.                                                                                                                              |

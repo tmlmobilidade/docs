@@ -1,70 +1,37 @@
 ---
 title: Validações
-description: Um poderoso e versátil sistema de bilhética.
+description: As validações permitem às equipas compreender a utilização da rede e melhorar a oferta para os utilizadores.
 ---
-# O que são as transações de validação ?
 
-Correspondem a um dos tipos de transações utilizadas no sistema APEX, e são geradas pelos equipamentos embarcados dos veículos sempre que um passageiro efetua a validação do seu título de transporte (passe/zapping) ou compra de bilhete de bordo.
+## O que são transações de validação?
 
-Estas transações permitem registar e validar cada entrada/saída de um passageiro do sistema, e a estrutura de dados simplificada utilizada no GO encontra-se descrita nesta secção.
+São transações do tipo `11` geradas pelos equipamentos embarcados sempre que um passageiro efetua a validação do seu título de transporte (passe/zapping) ou compra um bilhete de bordo.
 
-Estas transações permitem, entre outras operações, a contabilização do número de passageiros transportados ou, através da análise de sequencialidade das mesmas em conjunto com os restantes tipos de transações, a deteção de períodos de downtime dos equipamentos embarcados que as enviam.
-# A estrutura
+Estas transações são fundamentais pois permitem registar cada entrada e/ou saída de um passageiro no sistema de transportes públicos. É possível contabilizar o número de pessoas transportados em cada viagem, percurso, linha ou paragem, compreender quais serviços estão a ser mais utilizados, e com isso ajustar a rede para melhor responder às necessidades dos utilizadores.
 
-Por forma a serem corretamente contabilizadas/utilizadas, são essenciais para este tipo de transações os seguintes campos:
+## Estrutura Simplificada
 
-| Nome do Campo         | Tipo de dado | Descrição                                                                                                                                                                           |
-| --------------------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| id                    | GUID         | identificador único da transação                                                                                                                                                    |
-| agency_id             | STRING       | código do Operador de transporte                                                                                                                                                    |
-| apex_version          | STRING       | versão da APEX em utilização                                                                                                                                                        |
-| card_serial_number    | STRING       | número de série do título de transporte do passageiro (codificado)                                                                                                                  |
-| category              | ENUM         | categoria do tipo de título de transporte utilizado:  <br/>ocasional a bordo -> on_board_sale  <br/>ocasional pré-pago -> prepaid  <br/>passe mensal -> subscription                |
-| created_at            | INTEGER      | _timestamp_ (data+hora) da geração da transação                                                                                                                                     |
-| device_id             | STRING       | identificador do equipamento embarcado que gerou a transação                                                                                                                        |
-| event_type            | ENUM         | tipo de validação (entrada/saída/reentrada/entrada com recuperação)                                                                                                                 |
-| is_passenger          | BOOLEAN      | verificação de que 1) a validação é válida e 2) não tem uma anulação associada (para aferição do número de passageiros transportados)                                               |
-| line_id               | STRING       | código identifiador da linha                                                                                                                                                        |
-| pattern_id            | STRING       | código identificador do percurso                                                                                                                                                    |
-| trip_id               | STRING       | código identificador da circulação                                                                                                                                                  |
-| stop_id               | STRING       | código identificador da paragem                                                                                                                                                     |
-| vehicle_id            | STRING       | identificador do veículo                                                                                                                                                            |
-| updated_at            | INTEGER      | _timestamp_ (data+hora) da integração da transação nos sistemas da TML                                                                                                              |
-| mac_sam_serial_number | INTEGER      | identificador do número de série do cartão SAM que gerou a transação                                                                                                                |
-| mac_ase_counter_value | INTEGER      | número de contador incremental associado à transação, atribuído pelo equipamento embarcado, que permite a avaliação da sequencialidade das transações geradas por aquele cartão SAM |
-| on_board_refund_id    | GUID         | identificador único do reembolso a que a validação está associada, quando aplicável                                                                                                 |
-| on_board_sale_id      | GUID         | identificador único da venda do título de bordo a que a validação está associada, quando aplicável                                                                                  |
-| product_id            | STRING       | identificador do tipo de título utilizado                                                                                                                                           |
-| units_qty             | INTEGER      | valor descontado do cartão (apenas aplicável quando o título utilizado é ocasional pré-pago)                                                                                        |
-| validation_status     | ENUM         | resultado da validação                                                                                                                                                              |
-
-
-Em seguida apresenta-se um exemplo de uma transação de validação de acordo com a estrutura de dados simplificada:
-
-```json
-{
-  "_id": "68B05E2F-0186-40AE-8130-CA2B1F00749C",
-  "agency_id": "43",
-  "apex_version": "3.2.0",
-  "card_serial_number": "0000000000000000",
-  "category": "subscription",
-  "created_at": 1756388910000,
-  "device_id": "berlioz_38000145",
-  "event_type": 1,
-  "is_passenger": true,
-  "line_id": "3110",
-  "mac_ase_counter_value": 29852,
-  "mac_sam_serial_number": 2932484895,
-  "on_board_refund_id": null,
-  "on_board_sale_id": null,
-  "pattern_id": "3110_0_2",
-  "product_id": "id-prod-navegante-65",
-  "received_at": 1756389000901,
-  "stop_id": "140417",
-  "trip_id": "3110_0_2_1430_1459_0_VER_DU",
-  "units_qty": null,
-  "updated_at": 1769404864734,
-  "validation_status": 0,
-  "vehicle_id": 2387
-}
-```
+| Propriedade              |   Tipo  | Descrição                                                                                                                                                                           |
+| ------------------------ | :-----: | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| \_id                     |   GUID  | identificador único da transação                                                                                                                                                    |
+| agency\_id               |  STRING | código do Operador de transporte                                                                                                                                                    |
+| apex\_version            |  STRING | versão da APEX em utilização                                                                                                                                                        |
+| card\_serial\_number     |  STRING | número de série do título de transporte do passageiro (codificado)                                                                                                                  |
+| category                 |   ENUM  | categoria do tipo de título de transporte utilizado:  <br/>ocasional a bordo -> on\_board\_sale  <br/>ocasional pré-pago -> prepaid  <br/>passe mensal -> subscription              |
+| created\_at              | INTEGER | *timestamp* (data+hora) da geração da transação                                                                                                                                     |
+| device\_id               |  STRING | identificador do equipamento embarcado que gerou a transação                                                                                                                        |
+| event\_type              |   ENUM  | tipo de validação (entrada/saída/reentrada/entrada com recuperação)                                                                                                                 |
+| is\_passenger            | BOOLEAN | verificação de que 1) a validação é válida e 2) não tem uma anulação associada (para aferição do número de passageiros transportados)                                               |
+| line\_id                 |  STRING | código identifiador da linha                                                                                                                                                        |
+| pattern\_id              |  STRING | código identificador do percurso                                                                                                                                                    |
+| trip\_id                 |  STRING | código identificador da circulação                                                                                                                                                  |
+| stop\_id                 |  STRING | código identificador da paragem                                                                                                                                                     |
+| vehicle\_id              |  STRING | identificador do veículo                                                                                                                                                            |
+| updated\_at              | INTEGER | *timestamp* (data+hora) da integração da transação nos sistemas da TML                                                                                                              |
+| mac\_sam\_serial\_number | INTEGER | identificador do número de série do cartão SAM que gerou a transação                                                                                                                |
+| mac\_ase\_counter\_value | INTEGER | número de contador incremental associado à transação, atribuído pelo equipamento embarcado, que permite a avaliação da sequencialidade das transações geradas por aquele cartão SAM |
+| on\_board\_refund\_id    |   GUID  | identificador único do reembolso a que a validação está associada, quando aplicável                                                                                                 |
+| on\_board\_sale\_id      |   GUID  | identificador único da venda do título de bordo a que a validação está associada, quando aplicável                                                                                  |
+| product\_id              |  STRING | identificador do tipo de título utilizado                                                                                                                                           |
+| units\_qty               | INTEGER | valor descontado do cartão (apenas aplicável quando o título utilizado é ocasional pré-pago)                                                                                        |
+| validation\_status       |   ENUM  | resultado da validação                                                                                                                                                              |
