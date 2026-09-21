@@ -1,0 +1,17 @@
+---
+title: Taps Bancários
+description: Um tap bancário regista o acto de validação com um cartão bancário (CUT).
+---
+
+## O que são taps bancários?
+
+Um tap bancário é gerado quando um passageiro opta por utilizar o sistema [Tap\&Ride](https://carrismetropolitana.pt/tap-and-ride) para comprar o seu bilhete, encostando o seu cartão bancário ao equipamento de validação. Na APEX são as transação de tipo `20`.
+
+## Estrutura Simplificada
+
+| Propriedade   |  Tipo  | Descrição                                                      |
+| ------------- | :----: | -------------------------------------------------------------- |
+| \_id          |  GUID  | Identificador único da transação de venda.                     |
+| agency\_id    | STRING | Identificador único do Operador.                               |
+| apex\_version | STRING | Versão do protocolo APEX utilizado para comunicar a transação. |
+| TBD           |   ...  | ...                                                            |

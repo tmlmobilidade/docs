@@ -1,0 +1,10 @@
+{
+	"pages": [
+		"index",
+		"sales",
+		"refunds",
+		"locations",
+		"validations",
+		"banking-taps"
+	]
+}
