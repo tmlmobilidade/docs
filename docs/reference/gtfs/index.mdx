@@ -2,27 +2,34 @@
 title: Introdução
 description: Descobre o que é um GTFS e o que podes fazer com ele.
 ---
-## Resumo
+
+## O que é um GTFS?
 
 GTFS significa General Transit Feed Specification. É um standard internacional que define como aplicações de planeamento (ex. Google Maps, Transit, CityMapper) devem interpretar redes de transportes públicos, como horários e percursos. A especificação foi criada pelo Google, mas é agora mantida e orientada pela equipa da [Mobility Data](https://mobilitydata.org), de forma aberta e partilhada.
 
-O standard define dois grupos: o GTFS Schedule, onde estão mapeadas todas as paragens, percursos e horários *planeados* de uma determinada agência; e o GTFS Real Time, que funciona como uma camada em cima do GTFS Schedule para ajustar as informações à realidade do momento (ex. horários mudam pois houve um acidente na ponte).
+O standard define dois grupos: o GTFS Schedule, onde estão mapeadas todas as paragens, percursos e horários *planeados* para um determinado operador; e o GTFS Real Time, que funciona como uma camada em cima do GTFS Schedule para ajustar as informações à realidade do momento (ex. horários mudam pois houve um acidente na ponte).
 
-O [GTFS Schedule](/reference/gtfs/schedule) não é mais do que uma série de tabelas (ex. ficheiros Excel) agrupados num arquivo `.zip`. Cada uma destas tabelas é um ficheiro separado em formato `.csv` (comma-separated values). Cada ficheiro tem um nome específico e um conjunto obrigatório de colunas, formando uma estrutura relacional.
+O [GTFS Schedule](/reference/gtfs/schedule) não é mais do que uma série de tabelas (ex. ficheiros Excel) agrupados num arquivo `.zip`. Cada uma destas tabelas é um ficheiro separado por vírgulas (`.csv` que significa comma-separated values) mas a terminação dos ficheiros é sempre `.txt` para evitar conflitos com alguns programas. Cada ficheiro tem um nome específico e um conjunto obrigatório de colunas, formando uma estrutura relacional.
 
-O [GTFS Real Time](/reference/gtfs/realtime) é um pouco mais complexo pois utiliza o formato [Protobuf](https://protobuf.dev/overview), o que exige necessariamente aplicações adicionais ou scripts de descodificação. Não deixa de ser apenas um "ficheiro" que contém alterações ou informações adicionais ao que estava descrito no GTFS planeado.
+O [GTFS Real Time](/reference/gtfs/realtime) é um pouco mais complexo pois utiliza o formato [Protobuf](https://protobuf.dev/overview), o que exige necessariamente aplicações adicionais ou scripts de descodificação. Não deixa de ser apenas um "ficheiro" que contém alterações ou informações adicionais ao que estava descrito no GTFS planeado. Protobuf é um formato também desenvolvido pelo Google que pretende ser extremamente eficiente na transmissão de dados entre aplicações.
 
-Quem produz o GTFS são as agências de transporte público, e quase todas têm pelo menos a versão planeada.
+Quem produz o GTFS são os operadores de transporte público, e quase todos têm pelo menos a versão planeada.
 
 ## GTFS versão 30
 
-A TML utiliza o **GTFS como formato standard para comunicar a sua operação de transportes públicos**. A versão 30 define uma estrutura comum para os diferentes operadores, utilizando os campos previstos no GTFS Standard.
+Como o GTFS foi inicialmente pensado apenas para comunicar horários e percursos às aplicações de planeamento, existem algumas informações que a TML considera essenciais que não estão mapeadas no standard. Ainda, o GTFS permite mapear informações de diferentes formas tornando mais complexo o seu entendimento e processamento.
 
-A informação necessária aos sistemas TML e à APEX é obtida através da leitura dos campos existentes no GTFS, não sendo necessário acrescentar campos específicos da APEX ao ficheiro fornecido pelos operadores.
+A TML utiliza o **GTFS como formato standard para comunicar as operações de transporte com os operadores e com o público**. Tal como acontece com várias autoridades de transporte no mundo, a TML decidiu expandir o standard para que os ficheiros GTFS possam incluir informações adicionais que são essenciais para configurar outros sistemas, como o sistema de bilhética APEX. Ao longo do tempo, esta extensão tem evoluído para responder ao feedback dos operadores e às evoluções tecnológicas dos sistemas de informação ao público e de bilhética.
 
-Para a identificação da **linha**, o campo `route_short_name` passa a ser **obrigatório** no GTFS versão 30. O seu valor é utilizado diretamente como `LineLongID` na APEX. Desta forma, deixa de ser necessário utilizar um campo adicional `line_id` para representar a linha.
+Atualmente, estamos na **versão 30** desta extensão. Esta atualização, introduzida em Setembro de 2026, define uma estrutura comum para todos os operadores de transporte sem acrescentar nenhuma coluna obrigatória adicional às que já estão presentes no standard. No entanto, para garantir a consistência da informação e simplificar o processo de configuração da APEX, a TML exige que algumas colunas que já existem no standard sejam obrigatoriamente preenchidas.
 
-Para a identificação do **percurso**, o campo `pattern_id` é eliminado. O `shape_id` passa a ser utilizado como identificador do percurso e é mapeado diretamente para `PatternLongID` na APEX. O mesmo `shape_id` deve ser utilizado de forma consistente em `trips.txt` e `shapes.txt`, garantindo a correspondência entre as viagens e a geometria do percurso.
+**A motivação desta atualização é a simplificação das exigências, reduzindo a duplicação de informação e a necessidade de desenvolvimentos para produzir um ficheiro GTFS adaptado às necessidades específicas da TML.**
+
+Na grande maioria dos casos, não há necessidade de alterar os sistemas que produzem os ficheiros GTFS pois essas colunas obrigatórias já estavam a ser corretamente preenchidas.
+
+Para a identificação da **linha**, o campo `route_short_name`, que é opcional no standard, é considerado **obrigatório** no GTFS v30. O seu valor é mapeado para o campo `lineLongID` na APEX. Desta forma, os campos adicionais `line_id`, `line_short_name` e `line_long_name` deixam de ser necessários. Os operadores podem continuar a enviar ficheiros com estes campos, que serão corretamente ignorados pelos sistemas.
+
+Para a identificação do **percurso**, no ficheiro `trips.txt`, o campo `pattern_id` é combinado com o `shape_id`. Num número significativo de operadores o campo `shape_id` já é preenchido com o mesmo valor do campo `pattern_id`, existindo . passa a ser utilizado como identificador do percurso e é mapeado diretamente para `PatternLongID` na APEX. O mesmo `shape_id` deve ser utilizado de forma consistente em `trips.txt` e `shapes.txt`, garantindo a correspondência entre as viagens e a geometria do percurso.
 
 Recomenda-se que o `shape_id` seja definido através da combinação do `route_id` com o `direction_id`:
 
