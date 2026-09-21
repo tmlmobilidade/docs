@@ -11,22 +11,22 @@ Os IDs de cada operador são acompanhados também com um código (agency\_code) 
 
 No Hub, um operador é representado por um objeto JSON com as seguintes propriedades:
 
-| Propriedade                       |   Tipo  | Descrição                                                                                             |
-| --------------------------------- | :-----: | ----------------------------------------------------------------------------------------------------- |
-| `_id`                             |  String | ID único do operador.                                                                                 |
-| `code`                            |  String | Código do operador noutros sistemas de informação.                                                    |
-| `name`                            |  String | Nome do operador.                                                                                     |
-| `website_url`                     |  String | URL do website.                                                                                       |
-| `fare_url`                        |  String | URL para informação de tarifas.                                                                       |
-| `email`                           |  String | Email de contacto público.                                                                            |
-| `phone`                           |  String | Contacto telefónico do operador.                                                                      |
-| `primary_language`                |  String | Idioma principal utilizado pelo operador.                                                             |
-| `timezone`                        |  String | Fuso horário da operação.                                                                             |
-| `services`                        |  Object | Serviços do GO Hub ativos para este operador.                                                         |
-| `services.eta_enabled`            | Boolean | Indica se estão a ser geradas estimativas de chegada em tempo real com base nas posições de veículos. |
-| `services.gtfs_enabled`           | Boolean | Indica se os planos deste operador estão a ser incluídos na exportação do GTFS global.                |
-| `services.positions_enabled`      | Boolean | Indica se estão a ser publicadas posições de veículos em tempo real para este operador.               |
-| `services.service_alerts_enabled` | Boolean | Indica se estão a ser publicados alertas de serviço para este operador.                               |
+| Propriedade                       |             Tipo            | Descrição                                                                                             |
+| --------------------------------- | :-------------------------: | ----------------------------------------------------------------------------------------------------- |
+| `_id`                             |            String           | ID único do operador.                                                                                 |
+| `code`                            |            String           | Código do operador noutros sistemas de informação.                                                    |
+| `name`                            |            String           | Nome do operador.                                                                                     |
+| `website_url`                     |            String           | URL do website.                                                                                       |
+| `fare_url`                        |            String           | URL para informação de tarifas.                                                                       |
+| `email`                           |            String           | Email de contacto público.                                                                            |
+| `phone`                           |            String           | Contacto telefónico do operador.                                                                      |
+| `primary_language`                |     LanguageTag (String)    | Idioma principal utilizado pelo operador.                                                             |
+| `timezone`                        | TimezoneIdentified (String) | Fuso horário da operação.                                                                             |
+| `services`                        |            Object           | Serviços do GO Hub ativos para este operador.                                                         |
+| `services.eta_enabled`            |           Boolean           | Indica se estão a ser geradas estimativas de chegada em tempo real com base nas posições de veículos. |
+| `services.gtfs_enabled`           |           Boolean           | Indica se os planos deste operador estão a ser incluídos na exportação do GTFS global.                |
+| `services.positions_enabled`      |           Boolean           | Indica se estão a ser publicadas posições de veículos em tempo real para este operador.               |
+| `services.service_alerts_enabled` |           Boolean           | Indica se estão a ser publicados alertas de serviço para este operador.                               |
 
 ### Endpoints disponíveis
 
