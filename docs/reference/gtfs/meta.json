@@ -2,6 +2,7 @@
 	"pages": [
 		"index",
 		"schedule",
-		"realtime"
+		"realtime",
+		"validation-rules"
 	]
 }
