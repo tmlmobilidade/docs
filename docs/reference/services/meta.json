@@ -4,6 +4,7 @@
 		"maps",
 		"valhalla",
 		"motis",
+		"nominatim",
 		"tts"
 	]
 }
