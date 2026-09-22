@@ -1,7 +1,7 @@
 {
 	"pages": [
-		"agency",
 		"feed-info",
+		"agency",
 		"routes",
 		"trips",
 		"calendar",
