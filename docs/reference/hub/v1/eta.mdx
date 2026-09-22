@@ -1,18 +1,32 @@
 ---
-title: ETA
-description: Estimativas de chegada (ETA) para todas as viagens/paragens em operação, em JSON simplificado.
+title: Estimativas de Chegada
+description: Estimativas de chegada (ETA - Estimated Time of Arrival) para todas as viagens/paragens em operação.
 ---
 
 Informação em tempo real da rede de transportes, como posições de veículos e estimativas de chegada. O estimador de horários ainda está em fase experimental, pelo que deve ser utilizado com algum cuidado.
 
-| Path                                                                                                                    | Descrição                                                                                                                                                    |
-| ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [`/v1/eta/gtfs.pb`](https://go.tmlmobilidade.pt/hub/api/v1/eta/gtfs.pb)                               | Estimativas de chegada (ETA) para todas as viagens/paragens em operação, no formato GTFS-RT TripUpdates (Protobuf).                                          |
-| [`/v1/eta/gtfs`](https://go.tmlmobilidade.pt/hub/api/v1/eta/gtfs)                                     | Estimativas de chegada (ETA) para todas as viagens/paragens em operação, no formato GTFS-RT TripUpdates (JSON).                                              |
-| [`/v1/eta`](https://go.tmlmobilidade.pt/hub/api/v1/eta)                                               | Estimativas de chegada (ETA) para todas as viagens/paragens em operação, em JSON simplificado.                                                               |
-| [`/v1/eta/by-trip/:id/gtfs.pb`](https://go.tmlmobilidade.pt/hub/api/v1/eta/by-trip/:id/gtfs.pb)       | Estimativas de chegada (ETA) para uma viagem específica (`:id`), em formato GTFS-RT TripUpdates (Protobuf).                                                  |
-| [`/v1/eta/by-trip/:id/gtfs`](https://go.tmlmobilidade.pt/hub/api/v1/eta/by-trip/:id/gtfs)             | Estimativas de chegada (ETA) para uma viagem específica (`:id`), em formato GTFS-RT TripUpdates (JSON).                                                      |
-| [`/v1/eta/by-trip/:id`](https://go.tmlmobilidade.pt/hub/api/v1/eta/by-trip/:id)                       | Estimativas de chegada (ETA) para uma viagem específica (`:id`), em JSON simplificado.                                                                       |
-| [`/v1/eta/by-stop/:id/gtfs.pb`](https://go.tmlmobilidade.pt/hub/api/v1/eta/by-stop/:id/gtfs.pb)       | Estimativas de chegada (ETA) para uma paragem específica (`:id`), em formato GTFS-RT TripUpdates (Protobuf).                                                 |
-| [`/v1/eta/by-stop/:id/gtfs`](https://go.tmlmobilidade.pt/hub/api/v1/eta/by-stop/:id/gtfs)             | Estimativas de chegada (ETA) para uma paragem específica (`:id`), em formato GTFS-RT TripUpdates (JSON).                                                     |
-| [`/v1/eta/by-stop/:id`](https://go.tmlmobilidade.pt/hub/api/v1/eta/by-stop/:id)                       | Estimativas de chegada (ETA) para uma paragem específica (`:id`), em JSON simplificado.                                                                      |
+### Estrutura de um plano [#estrutura-de-dados]
+
+No Hub, o ETA é representado por um objeto JSON com as seguintes propriedades:
+
+| Propriedade          | Tipo                   | Descrição                                           |
+| ---------------------| ---------------------- | --------------------------------------------------- |
+| `eta_at`             | Integer                | Timestamp do ETA em milissegundos (Unix timestamp). |
+| `eta_seconds`        | Integer                | Tempo de espera em segundos.                        |
+| `stop_id`            | String                 | ID da paragem.                                      |
+| `stop_name`          | String                 | Nome da paragem.                                    |
+| `stop_sequence`      | Integer                | Sequência da paragem.                               |
+| `trip_id`            | String                 | ID do viagem.                                       |
+| `vehicle_id`         | String                 | ID do veículo.                                      
+
+### [**Endpoints disponíveis**](https://go.tmlmobilidade.pt/reference/hub/v1/eta#endpoints-dispon%C3%ADveis)
+
+Base path: `https://go.tmlmobilidade.pt/hub/api`
+
+| Path                                                                             | Descrição                                                                                                                                                                             |
+| -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`/v1/eta/gtfs.pb`](https://go.tmlmobilidade.pt/hub/api/v1/eta/gtfs.pb)          | Estimativas de chegada (ETA) para todas as viagens/paragens em operação, no formato [GTFS-RT TripUpdates](https://gtfs.org/documentation/realtime/examples/trip-updates/) (Protobuf). |
+| [`/v1/eta/gtfs`](https://go.tmlmobilidade.pt/hub/api/v1/eta/gtfs)                | Estimativas de chegada (ETA) para todas as viagens/paragens em operação, no formato [GTFS-RT TripUpdates](https://gtfs.org/documentation/realtime/examples/trip-updates/) (JSON).     |
+| [`/v1/eta`](https://go.tmlmobilidade.pt/hub/api/v1/eta)                          | Estimativas de chegada (ETA) para todas as viagens/paragens em operação, em JSON simplificado.                                                                                        |
+| [`/v1/eta/by-trip/:id`](https://go.tmlmobilidade.pt/hub/api/v1/eta/by-trip/\:id) | Estimativas de chegada (ETA) para uma viagem específica (`:id`), em JSON simplificado.                                                                                                |
+| [`/v1/eta/by-stop/:id`](https://go.tmlmobilidade.pt/hub/api/v1/eta/by-stop/\:id) | Estimativas de chegada (ETA) para uma paragem específica (`:id`), em JSON simplificado.                                                                                               |
