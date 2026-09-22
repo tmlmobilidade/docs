@@ -14,7 +14,7 @@ A funcionalidade de exportação não tem limite de resultados.
 
 #### Intervalo de datas
 
-O filtro por i**ntervalo de datas** é o único que é obrigatório devido ao elevado volume de dados. Este permite-nos filtrar as circulações por um intervalo entre o *inicio de hora planeada* (`start_time_scheduled`) e *fim de hora planeada* (`end_time_scheduled`).
+O filtro por **intervalo de datas** é o único que é obrigatório devido ao elevado volume de dados. Este permite-nos filtrar as circulações por um intervalo entre o *início de hora planeada* (`start_time_scheduled`) e *fim de hora planeada* (`end_time_scheduled`).
 
 #### Operador
 
@@ -32,61 +32,63 @@ A pesquisa pode ser utilizada tanto para consultas simples como para combinaçõ
 
 #### Como Funciona
 
-Ao introduzir texto no campo de pesquisa, o sistema analisa cada termo individualmente e tenta associá-lo ao tipo de informação mais relevante, como por exemplo:
+Ao introduzir texto no campo de pesquisa, o sistema analisa o conteúdo e distingue:
 
-- ID da Ride
-- Códigos operacionais
-- Veículo associado
-- Motorista associado
-- Horário da circulação
+- **Etiquetas especiais** com prefixo (`l:`, `v:`, `d:`) — filtragem direta por linha, veículo ou motorista
+- **Padrões de `trip_id`** com `%%` — correspondência por padrão
+- **Texto livre** — pesquisa parcial no identificador da circulação (`_id`) e no destino (`headsign`)
 
-Sempre que possível, os termos são encaminhados para filtros específicos, tornando a pesquisa mais precisa e eficiente.
+As etiquetas especiais são confirmadas com a tecla **Espaço**: o valor passa a um *badge* no campo de pesquisa e o cursor fica livre para continuares a escrever. Com **Backspace** num campo vazio, o último *badge* volta a texto editável. Podes combinar várias etiquetas e texto livre na mesma pesquisa.
 
-Quando um termo não corresponde diretamente a um filtro conhecido, o sistema utiliza-o como pesquisa genérica, procurando correspondências no identificador da circulação.
+Exemplo: `l:1001 v:1234 Oriente`
 
 #### ID da Ride
 
-As circulações são identificadas com o seguinte formato `[plan_id]-[agency_id]-[operational_day]-[trip_id]`
-Um exemplo de um `id` de uma circulação é `O9AXB-41-20260302-1001_0_1_0700_0729_0_1`. A pesquisa pelo `id` da circulação é a forma mais direta de chegar a uma circulação específica. Como os identificadores são únicos, colocando o ID na caixa de pesquisa irá devolver imediatamente a circulação que procuras.
+As circulações são identificadas com o seguinte formato `[plan_id]-[agency_id]-[operational_day]-[trip_id]`.
 
-#### Códigos operacionais
+Um exemplo de um `id` de uma circulação é `O9AXB-41-20260302-1001_0_1_0700_0729_0_1`. A pesquisa pelo `id` da circulação é a forma mais direta de chegar a uma circulação específica. Como os identificadores são únicos, colocando o ID completo na caixa de pesquisa irá devolver imediatamente a circulação que procuras — mesmo que esteja fora do intervalo de datas selecionado.
 
-Os códigos operacionais indentificam a linha, a variante ou o percurso e podem ser separados individualmente. Por exemplo: `line_id: 1001`, `route_id: 1001_0`, `pattern_id: 1001_0_1`.
+#### Linha associada
+
+É possível filtrar diretamente por código curto da linha (`route_short_name`) através do prefixo `l:{route_short_name}`. É possível ainda pesquisar por múltiplas linhas de uma só vez, separando os valores por vírgulas.
+
+Exemplo: `l:1001` ou `l:1001,10B,1020`
 
 #### Veículo associado
 
-É possível filtrar diretamente por identificador do veículo através do prefixo `v:{vehicle_id}`. É possível ainda pesquisar por múltiplos veículos de uma só vez, separando os valores por virgulas.
+É possível filtrar diretamente por identificador do veículo através do prefixo `v:{vehicle_id}`. É possível ainda pesquisar por múltiplos veículos de uma só vez, separando os valores por vírgulas.
 
 Exemplo: `v:1234` ou `v:1234,5678`
 
 #### Motorista associado
 
-É possível filtrar diretamente por identificador de motorista através do prefixo `d:{driver_id}`. É possível ainda pesquisar por múltiplos motoristas de uma só vez, separando os valores por virgulas.
+É possível filtrar diretamente por identificador de motorista através do prefixo `d:{driver_id}`. É possível ainda pesquisar por múltiplos motoristas de uma só vez, separando os valores por vírgulas.
 
 Exemplo: `d:1234` ou `d:1234,5678`
 
-Aqui tens uma versão mais clara e direta, com melhor estrutura e precisão:
-
 #### Pesquisa de `trip_id` com Pattern Matching
+
 É possível pesquisar `trip_id` utilizando *pattern matching* com o delimitador `%%`, permitindo encontrar múltiplos valores que partilham um padrão comum.
 Isto é especialmente útil quando os `trip_id` seguem convenções estruturadas, como a inclusão de horários ou identificadores parciais.
 
 **Exemplo 1 — Filtrar por padrão (hora)**
 
 Dado o conjunto de `trip_id`:
+
 - `2141_0_2|120|1|1430`
 - `3536_1_2_1430_1459_0_ESC_DU`
 - `1230_0_1_1430_1459_0_1`
-  
+
 Para obter todos os `trip_id` que contêm o padrão `1430` (ex: hora 14:30), pode-se usar: `%%1430%%`
 
 **Exemplo 2 — Ignorar segmentos variáveis**
 
 Dado o conjunto:
+
 - `4404_0_3|3000|1430`
 - `4404_0_3|3100|1430`
 - `4404_0_3|400|1430`
-  
+
 Se apenas a parte intermédia varia, é possível usar: `4404_0_3|%%|1430`
 
 Este padrão permite ignorar qualquer valor entre os delimitadores fixos, capturando todas as variações relevantes.
