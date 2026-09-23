@@ -32,7 +32,7 @@ export function MapOverlayDebug({ className }: Props) {
 		return (typeof (possibleMap as { getMap?: () => MapLibre }).getMap === 'function')
 			? (possibleMap as { getMap: () => MapLibre }).getMap()
 			: (possibleMap as MapLibre);
-	}, [map.current]);
+	}, [map]);
 
 	//
 	// B. Transform data
