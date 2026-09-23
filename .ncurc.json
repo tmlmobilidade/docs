@@ -1,0 +1,12 @@
+{
+	"dep": [
+		"prod",
+		"dev",
+		"optional",
+		"packageManager",
+		"overrides"
+	],
+	"reject": [
+		"typescript"
+	]
+}

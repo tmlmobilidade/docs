@@ -115,5 +115,5 @@ export function MapViewBasemap({ children, cursor, id, interactiveLayerIds = [],
 		</Map>
 	);
 
-	//
+
 }

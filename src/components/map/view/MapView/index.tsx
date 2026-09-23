@@ -37,7 +37,6 @@ export function MapView({ children, cursor, id, interactiveLayerIds = [], onClic
 			<div
 				className={styles.container}
 				style={{ height: '100%', width: '100%' }}
-				// style={{ gridTemplateRows: height ? `${height}px auto` : '1fr auto' }}
 			>
 				<MapViewBasemap
 					cursor={cursor}
