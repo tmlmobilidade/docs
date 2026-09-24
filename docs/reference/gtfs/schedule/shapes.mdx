@@ -8,17 +8,13 @@ description: Define os percursos geográficos das viagens, através de uma sequ�
 | [GTFS Standard](https://gtfs.org/documentation/schedule/reference/#shapestxt) | Ficheiro optional    |
 | GTFS v30 (GO)                                                                 | Ficheiro obrigatório |
 
+Os percursos descrevem o trajeto que um veículo percorre ao longo do alinhamento de uma rota e são definidos no ficheiro shapes.txt. Os percursos estão associados a viagens e são constituídos por uma sequência de pontos pelos quais o veículo passa, pela ordem indicada.
+Os percursos não têm de coincidir exatamente com a localização das paragens, mas todas as paragens de uma viagem devem estar a uma pequena distância do percurso correspondente, ou seja, próximas dos segmentos de linha reta que ligam os pontos do percurso.
+O ficheiro shapes.txt deve ser incluído para todos os serviços baseados em rotas (não se aplica a serviços de transporte a pedido).
 ## Chave Primária
 
 O conteúdo deste ficheiro é identificado pelos valores da coluna `shape_id` e `shape_pt_sequence` .
 
----
-
-Os percursos descrevem o trajeto que um veículo percorre ao longo do alinhamento de uma rota e são definidos no ficheiro shapes.txt. Os percursos estão associados a viagens e são constituídos por uma sequência de pontos pelos quais o veículo passa, pela ordem indicada.
-Os percursos não têm de coincidir exatamente com a localização das paragens, mas todas as paragens de uma viagem devem estar a uma pequena distância do percurso correspondente, ou seja, próximas dos segmentos de linha reta que ligam os pontos do percurso.
-O ficheiro shapes.txt deve ser incluído para todos os serviços baseados em rotas (não se aplica a serviços de transporte a pedido).
-
----
 ### Estrutura
 
 | Nome do Campo         |            Tipo             | GTFS Standard |    GTFS v30     | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
