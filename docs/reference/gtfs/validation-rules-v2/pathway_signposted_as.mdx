@@ -1,0 +1,44 @@
+---
+title: Texto da sinalética do percurso
+description: Verifica se o signposted_as de pathways.txt, quando preenchido, cumpre a configuração da regra.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `pathway_signposted_as` |
+| Ficheiro | `pathways.txt` |
+| Campo | `signposted_as` |
+| Tipo | Texto |
+| Severidade | Opcional |
+
+**Descrição do campo:** texto da sinalética física visível para os passageiros, por exemplo `Siga as placas para Prior Velho`. Deve aparecer exatamente como está impresso nas placas.
+
+Mais informação em [pathways.txt](/reference/gtfs/schedule/pathways).
+
+## Como funciona
+
+O `signposted_as` é opcional. Um campo vazio é aceite, salvo se a configuração da regra o exigir ou recomendar. A regra **não verifica o conteúdo do texto**. Aceita qualquer texto preenchido.
+
+A regra avalia cada linha do `pathways.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `signposted_as` está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | ✅ Passa |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `Saída Prior Velho` | ✅ Passa | Preenchido |
+| *(vazio)* | ✅ Passa | Campo opcional |
+| *(vazio)* com campo exigido na configuração | ❌ Problema | A configuração da regra exige o campo |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `signposted_as` em `pathways.txt` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `signposted_as` em `pathways.txt` |

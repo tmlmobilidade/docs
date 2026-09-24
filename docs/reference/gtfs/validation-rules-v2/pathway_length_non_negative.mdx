@@ -1,0 +1,56 @@
+---
+title: Comprimento do percurso
+description: Verifica se o length de pathways.txt, quando preenchido, não é negativo, e se é recomendado para passagens a pé e cancelas.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `pathway_length_non_negative` |
+| Ficheiro | `pathways.txt` |
+| Campos | `length`, `pathway_mode` |
+| Tipo | Número decimal não negativo, enumeração (`1` a `7`) |
+| Severidade | Opcional (recomendado nas passagens a pé, cancelas de pagamento e cancelas de saída), Obrigatório |
+
+**Descrição dos campos:**
+
+- `length`: comprimento horizontal do percurso, em metros, de `from_stop_id` até `to_stop_id`. É recomendado nas passagens a pé, nas cancelas de pagamento e nas cancelas de saída.
+- `pathway_mode`: indica o tipo de percurso. Os tipos `1`, `6` e `7` são passagem a pé, cancela de pagamento e cancela de saída.
+
+Mais informação em [pathways.txt](/reference/gtfs/schedule/pathways).
+
+## Como funciona
+
+Se o `length` estiver preenchido, não pode ser negativo. Se estiver vazio, é recomendado nas passagens a pé, nas cancelas de pagamento e nas cancelas de saída. A regra **não verifica se o comprimento é realista**.
+
+A regra avalia cada linha do `pathways.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `length` está vazio e o `pathway_mode` é `1`, `6` ou `7`? | ❌ Reporta o problema: `length` recomendado | Segue para o passo 2 |
+| 2 | O `length` está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 3 |
+| 3 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 4 |
+| 4 | O `length` é um número negativo? | ❌ Reporta o problema: valor negativo | ✅ Passa |
+
+## Como se relacionam
+
+O `pathway_mode` decide se o `length` é recomendado. Nos tipos `1`, `6` e `7`, o `length` vazio é sempre reportado.
+
+## Exemplos
+
+| `length` | `pathway_mode` | Resultado | Porquê |
+|---|---|---|---|
+| `12.5` | `1` | ✅ Passa | Preenchido e não negativo |
+| *(vazio)* | `2` | ✅ Passa | Escadas, campo opcional |
+| *(vazio)* | `1` | ❌ Problema | Passagem a pé, campo recomendado |
+| `-3` | `1` | ❌ Problema | Valor negativo |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `length` recomendado | O `length` está vazio e o `pathway_mode` é `1`, `6` ou `7` | Preencher o `length` em `pathways.txt` com o comprimento em metros |
+| Valor negativo | O `length` é um número negativo | Em `pathways.txt`, escrever o `length` com um número igual ou superior a `0` |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `length` em `pathways.txt` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `length` em `pathways.txt` |

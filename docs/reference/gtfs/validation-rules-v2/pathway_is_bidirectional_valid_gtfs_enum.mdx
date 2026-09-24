@@ -1,0 +1,59 @@
+---
+title: Sentido do percurso
+description: Verifica se o is_bidirectional de pathways.txt está preenchido com 0 ou 1 e se as cancelas de saída não são bidirecionais.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `pathway_is_bidirectional_valid_gtfs_enum` |
+| Ficheiro | `pathways.txt` |
+| Campos | `is_bidirectional`, `pathway_mode` |
+| Tipo | Enumeração (`0` ou `1`), enumeração (`1` a `7`) |
+| Severidade | Obrigatório, Obrigatório |
+
+**Descrição dos campos:**
+
+- `is_bidirectional`: indica se o percurso pode ser usado nos dois sentidos. O valor `0` significa que só pode ser usado de `from_stop_id` para `to_stop_id`. O valor `1` significa que pode ser usado nos dois sentidos.
+- `pathway_mode`: indica o tipo de percurso. As cancelas de saída (`7`) não podem ser bidirecionais.
+
+Mais informação em [pathways.txt](/reference/gtfs/schedule/pathways).
+
+## Como funciona
+
+Cada linha do `pathways.txt` tem de ter um `is_bidirectional` de `0` ou `1`. Se a configuração da regra tiver uma lista de valores permitidos, o valor também tem de constar dessa lista. Uma cancela de saída não pode ser bidirecional. A regra **não verifica os outros tipos de percurso**.
+
+A regra avalia cada linha do `pathways.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `is_bidirectional` está vazio? | ❌ Reporta o problema: `is_bidirectional` obrigatório | Segue para o passo 2 |
+| 2 | O `is_bidirectional` é `0` ou `1`? | Segue para o passo 3 | ❌ Reporta o problema: valor inválido |
+| 3 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 4 | Segue para o passo 6 |
+| 4 | A lista aceita qualquer valor? | ✅ Passa, sem mais verificações | Segue para o passo 5 |
+| 5 | O valor está na lista? | Segue para o passo 6 | ❌ Reporta o problema: valor não permitido |
+| 6 | O `is_bidirectional` é `1` e o `pathway_mode` é `7`? | ❌ Reporta o problema: cancela de saída bidirecional | ✅ Passa |
+
+## Como se relacionam
+
+Quando o `pathway_mode` é `7` (cancela de saída), o `is_bidirectional` tem de ser `0`.
+
+## Exemplos
+
+| `is_bidirectional` | `pathway_mode` | Resultado | Porquê |
+|---|---|---|---|
+| `1` | `2` | ✅ Passa | Escadas nos dois sentidos |
+| `0` | `7` | ✅ Passa | Cancela de saída num só sentido |
+| `1` | `7` | ❌ Problema | Cancela de saída não pode ser bidirecional |
+| `2` | `2` | ❌ Problema | Só são aceites `0` e `1` |
+| *(vazio)* | `2` | ❌ Problema | Falta o valor |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `is_bidirectional` obrigatório | A linha não tem `is_bidirectional` | Preencher o `is_bidirectional` em `pathways.txt` com `0` ou `1` |
+| Valor inválido | O valor é um número diferente de `0` e `1` | Corrigir o `is_bidirectional` em `pathways.txt` para `0` ou `1` |
+| Valor não permitido | O valor é válido, mas a configuração da regra não o permite | Usar um valor da lista permitida, ou pedir ao administrador que o adicione |
+| Cancela de saída bidirecional | O `is_bidirectional` é `1` num percurso com `pathway_mode` `7` | Escrever `0` no `is_bidirectional` em `pathways.txt` |

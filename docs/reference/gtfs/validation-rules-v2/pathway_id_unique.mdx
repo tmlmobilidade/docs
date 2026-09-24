@@ -1,0 +1,46 @@
+---
+title: Identificador do percurso
+description: Verifica se o pathway_id de pathways.txt está preenchido e não se repete.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `pathway_id_unique` |
+| Ficheiro | `pathways.txt` |
+| Campo | `pathway_id` |
+| Tipo | ID único |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** identifica um percurso. É usado pelos sistemas como identificador interno do registo e tem de ser único no conjunto de dados. Percursos diferentes podem ter os mesmos `from_stop_id` e `to_stop_id`, por exemplo duas escadas rolantes lado a lado em sentidos opostos.
+
+Mais informação em [pathways.txt](/reference/gtfs/schedule/pathways).
+
+## Como funciona
+
+Cada linha do `pathways.txt` tem de ter um `pathway_id` preenchido e diferente do das outras linhas. A regra **não verifica se os percursos são diferentes entre si**. Só verifica o identificador.
+
+A regra avalia cada linha do `pathways.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `pathway_id` está vazio? | ❌ Reporta o problema: `pathway_id` obrigatório | Segue para o passo 2 |
+| 2 | Outra linha do `pathways.txt` tem o mesmo `pathway_id`? | ❌ Reporta o problema: `pathway_id` duplicado | ✅ Passa |
+
+Quando há duplicados, o problema é reportado em todas as linhas que repetem o `pathway_id`.
+
+## Exemplos
+
+| `pathway_id` nas linhas do `pathways.txt` | Resultado | Porquê |
+|---|---|---|
+| `P1`, `P2` | ✅ Passa | Preenchidos e diferentes |
+| `P1`, `P1` | ❌ Problema | `pathway_id` repetido |
+| *(vazio)* | ❌ Problema | Falta o `pathway_id` |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `pathway_id` obrigatório | A linha não tem `pathway_id` | Preencher o `pathway_id` em `pathways.txt` com um identificador único |
+| `pathway_id` duplicado | Duas ou mais linhas do `pathways.txt` têm o mesmo `pathway_id` | Em `pathways.txt`, dar a cada percurso um `pathway_id` diferente. Se for o mesmo percurso, remover a linha repetida |

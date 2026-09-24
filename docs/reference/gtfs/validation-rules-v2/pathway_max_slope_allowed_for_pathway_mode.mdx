@@ -1,0 +1,57 @@
+---
+title: Inclinação máxima do percurso
+description: Verifica se o max_slope de pathways.txt só é usado em passagens a pé e tapetes rolantes.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `pathway_max_slope_allowed_for_pathway_mode` |
+| Ficheiro | `pathways.txt` |
+| Campos | `max_slope`, `pathway_mode` |
+| Tipo | Número decimal, enumeração (`1` a `7`) |
+| Severidade | Opcional, Obrigatório |
+
+**Descrição dos campos:**
+
+- `max_slope`: inclinação máxima do percurso. O valor `0` ou vazio significa sem inclinação. Um número indica a inclinação, positivo para subir e negativo para descer. Só deve ser usado em passagens a pé e tapetes rolantes.
+- `pathway_mode`: indica o tipo de percurso. Os tipos `1` e `3` são passagem a pé e tapete rolante.
+
+Mais informação em [pathways.txt](/reference/gtfs/schedule/pathways).
+
+## Como funciona
+
+O `max_slope` só pode ter valor, diferente de `0`, em passagens a pé (`pathway_mode` `1`) e tapetes rolantes (`3`). Nesses dois tipos, um campo vazio é recomendado. A regra **não verifica se o valor é um número válido**.
+
+A regra avalia cada linha do `pathways.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `max_slope` está vazio e a configuração da regra ignora ou proíbe o campo? | ✅ Passa | Segue para o passo 2 |
+| 2 | O `max_slope` está vazio e o `pathway_mode` é `1` ou `3`? | ❌ Reporta o problema: `max_slope` recomendado | Segue para o passo 3 |
+| 3 | O `max_slope` está vazio? | ❌ Reporta o problema: em falta (recomendado, ou obrigatório se a configuração da regra o exigir) | Segue para o passo 4 |
+| 4 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 5 |
+| 5 | O `pathway_mode` é diferente de `1` e `3` e o `max_slope` é diferente de `0`? | ❌ Reporta o problema: `max_slope` não permitido neste tipo de percurso | ✅ Passa |
+
+## Como se relacionam
+
+O `pathway_mode` decide se o `max_slope` pode ter valor. Só nas passagens a pé e nos tapetes rolantes pode ser diferente de `0`.
+
+## Exemplos
+
+| `max_slope` | `pathway_mode` | Resultado | Porquê |
+|---|---|---|---|
+| `0.05` | `1` | ✅ Passa | Passagem a pé com inclinação |
+| `0` | `2` | ✅ Passa | Sem inclinação |
+| `0.1` | `2` | ❌ Problema | Escadas não usam `max_slope` |
+| *(vazio)* | `1` | ❌ Problema | Passagem a pé, campo recomendado |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `max_slope` recomendado | O `max_slope` está vazio numa passagem a pé ou tapete rolante | Preencher o `max_slope` em `pathways.txt` com a inclinação, por exemplo `0.05` |
+| `max_slope` não permitido neste tipo de percurso | O `max_slope` tem valor diferente de `0` e o `pathway_mode` não é `1` nem `3` | Em `pathways.txt`, remover o `max_slope` ou escrever `0` |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `max_slope` em `pathways.txt` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `max_slope` em `pathways.txt` |

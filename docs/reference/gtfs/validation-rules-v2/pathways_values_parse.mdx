@@ -1,0 +1,54 @@
+---
+title: Valores numéricos dos percursos
+description: Verifica se os campos numéricos de pathways.txt têm um valor que o validador consegue ler como número.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `pathways_values_parse` |
+| Ficheiro | `pathways.txt` |
+| Campos | `pathway_mode`, `is_bidirectional`, `traversal_time`, `length`, `stair_count` |
+| Tipo | Enumeração, enumeração, número inteiro positivo, número decimal não negativo, número inteiro |
+| Severidade | Obrigatório, Obrigatório, Opcional, Opcional, Opcional |
+
+**Descrição dos campos:**
+
+- `pathway_mode`: indica o tipo de percurso, de `1` (passagem a pé) a `7` (cancela de saída).
+- `is_bidirectional`: indica se o percurso pode ser usado nos dois sentidos. O valor `0` significa um só sentido. O valor `1` significa os dois sentidos.
+- `traversal_time`: tempo, em segundos, necessário para percorrer o percurso.
+- `length`: comprimento horizontal do percurso, em metros.
+- `stair_count`: número de degraus do percurso.
+
+Mais informação em [pathways.txt](/reference/gtfs/schedule/pathways).
+
+## Como funciona
+
+`pathway_mode`, `is_bidirectional`, `traversal_time` e `stair_count` têm de ser números inteiros, sem casas decimais. O `stair_count` também não pode ser negativo nem passar de `65535`. O `length` pode ter casas decimais. Se algum campo não for um número, a linha inteira deixa de ser avaliada pelas outras regras do `pathways.txt`. A regra **não verifica se o valor faz sentido**, por exemplo se `pathway_mode` está entre `1` e `7`.
+
+A regra avalia cada linha do `pathways.txt`, seguindo o passo abaixo, que dá o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | Algum dos campos `pathway_mode`, `is_bidirectional`, `traversal_time`, `length` ou `stair_count` tem um valor que não se lê como número? | ❌ Reporta o problema, um por cada campo inválido. A linha deixa de ser avaliada pelas outras regras | ✅ Passa |
+
+Um campo vazio não é um problema nesta regra. Os campos `pathway_id`, `from_stop_id`, `to_stop_id`, `signposted_as`, `reversed_signposted_as`, `max_slope` e `min_width` são texto e aceitam qualquer valor.
+
+## Exemplos
+
+| Campo | Valor | Resultado | Porquê |
+|---|---|---|---|
+| `pathway_mode` | `2` | ✅ Passa | Número inteiro |
+| `length` | `12.5` | ✅ Passa | Número decimal |
+| `traversal_time` | `60.5` | ❌ Problema | Tem casas decimais, tem de ser inteiro |
+| `stair_count` | `-4` | ❌ Problema | Não pode ser negativo |
+| `is_bidirectional` | `sim` | ❌ Problema | Texto em vez de número |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor inválido em `pathway_mode`, `is_bidirectional` ou `traversal_time` | O valor tem texto ou casas decimais | Em `pathways.txt`, escrever o campo como número inteiro, por exemplo `2`, `1` ou `60` |
+| Valor inválido em `length` | O valor tem texto ou vírgula decimal | Em `pathways.txt`, escrever o `length` só com dígitos e ponto decimal, por exemplo `12.5` |
+| Valor inválido em `stair_count` | O valor tem texto, casas decimais ou é negativo | Em `pathways.txt`, escrever o `stair_count` como número inteiro igual ou superior a `0` |

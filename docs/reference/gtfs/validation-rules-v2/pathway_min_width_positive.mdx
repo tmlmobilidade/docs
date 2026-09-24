@@ -1,0 +1,52 @@
+---
+title: Largura mínima do percurso
+description: Verifica se o min_width de pathways.txt, quando preenchido, é um número positivo e avisa quando é inferior a 1 metro.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `pathway_min_width_positive` |
+| Ficheiro | `pathways.txt` |
+| Campo | `min_width` |
+| Tipo | Número decimal positivo |
+| Severidade | Opcional (recomendado quando a largura mínima é inferior a 1 metro) |
+
+**Descrição do campo:** largura mínima do percurso, em metros. É recomendado quando a largura mínima é inferior a 1 metro.
+
+Mais informação em [pathways.txt](/reference/gtfs/schedule/pathways).
+
+## Como funciona
+
+Se o `min_width` estiver preenchido, tem de ser um número que não seja negativo. Se for inferior a `1`, a regra reporta um problema com a mensagem "campo recomendado". Um campo vazio é aceite, salvo se a configuração da regra o exigir ou recomendar.
+
+A regra avalia cada linha do `pathways.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `min_width` está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O `min_width` é um número? | Segue para o passo 4 | ❌ Reporta o problema: valor inválido |
+| 4 | O `min_width` é negativo? | ❌ Reporta o problema: valor negativo | Segue para o passo 5 |
+| 5 | O `min_width` é inferior a `1`? | ❌ Reporta o problema: campo recomendado | ✅ Passa |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `1.5` | ✅ Passa | Largura de 1,5 metros |
+| *(vazio)* | ✅ Passa | Campo opcional |
+| `0.8` | ❌ Problema | Inferior a 1 metro |
+| `-1` | ❌ Problema | Valor negativo |
+| `largo` | ❌ Problema | Texto em vez de número |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor inválido | O `min_width` tem texto ou vírgula decimal | Em `pathways.txt`, escrever o `min_width` só com dígitos e ponto decimal, por exemplo `1.5` |
+| Valor negativo | O `min_width` é um número negativo | Em `pathways.txt`, escrever o `min_width` com um número positivo |
+| Campo recomendado | O `min_width` é inferior a `1` | Confirmar em `pathways.txt` que a largura mínima está correta. Se for o caso, manter o valor |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `min_width` em `pathways.txt` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `min_width` em `pathways.txt` |
