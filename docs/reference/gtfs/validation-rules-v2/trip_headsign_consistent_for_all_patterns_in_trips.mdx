@@ -5,20 +5,20 @@ description: Verifica se todas as viagens com o mesmo pattern_id em trips.txt t�
 
 ## Propriedades da regra
 
-| Propriedade      | Valor                                                |
-| ---------------- | ---------------------------------------------------- |
-| Rule ID          | `trip_headsign_consistent_for_all_patterns_in_trips` |
-| Ficheiro         | `trips.txt`                                          |
-| Campos           | `trip_headsign`, `pattern_id`                        |
-| Tipo             | Texto                                                |
-| Presença no GTFS | Obrigatório                                          |
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `trip_headsign_consistent_for_all_patterns_in_trips` |
+| Ficheiro | `trips.txt` |
+| Campos | `trip_headsign`, `pattern_id` |
+| Tipo | Texto |
+| Severidade | Obrigatório |
 
 **Descrição dos campos:**
 
 - `trip_headsign`: texto que aparece na sinalética e identifica o destino da viagem para os passageiros.
 - `pattern_id`: identifica o padrão a que a viagem pertence. É com este campo que a regra agrupa as viagens.
 
-Mais informação em [trips.txt](/reference/gtfs/schedule/trips.mdx).
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
 
 ## Como funciona
 

@@ -13,7 +13,7 @@ description: Verifica se o agency_id de agency.txt está preenchido, não se rep
 | Tipo | ID único |
 | Severidade | Obrigatório |
 
-**Descrição do campo (GTFS):** identifica uma marca de transporte, muitas vezes equivalente a um operador. Nalguns casos, como quando um operador gere vários serviços separados, operador e marca são diferentes. Um feed pode ter dados de vários operadores. Mais informação em [agency.txt](/reference/gtfs/schedule/agency.mdx).
+**Descrição do campo (GTFS):** identifica uma marca de transporte, muitas vezes equivalente a um operador. Nalguns casos, como quando um operador gere vários serviços separados, operador e marca são diferentes. Um feed pode ter dados de vários operadores. Mais informação em [agency.txt](/reference/gtfs/schedule/agency).
 
 ## Como funciona
 
@@ -37,7 +37,7 @@ Um problema de duplicado não impede a verificação da lista de valores permiti
 | `1`, `2` | ✅ Passa | Preenchidos e diferentes |
 | `1`, `1` | ❌ Problema | `agency_id` repetido |
 | *(vazio)* | ❌ Problema | Falta o `agency_id` |
-| `3` (lista permitida = `1`, `2`) | ❌ Problema | Formato válido, mas fora da lista |
+| `3` (lista permitida = `1`, `2`) | ❌ Problema | Valor fora da lista |
 
 ## Como corrigir
 
