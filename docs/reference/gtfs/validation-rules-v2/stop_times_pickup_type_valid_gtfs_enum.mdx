@@ -1,0 +1,60 @@
+---
+title: Tipo de recolha na paragem
+description: Verifica se o pickup_type de stop_times.txt é 0 a 3 e não conflita com janelas de recolha e largada a pedido.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_times_pickup_type_valid_gtfs_enum` |
+| Ficheiro | `stop_times.txt` |
+| Campos | `pickup_type`, `start_pickup_drop_off_window`, `end_pickup_drop_off_window` |
+| Tipo | Enumeração (`0` a `3`), hora, hora |
+| Severidade | Condicional (proibido em certos valores quando há janelas), Condicional, Condicional |
+
+**Descrição dos campos:**
+
+- `pickup_type`: indica o método de recolha. O valor `0` ou vazio significa recolha regular. O valor `1` significa sem recolha. O valor `2` significa que é preciso telefonar ao operador. O valor `3` significa que é preciso combinar com o motorista.
+- `start_pickup_drop_off_window`: início da janela de recolha e largada a pedido.
+- `end_pickup_drop_off_window`: fim da janela de recolha e largada a pedido.
+
+Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times).
+
+## Como funciona
+
+Quando preenchido, o `pickup_type` tem de ser `0`, `1`, `2` ou `3`. Se houver janelas de recolha e largada (`start_pickup_drop_off_window` ou `end_pickup_drop_off_window`) na mesma linha, os valores `0` e `3` são proibidos. Se a configuração da regra tiver uma lista de valores permitidos, o valor também tem de constar dessa lista. Um campo vazio é aceite, salvo se a configuração da regra o exigir ou recomendar.
+
+A regra avalia cada linha do `stop_times.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `pickup_type` está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | O `pickup_type` é `0`, `1`, `2` ou `3`? | Segue para o passo 3 | ❌ Reporta o problema: valor inválido |
+| 3 | Há janela de recolha e largada nesta linha e o `pickup_type` é `0` ou `3`? | ❌ Reporta o problema: valor proibido com janela | Segue para o passo 4 |
+| 4 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 5 | ✅ Passa |
+| 5 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+## Como se relacionam
+
+As colunas `start_pickup_drop_off_window` e `end_pickup_drop_off_window` da mesma linha decidem se certos valores do `pickup_type` são proibidos.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `1` | ✅ Passa | Sem recolha |
+| `0`, com janela | ❌ Problema | Valor proibido com janela |
+| `5` | ❌ Problema | Só são aceites de `0` a `3` |
+| *(vazio)* | ✅ Passa | Campo opcional |
+| *(vazio)* com campo exigido na configuração | ❌ Problema | A configuração da regra exige o campo |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor inválido | O `pickup_type` é um número fora de `0` a `3` | Corrigir o `pickup_type` em `stop_times.txt` para `0`, `1`, `2` ou `3` |
+| Valor proibido com janela | A linha tem janela de recolha e largada e o `pickup_type` tem um valor proibido | Em `stop_times.txt`, corrigir o `pickup_type` ou remover as janelas |
+| Valor não permitido | O valor não está na lista da configuração da regra | Usar um valor da lista permitida, ou pedir ao administrador que o adicione |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `pickup_type` em `stop_times.txt` |
+

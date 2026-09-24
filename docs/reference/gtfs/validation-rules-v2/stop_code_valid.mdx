@@ -1,0 +1,50 @@
+---
+title: Código público da paragem
+description: Verifica se o stop_code de stops.txt, quando preenchido, cumpre a configuração da regra.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_code_valid` |
+| Ficheiro | `stops.txt` |
+| Campo | `stop_code` |
+| Tipo | Texto |
+| Severidade | Opcional |
+
+**Descrição do campo:** texto curto ou número que identifica o local para os passageiros. Costuma ser usado em sistemas de informação por telefone ou impresso na sinalética. Pode ser igual ao `stop_id` se este for público. Deve ficar vazio nos locais sem código visível para os passageiros.
+
+Mais informação em [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+O `stop_code` é opcional. Um campo vazio é aceite, salvo se a configuração da regra o exigir ou recomendar. Se a configuração da regra tiver uma lista de valores permitidos, o valor também tem de constar dessa lista. A regra **não verifica se o `stop_code` é único entre paragens**: a comparação de repetidos usa o valor do `stop_code` como se fosse um `stop_id`.
+
+A regra avalia cada linha do `stops.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `stop_code` está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor do `stop_code` existe como `stop_id` em mais de uma linha do `stops.txt`? | ❌ Reporta o problema, como aviso: valor duplicado. A regra termina aqui | Segue para o passo 4 |
+| 4 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 5 | ✅ Passa |
+| 5 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `1234` | ✅ Passa | Preenchido |
+| *(vazio)* | ✅ Passa | Campo opcional |
+| *(vazio)* com campo exigido na configuração | ❌ Problema | A configuração da regra exige o campo |
+| `1234` (lista permitida = `5678`) | ❌ Problema | Fora da lista |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor duplicado | O valor do `stop_code` existe como `stop_id` em mais de uma linha | Em `stops.txt`, corrigir os `stop_id` repetidos |
+| Valor não permitido | O valor não está na lista da configuração da regra | Usar um valor da lista permitida, ou pedir ao administrador que o adicione |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `stop_code` em `stops.txt` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `stop_code` em `stops.txt` |

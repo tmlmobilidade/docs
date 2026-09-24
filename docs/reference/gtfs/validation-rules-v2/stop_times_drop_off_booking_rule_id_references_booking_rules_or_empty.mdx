@@ -1,0 +1,52 @@
+---
+title: Regra de reserva da largada
+description: Verifica se o drop_off_booking_rule_id de stop_times.txt, quando preenchido, existe em booking_rules.txt.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_times_drop_off_booking_rule_id_references_booking_rules_or_empty` |
+| Ficheiros | `stop_times.txt`, `booking_rules.txt` |
+| Campo | `drop_off_booking_rule_id` |
+| Tipo | ID externo (refere `booking_rule_id` de `booking_rules.txt`) |
+| Severidade | Opcional |
+
+**Descrição do campo:** identifica a regra de reserva para sair nesta paragem. É recomendado quando o `drop_off_type` é `2`.
+
+Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times) e [booking_rules.txt](/reference/gtfs/schedule/booking_rules).
+
+## Como funciona
+
+Se o `drop_off_booking_rule_id` estiver preenchido, o valor tem de existir em `booking_rules.txt`. Um campo vazio é aceite, salvo se a configuração da regra o exigir ou recomendar. A regra **não verifica se a regra de reserva faz sentido** para o tipo de recolha ou largada.
+
+A regra avalia cada linha do `stop_times.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `drop_off_booking_rule_id` está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O `drop_off_booking_rule_id` existe em `booking_rules.txt`? | ❌ Reporta o problema: `drop_off_booking_rule_id` não encontrado | ✅ Passa |
+
+## Como se relacionam
+
+Cada `drop_off_booking_rule_id` de `stop_times.txt` tem de existir como `booking_rule_id` em `booking_rules.txt`.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `RESERVA_1` (existe em `booking_rules.txt`) | ✅ Passa | Existe em `booking_rules.txt` |
+| `XPTO` (não existe) | ❌ Problema | Não existe em `booking_rules.txt` |
+| *(vazio)* | ✅ Passa | Campo opcional |
+| *(vazio)* com campo exigido na configuração | ❌ Problema | A configuração da regra exige o campo |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `drop_off_booking_rule_id` não encontrado | O valor tem um erro de escrita ou a regra de reserva não está em `booking_rules.txt` | Corrigir o `drop_off_booking_rule_id` em `stop_times.txt`, ou adicionar a regra em `booking_rules.txt` |
+
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `drop_off_booking_rule_id` em `stop_times.txt` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `drop_off_booking_rule_id` em `stop_times.txt` |

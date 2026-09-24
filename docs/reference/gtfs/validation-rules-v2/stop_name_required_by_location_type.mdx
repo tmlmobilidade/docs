@@ -1,0 +1,58 @@
+---
+title: Nome da paragem
+description: Verifica se o stop_name de stops.txt está preenchido nas paragens, estações e entradas.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_name_required_by_location_type` |
+| Ficheiro | `stops.txt` |
+| Campos | `stop_name`, `location_type` |
+| Tipo | Texto, enumeração (`0` a `4`) |
+| Severidade | Condicional (obrigatório quando o `location_type` é `0`, `1` ou `2`), Opcional |
+
+**Descrição dos campos:**
+
+- `stop_name`: nome do local. Deve ser igual ao nome que os passageiros veem no horário, online ou na sinalética. Numa área de embarque (`location_type` `4`), é o nome da área, como uma letra ou `Zona de cadeiras de rodas`. É obrigatório para paragens (`0`), estações (`1`) e entradas ou saídas (`2`). É opcional para nós genéricos (`3`) e áreas de embarque (`4`).
+- `location_type`: tipo de local. `0` é paragem, `1` estação, `2` entrada ou saída, `3` nó genérico e `4` área de embarque.
+
+Mais informação em [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+O `stop_name` tem de estar preenchido quando o `location_type` é `0`, `1` ou `2`. Nos outros tipos, um campo vazio só é reportado se a configuração da regra o exigir ou recomendar. Se a configuração da regra tiver uma lista de valores permitidos, o valor também tem de constar dessa lista. A regra **não verifica o conteúdo do nome**.
+
+A regra avalia cada linha do `stops.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `stop_name` está vazio e o `location_type` é `0`, `1` ou `2`? | ❌ Reporta o problema: `stop_name` obrigatório para este tipo de local | Segue para o passo 2 |
+| 2 | O `stop_name` está vazio e a configuração da regra não ignora o campo? | ❌ Reporta o problema: em falta (recomendado, ou obrigatório se a configuração da regra o exigir) | Segue para o passo 3 |
+| 3 | O `stop_name` está vazio? | ✅ Passa | Segue para o passo 4 |
+| 4 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 5 | ✅ Passa |
+| 5 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+Um `location_type` vazio não conta como `0` neste passo 1.
+
+## Como se relacionam
+
+O `location_type` da mesma linha decide se o `stop_name` é obrigatório.
+
+## Exemplos
+
+| `stop_name` | `location_type` | Resultado | Porquê |
+|---|---|---|---|
+| `Prior Velho` | `0` | ✅ Passa | Preenchido |
+| *(vazio)* | `1` | ❌ Problema | Estação sem nome |
+| *(vazio)* | `3` | ✅ Passa | Nó genérico, nome opcional |
+| `Prior Velho` (lista permitida = `Sacavém`) | `0` | ❌ Problema | Fora da lista |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `stop_name` obrigatório para este tipo de local | O `location_type` é `0`, `1` ou `2` e o `stop_name` está vazio | Preencher o `stop_name` em `stops.txt` com o nome do local |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `stop_name` em `stops.txt` |
+| Valor não permitido | O valor não está na lista da configuração da regra | Usar um valor da lista permitida, ou pedir ao administrador que o adicione |

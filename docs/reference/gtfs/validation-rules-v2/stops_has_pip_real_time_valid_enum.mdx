@@ -1,0 +1,54 @@
+---
+title: Painel de informação em tempo real na paragem
+description: Verifica se o has_pip_real_time de stops.txt, quando preenchido, é 0, 1 ou 2 e cumpre a configuração da regra.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stops_has_pip_real_time_valid_enum` |
+| Ficheiro | `stops.txt` |
+| Campo | `has_pip_real_time` |
+| Tipo | Enumeração (`0`, `1` ou `2`) |
+| Severidade | Opcional |
+
+**Descrição do campo:** indica se a paragem tem painel de informação em tempo real. Este campo é uma extensão da TML ao GTFS.
+
+- `0`: não se aplica a esta paragem
+- `1`: tem painel em tempo real, mas em mau estado
+- `2`: tem painel em tempo real em bom estado
+
+Mais informação em [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+O `has_pip_real_time` é opcional. Um campo vazio é aceite, salvo se a configuração da regra o exigir ou recomendar. Se estiver preenchido, tem de ser `0`, `1` ou `2`.
+
+A regra avalia cada linha do `stops.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `has_pip_real_time` está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O `has_pip_real_time` é `0`, `1` ou `2`? | Segue para o passo 4 | ❌ Reporta o problema: valor inválido |
+| 4 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 5 | ✅ Passa |
+| 5 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `2` | ✅ Passa | Em bom estado |
+| `3` | ❌ Problema | Só são aceites `0`, `1` e `2` |
+| *(vazio)* | ✅ Passa | Campo opcional |
+| *(vazio)* com campo exigido na configuração | ❌ Problema | A configuração da regra exige o campo |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor inválido | O `has_pip_real_time` é um número fora da lista de valores aceites | Corrigir o `has_pip_real_time` em `stops.txt` para `0`, `1` ou `2` |
+| Valor não permitido | O valor não está na lista da configuração da regra | Usar um valor da lista permitida, ou pedir ao administrador que o adicione |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `has_pip_real_time` em `stops.txt` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `has_pip_real_time` em `stops.txt` |

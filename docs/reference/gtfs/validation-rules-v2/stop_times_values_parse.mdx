@@ -1,0 +1,51 @@
+---
+title: Valores numéricos das paragens da viagem
+description: Verifica se os campos numéricos de stop_times.txt têm um valor que o validador consegue ler como número.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_times_values_parse` |
+| Ficheiro | `stop_times.txt` |
+| Campos | `stop_sequence`, `pickup_type`, `drop_off_type`, `continuous_pickup`, `continuous_drop_off`, `timepoint`, `shape_dist_traveled` |
+| Tipo | Número inteiro não negativo, enumerações, número decimal não negativo |
+| Severidade | Obrigatório, Condicional, Condicional, Condicional, Condicional, Opcional, Opcional |
+
+**Descrição dos campos:**
+
+- `stop_sequence`: ordem das paragens na viagem. Tem de ser um número inteiro.
+- `pickup_type`, `drop_off_type`, `continuous_pickup`, `continuous_drop_off` e `timepoint`: valores de enumeração do GTFS. Têm de ser números inteiros.
+- `shape_dist_traveled`: distância percorrida ao longo do percurso até esta paragem. Tem de ser um número, com ou sem casas decimais.
+
+Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times).
+
+## Como funciona
+
+`stop_sequence` e os campos de enumeração têm de ser escritos como números inteiros, sem casas decimais. O `shape_dist_traveled` pode ter casas decimais. Se algum não for número, a linha inteira deixa de ser avaliada pelas outras regras do `stop_times.txt`. A regra **não verifica se os valores fazem sentido**, por exemplo se o `pickup_type` está entre `0` e `3`. Isso fica para outras regras.
+
+A regra avalia cada linha do `stop_times.txt`, seguindo o passo abaixo, que dá o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | Algum dos campos numéricos listados tem um valor que não se lê como número? | ❌ Reporta o problema, um por cada campo inválido. A linha deixa de ser avaliada pelas outras regras | ✅ Passa |
+
+Um campo vazio não é um problema nesta regra. Os outros campos do `stop_times.txt` são texto e aceitam qualquer valor.
+
+## Exemplos
+
+| Campo | Valor | Resultado | Porquê |
+|---|---|---|---|
+| `stop_sequence` | `3` | ✅ Passa | Número inteiro |
+| `shape_dist_traveled` | `5.25` | ✅ Passa | Número decimal |
+| `stop_sequence` | `3.5` | ❌ Problema | Tem casas decimais |
+| `timepoint` | `sim` | ❌ Problema | Texto em vez de número |
+| `shape_dist_traveled` | `5,25` | ❌ Problema | Vírgula em vez de ponto decimal |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor inválido num campo inteiro | O valor tem texto ou casas decimais | Em `stop_times.txt`, escrever o campo como número inteiro, por exemplo `3` ou `0` |
+| Valor inválido em `shape_dist_traveled` | O valor tem texto, unidades ou vírgula decimal | Em `stop_times.txt`, escrever o `shape_dist_traveled` só com dígitos e ponto decimal, por exemplo `5.25` |

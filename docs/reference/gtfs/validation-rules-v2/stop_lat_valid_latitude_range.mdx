@@ -1,0 +1,57 @@
+---
+title: Latitude da paragem
+description: Verifica se o stop_lat de stops.txt está preenchido nas paragens, estações e entradas e entre -90 e 90.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_lat_valid_latitude_range` |
+| Ficheiro | `stops.txt` |
+| Campos | `stop_lat`, `location_type` |
+| Tipo | Latitude, enumeração (`0` a `4`) |
+| Severidade | Condicional (obrigatório quando o `location_type` é `0`, `1` ou `2`), Opcional |
+
+**Descrição dos campos:**
+
+- `stop_lat`: latitude do local. Nas paragens e áreas de embarque, deve ser a do poste da paragem, se existir, ou do sítio onde os passageiros entram no veículo (no passeio ou na plataforma, não na estrada). É obrigatória para paragens (`0`), estações (`1`) e entradas ou saídas (`2`). É opcional para nós genéricos (`3`) e áreas de embarque (`4`).
+- `location_type`: tipo de local. `0` é paragem, `1` estação, `2` entrada ou saída, `3` nó genérico e `4` área de embarque.
+
+Mais informação em [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+O `stop_lat` tem de estar preenchido quando o `location_type` é `0`, `1` ou `2`. Quando está preenchido, tem de ser um número entre `-90` e `90`. Nos outros tipos, um campo vazio só é reportado se a configuração da regra o exigir ou recomendar. A regra **não verifica se o ponto está no sítio certo**. Um valor que não seja um número é tratado pela regra `stops_values_parse`.
+
+A regra avalia cada linha do `stops.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `stop_lat` está vazio e o `location_type` é `0`, `1` ou `2`? | ❌ Reporta o problema: `stop_lat` obrigatório para este tipo de local | Segue para o passo 2 |
+| 2 | O `stop_lat` está vazio e a configuração da regra não ignora o campo? | ❌ Reporta o problema: em falta (recomendado, ou obrigatório se a configuração da regra o exigir) | Segue para o passo 3 |
+| 3 | O `stop_lat` está vazio? | ✅ Passa | Segue para o passo 4 |
+| 4 | O `stop_lat` está entre `-90` e `90`? | ✅ Passa | ❌ Reporta o problema: latitude inválida |
+
+Um `location_type` vazio não conta como `0` neste passo 1.
+
+## Como se relacionam
+
+O `location_type` da mesma linha decide se o `stop_lat` é obrigatório.
+
+## Exemplos
+
+| `stop_lat` | `location_type` | Resultado | Porquê |
+|---|---|---|---|
+| `38.7823` | `0` | ✅ Passa | Latitude possível |
+| `91.5` | `0` | ❌ Problema | Fora do intervalo |
+| *(vazio)* | `1` | ❌ Problema | Estação sem latitude |
+| *(vazio)* | `3` | ✅ Passa | Nó genérico, campo opcional |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `stop_lat` obrigatório para este tipo de local | O `location_type` é `0`, `1` ou `2` e o `stop_lat` está vazio | Preencher o `stop_lat` em `stops.txt` com a latitude do local |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `stop_lat` em `stops.txt` |
+| Latitude inválida | O valor está fora do intervalo, ou a latitude e a longitude estão trocadas | Corrigir o `stop_lat` em `stops.txt` para um valor entre `-90` e `90` |

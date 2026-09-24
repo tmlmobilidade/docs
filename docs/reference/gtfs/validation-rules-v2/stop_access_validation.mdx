@@ -1,0 +1,60 @@
+---
+title: Acesso à paragem a partir da rua
+description: Verifica se o stop_access de stops.txt, quando preenchido, é 0 ou 1 e só é usado em paragens com estação.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_access_validation` |
+| Ficheiro | `stops.txt` |
+| Campos | `stop_access`, `parent_station`, `location_type` |
+| Tipo | Enumeração (`0` ou `1`), ID externo, enumeração (`0` a `4`) |
+| Severidade | Condicional (proibido quando o `parent_station` está vazio ou o `location_type` não é `0`), Opcional, Opcional |
+
+**Descrição dos campos:**
+
+- `stop_access`: indica como se acede à paragem numa estação. O valor `0` significa que não se acede diretamente da rua: é preciso passar por uma entrada da estação, se existir, ou pela estação, e usar os percursos definidos. O valor `1` significa que as aplicações devem dar direções diretas até à paragem, sem depender das entradas ou dos percursos da estação. Vazio significa acesso indefinido. É proibido em estações (`1`), entradas (`2`), nós genéricos (`3`) e áreas de embarque (`4`), e quando o `parent_station` está vazio.
+- `parent_station`: estação a que a paragem pertence. Se estiver vazio, o `stop_access` é proibido.
+- `location_type`: tipo de local. O `stop_access` só se aplica a paragens (`0` ou vazio).
+
+Mais informação em [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+O `stop_access` só pode estar preenchido em paragens que pertençam a uma estação, isto é, com `parent_station` preenchido. Quando preenchido, tem de ser `0` ou `1`. Se a configuração da regra tiver uma lista de valores permitidos, o valor também tem de constar dessa lista. A regra **não verifica o `location_type`** quando este está preenchido, apesar de a descrição do campo o proibir para locais que não sejam paragens.
+
+A regra avalia cada linha do `stops.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `stop_access` está vazio? | Se a configuração da regra ignora o campo, ✅ passa. Se não, ❌ reporta o problema: em falta (recomendado, ou obrigatório se a configuração da regra o exigir) | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O `parent_station` está vazio? | ❌ Reporta o problema: `stop_access` proibido sem `parent_station` | Segue para o passo 4 |
+| 4 | O `stop_access` é `0` ou `1`? | Segue para o passo 5 | ❌ Reporta o problema: valor inválido |
+| 5 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 6 | ✅ Passa |
+| 6 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+## Como se relacionam
+
+O `parent_station` da mesma linha decide se o `stop_access` pode ser usado.
+
+## Exemplos
+
+| `stop_access` | `parent_station` | Resultado | Porquê |
+|---|---|---|---|
+| `1` | `PV_ESTACAO` | ✅ Passa | Paragem numa estação |
+| `1` | *(vazio)* | ❌ Problema | Sem estação, o campo é proibido |
+| `2` | `PV_ESTACAO` | ❌ Problema | Só são aceites `0` e `1` |
+| *(vazio)* | `PV_ESTACAO` | ✅ Passa | Campo opcional |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `stop_access` proibido sem `parent_station` | O `stop_access` está preenchido e a paragem não tem estação | Em `stops.txt`, remover o `stop_access` ou preencher o `parent_station` |
+| Valor inválido | O valor é um número diferente de `0` e `1` | Corrigir o `stop_access` em `stops.txt` para `0` ou `1` |
+| Valor não permitido | O valor não está na lista da configuração da regra | Usar um valor da lista permitida, ou pedir ao administrador que o adicione |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `stop_access` em `stops.txt` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `stop_access` em `stops.txt` |

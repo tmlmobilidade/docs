@@ -1,0 +1,48 @@
+---
+title: Distância percorrida até à paragem
+description: Verifica se o shape_dist_traveled de stop_times.txt, quando preenchido, não é negativo.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_times_shape_dist_traveled_non_decreasing_on_trip` |
+| Ficheiro | `stop_times.txt` |
+| Campo | `shape_dist_traveled` |
+| Tipo | Número decimal não negativo |
+| Severidade | Opcional |
+
+**Descrição do campo:** distância real percorrida ao longo do percurso associado, desde a primeira paragem até à paragem desta linha. Indica que parte do percurso desenhar entre duas paragens. Tem de usar as unidades do `shapes.txt` e aumentar com o `stop_sequence`. É recomendado em linhas que cruzam ou repetem o mesmo trajeto.
+
+Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times).
+
+## Como funciona
+
+Se o `shape_dist_traveled` estiver preenchido, não pode ser negativo. Um campo vazio é aceite, salvo se a configuração da regra o exigir ou recomendar. Apesar do nome da regra, ela **não verifica se os valores aumentam ao longo da viagem**. Um valor que não seja um número é tratado pela regra `stop_times_values_parse`.
+
+A regra avalia cada linha do `stop_times.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `shape_dist_traveled` está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O `shape_dist_traveled` é um número negativo? | ❌ Reporta o problema: valor negativo | ✅ Passa |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `5.25` | ✅ Passa | Número não negativo |
+| `-1` | ❌ Problema | Valor negativo |
+| *(vazio)* | ✅ Passa | Campo opcional |
+| *(vazio)* com campo exigido na configuração | ❌ Problema | A configuração da regra exige o campo |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor negativo | O `shape_dist_traveled` é um número negativo | Em `stop_times.txt`, escrever o `shape_dist_traveled` com um número igual ou superior a `0` |
+
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `shape_dist_traveled` em `stop_times.txt` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `shape_dist_traveled` em `stop_times.txt` |

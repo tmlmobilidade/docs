@@ -1,0 +1,61 @@
+---
+title: Largada contínua entre paragens
+description: Verifica se o continuous_drop_off de stop_times.txt é 0 a 3 e não conflita com janelas de recolha e largada a pedido.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_times_continuous_drop_off_valid_gtfs_enum` |
+| Ficheiro | `stop_times.txt` |
+| Campos | `continuous_drop_off`, `start_pickup_drop_off_window`, `end_pickup_drop_off_window` |
+| Tipo | Enumeração (`0` a `3`), hora, hora |
+| Severidade | Condicional (proibido com valor diferente de `1` quando há janelas), Condicional, Condicional |
+
+**Descrição dos campos:**
+
+- `continuous_drop_off`: indica que o passageiro pode sair do veículo em qualquer ponto do percurso descrito em `shapes.txt`, entre esta paragem e a seguinte da viagem. Os valores são `0` (paragem contínua), `1` ou vazio (sem paragem contínua), `2` (é preciso telefonar ao operador) e `3` (é preciso combinar com o motorista).
+- `start_pickup_drop_off_window`: início da janela de recolha e largada a pedido.
+- `end_pickup_drop_off_window`: fim da janela de recolha e largada a pedido.
+
+Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times).
+
+## Como funciona
+
+Quando preenchido, o `continuous_drop_off` tem de ser `0`, `1`, `2` ou `3`. Se houver janelas de recolha e largada (`start_pickup_drop_off_window` ou `end_pickup_drop_off_window`) na mesma linha, só é aceite `1`. Se a configuração da regra tiver uma lista de valores permitidos, o valor também tem de constar dessa lista. Um campo vazio é aceite, salvo se a configuração da regra o exigir ou recomendar.
+
+A regra avalia cada linha do `stop_times.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `continuous_drop_off` está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | O `continuous_drop_off` é `0`, `1`, `2` ou `3`? | Segue para o passo 3 | ❌ Reporta o problema: valor inválido |
+| 3 | Há janela de recolha e largada nesta linha e o `continuous_drop_off` é diferente de `1`? | ❌ Reporta o problema: valor proibido com janela | Segue para o passo 4 |
+| 4 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 5 | ✅ Passa |
+| 5 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+## Como se relacionam
+
+As colunas `start_pickup_drop_off_window` e `end_pickup_drop_off_window` da mesma linha decidem se o `continuous_drop_off` pode ser diferente de `1`.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `1` | ✅ Passa | Sem paragem contínua |
+| `0`, sem janelas | ✅ Passa | Paragem contínua, sem conflito |
+| `0`, com janela | ❌ Problema | Só `1` é aceite com janelas |
+| `5` | ❌ Problema | Só são aceites de `0` a `3` |
+| *(vazio)* | ✅ Passa | Campo opcional |
+| *(vazio)* com campo exigido na configuração | ❌ Problema | A configuração da regra exige o campo |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor inválido | O `continuous_drop_off` é um número fora de `0` a `3` | Corrigir o `continuous_drop_off` em `stop_times.txt` para `0`, `1`, `2` ou `3` |
+| Valor proibido com janela | A linha tem janela de recolha e largada e o `continuous_drop_off` é diferente de `1` | Em `stop_times.txt`, escrever `1` no `continuous_drop_off` ou remover as janelas |
+| Valor não permitido | O valor não está na lista da configuração da regra | Usar um valor da lista permitida, ou pedir ao administrador que o adicione |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `continuous_drop_off` em `stop_times.txt` |
+

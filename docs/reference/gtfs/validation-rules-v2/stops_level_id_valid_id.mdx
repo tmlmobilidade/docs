@@ -1,0 +1,54 @@
+---
+title: Nível da paragem
+description: Verifica se o level_id de stops.txt, quando preenchido, existe em levels.txt.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stops_level_id_valid_id` |
+| Ficheiros | `stops.txt`, `levels.txt` |
+| Campo | `level_id` |
+| Tipo | ID externo (refere `level_id` de `levels.txt`) |
+| Severidade | Opcional |
+
+**Descrição do campo:** nível do local. O mesmo nível pode ser usado por várias estações sem ligação entre si.
+
+Mais informação em [stops.txt](/reference/gtfs/schedule/stops) e [levels.txt](/reference/gtfs/schedule/levels).
+
+## Como funciona
+
+Se o `level_id` estiver preenchido, o valor tem de existir em `levels.txt`. Um campo vazio é aceite, salvo se a configuração da regra o exigir ou recomendar. A regra **não verifica se o nível corresponde ao tipo de local**.
+
+A regra avalia cada linha do `stops.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `level_id` está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O `level_id` existe em `levels.txt`? | Segue para o passo 4 | ❌ Reporta o problema: `level_id` não encontrado |
+| 4 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 5 | ✅ Passa |
+| 5 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+## Como se relacionam
+
+Cada `level_id` de `stops.txt` tem de existir como `level_id` em `levels.txt`.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `L0` (existe em `levels.txt`) | ✅ Passa | Existe em `levels.txt` |
+| `XPTO` (não existe em `levels.txt`) | ❌ Problema | Não existe em `levels.txt` |
+| *(vazio)* | ✅ Passa | Campo opcional |
+| *(vazio)* com campo exigido na configuração | ❌ Problema | A configuração da regra exige o campo |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `level_id` não encontrado | O valor tem um erro de escrita ou o nível não está em `levels.txt` | Corrigir o `level_id` em `stops.txt`, ou adicionar o nível em `levels.txt` |
+| Valor não permitido | O valor não está na lista da configuração da regra | Usar um valor da lista permitida, ou pedir ao administrador que o adicione |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `level_id` em `stops.txt` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `level_id` em `stops.txt` |

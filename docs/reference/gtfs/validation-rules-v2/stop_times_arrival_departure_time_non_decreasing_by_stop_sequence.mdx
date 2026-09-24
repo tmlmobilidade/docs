@@ -1,0 +1,53 @@
+---
+title: Horas da viagem sempre a crescer
+description: Verifica se as horas de cada viagem em stop_times.txt não voltam para trás ao longo do stop_sequence.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_times_arrival_departure_time_non_decreasing_by_stop_sequence` |
+| Ficheiro | `stop_times.txt` |
+| Campos | `arrival_time`, `departure_time`, `stop_sequence`, `trip_id` |
+| Tipo | Hora, hora, número inteiro não negativo, ID |
+| Severidade | Condicional (obrigatório nas paragens com hora), Condicional, Obrigatório, Obrigatório |
+
+**Descrição dos campos:**
+
+- `arrival_time`: hora de chegada à paragem.
+- `departure_time`: hora de partida da paragem.
+- `stop_sequence`: ordem das paragens na viagem.
+- `trip_id`: identifica a viagem a que as paragens pertencem.
+
+Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times).
+
+## Como funciona
+
+Dentro de cada viagem, as paragens são ordenadas pelo `stop_sequence`. A hora de uma paragem não pode ser anterior à da paragem anterior. A regra usa a hora de partida da paragem anterior (ou a de chegada, se não houver partida) e a hora de chegada da paragem atual (ou a de partida, se não houver chegada). A regra **não verifica se as horas estão no formato correto**: as horas inválidas são ignoradas nesta comparação. Também não verifica paragens sem hora.
+
+A regra avalia cada grupo de paragens com o mesmo `trip_id`, seguindo o passo abaixo, que dá o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | Para algum par de paragens seguidas, a hora da paragem atual é anterior à hora da paragem anterior? | ❌ Reporta o problema: horas a diminuir, na linha da paragem atual | ✅ Passa |
+
+Se a configuração da regra ignorar ou proibir o campo, a regra não faz nada.
+
+## Como se relacionam
+
+Os dados são agrupados pelo `trip_id` e ordenados pelo `stop_sequence`. As horas de chegada e partida de paragens seguidas são comparadas.
+
+## Exemplos
+
+| Paragens da viagem (`stop_sequence`: hora) | Resultado | Porquê |
+|---|---|---|
+| `1`: `08:00:00`, `2`: `08:10:00`, `3`: `08:20:00` | ✅ Passa | Horas sempre a crescer |
+| `1`: `08:00:00`, `2`: `07:50:00` | ❌ Problema | A hora volta para trás |
+| `1`: `08:00:00`, `2`: *(vazio)*, `3`: `08:20:00` | ✅ Passa | Sem hora na paragem `2`, não há comparação com ela |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Horas a diminuir | A hora de uma paragem é anterior à da paragem anterior | Em `stop_times.txt`, corrigir as horas ou a ordem do `stop_sequence` da viagem indicada |

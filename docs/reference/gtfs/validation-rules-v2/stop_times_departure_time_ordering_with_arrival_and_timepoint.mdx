@@ -1,0 +1,58 @@
+---
+title: Hora de partida da paragem
+description: Verifica se o departure_time de stop_times.txt está preenchido quando o timepoint é 1, é proibido com janelas a pedido e está no formato HH:MM:SS.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_times_departure_time_ordering_with_arrival_and_timepoint` |
+| Ficheiro | `stop_times.txt` |
+| Campos | `departure_time`, `timepoint`, `start_pickup_drop_off_window`, `end_pickup_drop_off_window` |
+| Tipo | Hora, enumeração (`0` ou `1`), hora, hora |
+| Severidade | Condicional (obrigatório quando o `timepoint` é `1`; proibido com janelas), Opcional, Condicional, Condicional |
+
+**Descrição dos campos:**
+
+- `departure_time`: hora de partida da paragem, no fuso do `agency_timezone` de `agency.txt`. Depois da meia-noite, escreve-se um valor superior a `24:00:00`. É obrigatória quando o `timepoint` é `1`. É proibida com janelas de recolha e largada.
+- `timepoint`: indica se as horas são exatas (`1`) ou aproximadas (`0`).
+- `start_pickup_drop_off_window`: início da janela de recolha e largada a pedido.
+- `end_pickup_drop_off_window`: fim da janela de recolha e largada a pedido.
+
+Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times).
+
+## Como funciona
+
+O `departure_time` tem de estar preenchido quando o `timepoint` é `1`. Não pode estar preenchido quando há janelas de recolha e largada na mesma linha. Quando preenchido, tem de ter o formato `HH:MM:SS`, com 8 carateres. Apesar do nome da regra, ela **não compara o `departure_time` com o `arrival_time`**. Não verifica se as horas são possíveis.
+
+A regra avalia cada linha do `stop_times.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `timepoint` é `1` e o `departure_time` está vazio? | ❌ Reporta o problema: `departure_time` obrigatório com `timepoint` `1` | Segue para o passo 2 |
+| 2 | Há janela de recolha e largada nesta linha e o `departure_time` está preenchido? | ❌ Reporta o problema: `departure_time` proibido com janela | Segue para o passo 3 |
+| 3 | O `departure_time` está preenchido e não tem o formato `HH:MM:SS`? | ❌ Reporta o problema: hora inválida | Segue para o passo 4 |
+| 4 | O `departure_time` está vazio e a configuração da regra não ignora o campo? | ❌ Reporta o problema: em falta (recomendado, ou obrigatório se a configuração da regra o exigir) | ✅ Passa |
+
+## Como se relacionam
+
+O `timepoint` e as janelas da mesma linha decidem se o `departure_time` é obrigatório ou proibido.
+
+## Exemplos
+
+| `departure_time` | Situação | Resultado | Porquê |
+|---|---|---|---|
+| `08:01:00` | Paragem intermédia | ✅ Passa | Formato correto |
+| *(vazio)* | `timepoint` `1` | ❌ Problema | Obrigatório com `timepoint` `1` |
+| `08:01:00` | Com janela de recolha e largada | ❌ Problema | Proibido com janela |
+| `8:01` | Paragem intermédia | ❌ Problema | Formato incorreto |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `departure_time` obrigatório com `timepoint` `1` | O `timepoint` é `1` e o `departure_time` está vazio | Preencher o `departure_time` em `stop_times.txt` no formato `HH:MM:SS` |
+| `departure_time` proibido com janela | A linha tem janela de recolha e largada e `departure_time` | Em `stop_times.txt`, remover o `departure_time` ou as janelas |
+| Hora inválida | O valor não tem o formato `HH:MM:SS` | Escrever o `departure_time` em `stop_times.txt` como `HH:MM:SS`, por exemplo `08:01:00` |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `departure_time` em `stop_times.txt` |

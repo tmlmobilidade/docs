@@ -1,0 +1,48 @@
+---
+title: Viagem da paragem
+description: Verifica se o trip_id de stop_times.txt está preenchido e existe em trips.txt.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_times_trip_id_references_trips_table` |
+| Ficheiros | `stop_times.txt`, `trips.txt` |
+| Campo | `trip_id` |
+| Tipo | ID externo (refere `trip_id` de `trips.txt`) |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** identifica uma viagem.
+
+Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times) e [trips.txt](/reference/gtfs/schedule/trips).
+
+## Como funciona
+
+Cada linha do `stop_times.txt` tem de ter um `trip_id` preenchido que exista em `trips.txt`. A regra **não verifica se a viagem tem paragens suficientes** nem a ordem das paragens. Só verifica se o `trip_id` existe.
+
+A regra avalia cada linha do `stop_times.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `trip_id` está vazio? | ❌ Reporta o problema: `trip_id` obrigatório | Segue para o passo 2 |
+| 2 | O `trip_id` existe em `trips.txt`? | ✅ Passa | ❌ Reporta o problema: `trip_id` não encontrado |
+
+## Como se relacionam
+
+Cada `trip_id` de `stop_times.txt` tem de existir como `trip_id` em `trips.txt`.
+
+## Exemplos
+
+| `trip_id` em `stop_times.txt` | Resultado | Porquê |
+|---|---|---|
+| `VIAGEM_1` (existe em `trips.txt`) | ✅ Passa | Existe em `trips.txt` |
+| `XPTO` (não existe em `trips.txt`) | ❌ Problema | Não existe em `trips.txt` |
+| *(vazio)* | ❌ Problema | Falta o `trip_id` |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `trip_id` obrigatório | A linha não tem `trip_id` | Preencher o `trip_id` em `stop_times.txt` com um `trip_id` de `trips.txt` |
+| `trip_id` não encontrado | O valor tem um erro de escrita ou a viagem não está em `trips.txt` | Corrigir o `trip_id` em `stop_times.txt`, ou adicionar a viagem em `trips.txt` |

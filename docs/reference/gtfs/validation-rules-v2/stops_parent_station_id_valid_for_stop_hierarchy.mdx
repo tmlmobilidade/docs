@@ -1,0 +1,62 @@
+---
+title: Estação a que a paragem pertence
+description: Verifica se o parent_station de stops.txt respeita a hierarquia entre paragens, estações, entradas, nós e áreas de embarque.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stops_parent_station_id_valid_for_stop_hierarchy` |
+| Ficheiro | `stops.txt` |
+| Campos | `parent_station`, `location_type` |
+| Tipo | ID externo (refere `stop_id` de `stops.txt`), enumeração (`0` a `4`) |
+| Severidade | Condicional (obrigatório para `location_type` `2`, `3` e `4`, proibido para `1`), Opcional |
+
+**Descrição dos campos:**
+
+- `parent_station`: define a hierarquia entre locais. Numa paragem ou plataforma (`0`), contém o `stop_id` de uma estação e é opcional. Numa estação (`1`), tem de estar vazio. Numa entrada ou saída (`2`) ou nó genérico (`3`), contém o `stop_id` de uma estação e é obrigatório. Numa área de embarque (`4`), contém o `stop_id` de uma plataforma e é obrigatório.
+- `location_type`: tipo de local. `0` é paragem, `1` estação, `2` entrada ou saída, `3` nó genérico e `4` área de embarque. Vazio conta como `0`.
+
+Mais informação em [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+O `parent_station` tem de estar de acordo com o `location_type` da mesma linha e, quando preenchido, tem de existir em `stops.txt`. A regra **não verifica se o local referido é do tipo certo**, por exemplo se é mesmo uma estação. Só verifica se existe.
+
+A regra avalia cada linha do `stops.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `parent_station` está vazio e a configuração da regra não ignora o campo? | ❌ Reporta o problema: em falta (recomendado, ou obrigatório se a configuração da regra o exigir) | Segue para o passo 2 |
+| 2 | O `parent_station` está vazio, a configuração da regra ignora o campo e o `location_type` é `0`, `1` ou vazio? | ✅ Passa | Segue para o passo 3 |
+| 3 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 4 |
+| 4 | O `location_type` é `1` e o `parent_station` está preenchido? | ❌ Reporta o problema: estação não pode ter `parent_station` | Segue para o passo 5 |
+| 5 | O `location_type` é `2`, `3` ou `4` e o `parent_station` está vazio? | ❌ Reporta o problema: `parent_station` obrigatório para este tipo de local | Segue para o passo 6 |
+| 6 | O `parent_station` existe em `stops.txt`? | Segue para o passo 7 | ❌ Reporta o problema: `parent_station` não encontrado |
+| 7 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 8 | ✅ Passa |
+| 8 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+## Como se relacionam
+
+O `location_type` decide se o `parent_station` é proibido, obrigatório ou opcional. O `parent_station` de cada linha tem de existir como `stop_id` no mesmo `stops.txt`.
+
+## Exemplos
+
+| `location_type` | `parent_station` | Resultado | Porquê |
+|---|---|---|---|
+| `0` | `PV_ESTACAO` (existe) | ✅ Passa | Plataforma dentro de uma estação |
+| `1` | `PV_OUTRA` | ❌ Problema | Estação não pode ter `parent_station` |
+| `2` | *(vazio)* | ❌ Problema | Entrada sem estação |
+| `0` | `XPTO` (não existe) | ❌ Problema | Não existe em `stops.txt` |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Estação não pode ter `parent_station` | O `location_type` é `1` e o `parent_station` está preenchido | Remover o valor de `parent_station` em `stops.txt` |
+| `parent_station` obrigatório para este tipo de local | O `location_type` é `2`, `3` ou `4` e o `parent_station` está vazio | Preencher o `parent_station` em `stops.txt` com o `stop_id` da estação (ou da plataforma, nas áreas de embarque) |
+| `parent_station` não encontrado | O valor tem um erro de escrita ou o local não está em `stops.txt` | Corrigir o `parent_station` em `stops.txt`, ou adicionar o local |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `parent_station` em `stops.txt` |
+| Valor não permitido | O valor não está na lista da configuração da regra | Usar um valor da lista permitida, ou pedir ao administrador que o adicione |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `parent_station` em `stops.txt` |

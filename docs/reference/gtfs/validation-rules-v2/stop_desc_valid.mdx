@@ -1,0 +1,50 @@
+---
+title: Descrição da paragem
+description: Verifica se o stop_desc de stops.txt, quando preenchido, é diferente do stop_name.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_desc_valid` |
+| Ficheiro | `stops.txt` |
+| Campo | `stop_desc` |
+| Tipo | Texto |
+| Severidade | Opcional |
+
+**Descrição do campo:** descrição do local, com informação útil e de qualidade. Não deve repetir o `stop_name`.
+
+Mais informação em [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+O `stop_desc` é opcional. Um campo vazio é aceite, salvo se a configuração da regra o exigir ou recomendar. Se estiver preenchido, não deve ser igual ao `stop_name`. A regra **não verifica a qualidade do texto**.
+
+A regra avalia cada linha do `stops.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `stop_desc` está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O `stop_desc` é igual ao `stop_name`? | ❌ Reporta o problema, como aviso: descrição repetida. A regra termina aqui | Segue para o passo 4 |
+| 4 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 5 | ✅ Passa |
+| 5 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `Junto ao centro comercial` | ✅ Passa | Descrição própria |
+| igual ao `stop_name` | ❌ Problema | Repete o nome (aviso) |
+| *(vazio)* | ✅ Passa | Campo opcional |
+| *(vazio)* com campo exigido na configuração | ❌ Problema | A configuração da regra exige o campo |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Descrição repetida | O `stop_desc` é igual ao `stop_name` | Em `stops.txt`, escrever no `stop_desc` um texto diferente do nome, ou deixá-lo vazio |
+| Valor não permitido | O valor não está na lista da configuração da regra | Usar um valor da lista permitida, ou pedir ao administrador que o adicione |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `stop_desc` em `stops.txt` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `stop_desc` em `stops.txt` |

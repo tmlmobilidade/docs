@@ -1,0 +1,51 @@
+---
+title: Horas exatas na paragem
+description: Verifica se o timepoint de stop_times.txt, quando preenchido, é 0 ou 1.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_times_timepoint_valid_gtfs_enum` |
+| Ficheiro | `stop_times.txt` |
+| Campo | `timepoint` |
+| Tipo | Enumeração (`0` ou `1`) |
+| Severidade | Opcional |
+
+**Descrição do campo:** indica se as horas de chegada e partida são cumpridas com exatidão pelo veículo (`1`) ou se são aproximadas ou calculadas (`0`). Todas as linhas com hora de chegada ou partida devem ter `timepoint`. Sem `timepoint`, todas as horas são consideradas exatas.
+
+Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times).
+
+## Como funciona
+
+O `timepoint` é opcional. Um campo vazio é aceite, salvo se a configuração da regra o exigir ou recomendar. Se estiver preenchido, tem de ser `0` ou `1`. Se a configuração da regra tiver uma lista de valores permitidos, o valor também tem de constar dessa lista.
+
+A regra avalia cada linha do `stop_times.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `timepoint` está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O `timepoint` é `0` ou `1`? | Segue para o passo 4 | ❌ Reporta o problema: valor inválido |
+| 4 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 5 | ✅ Passa |
+| 5 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `1` | ✅ Passa | Horas exatas |
+| `0` | ✅ Passa | Horas aproximadas |
+| `2` | ❌ Problema | Só são aceites `0` e `1` |
+| *(vazio)* | ✅ Passa | Campo opcional |
+| *(vazio)* com campo exigido na configuração | ❌ Problema | A configuração da regra exige o campo |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor inválido | O `timepoint` é um número diferente de `0` e `1` | Corrigir o `timepoint` em `stop_times.txt` para `0` ou `1` |
+| Valor não permitido | O valor não está na lista da configuração da regra | Usar um valor da lista permitida, ou pedir ao administrador que o adicione |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `timepoint` em `stop_times.txt` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `timepoint` em `stop_times.txt` |

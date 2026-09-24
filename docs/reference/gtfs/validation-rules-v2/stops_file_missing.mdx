@@ -1,0 +1,45 @@
+---
+title: Ficheiro stops.txt em falta
+description: Verifica se o ficheiro stops.txt existe quando não há locations.geojson.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stops_file_missing` |
+| Ficheiros | `stops.txt`, `locations.geojson` |
+| Campo | Se aplica em todo o ficheiro |
+| Tipo | Presença de ficheiro |
+| Severidade | Condicional (obrigatório quando não existe `locations.geojson`) |
+
+## Como funciona
+
+O `stops.txt` é obrigatório, exceto quando o conjunto de dados define zonas de recolha a pedido em `locations.geojson`. Nesse caso, é opcional. A configuração da regra também pode exigir ou recomendar o ficheiro. A regra **não verifica o conteúdo do `stops.txt`**, só se existe.
+
+A regra avalia o conjunto de dados, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | Existe `locations.geojson` no conjunto de dados? | ✅ Passa | Segue para o passo 2 |
+| 2 | O `stops.txt` existe? | ✅ Passa | ❌ Reporta o problema: `stops.txt` em falta |
+
+Se a configuração da regra ignorar o ficheiro, não é reportado nada.
+
+## Como se relacionam
+
+O `locations.geojson` define zonas de recolha a pedido. Quando existe, dispensa o `stops.txt`.
+
+## Exemplos
+
+| `locations.geojson` | `stops.txt` | Resultado | Porquê |
+|---|---|---|---|
+| Não existe | Existe | ✅ Passa | O ficheiro obrigatório está presente |
+| Existe | Não existe | ✅ Passa | O `stops.txt` é opcional neste caso |
+| Não existe | Não existe | ❌ Problema | Falta o `stops.txt` |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `stops.txt` em falta | O ZIP não inclui `stops.txt` nem `locations.geojson` | Adicionar o `stops.txt` ao ZIP, ou o `locations.geojson` se o serviço for só a pedido |

@@ -1,0 +1,60 @@
+---
+title: Início da janela de recolha e largada
+description: Verifica se o start_pickup_drop_off_window de stop_times.txt está preenchido quando necessário, é proibido com hora de chegada ou partida e está no formato HH:MM:SS.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_times_start_pickup_drop_off_window_valid` |
+| Ficheiro | `stop_times.txt` |
+| Campos | `start_pickup_drop_off_window`, `end_pickup_drop_off_window`, `arrival_time`, `departure_time`, `location_group_id`, `location_id` |
+| Tipo | Hora, hora, hora, hora, ID, ID |
+| Severidade | Condicional (obrigatório com `location_group_id`, `location_id` ou `end_pickup_drop_off_window`; proibido com `arrival_time` ou `departure_time`), Condicional, Condicional, Condicional, Opcional, Opcional |
+
+**Descrição dos campos:**
+
+- `start_pickup_drop_off_window`: hora a partir da qual o serviço a pedido fica disponível numa zona, grupo de paragens ou paragem. É obrigatório quando o `location_group_id` ou o `location_id` está preenchido, ou quando o `end_pickup_drop_off_window` está preenchido. É proibido quando o `arrival_time` ou o `departure_time` está preenchido.
+- `end_pickup_drop_off_window`: o outro extremo da mesma janela.
+- `arrival_time`: hora de chegada à paragem. Se estiver preenchida, a janela é proibida.
+- `departure_time`: hora de partida da paragem. Se estiver preenchida, a janela é proibida.
+- `location_group_id`: grupo de paragens em serviço a pedido. Se estiver preenchido, a janela é obrigatória.
+- `location_id`: zona de `locations.geojson` em serviço a pedido. Se estiver preenchido, a janela é obrigatória.
+
+Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times).
+
+## Como funciona
+
+As janelas de recolha e largada só existem em serviço a pedido. O `start_pickup_drop_off_window` não pode coexistir com `arrival_time` ou `departure_time`. É obrigatório se a linha usa `location_group_id` ou `location_id`, ou se o `end_pickup_drop_off_window` está preenchido. Quando preenchido, tem de ter o formato `HH:MM:SS`, com 8 carateres. A regra **não verifica se o fim da janela é posterior ao início**. Só verifica cada campo.
+
+A regra avalia cada linha do `stop_times.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `arrival_time` ou o `departure_time` está preenchido? | Se o `start_pickup_drop_off_window` também está preenchido, ❌ reporta o problema: `start_pickup_drop_off_window` proibido com hora de chegada ou partida. Se não, ✅ passa | Segue para o passo 2 |
+| 2 | O `location_group_id`, o `location_id` ou o `end_pickup_drop_off_window` está preenchido e o `start_pickup_drop_off_window` está vazio? | ❌ Reporta o problema: `start_pickup_drop_off_window` obrigatório | Segue para o passo 3 |
+| 3 | O `start_pickup_drop_off_window` está preenchido e não tem o formato `HH:MM:SS`? | ❌ Reporta o problema: hora inválida | Segue para o passo 4 |
+| 4 | O `start_pickup_drop_off_window` está vazio e a configuração da regra não ignora o campo? | ❌ Reporta o problema: em falta (recomendado, ou obrigatório se a configuração da regra o exigir) | ✅ Passa |
+
+## Como se relacionam
+
+Os campos `arrival_time`, `departure_time`, `location_group_id`, `location_id` e `end_pickup_drop_off_window` da mesma linha decidem se o `start_pickup_drop_off_window` é proibido ou obrigatório.
+
+## Exemplos
+
+| `start_pickup_drop_off_window` | Situação | Resultado | Porquê |
+|---|---|---|---|
+| `08:00:00` | Com `location_group_id`, sem horas | ✅ Passa | Serviço a pedido com janela |
+| *(vazio)* | Com `location_group_id` | ❌ Problema | Obrigatório em serviço a pedido |
+| `08:00:00` | Com `arrival_time` | ❌ Problema | Proibido com hora de chegada |
+| `8:00` | Com `location_group_id` | ❌ Problema | Formato incorreto |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `start_pickup_drop_off_window` proibido com hora de chegada ou partida | A linha tem janela e também `arrival_time` ou `departure_time` | Em `stop_times.txt`, usar só a janela ou só as horas |
+| `start_pickup_drop_off_window` obrigatório | A linha é de serviço a pedido e o `start_pickup_drop_off_window` está vazio | Preencher o `start_pickup_drop_off_window` em `stop_times.txt` no formato `HH:MM:SS` |
+| Hora inválida | O valor não tem o formato `HH:MM:SS` | Escrever o `start_pickup_drop_off_window` em `stop_times.txt` como `HH:MM:SS`, por exemplo `08:00:00` |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `start_pickup_drop_off_window` em `stop_times.txt` |

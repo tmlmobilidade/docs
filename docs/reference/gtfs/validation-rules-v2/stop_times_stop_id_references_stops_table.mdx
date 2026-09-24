@@ -1,0 +1,58 @@
+---
+title: Paragem da viagem
+description: Verifica se o stop_id de stop_times.txt existe em stops.txt, é uma paragem e não é usado com location_group_id ou location_id.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_times_stop_id_references_stops_table` |
+| Ficheiros | `stop_times.txt`, `stops.txt` |
+| Campos | `stop_id`, `location_group_id`, `location_id` |
+| Tipo | ID externo (refere `stop_id` de `stops.txt`), ID, ID |
+| Severidade | Condicional (obrigatório quando não há `location_group_id` nem `location_id`), Opcional, Opcional |
+
+**Descrição dos campos:**
+
+- `stop_id`: identifica a paragem usada. Tem de ser o `stop_id` de uma paragem (`location_type` `0` ou vazio). É obrigatório, exceto quando o `location_group_id` ou o `location_id` estão preenchidos. É proibido nesse caso.
+- `location_group_id`: identifica um grupo de paragens, em serviço a pedido.
+- `location_id`: identifica uma zona de `locations.geojson`, em serviço a pedido.
+
+Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times) e [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+Cada linha do `stop_times.txt` tem de indicar a paragem por `stop_id`, ou por `location_group_id` ou `location_id`, mas não por mais de uma forma. Quando usa `stop_id`, este tem de existir em `stops.txt` e ser uma paragem, não uma estação, entrada ou outro tipo de local. A regra **não verifica se a paragem pertence à linha da viagem**.
+
+A regra avalia cada linha do `stop_times.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `location_group_id` ou o `location_id` está preenchido? | Se o `stop_id` também está preenchido, ❌ reporta o problema: `stop_id` proibido com os outros identificadores. Se não, ✅ passa | Segue para o passo 2 |
+| 2 | O `stop_id` está vazio? | ❌ Reporta o problema: `stop_id` obrigatório | Segue para o passo 3 |
+| 3 | O `stop_id` existe em `stops.txt`? | Segue para o passo 4 | ❌ Reporta o problema: `stop_id` não encontrado |
+| 4 | O `location_type` desse local é diferente de `0` e de vazio? | ❌ Reporta o problema: o local não é uma paragem | ✅ Passa |
+
+## Como se relacionam
+
+O `stop_id` de `stop_times.txt` tem de existir em `stops.txt`. O `location_type` desse local decide se é aceite.
+
+## Exemplos
+
+| `stop_id` | `location_group_id` | Resultado | Porquê |
+|---|---|---|---|
+| `PV01` (paragem) | *(vazio)* | ✅ Passa | Paragem existente |
+| *(vazio)* | *(vazio)* | ❌ Problema | Falta o `stop_id` |
+| `XPTO` | *(vazio)* | ❌ Problema | Não existe em `stops.txt` |
+| `PV_ESTACAO` (estação) | *(vazio)* | ❌ Problema | Não é uma paragem |
+| `PV01` | `GRUPO_1` | ❌ Problema | `stop_id` proibido com `location_group_id` |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `stop_id` proibido com os outros identificadores | A linha tem `stop_id` e também `location_group_id` ou `location_id` | Em `stop_times.txt`, deixar só um dos identificadores preenchido |
+| `stop_id` obrigatório | A linha não tem `stop_id`, `location_group_id` nem `location_id` | Preencher o `stop_id` em `stop_times.txt` com um `stop_id` de `stops.txt` |
+| `stop_id` não encontrado | O valor tem um erro de escrita ou a paragem não está em `stops.txt` | Corrigir o `stop_id` em `stop_times.txt`, ou adicionar a paragem em `stops.txt` |
+| O local não é uma paragem | O `stop_id` refere uma estação, entrada, nó ou área de embarque | Em `stop_times.txt`, usar o `stop_id` de uma paragem ou plataforma (`location_type` `0` ou vazio) |

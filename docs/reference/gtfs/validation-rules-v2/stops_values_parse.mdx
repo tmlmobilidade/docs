@@ -1,0 +1,51 @@
+---
+title: Valores numéricos das paragens
+description: Verifica se os campos numéricos de stops.txt têm um valor que o validador consegue ler como número.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stops_values_parse` |
+| Ficheiro | `stops.txt` |
+| Campos | `stop_lat`, `stop_lon`, `location_type`, `wheelchair_boarding`, `public_visible`, `stop_access`, `has_bench`, `has_network_map`, `has_pip_real_time`, `has_schedules`, `has_shelter`, `has_stop_sign`, `has_tariffs_information` |
+| Tipo | Latitude, longitude, enumerações |
+| Severidade | Condicional, Condicional, Opcional (nos restantes) |
+
+**Descrição dos campos:**
+
+- `stop_lat` e `stop_lon`: latitude e longitude do local. Têm de ser números, com ou sem casas decimais.
+- `location_type`, `wheelchair_boarding`, `public_visible` e `stop_access`: valores de enumeração do GTFS. Têm de ser números inteiros.
+- `has_bench`, `has_network_map`, `has_pip_real_time`, `has_schedules`, `has_shelter`, `has_stop_sign` e `has_tariffs_information`: estado dos equipamentos da paragem. São extensões da TML ao GTFS. Têm de ser números inteiros.
+
+Mais informação em [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+`stop_lat` e `stop_lon` têm de ser escritos como números. Os restantes campos listados têm de ser números inteiros, sem casas decimais. Se algum não for, a linha inteira deixa de ser avaliada pelas outras regras do `stops.txt`. A regra **não verifica se o valor faz sentido**, por exemplo se o `location_type` está entre `0` e `4`. Isso é verificado por outras regras.
+
+A regra avalia cada linha do `stops.txt`, seguindo o passo abaixo, que dá o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | Algum dos campos numéricos listados tem um valor que não se lê como número? | ❌ Reporta o problema, um por cada campo inválido. A linha deixa de ser avaliada pelas outras regras | ✅ Passa |
+
+Um campo vazio não é um problema nesta regra. Os outros campos do `stops.txt` são texto e aceitam qualquer valor.
+
+## Exemplos
+
+| Campo | Valor | Resultado | Porquê |
+|---|---|---|---|
+| `stop_lat` | `38.7823` | ✅ Passa | Número decimal |
+| `location_type` | `1` | ✅ Passa | Número inteiro |
+| `stop_lon` | `-9,1002` | ❌ Problema | Vírgula em vez de ponto decimal |
+| `location_type` | `1.5` | ❌ Problema | Tem casas decimais, tem de ser inteiro |
+| `has_bench` | `sim` | ❌ Problema | Texto em vez de número |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor inválido em `stop_lat` ou `stop_lon` | O valor tem texto ou vírgula decimal | Em `stops.txt`, escrever o campo só com dígitos e ponto decimal, por exemplo `38.7823` |
+| Valor inválido num campo de enumeração | O valor tem texto ou casas decimais | Em `stops.txt`, escrever o campo como número inteiro, por exemplo `0` ou `1` |

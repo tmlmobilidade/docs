@@ -1,0 +1,63 @@
+---
+title: Hora de chegada à paragem
+description: Verifica se o arrival_time de stop_times.txt está preenchido quando necessário, é proibido com janelas a pedido e está no formato HH:MM:SS.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_times_arrival_time_ordering_with_departure_and_frequencies` |
+| Ficheiro | `stop_times.txt` |
+| Campos | `arrival_time`, `timepoint`, `stop_sequence`, `start_pickup_drop_off_window`, `end_pickup_drop_off_window` |
+| Tipo | Hora, enumeração (`0` ou `1`), número inteiro não negativo, hora, hora |
+| Severidade | Condicional (obrigatório na primeira e última paragem da viagem e quando o `timepoint` é `1`; proibido com janelas), Opcional, Obrigatório, Condicional, Condicional |
+
+**Descrição dos campos:**
+
+- `arrival_time`: hora de chegada à paragem, no fuso do `agency_timezone` de `agency.txt`. Depois da meia-noite, escreve-se um valor superior a `24:00:00`. Se não houver horas de chegada e partida diferentes, as duas são iguais. É obrigatória na primeira e última paragem da viagem e quando o `timepoint` é `1`. É proibida com janelas de recolha e largada.
+- `timepoint`: indica se as horas são exatas (`1`) ou aproximadas (`0`).
+- `stop_sequence`: ordem das paragens na viagem.
+- `start_pickup_drop_off_window`: início da janela de recolha e largada a pedido.
+- `end_pickup_drop_off_window`: fim da janela de recolha e largada a pedido.
+
+Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times).
+
+## Como funciona
+
+O `arrival_time` tem de estar preenchido na primeira e na última paragem da viagem e quando o `timepoint` é `1`. Não pode estar preenchido quando há janelas de recolha e largada na mesma linha. Quando preenchido, tem de ter o formato `HH:MM:SS`, com 8 carateres. Apesar do nome da regra, ela **não compara o `arrival_time` com o `departure_time`** nem com frequências. Não verifica se as horas são possíveis.
+
+A regra avalia cada linha do `stop_times.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `timepoint` é `1` e o `arrival_time` está vazio? | ❌ Reporta o problema: `arrival_time` obrigatório com `timepoint` `1` | Segue para o passo 2 |
+| 2 | Há janela de recolha e largada nesta linha e o `arrival_time` está preenchido? | ❌ Reporta o problema: `arrival_time` proibido com janela | Segue para o passo 3 |
+| 3 | O `arrival_time` está vazio e esta é a primeira paragem da viagem (menor `stop_sequence`)? | ❌ Reporta o problema: `arrival_time` obrigatório na primeira paragem | Segue para o passo 4 |
+| 4 | O `arrival_time` está vazio e esta é a última paragem da viagem (maior `stop_sequence`)? | ❌ Reporta o problema: `arrival_time` obrigatório na última paragem | Segue para o passo 5 |
+| 5 | O `arrival_time` está preenchido e não tem o formato `HH:MM:SS`? | ❌ Reporta o problema: hora inválida | Segue para o passo 6 |
+| 6 | O `arrival_time` está vazio e a configuração da regra não ignora o campo? | ❌ Reporta o problema: em falta (recomendado, ou obrigatório se a configuração da regra o exigir) | ✅ Passa |
+
+## Como se relacionam
+
+O `timepoint`, o `stop_sequence` e as janelas da mesma linha decidem se o `arrival_time` é obrigatório ou proibido.
+
+## Exemplos
+
+| `arrival_time` | Situação | Resultado | Porquê |
+|---|---|---|---|
+| `08:00:00` | Paragem intermédia | ✅ Passa | Formato correto |
+| `25:10:00` | Depois da meia-noite | ✅ Passa | O formato é aceite |
+| *(vazio)* | Primeira paragem da viagem | ❌ Problema | Obrigatório na primeira paragem |
+| `08:00:00` | Com janela de recolha e largada | ❌ Problema | Proibido com janela |
+| `8:00:00` | Paragem intermédia | ❌ Problema | Falta o zero à esquerda |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `arrival_time` obrigatório com `timepoint` `1` | O `timepoint` é `1` e o `arrival_time` está vazio | Preencher o `arrival_time` em `stop_times.txt` no formato `HH:MM:SS` |
+| `arrival_time` proibido com janela | A linha tem janela de recolha e largada e `arrival_time` | Em `stop_times.txt`, remover o `arrival_time` ou as janelas |
+| `arrival_time` obrigatório na primeira ou na última paragem | O `arrival_time` está vazio numa das pontas da viagem | Preencher o `arrival_time` em `stop_times.txt` no formato `HH:MM:SS` |
+| Hora inválida | O valor não tem o formato `HH:MM:SS` | Escrever o `arrival_time` em `stop_times.txt` como `HH:MM:SS`, por exemplo `08:00:00` |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `arrival_time` em `stop_times.txt` |

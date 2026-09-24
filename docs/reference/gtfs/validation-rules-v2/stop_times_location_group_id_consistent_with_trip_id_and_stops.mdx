@@ -1,0 +1,53 @@
+---
+title: Grupo de paragens da viagem
+description: Verifica se o location_group_id de stop_times.txt, quando preenchido, existe em location_groups.txt e não é usado com stop_id ou location_id.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_times_location_group_id_consistent_with_trip_id_and_stops` |
+| Ficheiros | `stop_times.txt`, `location_groups.txt` |
+| Campos | `location_group_id`, `stop_id`, `location_id` |
+| Tipo | ID externo (refere `location_group_id` de `location_groups.txt`), ID, ID |
+| Severidade | Condicional (proibido quando o `stop_id` ou o `location_id` estão preenchidos), Condicional, Opcional |
+
+**Descrição dos campos:**
+
+- `location_group_id`: identifica um grupo de paragens, em serviço a pedido. É proibido quando o `stop_id` ou o `location_id` estão preenchidos.
+- `stop_id`: identifica a paragem usada. Se estiver preenchido, o `location_group_id` é proibido.
+- `location_id`: identifica uma zona de `locations.geojson`. Se estiver preenchido, o `location_group_id` é proibido.
+
+Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times) e [location_groups.txt](/reference/gtfs/schedule/location_groups).
+
+## Como funciona
+
+Cada linha do `stop_times.txt` só pode usar um destes identificadores: `stop_id`, `location_group_id` ou `location_id`. Quando usa `location_group_id`, este tem de existir em `location_groups.txt`. Apesar do nome da regra, ela **não compara o `location_group_id` com o `trip_id` nem com as paragens da viagem**.
+
+A regra avalia cada linha do `stop_times.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `stop_id` ou o `location_id` está preenchido? | Se o `location_group_id` também está preenchido, ❌ reporta o problema: `location_group_id` proibido com os outros identificadores. Se não, ✅ passa | Segue para o passo 2 |
+| 2 | O `location_group_id` está preenchido e não existe em `location_groups.txt`? | ❌ Reporta o problema: `location_group_id` não encontrado | ✅ Passa |
+
+## Como se relacionam
+
+O `location_group_id` de `stop_times.txt` tem de existir em `location_groups.txt`. Só um entre `stop_id`, `location_group_id` e `location_id` pode estar preenchido.
+
+## Exemplos
+
+| `location_group_id` | `stop_id` | Resultado | Porquê |
+|---|---|---|---|
+| `GRUPO_1` (existe) | *(vazio)* | ✅ Passa | Existe em `location_groups.txt` |
+| *(vazio)* | `PV01` | ✅ Passa | Usa `stop_id` |
+| `GRUPO_1` | `PV01` | ❌ Problema | Dois identificadores na mesma linha |
+| `XPTO` (não existe) | *(vazio)* | ❌ Problema | Não existe em `location_groups.txt` |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `location_group_id` proibido com os outros identificadores | A linha tem `location_group_id` e também `stop_id` ou `location_id` | Em `stop_times.txt`, deixar só um dos identificadores preenchido |
+| `location_group_id` não encontrado | O valor tem um erro de escrita ou o grupo não está em `location_groups.txt` | Corrigir o `location_group_id` em `stop_times.txt`, ou adicionar o grupo em `location_groups.txt` |

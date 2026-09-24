@@ -1,0 +1,56 @@
+---
+title: Tipo de local
+description: Verifica se o location_type de stops.txt, quando preenchido, é 0, 1, 2, 3 ou 4 e cumpre a configuração da regra.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stops_location_type_valid_enum` |
+| Ficheiro | `stops.txt` |
+| Campo | `location_type` |
+| Tipo | Enumeração (`0`, `1`, `2`, `3` ou `4`) |
+| Severidade | Opcional |
+
+**Descrição do campo:** tipo de local.
+
+- `0 (ou vazio)`: paragem ou plataforma, onde os passageiros entram ou saem do veículo
+- `1`: estação, estrutura ou área que contém uma ou mais plataformas
+- `2`: entrada ou saída de uma estação
+- `3`: nó genérico dentro de uma estação, usado para ligar percursos de `pathways.txt`
+- `4`: área de embarque numa plataforma
+
+Mais informação em [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+O `location_type` é opcional. Um campo vazio é aceite, salvo se a configuração da regra o exigir ou recomendar. Se estiver preenchido, tem de ser `0`, `1`, `2`, `3` ou `4`.
+
+A regra avalia cada linha do `stops.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `location_type` está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O `location_type` é `0`, `1`, `2`, `3` ou `4`? | Segue para o passo 4 | ❌ Reporta o problema: valor inválido |
+| 4 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 5 | ✅ Passa |
+| 5 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `1` | ✅ Passa | Estação |
+| `5` | ❌ Problema | Só são aceites de `0` a `4` |
+| *(vazio)* | ✅ Passa | Campo opcional |
+| *(vazio)* com campo exigido na configuração | ❌ Problema | A configuração da regra exige o campo |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor inválido | O `location_type` é um número fora da lista de valores aceites | Corrigir o `location_type` em `stops.txt` para `0`, `1`, `2`, `3` ou `4` |
+| Valor não permitido | O valor não está na lista da configuração da regra | Usar um valor da lista permitida, ou pedir ao administrador que o adicione |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `location_type` em `stops.txt` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `location_type` em `stops.txt` |

@@ -1,0 +1,53 @@
+---
+title: Paragem visível ao público
+description: Verifica se o public_visible de stops.txt, quando preenchido, é 0 ou 1 e cumpre a configuração da regra.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stops_public_visible_valid_enum` |
+| Ficheiro | `stops.txt` |
+| Campo | `public_visible` |
+| Tipo | Enumeração (`0` ou `1`) |
+| Severidade | Opcional |
+
+**Descrição do campo:** indica se a paragem é visível para o público.
+
+- `0`: não
+- `1`: sim
+
+Mais informação em [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+O `public_visible` é opcional. Um campo vazio é aceite, salvo se a configuração da regra o exigir ou recomendar. Se estiver preenchido, tem de ser `0` ou `1`.
+
+A regra avalia cada linha do `stops.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `public_visible` está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O `public_visible` é `0` ou `1`? | Segue para o passo 4 | ❌ Reporta o problema: valor inválido |
+| 4 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 5 | ✅ Passa |
+| 5 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `1` | ✅ Passa | Visível ao público |
+| `2` | ❌ Problema | Só são aceites `0` e `1` |
+| *(vazio)* | ✅ Passa | Campo opcional |
+| *(vazio)* com campo exigido na configuração | ❌ Problema | A configuração da regra exige o campo |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor inválido | O `public_visible` é um número fora da lista de valores aceites | Corrigir o `public_visible` em `stops.txt` para `0` ou `1` |
+| Valor não permitido | O valor não está na lista da configuração da regra | Usar um valor da lista permitida, ou pedir ao administrador que o adicione |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `public_visible` em `stops.txt` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `public_visible` em `stops.txt` |

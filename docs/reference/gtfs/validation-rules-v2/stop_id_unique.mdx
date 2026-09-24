@@ -1,0 +1,50 @@
+---
+title: Identificador da paragem
+description: Verifica se o stop_id de stops.txt está preenchido e não se repete.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_id_unique` |
+| Ficheiro | `stops.txt` |
+| Campo | `stop_id` |
+| Tipo | ID único |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** identifica um local: paragem ou plataforma, estação, entrada ou saída, nó genérico ou área de embarque (ver `location_type`). Tem de ser único entre os `stop_id` de `stops.txt`, os `id` de `locations.geojson` e os `location_group_id` de `location_groups.txt`.
+
+Mais informação em [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+Cada linha do `stops.txt` tem de ter um `stop_id` preenchido e diferente do das outras linhas. Se a configuração da regra tiver uma lista de valores permitidos, o valor também tem de constar dessa lista. A regra **só compara com o próprio `stops.txt`**. Não compara com `locations.geojson` nem com `location_groups.txt`.
+
+A regra avalia cada linha do `stops.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `stop_id` está vazio? | ❌ Reporta o problema: `stop_id` obrigatório | Segue para o passo 2 |
+| 2 | Outra linha do `stops.txt` tem o mesmo `stop_id`? | ❌ Reporta o problema: `stop_id` duplicado | Segue para o passo 3 |
+| 3 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 4 | ✅ Passa |
+| 4 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+Quando há duplicados, o problema é reportado em todas as linhas que repetem o `stop_id`.
+
+## Exemplos
+
+| `stop_id` nas linhas do `stops.txt` | Resultado | Porquê |
+|---|---|---|
+| `PV01`, `PV02` | ✅ Passa | Preenchidos e diferentes |
+| `PV01`, `PV01` | ❌ Problema | `stop_id` repetido |
+| *(vazio)* | ❌ Problema | Falta o `stop_id` |
+| `PV01` (lista permitida = `PV02`) | ❌ Problema | Fora da lista |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `stop_id` obrigatório | A linha não tem `stop_id` | Preencher o `stop_id` em `stops.txt` com um identificador único |
+| `stop_id` duplicado | Duas ou mais linhas do `stops.txt` têm o mesmo `stop_id` | Em `stops.txt`, dar a cada local um `stop_id` diferente. Se for o mesmo local, remover a linha repetida |
+| Valor não permitido | O valor não está na lista da configuração da regra | Usar um valor da lista permitida, ou pedir ao administrador que o adicione |
