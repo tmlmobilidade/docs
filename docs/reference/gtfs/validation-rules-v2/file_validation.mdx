@@ -1,0 +1,42 @@
+---
+title: Leitura dos ficheiros do conjunto de dados
+description: Verifica se cada ficheiro GTFS dentro do ZIP consegue ser lido pelo validador.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `file_validation` |
+| Ficheiro | Qualquer ficheiro GTFS reconhecido dentro do ZIP |
+| Campo | Se aplica em todo o ficheiro |
+| Tipo | Leitura do ficheiro |
+| Severidade | Obrigatório |
+
+## Como funciona
+
+Cada ficheiro GTFS reconhecido dentro do ZIP tem de ser legível pelo validador: ter texto válido, um cabeçalho e linhas de tabela bem formadas. Se um ficheiro não puder ser lido, o validador reporta o problema e não avalia esse ficheiro. A regra **não verifica o conteúdo dos campos**. Isso fica para as regras de cada ficheiro.
+
+A regra avalia cada ficheiro do ZIP, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O nome do ficheiro é de um ficheiro GTFS que o validador reconhece? | Segue para o passo 2 | O ficheiro é ignorado e não conta como problema |
+| 2 | O ficheiro consegue ser lido? | ✅ Passa | ❌ Reporta o problema: erro ao processar o ficheiro |
+
+Ficheiros dentro de uma pasta no ZIP são lidos como se estivessem na raiz. Os ficheiros de metadados do macOS e as pastas são ignorados.
+
+## Exemplos
+
+| Ficheiro no ZIP | Resultado | Porquê |
+|---|---|---|
+| `agency.txt` com cabeçalho e linhas corretas | ✅ Passa | Ficheiro legível |
+| `notas.txt` | ✅ Passa | Ficheiro desconhecido, ignorado |
+| `stops.txt` vazio | ❌ Problema | Sem cabeçalho |
+| `routes.txt` com carateres inválidos | ❌ Problema | Texto que não está em UTF-8 |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Erro ao processar o ficheiro | O ficheiro está vazio, não está em UTF-8 ou tem linhas mal formadas | Abrir o ficheiro indicado, confirmar que tem cabeçalho na primeira linha, que está gravado em UTF-8 e que todas as linhas estão bem formadas. Depois voltar a criar o ZIP |

@@ -1,0 +1,46 @@
+---
+title: Valor do tipo de exceção de serviço
+description: Verifica se o exception_type de calendar_dates.txt tem um valor que o validador consegue ler como número inteiro.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `calendar_dates_values_parse` |
+| Ficheiro | `calendar_dates.txt` |
+| Campo | `exception_type` |
+| Tipo | Número inteiro |
+| Severidade | Obrigatório |
+
+**Descrição do campo (GTFS):** indica se há serviço na data indicada em `date`. O valor `1` significa que o serviço foi adicionado nessa data. O valor `2` significa que o serviço foi removido nessa data.
+
+Mais informação em [calendar_dates.txt](/reference/gtfs/schedule/calendar_dates).
+
+## Como funciona
+
+O `exception_type` tem de ser um número inteiro, por exemplo `1` ou `2`. Se tiver outro texto, a linha inteira deixa de ser avaliada pelas outras regras do `calendar_dates.txt`. A regra **não verifica se o número é `1` ou `2`**, isso é verificado por outra regra. Só verifica se o valor se lê como número inteiro.
+
+A regra avalia cada linha do `calendar_dates.txt`, seguindo o passo abaixo, que dá o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `exception_type` tem um valor que não se lê como número inteiro? | ❌ Reporta o problema. A linha deixa de ser avaliada pelas outras regras | ✅ Passa |
+
+Um campo vazio não é reportado por esta regra.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `1` | ✅ Passa | Número inteiro |
+| `2` | ✅ Passa | Número inteiro |
+| `3` | ✅ Passa | Número inteiro, mas será recusado por outra regra |
+| *(vazio)* | ✅ Passa | Não é reportado por esta regra |
+| `adicionar` | ❌ Problema | Texto em vez de número |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor que não é um número inteiro | O valor é texto, tem casas decimais ou tem espaços | Em `calendar_dates.txt`, escrever no `exception_type` o número `1` para adicionar serviço ou `2` para o remover |

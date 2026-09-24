@@ -1,0 +1,45 @@
+---
+title: Momento de pagamento da tarifa
+description: Verifica se o payment_method de fare_attributes.txt está preenchido com 0 ou 1.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `fare_attributes_payment_method_valid_gtfs_enum` |
+| Ficheiro | `fare_attributes.txt` |
+| Campo | `payment_method` |
+| Tipo | Enumeração (`0` ou `1`) |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** indica quando a tarifa tem de ser paga. O valor `0` significa que a tarifa é paga a bordo. O valor `1` significa que a tarifa tem de ser paga antes de embarcar.
+
+Mais informação em [fare_attributes.txt](/reference/gtfs/schedule/fare_attributes).
+
+## Como funciona
+
+Cada linha do `fare_attributes.txt` tem de ter um `payment_method` preenchido com `0` ou `1`. A regra **não verifica se o momento de pagamento corresponde ao que acontece na prática**. Só verifica se o valor é um dos dois aceites.
+
+A regra avalia cada linha do `fare_attributes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `payment_method` está vazio? | ❌ Reporta o problema: `payment_method` obrigatório | Segue para o passo 2 |
+| 2 | O `payment_method` é `0` ou `1`? | ✅ Passa | ❌ Reporta o problema: valor inválido |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `0` | ✅ Passa | Pago a bordo |
+| `1` | ✅ Passa | Pago antes de embarcar |
+| `2` | ❌ Problema | Só são aceites `0` e `1` |
+| *(vazio)* | ❌ Problema | Falta o valor |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `payment_method` obrigatório | A linha não tem `payment_method` | Preencher o `payment_method` em `fare_attributes.txt` com `0` (pago a bordo) ou `1` (pago antes de embarcar) |
+| Valor inválido | O valor é um número diferente de `0` e `1` | Corrigir o `payment_method` em `fare_attributes.txt` para `0` ou `1` |

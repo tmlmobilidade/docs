@@ -13,7 +13,17 @@ description: Verifica se os campos dos dias da semana de calendar.txt têm um va
 | Tipo | Enumeração (`0` ou `1`) |
 | Severidade | Obrigatório |
 
-**Descrição dos campos (GTFS):** cada campo indica se há serviço em todos os dias da semana correspondentes dentro do intervalo entre `start_date` e `end_date`. O valor `1` significa que há serviço em todos esses dias. O valor `0` significa que não há. As exceções para datas concretas podem estar no `calendar_dates.txt`. Os sete campos funcionam da mesma forma, cada um para o seu dia. Mais informação em [calendar.txt](/reference/gtfs/schedule/calendar).
+**Descrição dos campos:**
+
+- `monday`: indica se há serviço em todas as segundas-feiras do intervalo entre `start_date` e `end_date`. O valor `1` significa que há serviço. O valor `0` significa que não há. As exceções para datas concretas podem estar no `calendar_dates.txt`.
+- `tuesday`: funciona como o `monday`, para as terças-feiras.
+- `wednesday`: funciona como o `monday`, para as quartas-feiras.
+- `thursday`: funciona como o `monday`, para as quintas-feiras.
+- `friday`: funciona como o `monday`, para as sextas-feiras.
+- `saturday`: funciona como o `monday`, para os sábados.
+- `sunday`: funciona como o `monday`, para os domingos.
+
+Mais informação em [calendar.txt](/reference/gtfs/schedule/calendar).
 
 ## Como funciona
 

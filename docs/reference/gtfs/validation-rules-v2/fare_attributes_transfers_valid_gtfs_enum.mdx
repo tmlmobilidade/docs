@@ -1,0 +1,51 @@
+---
+title: Número de transferências da tarifa
+description: Verifica se o transfers de fare_attributes.txt, quando preenchido, é 0, 1 ou 2.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `fare_attributes_transfers_valid_gtfs_enum` |
+| Ficheiro | `fare_attributes.txt` |
+| Campo | `transfers` |
+| Tipo | Enumeração (`0`, `1` ou `2`) |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** indica o número de transferências permitidas nesta tarifa.
+
+- `0`: não são permitidas transferências.
+- `1`: os passageiros podem fazer uma transferência.
+- `2`: os passageiros podem fazer duas transferências.
+- *(vazio)*: as transferências são ilimitadas.
+
+Mais informação em [fare_attributes.txt](/reference/gtfs/schedule/fare_attributes).
+
+## Como funciona
+
+Se o `transfers` estiver preenchido, o valor tem de ser `0`, `1` ou `2`. Um campo vazio é aceite e significa transferências ilimitadas. A regra **não exige que o campo esteja preenchido** e não verifica se o número de transferências corresponde às regras reais da tarifa.
+
+A regra avalia cada linha do `fare_attributes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `transfers` está vazio? | ✅ Passa | Segue para o passo 2 |
+| 2 | O `transfers` é `0`, `1` ou `2`? | ✅ Passa | ❌ Reporta o problema: valor inválido |
+
+O cabeçalho `transfers` tem de existir no ficheiro, mas o conteúdo pode ficar vazio.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `0` | ✅ Passa | Sem transferências |
+| `2` | ✅ Passa | Até duas transferências |
+| *(vazio)* | ✅ Passa | Transferências ilimitadas |
+| `3` | ❌ Problema | Só são aceites `0`, `1` e `2` |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor inválido | O `transfers` é um número diferente de `0`, `1` e `2` | Em `fare_attributes.txt`, escrever no `transfers` o valor `0`, `1` ou `2`, ou deixar vazio se as transferências forem ilimitadas |

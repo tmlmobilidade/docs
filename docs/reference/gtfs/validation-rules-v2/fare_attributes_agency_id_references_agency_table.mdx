@@ -1,0 +1,53 @@
+---
+title: Operador da tarifa
+description: Verifica se o agency_id de fare_attributes.txt está preenchido quando necessário e se existe em agency.txt.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `fare_attributes_agency_id_references_agency_table` |
+| Ficheiro | `fare_attributes.txt` |
+| Campo | `agency_id` |
+| Tipo | ID externo (refere `agency_id` de `agency.txt`) |
+| Severidade | Condicional (obrigatório quando o conjunto de dados tem vários operadores em `agency.txt`; recomendado nos outros casos) |
+
+**Descrição do campo:** identifica o operador a que a tarifa se aplica.
+
+Mais informação em [fare_attributes.txt](/reference/gtfs/schedule/fare_attributes).
+
+## Como funciona
+
+Quando o `agency.txt` tem mais de um operador, cada tarifa tem de indicar o seu `agency_id`. Quando o valor está preenchido, tem de existir no `agency.txt`. A regra **não verifica se o operador indicado é o correto** para a tarifa. Só verifica se o `agency_id` existe.
+
+A regra avalia cada linha do `fare_attributes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `agency_id` está vazio e o `agency.txt` tem mais de um operador? | ❌ Reporta o problema: `agency_id` obrigatório | Segue para o passo 2 |
+| 2 | O `agency_id` está vazio e a configuração da regra não a ignora? | ❌ Reporta o problema: `agency_id` em falta (recomendado, ou obrigatório se a configuração da regra o exigir) | Segue para o passo 3 |
+| 3 | O `agency_id` existe no `agency.txt`? | ✅ Passa | ❌ Reporta o problema: `agency_id` não encontrado |
+
+Se não houver configuração, o problema é reportado com a gravidade de aviso.
+
+## Como se relacionam
+
+Cada `agency_id` de `fare_attributes.txt` tem de existir como `agency_id` em `agency.txt`. O número de operadores em `agency.txt` decide se o campo é obrigatório.
+
+## Exemplos
+
+| `agency_id` em `fare_attributes.txt` | Operadores em `agency.txt` | Resultado | Porquê |
+|---|---|---|---|
+| `CP` | `CP`, `METRO` | ✅ Passa | Existe em `agency.txt` |
+| *(vazio)* | `CP`, `METRO` | ❌ Problema | Há vários operadores, o campo é obrigatório |
+| *(vazio)* | `CP` | ❌ Problema | Só há um operador, o campo é recomendado |
+| `XPTO` | `CP`, `METRO` | ❌ Problema | Não existe em `agency.txt` |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `agency_id` obrigatório | A linha não tem `agency_id` e o `agency.txt` tem vários operadores | Preencher o `agency_id` em `fare_attributes.txt` com um `agency_id` de `agency.txt` |
+| `agency_id` recomendado | A linha não tem `agency_id` e o `agency.txt` tem só um operador | Preencher o `agency_id` em `fare_attributes.txt` com o `agency_id` do operador |
+| `agency_id` não encontrado | O valor tem um erro de escrita ou o operador não está em `agency.txt` | Corrigir o `agency_id` em `fare_attributes.txt`, ou adicionar o operador em `agency.txt` |

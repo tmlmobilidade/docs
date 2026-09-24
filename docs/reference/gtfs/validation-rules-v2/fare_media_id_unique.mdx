@@ -1,0 +1,44 @@
+---
+title: Identificador do meio de pagamento
+description: Verifica se o fare_media_id de fare_media.txt está preenchido e não se repete.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `fare_media_id_unique` |
+| Ficheiro | `fare_media.txt` |
+| Campo | `fare_media_id` |
+| Tipo | ID único |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** identifica um meio de pagamento.
+
+Mais informação em [fare_media.txt](/reference/gtfs/schedule/fare_media).
+
+## Como funciona
+
+Cada linha do `fare_media.txt` tem de ter um `fare_media_id` preenchido e diferente do das outras linhas. A regra **não verifica se o `fare_media_id` é usado noutros ficheiros**. Só verifica se está preenchido e é único no `fare_media.txt`.
+
+A regra avalia cada linha do `fare_media.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `fare_media_id` está vazio? | ❌ Reporta o problema: `fare_media_id` obrigatório | Segue para o passo 2 |
+| 2 | Outra linha do `fare_media.txt` tem o mesmo `fare_media_id`? | ❌ Reporta o problema: `fare_media_id` duplicado | ✅ Passa |
+
+## Exemplos
+
+| `fare_media_id` nas linhas do `fare_media.txt` | Resultado | Porquê |
+|---|---|---|
+| `CARTAO`, `APP` | ✅ Passa | Preenchidos e diferentes |
+| `CARTAO`, `CARTAO` | ❌ Problema | `fare_media_id` repetido |
+| *(vazio)* | ❌ Problema | Falta o `fare_media_id` |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `fare_media_id` obrigatório | A linha não tem `fare_media_id` | Preencher o `fare_media_id` em `fare_media.txt` com um identificador único |
+| `fare_media_id` duplicado | Duas ou mais linhas do `fare_media.txt` têm o mesmo `fare_media_id` | Em `fare_media.txt`, dar a cada meio de pagamento um `fare_media_id` diferente. Se for o mesmo meio, remover a linha repetida |

@@ -1,0 +1,42 @@
+---
+title: Versão do conjunto de dados
+description: Verifica se o feed_version de feed_info.txt está preenchido.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `feed_version_valid_identifier` |
+| Ficheiro | `feed_info.txt` |
+| Campo | `feed_version` |
+| Tipo | Texto |
+| Severidade | Opcional (recomendado) |
+
+**Descrição do campo:** texto que indica a versão atual do conjunto de dados GTFS. As aplicações podem mostrá-lo para ajudar quem publica a saber se a versão mais recente já foi incorporada.
+
+Mais informação em [feed_info.txt](/reference/gtfs/schedule/feed_info).
+
+## Como funciona
+
+O `feed_version` deve estar preenchido. Quando está vazio, a regra dá um aviso. A regra **não verifica o conteúdo do texto**, por exemplo se segue um formato de versão. Aceita qualquer valor preenchido.
+
+A regra avalia cada linha do `feed_info.txt`, seguindo o passo abaixo, que dá o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `feed_version` está vazio? | ❌ Reporta o problema, como aviso: campo recomendado | ✅ Passa |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `2024-06-01` | ✅ Passa | Preenchido |
+| `v12` | ✅ Passa | Preenchido |
+| *(vazio)* | ❌ Problema | Campo recomendado, dado como aviso |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo recomendado | O `feed_version` está vazio | Preencher o `feed_version` em `feed_info.txt` com a versão do conjunto de dados, por exemplo a data de publicação |

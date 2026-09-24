@@ -1,0 +1,44 @@
+---
+title: Identificador da tarifa
+description: Verifica se o fare_id de fare_attributes.txt está preenchido e não se repete.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `fare_attributes_id_unique` |
+| Ficheiro | `fare_attributes.txt` |
+| Campo | `fare_id` |
+| Tipo | ID único |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** identifica uma classe de tarifa.
+
+Mais informação em [fare_attributes.txt](/reference/gtfs/schedule/fare_attributes).
+
+## Como funciona
+
+Cada linha do `fare_attributes.txt` tem de ter um `fare_id` preenchido e diferente do das outras linhas. A regra **não verifica se o `fare_id` é usado noutros ficheiros**, como o `fare_rules.txt`. Só verifica se está preenchido e é único no `fare_attributes.txt`.
+
+A regra avalia cada linha do `fare_attributes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `fare_id` está vazio? | ❌ Reporta o problema: `fare_id` obrigatório | Segue para o passo 2 |
+| 2 | Outra linha do `fare_attributes.txt` tem o mesmo `fare_id`? | ❌ Reporta o problema: `fare_id` duplicado | ✅ Passa |
+
+## Exemplos
+
+| `fare_id` nas linhas do `fare_attributes.txt` | Resultado | Porquê |
+|---|---|---|
+| `URBANO`, `INTERURBANO` | ✅ Passa | Preenchidos e diferentes |
+| `URBANO`, `URBANO` | ❌ Problema | `fare_id` repetido |
+| *(vazio)* | ❌ Problema | Falta o `fare_id` |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `fare_id` obrigatório | A linha não tem `fare_id` | Preencher o `fare_id` em `fare_attributes.txt` com um identificador único |
+| `fare_id` duplicado | Duas ou mais linhas do `fare_attributes.txt` têm o mesmo `fare_id` | Em `fare_attributes.txt`, dar a cada tarifa um `fare_id` diferente. Se for a mesma tarifa, remover a linha repetida |

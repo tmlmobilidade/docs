@@ -1,0 +1,49 @@
+---
+title: Linha da regra de tarifa
+description: Verifica se o route_id de fare_rules.txt, quando preenchido, existe em routes.txt.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `fare_rule_route_id_references_routes` |
+| Ficheiros | `fare_rules.txt`, `routes.txt` |
+| Campo | `route_id` |
+| Tipo | ID externo (refere `route_id` de `routes.txt`) |
+| Severidade | Opcional |
+
+**Descrição do campo:** identifica uma linha associada à tarifa. Se várias linhas tiverem a mesma tarifa, cria-se uma linha em `fare_rules.txt` para cada `route_id`.
+
+Mais informação em [fare_rules.txt](/reference/gtfs/schedule/fare_rules) e [routes.txt](/reference/gtfs/schedule/routes).
+
+## Como funciona
+
+Se o `route_id` estiver preenchido, o valor tem de existir em `routes.txt`. Um campo vazio é sempre aceite. A regra **não verifica se a linha usa mesmo esta tarifa**. Só verifica se o `route_id` existe.
+
+A regra avalia cada linha do `fare_rules.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `route_id` está vazio? | ✅ Passa | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O `route_id` existe em `routes.txt`? | ✅ Passa | ❌ Reporta o problema: `route_id` não encontrado |
+
+## Como se relacionam
+
+Cada `route_id` de `fare_rules.txt` tem de existir como `route_id` em `routes.txt`.
+
+## Exemplos
+
+| `route_id` em `fare_rules.txt` | Resultado | Porquê |
+|---|---|---|
+| `TSW` (existe em `routes.txt`) | ✅ Passa | Existe em `routes.txt` |
+| `XPTO` (não existe em `routes.txt`) | ❌ Problema | Não existe em `routes.txt` |
+| *(vazio)* | ✅ Passa | Campo opcional |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `route_id` não encontrado | O valor tem um erro de escrita ou a linha não está em `routes.txt` | Corrigir o `route_id` em `fare_rules.txt`, ou adicionar a linha em `routes.txt` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `route_id` em `fare_rules.txt` |

@@ -1,0 +1,37 @@
+---
+title: Ficheiro sem regras de validação
+description: Avisa quando o conjunto de dados tem um ficheiro que o validador não sabe validar e por isso ignora.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `file_not_found_in_rules` |
+| Ficheiro | Qualquer ficheiro do conjunto de dados |
+| Campo | Se aplica em todo o ficheiro |
+| Tipo | Ficheiro suportado |
+| Severidade | Opcional |
+
+## Como funciona
+
+Se o conjunto de dados tem um ficheiro que o validador reconhece mas para o qual não tem regras, a regra dá um aviso. O ficheiro **não é validado**. A regra não diz se o ficheiro está certo ou errado.
+
+A regra avalia cada ficheiro do conjunto de dados, seguindo o passo abaixo, que dá o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O ficheiro existe no conjunto de dados mas o validador não tem regras para ele? | ❌ Reporta o problema, como aviso: ficheiro não suportado e ignorado | ✅ Passa |
+
+## Exemplos
+
+| Ficheiro no conjunto de dados | Resultado | Porquê |
+|---|---|---|
+| `agency.txt` | ✅ Passa | Tem regras de validação |
+| Um ficheiro reconhecido sem regras | ❌ Problema | O validador ignora-o |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Ficheiro não suportado e ignorado | O ficheiro é reconhecido mas o validador ainda não o valida | Não é preciso corrigir o ficheiro. Se ele não for necessário no conjunto de dados, removê-lo do ZIP |

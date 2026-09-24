@@ -1,0 +1,48 @@
+---
+title: Tarifa da regra de tarifa
+description: Verifica se o fare_id de fare_rules.txt está preenchido e existe em fare_attributes.txt.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `fare_rule_fare_id_references_fare_attributes` |
+| Ficheiros | `fare_rules.txt`, `fare_attributes.txt` |
+| Campo | `fare_id` |
+| Tipo | ID externo (refere `fare_id` de `fare_attributes.txt`) |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** identifica uma classe de tarifa.
+
+Mais informação em [fare_rules.txt](/reference/gtfs/schedule/fare_rules) e [fare_attributes.txt](/reference/gtfs/schedule/fare_attributes).
+
+## Como funciona
+
+Cada linha do `fare_rules.txt` tem de ter um `fare_id` preenchido e que exista em `fare_attributes.txt`. A regra **não verifica se as restantes colunas da linha fazem sentido**. Só verifica o `fare_id`.
+
+A regra avalia cada linha do `fare_rules.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `fare_id` está vazio? | ❌ Reporta o problema: `fare_id` obrigatório | Segue para o passo 2 |
+| 2 | O `fare_id` existe em `fare_attributes.txt`? | ✅ Passa | ❌ Reporta o problema: `fare_id` não encontrado |
+
+## Como se relacionam
+
+Cada `fare_id` de `fare_rules.txt` tem de existir como `fare_id` em `fare_attributes.txt`.
+
+## Exemplos
+
+| `fare_id` em `fare_rules.txt` | `fare_id` em `fare_attributes.txt` | Resultado | Porquê |
+|---|---|---|---|
+| `URBANO` | `URBANO`, `INTERURBANO` | ✅ Passa | Existe em `fare_attributes.txt` |
+| `XPTO` | `URBANO`, `INTERURBANO` | ❌ Problema | Não existe em `fare_attributes.txt` |
+| *(vazio)* | `URBANO` | ❌ Problema | Falta o `fare_id` |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `fare_id` obrigatório | A linha não tem `fare_id` | Preencher o `fare_id` em `fare_rules.txt` com um `fare_id` de `fare_attributes.txt` |
+| `fare_id` não encontrado | O valor tem um erro de escrita ou a tarifa não está em `fare_attributes.txt` | Corrigir o `fare_id` em `fare_rules.txt`, ou adicionar a tarifa em `fare_attributes.txt` |

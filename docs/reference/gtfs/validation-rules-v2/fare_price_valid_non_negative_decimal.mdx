@@ -1,0 +1,47 @@
+---
+title: Preço da tarifa
+description: Verifica se o price de fare_attributes.txt está preenchido e não é negativo.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `fare_price_valid_non_negative_decimal` |
+| Ficheiro | `fare_attributes.txt` |
+| Campo | `price` |
+| Tipo | Número decimal não negativo |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** preço da tarifa, na moeda indicada em `currency_type`.
+
+Mais informação em [fare_attributes.txt](/reference/gtfs/schedule/fare_attributes).
+
+## Como funciona
+
+Cada linha do `fare_attributes.txt` tem de ter um `price` preenchido com um número igual ou superior a zero. A regra **não verifica se o preço é razoável** nem se está na moeda certa. Só verifica se está preenchido e não é negativo.
+
+A regra avalia cada linha do `fare_attributes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `price` está vazio? | ❌ Reporta o problema: `price` obrigatório | Segue para o passo 2 |
+| 2 | O `price` é um número negativo? | ❌ Reporta o problema: valor inválido | ✅ Passa |
+
+Um valor que não seja um número, como `abc`, é tratado pela regra `fare_attributes_values_parse`.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `1.50` | ✅ Passa | Número positivo |
+| `0` | ✅ Passa | Zero não é negativo |
+| `-1.50` | ❌ Problema | Valor negativo |
+| *(vazio)* | ❌ Problema | Falta o preço |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `price` obrigatório | A linha não tem `price` | Preencher o `price` em `fare_attributes.txt`, por exemplo `1.50` |
+| Valor inválido | O `price` é um número negativo | Em `fare_attributes.txt`, escrever o `price` com um número igual ou superior a `0` |

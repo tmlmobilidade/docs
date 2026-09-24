@@ -1,0 +1,50 @@
+---
+title: Ficheiros proibidos no conjunto de dados
+description: Verifica se o conjunto de dados não inclui ficheiros proibidos, seja pela configuração da regra, seja por existirem network_id em routes.txt.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `file_validation_gtfs_feed_file_presence_and_integrity_rule` |
+| Ficheiros | `networks.txt`, `route_networks.txt` e os ficheiros que a configuração da regra marque como proibidos |
+| Campo | Se aplica em todo o ficheiro |
+| Tipo | Presença de ficheiros |
+| Severidade | Condicional (proibido quando a configuração da regra o define, ou quando existe `network_id` em `routes.txt`) |
+
+## Como funciona
+
+O conjunto de dados não pode incluir ficheiros marcados como proibidos na configuração da regra. Também não pode incluir `networks.txt` nem `route_networks.txt` quando o `routes.txt` tem `network_id` preenchido. A regra **não verifica o conteúdo desses ficheiros**, só se existem. A presença em falta de ficheiros obrigatórios é verificada por outras regras, uma por ficheiro, como `agency_file_missing`.
+
+A regra avalia o conjunto de dados e faz as verificações abaixo. Todas são feitas.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | Existe algum ficheiro que a configuração da regra marca como proibido? | ❌ Reporta o problema, um por ficheiro: ficheiro proibido | ✅ Passa |
+| 2 | O `routes.txt` tem alguma linha com `network_id` preenchido? | Segue para os passos 3 e 4 | ✅ Passa |
+| 3 | O `networks.txt` existe? | ❌ Reporta o problema: `networks.txt` proibido | ✅ Passa |
+| 4 | O `route_networks.txt` existe? | ❌ Reporta o problema: `route_networks.txt` proibido | ✅ Passa |
+
+Nos passos 3 e 4, a gravidade vem da configuração da regra. Se a configuração a ignorar, nenhum problema é reportado.
+
+## Como se relacionam
+
+Os ficheiros `networks.txt` e `route_networks.txt` são alternativos ao campo `network_id` de `routes.txt`. Só um dos dois modos pode ser usado.
+
+## Exemplos
+
+| `network_id` em `routes.txt` | `networks.txt` no ZIP | Resultado | Porquê |
+|---|---|---|---|
+| Preenchido | Não | ✅ Passa | Só se usa o `network_id` |
+| Preenchido | Sim | ❌ Problema | `networks.txt` é proibido com `network_id` |
+| Vazio | Sim | ✅ Passa | O `networks.txt` é opcional neste caso |
+| *(qualquer)* | Ficheiro proibido pela configuração | ❌ Problema | A configuração da regra proíbe o ficheiro |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Ficheiro proibido | O ZIP inclui um ficheiro que a configuração da regra proíbe | Remover o ficheiro indicado do ZIP |
+| `networks.txt` proibido | O `routes.txt` tem `network_id` e o ZIP inclui também `networks.txt` | Remover o `networks.txt` do ZIP, ou esvaziar o `network_id` em `routes.txt` |
+| `route_networks.txt` proibido | O `routes.txt` tem `network_id` e o ZIP inclui também `route_networks.txt` | Remover o `route_networks.txt` do ZIP, ou esvaziar o `network_id` em `routes.txt` |

@@ -1,0 +1,46 @@
+---
+title: Idioma predefinido do conjunto de dados
+description: Verifica se o default_lang de feed_info.txt, quando preenchido, é um código de idioma válido.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `feed_info_default_lang_matches_feed_lang_when_present` |
+| Ficheiro | `feed_info.txt` |
+| Campo | `default_lang` |
+| Tipo | Código de idioma |
+| Severidade | Opcional |
+
+**Descrição do campo:** idioma a usar quando a aplicação não conhece o idioma do passageiro. Costuma ser `en` (inglês).
+
+Mais informação em [feed_info.txt](/reference/gtfs/schedule/feed_info).
+
+## Como funciona
+
+Se o `default_lang` estiver preenchido, tem de ser um código de idioma de duas letras, como `en`. Um campo vazio é aceite. Apesar do nome da regra, ela **não compara o `default_lang` com o `feed_lang`**. Só verifica se o código existe.
+
+A regra avalia cada linha do `feed_info.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `default_lang` está vazio? | ✅ Passa | Segue para o passo 2 |
+| 2 | O `default_lang` é um código de idioma de duas letras válido? | ✅ Passa | ❌ Reporta o problema: código de idioma inválido |
+
+Maiúsculas e minúsculas são tratadas da mesma forma.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `en` | ✅ Passa | Código de idioma válido |
+| *(vazio)* | ✅ Passa | Campo opcional |
+| `inglês` | ❌ Problema | Nome do idioma, em vez do código |
+| `xx` | ❌ Problema | Código que não existe |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Código de idioma inválido | O valor é um nome, um código com região ou um código que não existe | Escrever o `default_lang` em `feed_info.txt` com um código de duas letras, por exemplo `en`, ou deixar o campo vazio |

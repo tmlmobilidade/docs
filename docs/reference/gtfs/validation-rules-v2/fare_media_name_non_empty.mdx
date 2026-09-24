@@ -1,0 +1,52 @@
+---
+title: Nome do meio de pagamento
+description: Verifica se o fare_media_name de fare_media.txt está preenchido, sobretudo nos cartões de transporte e nas aplicações móveis.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `fare_media_name_non_empty` |
+| Ficheiro | `fare_media.txt` |
+| Campo | `fare_media_name` |
+| Tipo | Texto |
+| Severidade | Opcional (recomendado quando `fare_media_type` é `2` ou `4`) |
+
+**Descrição do campo:** nome do meio de pagamento. Nos cartões de transporte (`fare_media_type` `2`) e nas aplicações móveis (`fare_media_type` `4`), o nome deve ser preenchido e igual ao nome que os passageiros conhecem.
+
+Mais informação em [fare_media.txt](/reference/gtfs/schedule/fare_media).
+
+## Como funciona
+
+Quando o meio de pagamento é um cartão de transporte ou uma aplicação móvel, a regra recomenda que o `fare_media_name` esteja preenchido. Nos outros tipos, o campo só é exigido se a configuração da regra o pedir. A regra **não verifica se o nome é o que os passageiros conhecem**.
+
+A regra avalia cada linha do `fare_media.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `fare_media_name` está preenchido e a configuração da regra define que **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 2 |
+| 2 | O `fare_media_name` está vazio e o `fare_media_type` é `2` ou `4`? | ❌ Reporta o problema: nome recomendado para este tipo | Segue para o passo 3 |
+| 3 | O `fare_media_name` está vazio e a configuração da regra ignora o campo? | ✅ Passa | Segue para o passo 4 |
+| 4 | O `fare_media_name` está vazio? | ❌ Reporta o problema: em falta (recomendado, ou obrigatório se a configuração da regra o exigir) | ✅ Passa |
+
+## Como se relacionam
+
+O `fare_media_name` depende do `fare_media_type` da mesma linha. Nos tipos `2` e `4`, o nome vazio é sempre reportado.
+
+## Exemplos
+
+| `fare_media_type` | `fare_media_name` | Resultado | Porquê |
+|---|---|---|---|
+| `2` | `Navegante` | ✅ Passa | Cartão com nome |
+| `4` | *(vazio)* | ❌ Problema | Aplicação móvel sem nome |
+| `1` | *(vazio)* | ✅ Passa | Bilhete de papel, nome não exigido por omissão |
+| `1` | *(vazio)* com campo exigido na configuração | ❌ Problema | A configuração da regra exige o campo |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Nome recomendado para este tipo | O `fare_media_type` é `2` ou `4` e o `fare_media_name` está vazio | Preencher o `fare_media_name` em `fare_media.txt` com o nome que os passageiros conhecem, por exemplo `Navegante` |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `fare_media_name` em `fare_media.txt` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `fare_media_name` em `fare_media.txt` |

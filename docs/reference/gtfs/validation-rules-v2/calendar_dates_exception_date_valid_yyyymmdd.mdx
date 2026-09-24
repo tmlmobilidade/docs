@@ -13,7 +13,7 @@ description: Verifica se a data de cada exceção de serviço em calendar_dates.
 | Tipo | Data |
 | Severidade | Obrigatório |
 
-**Descrição do campo (GTFS):** data em que ocorre a exceção de serviço. 
+**Descrição do campo (GTFS):** data em que ocorre a exceção de serviço.
 
 Mais informação em [calendar_dates.txt](/reference/gtfs/schedule/calendar_dates).
 
@@ -23,10 +23,10 @@ Cada linha do `calendar_dates.txt` tem de ter uma `date` preenchida e escrita co
 
 A regra avalia cada linha do `calendar_dates.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
-| #   | Pergunta                                                               | Se sim                                   | Se não                              |
-| --- | ---------------------------------------------------------------------- | ---------------------------------------- | ----------------------------------- |
-| 1   | A `date` está vazia?                                                   | ❌ Reporta o problema: `date` obrigatória | Segue para o passo 2                |
-| 2   | A `date` tem 8 carateres e é uma data existente no formato `AAAAMMDD`? | ✅ Passa                                  | ❌ Reporta o problema: data inválida |
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A `date` está vazia? | ❌ Reporta o problema: `date` obrigatória | Segue para o passo 2 |
+| 2 | A `date` tem 8 carateres e é uma data existente no formato `AAAAMMDD`? | ✅ Passa | ❌ Reporta o problema: data inválida |
 
 Uma data existente tem mês entre `01` e `12` e um dia que existe nesse mês. Por exemplo, `20240230` não existe.
 

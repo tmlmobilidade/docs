@@ -1,0 +1,53 @@
+---
+title: Zona de destino da tarifa
+description: Verifica se o destination_id de fare_rules.txt, quando preenchido, existe em stops.txt.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `fare_rule_destination_id_references_zones_stops` |
+| Ficheiros | `fare_rules.txt`, `stops.txt` |
+| Campo | `destination_id` |
+| Tipo | ID externo (refere uma zona de `stops.txt`) |
+| Severidade | Opcional |
+
+**Descrição do campo:** identifica uma zona de destino. Se uma tarifa tiver várias zonas de destino, cria-se uma linha em `fare_rules.txt` para cada `destination_id`.
+
+Mais informação em [fare_rules.txt](/reference/gtfs/schedule/fare_rules) e [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+Se o `destination_id` estiver preenchido, o valor tem de existir em `stops.txt`. Um campo vazio é aceite, salvo se a configuração da regra o exigir ou recomendar. A regra **não verifica se a zona faz sentido para a tarifa**. Só verifica se o valor existe em `stops.txt`.
+
+A regra avalia cada linha do `fare_rules.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `destination_id` está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O `destination_id` existe em `stops.txt`? | ✅ Passa | ❌ Reporta o problema: valor não encontrado |
+
+Sem configuração, um campo vazio é aceite.
+
+## Como se relacionam
+
+O `destination_id` de cada linha do `fare_rules.txt` tem de existir em `stops.txt`.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `PV01` (existe em `stops.txt`) | ✅ Passa | Existe em `stops.txt` |
+| `XPTO` (não existe em `stops.txt`) | ❌ Problema | Não existe em `stops.txt` |
+| *(vazio)* | ✅ Passa | Campo opcional |
+| *(vazio)* com campo exigido na configuração | ❌ Problema | A configuração da regra exige o campo |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor não encontrado | O valor tem um erro de escrita ou não existe em `stops.txt` | Corrigir o `destination_id` em `fare_rules.txt`, ou adicionar o valor em `stops.txt` |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `destination_id` em `fare_rules.txt` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `destination_id` em `fare_rules.txt` |

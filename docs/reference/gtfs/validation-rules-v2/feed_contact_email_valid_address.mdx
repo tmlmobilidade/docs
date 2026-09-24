@@ -1,0 +1,47 @@
+---
+title: Correio eletrónico técnico do conjunto de dados
+description: Verifica se o feed_contact_email de feed_info.txt está preenchido e é um endereço de e-mail bem escrito.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `feed_contact_email_valid_address` |
+| Ficheiro | `feed_info.txt` |
+| Campo | `feed_contact_email` |
+| Tipo | E-mail |
+| Severidade | Opcional (recomendado, em conjunto com `feed_contact_url`) |
+
+**Descrição do campo:** endereço de e-mail para contacto técnico sobre o conjunto de dados e a sua publicação. Serve as aplicações que usam o GTFS. O contacto de apoio ao cliente indica-se no `agency.txt`. Recomenda-se preencher pelo menos um de `feed_contact_email` e `feed_contact_url`.
+
+Mais informação em [feed_info.txt](/reference/gtfs/schedule/feed_info).
+
+## Como funciona
+
+O `feed_contact_email` deve estar preenchido e ser um endereço de e-mail bem escrito. Quando está vazio, a regra dá um aviso. A regra **não confirma que a caixa de correio existe** nem verifica se o `feed_contact_url` está preenchido.
+
+A regra avalia cada linha do `feed_info.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `feed_contact_email` está vazio? | ❌ Reporta o problema, como aviso: campo recomendado | Segue para o passo 2 |
+| 2 | O texto é um endereço de e-mail válido? | ✅ Passa | ❌ Reporta o problema: e-mail inválido |
+
+Os espaços no início e no fim são ignorados.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `dados@operador.pt` | ✅ Passa | Formato correto |
+| `dados-operador.pt` | ❌ Problema | Falta a `@` |
+| `dados@` | ❌ Problema | Falta o domínio |
+| *(vazio)* | ❌ Problema | Campo recomendado, dado como aviso |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo recomendado | O `feed_contact_email` está vazio | Preencher o `feed_contact_email` em `feed_info.txt` com o e-mail técnico responsável pelos dados |
+| E-mail inválido | Erro de digitação, `@` em falta ou espaço no meio | Escrever o endereço completo em `feed_contact_email`, em `feed_info.txt`, por exemplo `dados@operador.pt` |

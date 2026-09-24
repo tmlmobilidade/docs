@@ -1,0 +1,48 @@
+---
+title: Moeda da tarifa
+description: Verifica se o currency_type de fare_attributes.txt está preenchido com um código de moeda ISO 4217 válido.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `fare_attributes_currency_type_valid` |
+| Ficheiro | `fare_attributes.txt` |
+| Campo | `currency_type` |
+| Tipo | Código de moeda |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** moeda usada para pagar a tarifa.
+
+Mais informação em [fare_attributes.txt](/reference/gtfs/schedule/fare_attributes).
+
+## Como funciona
+
+Cada linha do `fare_attributes.txt` tem de ter um `currency_type` preenchido com um código de moeda de três letras da norma ISO 4217, por exemplo `EUR`. A regra **não verifica se a moeda é a usada no país** nem se o preço faz sentido nessa moeda. Só verifica se o código existe.
+
+A regra avalia cada linha do `fare_attributes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `currency_type` está vazio? | ❌ Reporta o problema: `currency_type` obrigatório | Segue para o passo 2 |
+| 2 | O `currency_type` é um código de moeda ISO 4217 da lista aceite? | ✅ Passa | ❌ Reporta o problema: código de moeda inválido |
+
+Maiúsculas e minúsculas são tratadas da mesma forma: `eur` é aceite como `EUR`.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `EUR` | ✅ Passa | Código de moeda válido |
+| `eur` | ✅ Passa | Minúsculas são aceites |
+| `€` | ❌ Problema | É um símbolo, não um código de três letras |
+| `EURO` | ❌ Problema | Tem quatro letras |
+| *(vazio)* | ❌ Problema | Falta a moeda |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `currency_type` obrigatório | A linha não tem `currency_type` | Preencher o `currency_type` em `fare_attributes.txt` com o código da moeda, por exemplo `EUR` |
+| Código de moeda inválido | O valor é um símbolo, um nome ou um código que não existe | Escrever o `currency_type` em `fare_attributes.txt` com um código ISO 4217 de três letras, por exemplo `EUR` |

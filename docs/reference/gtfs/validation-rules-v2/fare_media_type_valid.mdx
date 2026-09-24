@@ -1,0 +1,54 @@
+---
+title: Tipo de meio de pagamento
+description: Verifica se o fare_media_type de fare_media.txt está preenchido com um valor entre 0 e 4 e, quando configurado, se é um dos valores permitidos.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `fare_media_type_valid` |
+| Ficheiro | `fare_media.txt` |
+| Campo | `fare_media_type` |
+| Tipo | Enumeração (`0` a `4`) |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** tipo de meio de pagamento.
+
+- `0`: nenhum. Não há meio de pagamento envolvido, por exemplo pagar em dinheiro ao motorista sem bilhete físico.
+- `1`: bilhete de papel que permite um número de viagens pré-compradas ou viagens ilimitadas num período fixo.
+- `2`: cartão de transporte com bilhetes, passes ou dinheiro guardados.
+- `3`: cEMV (pagamento sem contacto Europay, Mastercard e Visa) usado como suporte de bilhética baseada em conta.
+- `4`: aplicação móvel com cartões, bilhetes, passes ou dinheiro virtuais guardados.
+
+Mais informação em [fare_media.txt](/reference/gtfs/schedule/fare_media).
+
+## Como funciona
+
+Cada linha do `fare_media.txt` tem de ter um `fare_media_type` entre `0` e `4`. Se a configuração da regra tiver uma lista de valores permitidos, o valor também tem de constar dessa lista. A regra **não verifica se o tipo corresponde ao meio de pagamento real**.
+
+A regra avalia cada linha do `fare_media.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `fare_media_type` está vazio? | ❌ Reporta o problema: `fare_media_type` obrigatório | Segue para o passo 2 |
+| 2 | O `fare_media_type` é `0`, `1`, `2`, `3` ou `4`? | Segue para o passo 3 | ❌ Reporta o problema: valor inválido |
+| 3 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 4 | ✅ Passa |
+| 4 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `2` | ✅ Passa | Cartão de transporte |
+| `5` | ❌ Problema | Só são aceites valores de `0` a `4` |
+| *(vazio)* | ❌ Problema | Falta o valor |
+| `3` (lista permitida = `2`, `4`) | ❌ Problema | Valor válido, mas fora da lista |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `fare_media_type` obrigatório | A linha não tem `fare_media_type` | Preencher o `fare_media_type` em `fare_media.txt` com um valor de `0` a `4` |
+| Valor inválido | O valor é um número fora do intervalo `0` a `4` | Corrigir o `fare_media_type` em `fare_media.txt` para `0`, `1`, `2`, `3` ou `4` |
+| Valor não permitido | O valor é válido, mas a configuração da regra não o permite | Usar um valor da lista permitida, ou pedir ao administrador que o adicione |
