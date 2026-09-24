@@ -3,7 +3,6 @@
 		"index",
 		"schedule",
 		"realtime",
-		"validation-rules",
-		"validation-rules-v2"
+		"validation-rules"
 	]
 }
