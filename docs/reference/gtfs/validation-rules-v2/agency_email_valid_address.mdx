@@ -1,0 +1,50 @@
+---
+title: Correio eletrónico do operador
+description: Verifica se o e-mail de apoio ao cliente indicado em agency.txt está bem escrito e, quando configurado, se consta da lista de endereços permitidos.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `agency_email_valid_address` |
+| Ficheiro | `agency.txt` |
+| Campo | `agency_email` |
+| Tipo | E-mail |
+| Severidade | Opcional |
+
+**Descrição do campo (GTFS):** endereço de e-mail monitorizado ativamente pelo departamento de apoio ao cliente do operador. Deve ser um ponto de contacto direto onde os passageiros podem falar com um representante do apoio ao cliente. Mais informação em [agency.txt](/reference/gtfs/schedule/agency.mdx).
+
+## Como funciona
+
+Se o operador indicar um e-mail de apoio ao cliente, o valor tem de ser um endereço bem escrito. Se a configuração da regra tiver uma lista de e-mails permitidos, o endereço também tem de constar dessa lista. A regra **não confirma que a caixa de correio existe**, só que o formato está correto.
+
+A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O texto é um endereço de e-mail válido? | Segue para o passo 4 | ❌ Reporta o problema: formato inválido |
+| 4 | A configuração da regra tem uma lista de e-mails permitidos? | Segue para o passo 5 | ✅ Passa |
+| 5 | O endereço está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: endereço não permitido |
+
+Os espaços no início e no fim são ignorados.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `apoio@operador.pt` | ✅ Passa | Formato correto |
+| `apoio-operador.pt` | ❌ Problema | Falta a `@` |
+| `apoio@` | ❌ Problema | Falta o domínio |
+| `geral@outro.pt` (lista permitida = `apoio@operador.pt`) | ❌ Problema | Formato válido, mas fora da lista |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Formato inválido | Erro de digitação, `@` em falta ou espaço no meio | Escrever o endereço completo, por exemplo `apoio@operador.pt` |
+| Endereço não permitido | O e-mail é válido mas não está na lista de e-mails permitidos | Usar um e-mail da lista, ou pedir ao administrador que o adicione |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher com o e-mail de apoio ao cliente |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `agency_email` |

@@ -1,0 +1,50 @@
+---
+title: Idioma do operador
+description: Verifica se o idioma indicado em agency.txt é um código de idioma válido e, quando configurado, se consta da lista de valores permitidos.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `agency_lang_valid_language_tag` |
+| Ficheiro | `agency.txt` |
+| Campo | `agency_lang` |
+| Tipo | Código de idioma |
+| Severidade | Opcional |
+
+**Descrição do campo (GTFS):** idioma principal usado pelo operador. Deve ser indicado para ajudar quem usa o GTFS a escolher regras de maiúsculas e outras definições próprias do idioma. Mais informação em [agency.txt](/reference/gtfs/schedule/agency.mdx).
+
+## Como funciona
+
+Se o operador indicar o idioma, o valor tem de ser um código de duas letras da norma ISO 639-1, como `pt` ou `en`. Se a configuração da regra tiver uma lista de valores permitidos, o código também tem de constar dessa lista. A regra **não verifica se o idioma corresponde ao usado pelo operador**, só se o código é válido.
+
+A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor é um código de idioma válido? | Segue para o passo 4 | ❌ Reporta o problema: código inválido |
+| 4 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 5 | ✅ Passa |
+| 5 | O código consta da lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: código não permitido |
+
+As maiúsculas e minúsculas são iguais: `PT` e `pt` são o mesmo código.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `pt` | ✅ Passa | Código ISO 639-1 válido |
+| `english` | ❌ Problema | Nome do idioma em vez do código |
+| `123` | ❌ Problema | Não é um código de idioma |
+| `en` (lista permitida = `pt`) | ❌ Problema | Código válido, mas fora da lista |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Código de idioma inválido | O valor é o nome do idioma, tem erro de escrita ou usa `_` ou `-` | Escrever em `agency_lang` o código de duas letras do idioma, por exemplo `pt` |
+| Código não permitido | O código é válido mas não consta da lista de valores permitidos | Usar em `agency_lang` um valor da lista, ou pedir ao administrador que o adicione |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `agency_lang` em `agency.txt` com o código do idioma do operador |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `agency_lang` em `agency.txt` |

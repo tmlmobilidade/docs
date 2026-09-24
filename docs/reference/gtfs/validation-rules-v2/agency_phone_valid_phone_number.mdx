@@ -1,0 +1,56 @@
+---
+title: Telefone do operador
+description: Verifica se o telefone indicado em agency.txt tem um formato válido e, quando configurado, se consta da lista de números permitidos.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `agency_phone_valid_phone_number` |
+| Ficheiro | `agency.txt` |
+| Campo | `agency_phone` |
+| Tipo | Número de telefone |
+| Severidade | Opcional |
+
+**Descrição do campo (GTFS):** número de telefone de voz do operador, escrito como é habitual na área de serviço do operador. Pode ter pontuação a agrupar os dígitos. Texto marcável, como `503-238-RIDE`, é permitido, mas o campo não pode ter outro texto descritivo. Mais informação em [agency.txt](/reference/gtfs/schedule/agency.mdx).
+
+## Como funciona
+
+Se o operador indicar um telefone, o valor tem de ter formato de número de telefone. Se a configuração da regra tiver uma lista de números permitidos, o número também tem de constar dessa lista. A regra **não confirma que o número existe ou atende**, só que o formato está correto.
+
+A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor é um número de telefone válido? (ver condições abaixo) | Segue para o passo 4 | ❌ Reporta o problema: número inválido |
+| 4 | A configuração da regra tem uma lista de números permitidos? | Segue para o passo 5 | ✅ Passa |
+| 5 | O número consta da lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: número não permitido |
+
+Para ser válido, o número tem de:
+
+- ter só dígitos, letras, espaços e os sinais `-` e `+`;
+- ter pelo menos 7 dígitos.
+
+Os espaços no início e no fim são ignorados.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `987-654-321` | ✅ Passa | Formato correto |
+| `+351 987 654 321` | ✅ Passa | Indicativo com `+` e espaços |
+| `12345` | ❌ Problema | Menos de 7 dígitos |
+| `987.654.321` | ❌ Problema | Os pontos não são aceites |
+| `987654321` (lista permitida = `210000000`) | ❌ Problema | Formato válido, mas fora da lista |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Número inválido | Tem menos de 7 dígitos ou carateres não aceites, como pontos ou parênteses | Escrever em `agency_phone` só dígitos, espaços, `-` e `+`, com pelo menos 7 dígitos, por exemplo `+351 210 000 000` |
+| Número não permitido | O número é válido mas não consta da lista de números permitidos | Usar em `agency_phone` um número da lista, ou pedir ao administrador que o adicione |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `agency_phone` em `agency.txt` com o telefone do operador |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `agency_phone` em `agency.txt` |

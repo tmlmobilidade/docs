@@ -1,0 +1,58 @@
+---
+title: URL das tarifas do operador
+description: Verifica se o endereço da página de tarifas indicado em agency.txt é um URL bem escrito e, quando configurado, se consta da lista de endereços permitidos.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `agency_fare_url_valid_url` |
+| Ficheiro | `agency.txt` |
+| Campo | `agency_fare_url` |
+| Tipo | URL |
+| Severidade | Opcional |
+
+**Descrição do campo (GTFS):** endereço de uma página web onde o passageiro pode comprar bilhetes ou outros títulos de transporte do operador, ou uma página com informação sobre as tarifas do operador. Mais informação em [agency.txt](/reference/gtfs/schedule/agency.mdx).
+
+## Como funciona
+
+Se o operador indicar a página de tarifas, o valor tem de ser um URL bem escrito, começado por `http://` ou `https://`. Se a configuração da regra tiver uma lista de URL permitidos, o endereço também tem de constar dessa lista. A regra **não confirma que a página existe ou abre**, só que o formato está correto.
+
+A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O texto é um URL válido? (ver condições abaixo) | Segue para o passo 4 | ❌ Reporta o problema: formato inválido |
+| 4 | A configuração da regra tem uma lista de URL permitidos? | Segue para o passo 5 | ✅ Passa |
+| 5 | O URL está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: endereço não permitido |
+
+Para ser válido, o URL tem de:
+
+- começar por `http://` ou `https://`;
+- ter um domínio a seguir, por exemplo `operador.pt`;
+- não ter espaços nem os carateres `"`, `'`, `<`, `>`, `{`, `}`, `|`, `\` e `^`;
+- usar `%` só em códigos completos, isto é, `%` seguido de dois carateres hexadecimais, como `%20`.
+
+Os espaços no início e no fim são ignorados.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `https://www.operador.pt/bilhetes` | ✅ Passa | Formato correto |
+| `www.operador.pt` | ❌ Problema | Falta `http://` ou `https://` |
+| `ftp://operador.pt` | ❌ Problema | Só são aceites `http` e `https` |
+| `https://operador.pt/tarifas e preços` | ❌ Problema | Tem espaços |
+| `https://outro.pt/tarifas` (lista permitida = `https://www.operador.pt/bilhetes`) | ❌ Problema | Formato válido, mas fora da lista |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Formato inválido | Falta `http://` ou `https://`, ou há espaços ou carateres não permitidos | Copiar o endereço completo a partir do browser, começado por `https://`, e substituir os espaços por `%20` em `agency_fare_url` |
+| Endereço não permitido | O URL é válido mas não está na lista de URL permitidos | Usar um URL da lista em `agency_fare_url`, ou pedir ao administrador que o adicione |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `agency_fare_url` em `agency.txt` com o endereço da página de tarifas |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `agency_fare_url` em `agency.txt` |

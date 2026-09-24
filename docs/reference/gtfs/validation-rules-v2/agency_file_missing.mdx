@@ -1,0 +1,48 @@
+---
+title: Ficheiro dos operadores em falta
+description: Verifica se o ficheiro agency.txt existe no feed GTFS.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `agency_file_missing` |
+| Ficheiro | `agency.txt` |
+| Campo | Não se aplica (a regra verifica o ficheiro inteiro) |
+| Tipo | Ficheiro |
+| Severidade | Obrigatório |
+
+**Descrição do ficheiro (GTFS):** operadores de transporte com serviço representado neste feed. Mais informação em [agency.txt](/reference/gtfs/schedule/agency.mdx).
+
+## Como funciona
+
+Se a configuração da regra exigir ou recomendar o `agency.txt`, o feed tem de o incluir. A regra **não verifica o conteúdo do ficheiro**, só se ele existe. O conteúdo é verificado pelas outras regras de `agency.txt`.
+
+A regra avalia o feed uma só vez, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O feed inclui o `agency.txt`? | ✅ Passa | Segue para o passo 2 |
+| 2 | A configuração da regra manda ignorar este ficheiro? | Não reporta | Segue para o passo 3 |
+| 3 | A configuração da regra exige o ficheiro? | ❌ Reporta o problema: ficheiro obrigatório em falta | ❌ Reporta o problema: ficheiro recomendado em falta |
+
+Sem configuração da regra, o `agency.txt` é obrigatório.
+
+O problema é reportado uma só vez por ficheiro.
+
+## Exemplos
+
+| Situação | Resultado | Porquê |
+|---|---|---|
+| Feed com `agency.txt` | ✅ Passa | O ficheiro existe |
+| Feed sem `agency.txt`, ficheiro exigido | ❌ Problema | Ficheiro obrigatório em falta |
+| Feed sem `agency.txt`, ficheiro recomendado | ❌ Problema | Ficheiro recomendado em falta |
+| Feed sem `agency.txt`, regra a ignorar | ✅ Passa | Nada a reportar |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Ficheiro obrigatório em falta | O feed não inclui o `agency.txt`, ou o ficheiro tem outro nome | Adicionar ao feed o ficheiro `agency.txt`, com este nome, e uma linha por operador |
+| Ficheiro recomendado em falta | O feed não inclui o `agency.txt` e a configuração da regra recomenda-o | Adicionar ao feed o ficheiro `agency.txt`, com este nome, e uma linha por operador |

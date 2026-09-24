@@ -1,0 +1,48 @@
+---
+title: Fuso horário do operador
+description: Verifica se o fuso horário indicado em agency.txt é um identificador válido e, quando configurado, se consta da lista de valores permitidos.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `agency_timezone_valid_id` |
+| Ficheiro | `agency.txt` |
+| Campo | `agency_timezone` |
+| Tipo | Fuso horário |
+| Severidade | Opcional |
+
+**Descrição do campo (GTFS):** fuso horário onde o operador se encontra. Se o feed tiver vários operadores, todos têm de ter o mesmo `agency_timezone`. Mais informação em [agency.txt](/reference/gtfs/schedule/agency.mdx).
+
+## Como funciona
+
+Se o operador indicar o fuso horário, o valor tem de ser um identificador de fuso horário conhecido, como `Europe/Lisbon`. Se a configuração da regra tiver uma lista de valores permitidos, o fuso também tem de constar dessa lista. A regra **não verifica se os vários operadores têm o mesmo fuso**, porque avalia cada linha em separado. Um campo vazio não é reportado.
+
+A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | ✅ Passa | Segue para o passo 2 |
+| 2 | O valor é um identificador de fuso horário válido? | Segue para o passo 3 | ❌ Reporta o problema: fuso horário inválido |
+| 3 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 4 | ✅ Passa |
+| 4 | A lista aceita qualquer valor, ou o fuso consta da lista? | ✅ Passa | ❌ Reporta o problema: fuso horário não permitido |
+
+Um identificador válido tem a forma `Região/Cidade`, como `Europe/Lisbon`. Também é aceite `UTC`.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `Europe/Lisbon` | ✅ Passa | Identificador válido |
+| `UTC` | ✅ Passa | Identificador válido |
+| `UTC+5` | ❌ Problema | Deslocamento em vez de identificador |
+| `Europe/Lisboa` | ❌ Problema | Cidade inexistente |
+| `Europe/Paris` (lista permitida = `Europe/Lisbon`) | ❌ Problema | Identificador válido, mas fora da lista |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Fuso horário inválido | O valor é uma sigla, um deslocamento ou um nome com erro de escrita | Escrever em `agency_timezone` o identificador completo do fuso, por exemplo `Europe/Lisbon` |
+| Fuso horário não permitido | O fuso é válido mas não consta da lista de valores permitidos | Usar em `agency_timezone` um valor da lista, ou pedir ao administrador que o adicione |

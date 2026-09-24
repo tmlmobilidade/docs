@@ -1,0 +1,48 @@
+---
+title: Identificador único do operador
+description: Verifica se o agency_id de agency.txt está preenchido, não se repete e, quando configurado, consta da lista de valores permitidos.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `agency_id_unique` |
+| Ficheiro | `agency.txt` |
+| Campo | `agency_id` |
+| Tipo | ID único |
+| Severidade | Obrigatório |
+
+**Descrição do campo (GTFS):** identifica uma marca de transporte, muitas vezes equivalente a um operador. Nalguns casos, como quando um operador gere vários serviços separados, operador e marca são diferentes. Um feed pode ter dados de vários operadores. Mais informação em [agency.txt](/reference/gtfs/schedule/agency.mdx).
+
+## Como funciona
+
+Cada linha do `agency.txt` tem de ter um `agency_id` preenchido e diferente do das outras linhas. Se a configuração da regra tiver uma lista de valores permitidos, o `agency_id` também tem de constar dessa lista. A regra **não verifica se o identificador corresponde ao operador certo**, só se está preenchido, é único e é permitido.
+
+A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `agency_id` está vazio? | ❌ Reporta o problema: `agency_id` obrigatório | Segue para o passo 2 |
+| 2 | Outra linha do `agency.txt` tem o mesmo `agency_id`? | ❌ Reporta o problema: `agency_id` duplicado, e segue para o passo 3 | Segue para o passo 3 |
+| 3 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 4 | ✅ Passa |
+| 4 | A lista aceita qualquer valor, ou o `agency_id` consta da lista? | ✅ Passa | ❌ Reporta o problema: `agency_id` não permitido |
+
+Um problema de duplicado não impede a verificação da lista de valores permitidos.
+
+## Exemplos
+
+| `agency_id` nas linhas do `agency.txt` | Resultado | Porquê |
+|---|---|---|
+| `1`, `2` | ✅ Passa | Preenchidos e diferentes |
+| `1`, `1` | ❌ Problema | `agency_id` repetido |
+| *(vazio)* | ❌ Problema | Falta o `agency_id` |
+| `3` (lista permitida = `1`, `2`) | ❌ Problema | Formato válido, mas fora da lista |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `agency_id` obrigatório | A linha do operador não tem `agency_id` | Preencher o `agency_id` em `agency.txt` com um identificador único |
+| `agency_id` duplicado | Duas ou mais linhas do `agency.txt` têm o mesmo `agency_id` | Em `agency.txt`, dar a cada operador um `agency_id` diferente. Se for o mesmo operador, remover a linha repetida |
+| `agency_id` não permitido | O valor não consta da lista de valores permitidos | Usar em `agency_id` um valor da lista, ou pedir ao administrador que o adicione |
