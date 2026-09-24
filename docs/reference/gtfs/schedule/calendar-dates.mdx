@@ -6,7 +6,7 @@ description: Define alterações ao funcionamento dos serviços em dias específ
 | Versão                                                                          | Presença                              |
 | ------------------------------------------------------------------------------- | ------------------------------------- |
 | [GTFS Standard](https://gtfs.org/documentation/schedule/reference/#calendartxt) | Ficheiro condicionalmente obrigatório |
-| GTFS v30 (GO)                                                                   | Ficheiro condicionalmenteobrigatório  |
+| GTFS v30 (GO)                                                                   | Ficheiro condicionalmete obrigatório  |
 
 A tabela `calendar_dates.txt` define explicitamente, para cada data, se um serviço está ativo ou inativo. Pode ser utilizada de duas formas:
 Recomendado: Utilizar `calendar_dates.txt` em conjunto com `calendar.txt` para definir exceções aos padrões de funcionamento predefinidos em `calendar.txt`. Esta abordagem é adequada quando o serviço é geralmente regular, mas existem algumas alterações em datas específicas (por exemplo, para acomodar serviços especiais durante eventos ou horários escolares). Neste caso, `calendar_dates.service_id` é um ID externo que referencia `calendar.service_id`.
