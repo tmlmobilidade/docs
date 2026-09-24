@@ -1,0 +1,44 @@
+---
+title: Identificador único do serviço
+description: Verifica se o service_id de calendar.txt está preenchido e não se repete.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `calendar_service_id_unique_non_empty` |
+| Ficheiro | `calendar.txt` |
+| Campo | `service_id` |
+| Tipo | ID único |
+| Severidade | Obrigatório |
+
+**Descrição do campo (GTFS):** identifica um conjunto de datas em que há serviço para uma ou mais linhas. Mais informação em [calendar.txt](/reference/gtfs/schedule/calendar).
+
+## Como funciona
+
+Cada linha do `calendar.txt` tem de ter um `service_id` preenchido e diferente do das outras linhas. A regra **não verifica se o `service_id` é usado noutros ficheiros**, como o `trips.txt`. Só verifica se está preenchido e é único no `calendar.txt`.
+
+A regra avalia cada linha do `calendar.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `service_id` está vazio? | ❌ Reporta o problema: `service_id` obrigatório | Segue para o passo 2 |
+| 2 | Outra linha do `calendar.txt` tem o mesmo `service_id`? | ❌ Reporta o problema: `service_id` duplicado | ✅ Passa |
+
+Quando há duplicados, o problema é reportado em todas as linhas que repetem o `service_id`.
+
+## Exemplos
+
+| `service_id` nas linhas do `calendar.txt` | Resultado | Porquê |
+|---|---|---|
+| `SEMANA`, `FIM_SEMANA` | ✅ Passa | Preenchidos e diferentes |
+| `SEMANA`, `SEMANA` | ❌ Problema | `service_id` repetido |
+| *(vazio)* | ❌ Problema | Falta o `service_id` |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `service_id` obrigatório | A linha não tem `service_id` | Preencher o `service_id` em `calendar.txt` com um identificador único |
+| `service_id` duplicado | Duas ou mais linhas do `calendar.txt` têm o mesmo `service_id` | Em `calendar.txt`, dar a cada serviço um `service_id` diferente. Se for o mesmo serviço, remover a linha repetida |

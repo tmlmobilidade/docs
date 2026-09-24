@@ -1,0 +1,46 @@
+---
+title: Data da exceção de serviço
+description: Verifica se a data de cada exceção de serviço em calendar_dates.txt está preenchida e no formato AAAAMMDD.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `calendar_dates_exception_date_valid_yyyymmdd` |
+| Ficheiro | `calendar_dates.txt` |
+| Campo | `date` |
+| Tipo | Data |
+| Severidade | Obrigatório |
+
+**Descrição do campo (GTFS):** data em que ocorre a exceção de serviço. Mais informação em [calendar_dates.txt](/reference/gtfs/schedule/calendar_dates).
+
+## Como funciona
+
+Cada linha do `calendar_dates.txt` tem de ter uma `date` preenchida e escrita como `AAAAMMDD`, por exemplo `20240101`. A regra **não verifica se a data faz sentido para o serviço**, por exemplo se está dentro do período do `calendar.txt`. Só verifica se é uma data do calendário.
+
+A regra avalia cada linha do `calendar_dates.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A `date` está vazia? | ❌ Reporta o problema: `date` obrigatória | Segue para o passo 2 |
+| 2 | A `date` tem 8 carateres e é uma data existente no formato `AAAAMMDD`? | ✅ Passa | ❌ Reporta o problema: data inválida |
+
+Uma data existente tem mês entre `01` e `12` e um dia que existe nesse mês. Por exemplo, `20240230` não existe.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `20240101` | ✅ Passa | Data válida |
+| `2024-01-01` | ❌ Problema | Tem hífenes, o formato é `AAAAMMDD` |
+| `2024010101` | ❌ Problema | Tem mais de 8 carateres |
+| `20240230` | ❌ Problema | O dia 30 não existe em fevereiro |
+| *(vazio)* | ❌ Problema | Falta a data |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `date` obrigatória | A linha não tem `date` | Preencher a `date` em `calendar_dates.txt` no formato `AAAAMMDD` |
+| Data inválida | A data tem hífenes ou barras, mais ou menos de 8 carateres, ou uma data que não existe | Escrever a `date` em `calendar_dates.txt` como `AAAAMMDD`, com ano, mês e dia existentes, por exemplo `20240101` |

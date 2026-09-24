@@ -1,0 +1,47 @@
+---
+title: Tipo de exceção de serviço
+description: Verifica se o exception_type de calendar_dates.txt está preenchido com 1 (serviço adicionado) ou 2 (serviço removido) e, quando configurado, se consta da lista de valores permitidos.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `calendar_dates_exception_type_add_or_remove_service` |
+| Ficheiro | `calendar_dates.txt` |
+| Campo | `exception_type` |
+| Tipo | Enumeração (`1` ou `2`) |
+| Severidade | Obrigatório |
+
+**Descrição do campo (GTFS):** indica se há serviço na data indicada em `date`. O valor `1` significa que o serviço foi adicionado nessa data. O valor `2` significa que o serviço foi removido nessa data. Por exemplo, num feriado, uma linha com `1` pode juntar a data ao `service_id` dos feriados, e outra com `2` pode retirá-la do `service_id` do serviço normal. Mais informação em [calendar_dates.txt](/reference/gtfs/schedule/calendar_dates).
+
+## Como funciona
+
+Cada linha do `calendar_dates.txt` tem de ter o `exception_type` preenchido com `1` ou `2`. Se a configuração da regra tiver uma lista de valores permitidos, o valor também tem de constar dessa lista. A regra **não verifica se a exceção faz sentido**, por exemplo se o `service_id` tem serviço na data indicada.
+
+A regra avalia cada linha do `calendar_dates.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `exception_type` está vazio? | ❌ Reporta o problema: campo obrigatório | Segue para o passo 2 |
+| 2 | O valor é `1` ou `2`? | Segue para o passo 3 | ❌ Reporta o problema: valor inválido |
+| 3 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 4 | ✅ Passa |
+| 4 | A lista aceita qualquer valor, ou o valor consta da lista? | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `1` | ✅ Passa | Serviço adicionado |
+| `2` | ✅ Passa | Serviço removido |
+| `3` | ❌ Problema | Só são aceites `1` e `2` |
+| *(vazio)* | ❌ Problema | Campo obrigatório |
+| `2` (lista permitida = `1`) | ❌ Problema | Valor válido, mas fora da lista |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo obrigatório | A linha não tem `exception_type` | Preencher o `exception_type` em `calendar_dates.txt` com `1` ou `2` |
+| Valor inválido | O valor não é `1` nem `2` | Escrever em `exception_type` o valor `1` para adicionar serviço ou `2` para o remover |
+| Valor não permitido | O valor é válido mas não consta da lista de valores permitidos | Usar em `exception_type` um valor da lista, ou pedir ao administrador que o adicione |

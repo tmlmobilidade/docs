@@ -1,0 +1,46 @@
+---
+title: Ficheiro das exceções de serviço em falta
+description: Verifica se o ficheiro calendar_dates.txt existe no feed GTFS.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `calendar_dates_file_missing` |
+| Ficheiro | `calendar_dates.txt` |
+| Campo | Se aplica em todo o ficheiro |
+| Tipo | Ficheiro |
+| Severidade | Condicional (obrigatório se o `calendar.txt` não existir; opcional nos outros casos) |
+
+## Como funciona
+
+O feed tem de incluir o `calendar_dates.txt` quando a configuração da regra o exige ou recomenda, ou quando também não tem o `calendar.txt`. A regra **não verifica o conteúdo do ficheiro**, só se ele existe.
+
+A regra avalia o feed uma só vez, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O feed inclui o `calendar_dates.txt`? | ✅ Passa | Segue para o passo 2 |
+| 2 | A configuração da regra exige ou recomenda o `calendar_dates.txt`? | ❌ Reporta o problema: ficheiro obrigatório ou recomendado em falta | Segue para o passo 3 |
+| 3 | O feed também não tem `calendar.txt`, e a configuração da regra não manda ignorar este problema? | ❌ Reporta o problema: falta `calendar.txt` ou `calendar_dates.txt` | ✅ Passa |
+
+Sem configuração da regra, o passo 3 só reporta a falta do `calendar.txt`.
+
+O problema é reportado uma só vez por ficheiro.
+
+## Exemplos
+
+| Situação | Resultado | Porquê |
+|---|---|---|
+| Feed com `calendar_dates.txt` | ✅ Passa | O ficheiro existe |
+| Feed sem `calendar_dates.txt`, mas com `calendar.txt` | ✅ Passa | O ficheiro é opcional se houver `calendar.txt` |
+| Feed sem `calendar_dates.txt` e sem `calendar.txt` | ❌ Problema | Falta um dos dois |
+| Feed sem `calendar_dates.txt`, ficheiro exigido | ❌ Problema | Ficheiro obrigatório em falta |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Ficheiro obrigatório ou recomendado em falta | O feed não inclui o `calendar_dates.txt` e a configuração da regra exige-o ou recomenda-o | Adicionar ao feed o ficheiro `calendar_dates.txt`, com este nome, e uma linha por data de exceção |
+| Falta `calendar.txt` ou `calendar_dates.txt` | O feed não tem nenhum dos dois ficheiros | Adicionar ao feed o `calendar.txt`, ou o `calendar_dates.txt` com todas as datas de serviço |

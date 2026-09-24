@@ -1,0 +1,44 @@
+---
+title: Valores dos dias da semana do calendário
+description: Verifica se os campos dos dias da semana de calendar.txt têm um valor que o validador consegue ler, isto é, 0 ou 1.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `calendar_values_parse` |
+| Ficheiro | `calendar.txt` |
+| Campos | `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday` |
+| Tipo | Enumeração (`0` ou `1`) |
+| Severidade | Obrigatório |
+
+**Descrição dos campos (GTFS):** cada campo indica se há serviço em todos os dias da semana correspondentes dentro do intervalo entre `start_date` e `end_date`. O valor `1` significa que há serviço em todos esses dias. O valor `0` significa que não há. As exceções para datas concretas podem estar no `calendar_dates.txt`. Os sete campos funcionam da mesma forma, cada um para o seu dia. Mais informação em [calendar.txt](/reference/gtfs/schedule/calendar).
+
+## Como funciona
+
+Os sete campos dos dias da semana têm de ter um valor que o validador consiga ler como sim ou não, isto é, `1` ou `0`. Se algum campo tiver outro valor, a linha inteira deixa de ser avaliada pelas outras regras do `calendar.txt`. A regra **não verifica se o serviço faz sentido**, por exemplo se algum dia da semana tem serviço. Só verifica se os valores são legíveis.
+
+A regra avalia cada linha do `calendar.txt`, seguindo o passo abaixo, que dá o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | Algum dos campos `monday` a `sunday` tem um valor que não se lê como sim ou não? | ❌ Reporta o problema, um por cada campo inválido. A linha deixa de ser avaliada pelas outras regras | ✅ Passa |
+
+Um campo vazio é lido como `0`, isto é, sem serviço nesse dia. O validador também aceita `true` e `false`, mas o GTFS só admite `0` e `1`.
+
+## Exemplos
+
+| Valor num campo de dia da semana | Resultado | Porquê |
+|---|---|---|
+| `1` | ✅ Passa | Há serviço nesse dia |
+| `0` | ✅ Passa | Não há serviço nesse dia |
+| *(vazio)* | ✅ Passa | Lido como `0` |
+| `2` | ❌ Problema | Só são aceites `0` e `1` |
+| `sim` | ❌ Problema | Texto em vez de `0` ou `1` |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor inválido num dia da semana | O valor não é `0` nem `1`, por exemplo `2` ou `sim` | Em `calendar.txt`, escrever nos campos `monday` a `sunday` o valor `1` se há serviço nesse dia ou `0` se não há |

@@ -1,0 +1,46 @@
+---
+title: Data de início do serviço
+description: Verifica se a data de início do intervalo de serviço em calendar.txt está preenchida e no formato AAAAMMDD.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `calendar_start_date_valid_yyyymmdd` |
+| Ficheiro | `calendar.txt` |
+| Campo | `start_date` |
+| Tipo | Data |
+| Severidade | Obrigatório |
+
+**Descrição do campo (GTFS):** primeiro dia de serviço do intervalo. Mais informação em [calendar.txt](/reference/gtfs/schedule/calendar).
+
+## Como funciona
+
+Cada linha do `calendar.txt` tem de ter uma `start_date` preenchida e escrita como `AAAAMMDD`, por exemplo `20240101`. A regra **não compara a `start_date` com a `end_date`**, nem verifica se o intervalo faz sentido. Só verifica se é uma data do calendário.
+
+A regra avalia cada linha do `calendar.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A `start_date` está vazia? | ❌ Reporta o problema: `start_date` obrigatória | Segue para o passo 2 |
+| 2 | A `start_date` tem 8 carateres e é uma data existente no formato `AAAAMMDD`? | ✅ Passa | ❌ Reporta o problema: data inválida |
+
+Uma data existente tem mês entre `01` e `12` e um dia que existe nesse mês. Por exemplo, `20240230` não existe.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `20240101` | ✅ Passa | Data válida |
+| `2024-01-01` | ❌ Problema | Tem hífenes, o formato é `AAAAMMDD` |
+| `2024010101` | ❌ Problema | Tem mais de 8 carateres |
+| `20240230` | ❌ Problema | O dia 30 não existe em fevereiro |
+| *(vazio)* | ❌ Problema | Falta a data |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `start_date` obrigatória | A linha não tem `start_date` | Preencher a `start_date` em `calendar.txt` no formato `AAAAMMDD` |
+| Data inválida | A data tem hífenes ou barras, mais ou menos de 8 carateres, ou uma data que não existe | Escrever a `start_date` em `calendar.txt` como `AAAAMMDD`, com ano, mês e dia existentes, por exemplo `20240101` |
