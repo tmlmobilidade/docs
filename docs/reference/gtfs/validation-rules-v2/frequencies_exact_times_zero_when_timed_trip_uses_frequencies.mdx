@@ -1,0 +1,56 @@
+---
+title: Horários exatos da frequência
+description: Verifica se o exact_times de frequencies.txt, quando preenchido, é 0 ou 1.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `frequencies_exact_times_zero_when_timed_trip_uses_frequencies` |
+| Ficheiro | `frequencies.txt` |
+| Campo | `exact_times` |
+| Tipo | Enumeração (`0` ou `1`) |
+| Severidade | Opcional |
+
+**Descrição do campo:** indica se o intervalo entre veículos é exatamente regular, sem variações.
+
+- `0` ou vazio: viagens baseadas em frequência.
+- `1`: viagens com horário fixo e o mesmo intervalo durante o dia. O `end_time` tem de ser maior que a hora de início da última viagem e menor que essa hora mais o `headway_secs`.
+
+Mais informação em [frequencies.txt](/reference/gtfs/schedule/frequencies).
+
+## Como funciona
+
+Se o `exact_times` estiver preenchido, o valor tem de ser `0` ou `1`. Um campo vazio é aceite, salvo se a configuração da regra o exigir ou recomendar. Apesar do nome da regra, ela **não verifica se uma viagem com horários fixos também usa frequências**, nem a regra do `end_time` quando o valor é `1`.
+
+A regra avalia cada linha do `frequencies.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 2 |
+| 2 | O `exact_times` está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 3 |
+| 3 | O `exact_times` é `0` ou `1`? | Segue para o passo 4 | ❌ Reporta o problema: valor inválido |
+| 4 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 5 | ✅ Passa |
+| 5 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+Sem configuração, um campo vazio é aceite.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `0` | ✅ Passa | Viagens baseadas em frequência |
+| `1` | ✅ Passa | Horários fixos |
+| *(vazio)* | ✅ Passa | Campo opcional |
+| `2` | ❌ Problema | Só são aceites `0` e `1` |
+| `1` (lista permitida = `0`) | ❌ Problema | Valor válido, mas fora da lista |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor inválido | O valor é um número diferente de `0` e `1` | Corrigir o `exact_times` em `frequencies.txt` para `0` ou `1` |
+| Valor não permitido | O valor é válido, mas a configuração da regra não o permite | Usar um valor da lista permitida, ou pedir ao administrador que o adicione |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `exact_times` em `frequencies.txt` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `exact_times` em `frequencies.txt` |

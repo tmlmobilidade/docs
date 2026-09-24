@@ -1,0 +1,47 @@
+---
+title: Intervalo entre veículos
+description: Verifica se o headway_secs de frequencies.txt está preenchido e é um número de segundos positivo.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `frequencies_headway_secs_positive_and_aligns_trip` |
+| Ficheiro | `frequencies.txt` |
+| Campo | `headway_secs` |
+| Tipo | Número inteiro positivo |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** intervalo entre veículos, em segundos.
+
+Mais informação em [frequencies.txt](/reference/gtfs/schedule/frequencies).
+
+## Como funciona
+
+Cada linha do `frequencies.txt` tem de ter um `headway_secs` preenchido com um número inteiro maior que zero. Apesar do nome da regra, ela **não verifica se o intervalo se alinha com a viagem**. Só verifica se está preenchido e é positivo.
+
+A regra avalia cada linha do `frequencies.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `headway_secs` está vazio? | ❌ Reporta o problema: `headway_secs` obrigatório | Segue para o passo 2 |
+| 2 | O `headway_secs` é zero ou negativo? | ❌ Reporta o problema: valor inválido | ✅ Passa |
+
+Um valor que não seja um número inteiro, como `abc` ou `600.5`, é tratado pela regra `frequencies_values_parse`.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `600` | ✅ Passa | Dez minutos, em segundos |
+| `0` | ❌ Problema | Tem de ser maior que zero |
+| `-300` | ❌ Problema | Valor negativo |
+| *(vazio)* | ❌ Problema | Falta o intervalo |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `headway_secs` obrigatório | A linha não tem `headway_secs` | Preencher o `headway_secs` em `frequencies.txt` com o intervalo em segundos, por exemplo `600` |
+| Valor inválido | O `headway_secs` é `0` ou negativo | Escrever o `headway_secs` em `frequencies.txt` com um número inteiro maior que `0` |

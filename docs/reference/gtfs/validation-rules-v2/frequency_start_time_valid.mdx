@@ -1,0 +1,46 @@
+---
+title: Hora de início da frequência
+description: Verifica se o start_time de frequencies.txt está preenchido e no formato HH:MM:SS.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `frequency_start_time_valid` |
+| Ficheiro | `frequencies.txt` |
+| Campo | `start_time` |
+| Tipo | Hora |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** hora a que o primeiro veículo parte da primeira paragem da viagem, com o intervalo indicado.
+
+Mais informação em [frequencies.txt](/reference/gtfs/schedule/frequencies).
+
+## Como funciona
+
+Cada linha do `frequencies.txt` tem de ter um `start_time` preenchido, escrito como `HH:MM:SS` com exatamente 8 carateres, por exemplo `08:00:00`. A regra **não verifica se as horas, minutos e segundos são possíveis** nem compara o `start_time` com o `end_time`. Só verifica o formato.
+
+A regra avalia cada linha do `frequencies.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `start_time` está vazio? | ❌ Reporta o problema: `start_time` obrigatório | Segue para o passo 2 |
+| 2 | O `start_time` tem 8 carateres, com três números separados por `:`? | ✅ Passa | ❌ Reporta o problema: hora inválida |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `08:00:00` | ✅ Passa | Formato correto |
+| `25:30:00` | ✅ Passa | O formato é aceite, mesmo depois das 24 horas |
+| `8:00:00` | ❌ Problema | Tem 7 carateres, falta o zero à esquerda |
+| `08:00` | ❌ Problema | Faltam os segundos |
+| *(vazio)* | ❌ Problema | Falta a hora |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `start_time` obrigatório | A linha não tem `start_time` | Preencher o `start_time` em `frequencies.txt` no formato `HH:MM:SS` |
+| Hora inválida | Falta o zero à esquerda, os segundos ou os dois pontos | Escrever o `start_time` em `frequencies.txt` como `HH:MM:SS`, por exemplo `08:00:00` |

@@ -1,0 +1,50 @@
+---
+title: Valores numéricos das frequências
+description: Verifica se os campos numéricos de frequencies.txt têm um valor que o validador consegue ler como número inteiro.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `frequencies_values_parse` |
+| Ficheiro | `frequencies.txt` |
+| Campos | `headway_secs`, `exact_times` |
+| Tipo | Número inteiro positivo, enumeração (`0` ou `1`) |
+| Severidade | Obrigatório, Opcional |
+
+**Descrição dos campos:**
+
+- `headway_secs`: intervalo entre veículos, em segundos.
+- `exact_times`: indica se o intervalo entre veículos é exatamente regular. O valor `0` ou vazio significa viagens baseadas em frequência. O valor `1` significa viagens com horário fixo.
+
+Mais informação em [frequencies.txt](/reference/gtfs/schedule/frequencies).
+
+## Como funciona
+
+Os dois campos têm de ser escritos como números inteiros, sem casas decimais. Se algum não for, as outras regras do `frequencies.txt` tratam essa linha como se os campos estivessem vazios. A regra **não verifica se o valor faz sentido**, por exemplo se `headway_secs` é positivo. Isso fica para outras regras.
+
+A regra avalia cada linha do `frequencies.txt`, seguindo o passo abaixo, que dá o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `headway_secs` ou o `exact_times` tem um valor que não se lê como número inteiro? | ❌ Reporta o problema, um por cada campo inválido | ✅ Passa |
+
+Um campo vazio não é um problema nesta regra. Os campos `trip_id`, `start_time` e `end_time` são texto e aceitam qualquer valor.
+
+## Exemplos
+
+| Campo | Valor | Resultado | Porquê |
+|---|---|---|---|
+| `headway_secs` | `600` | ✅ Passa | Número inteiro |
+| `exact_times` | `1` | ✅ Passa | Número inteiro |
+| `headway_secs` | `600.5` | ❌ Problema | Tem casas decimais |
+| `headway_secs` | `dez minutos` | ❌ Problema | Texto em vez de número |
+| `exact_times` | `sim` | ❌ Problema | Texto em vez de número |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor inválido em `headway_secs` | O valor tem texto ou casas decimais | Em `frequencies.txt`, escrever o `headway_secs` como número inteiro de segundos, por exemplo `600` |
+| Valor inválido em `exact_times` | O valor tem texto ou casas decimais | Em `frequencies.txt`, escrever o `exact_times` como `0` ou `1` |
