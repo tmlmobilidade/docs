@@ -1,6 +1,6 @@
 ---
-title: Destino das viagens do mesmo padrão
-description: Verifica se todas as viagens com o mesmo pattern_id em trips.txt têm o mesmo trip_headsign.
+title: Destino igual em todo o padrão
+description: Verifica se todas as viagens com o mesmo pattern_id têm o mesmo trip_headsign.
 ---
 
 ## Propriedades da regra
@@ -9,47 +9,38 @@ description: Verifica se todas as viagens com o mesmo pattern_id em trips.txt t�
 |---|---|
 | Rule ID | `trip_headsign_consistent_for_all_patterns_in_trips` |
 | Ficheiro | `trips.txt` |
-| Campos | `trip_headsign`, `pattern_id` |
+| Campo | `trip_headsign` |
 | Tipo | Texto |
 | Severidade | Obrigatório |
 
-**Descrição dos campos:**
-
-- `trip_headsign`: texto que aparece na sinalética e identifica o destino da viagem para os passageiros.
-- `pattern_id`: identifica o padrão a que a viagem pertence. É com este campo que a regra agrupa as viagens.
+**Descrição do campo:** texto que aparece na sinalética e identifica o destino da viagem.
 
 Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
 
 ## Como funciona
 
-Todas as viagens com o mesmo `pattern_id` têm de ter o mesmo `trip_headsign`. A regra **não verifica se o destino está bem escrito**, só se é igual em todas as viagens do padrão.
+Todas as viagens com o mesmo `pattern_id` têm de ter o mesmo `trip_headsign`. Um destino vazio numa viagem e preenchido noutra também conta como diferença. A regra só avalia viagens com `pattern_id` preenchido. **Não verifica** se o valor existe noutros ficheiros. Só é reportado um problema por padrão, na primeira viagem do grupo.
 
-A regra avalia cada grupo de viagens com o mesmo `pattern_id`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+A regra avalia cada grupo de viagens com o mesmo `pattern_id` no `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | Todas as viagens do grupo têm o mesmo `trip_headsign`? | ✅ Passa | Segue para o passo 2 |
-| 2 | A configuração da regra manda ignorar este problema? | Não reporta | ❌ Reporta o problema: destinos diferentes no mesmo `pattern_id` |
-
-Um `trip_headsign` vazio conta como um valor. Se umas viagens do padrão têm destino e outras não, há um problema. A comparação é exata: maiúsculas, acentos e espaços diferentes contam como destinos diferentes.
-
-O problema é reportado uma vez por `pattern_id`, com a lista dos destinos encontrados.
+| 1 | Há mais do que um valor de `trip_headsign` entre as viagens do grupo? | ❌ Reporta o problema: valores diferentes no mesmo padrão | ✅ Passa |
 
 ## Como se relacionam
 
-O `pattern_id` define o grupo: as viagens com o mesmo valor pertencem ao mesmo padrão. Dentro de cada grupo, o `trip_headsign` tem de ser igual em todas as viagens.
+Um padrão (`pattern_id`) agrupa as viagens que fazem o mesmo percurso no mesmo sentido. Por isso, o `trip_headsign` não pode mudar entre viagens do mesmo `pattern_id`.
 
 ## Exemplos
 
-| `pattern_id` | `trip_headsign` das viagens do padrão | Resultado | Porquê |
-|---|---|---|---|
-| `1001_0_1` | `Prior Velho`, `Prior Velho` | ✅ Passa | Todos iguais |
-| `1001_0_1` | *(vazio)*, *(vazio)* | ✅ Passa | Todos vazios, logo iguais |
-| `1001_0_1` | `Prior Velho`, `Prior Velo` | ❌ Problema | Texto diferente |
-| `1001_0_1` | `Prior Velho`, *(vazio)* | ❌ Problema | Uma viagem sem destino |
+| Viagens do mesmo `pattern_id` | Resultado | Porquê |
+|---|---|---|
+| `1001_0_1`: destino `Prior Velho` em todas | ✅ Passa | Destino único |
+| `1001_0_1`: `Prior Velho` e `Sacavém` | ❌ Problema | Dois destinos no mesmo padrão |
+| `1001_0_1`: `Prior Velho` e vazio | ❌ Problema | Destino em falta numa viagem |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Destinos diferentes no mesmo `pattern_id` | Erro de escrita no `trip_headsign`, `trip_headsign` em falta numa viagem, ou viagem com o `pattern_id` errado | Procurar em `trips.txt` as viagens do `pattern_id` indicado na mensagem e uniformizar o `trip_headsign`. Se os destinos forem mesmo diferentes, corrigir o `pattern_id` das viagens que não pertencem a este padrão |
+| Destinos diferentes no mesmo padrão | Uma viagem tem o destino escrito de forma diferente, ou em falta | Uniformizar `trip_headsign` das viagens do padrão no `trips.txt` |

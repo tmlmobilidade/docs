@@ -1,0 +1,56 @@
+---
+title: Percurso da viagem existe
+description: Verifica se o shape_id da viagem existe em shapes.txt e se está preenchido quando há embarque contínuo.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `trips_shape_id_references_shapes_table_when_present` |
+| Ficheiros | `trips.txt`, `routes.txt`, `stop_times.txt`, `shapes.txt` |
+| Campos | `shape_id`, `continuous_pickup` |
+| Tipo | Chave estrangeira (shapes.shape_id) e enumeração |
+| Severidade | Condicional (obrigatório quando existe `continuous_pickup` na rota ou nas paragens da viagem) |
+
+**Descrição dos campos:**
+
+- `shape_id`: identifica o percurso geográfico do veículo durante a viagem.
+- `continuous_pickup`: indica se o embarque é contínuo ao longo do percurso. É lido em `routes.txt` e em `stop_times.txt`.
+
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips), [routes.txt](/reference/gtfs/schedule/routes), [stop_times.txt](/reference/gtfs/schedule/stop_times), [shapes.txt](/reference/gtfs/schedule/shapes).
+
+## Como funciona
+
+O `shape_id` da viagem tem de existir em `shapes.txt`. Passa a ser obrigatório quando a rota ou alguma paragem da viagem tem `continuous_pickup` preenchido. A regra só olha para `continuous_pickup`. **Não olha** para `continuous_drop_off`, apesar de a descrição do campo falar nos dois. **Não verifica** se o percurso passa perto das paragens.
+
+A regra avalia cada linha do `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `route_id` da viagem está vazio? | Termina sem reportar nada | Segue para o passo 2 |
+| 2 | A rota não foi encontrada em `routes.txt`, ou aparece mais de uma vez? | ❌ Reporta o problema: percurso não encontrado | Segue para o passo 3 |
+| 3 | A viagem tem embarque contínuo (`continuous_pickup` preenchido na rota ou em alguma paragem da viagem) e o `shape_id` está vazio? | ❌ Reporta o problema: `shape_id` obrigatório | Segue para o passo 4 |
+| 4 | O `shape_id` está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 5 |
+| 5 | O `shape_id` existe em `shapes.txt`? | ✅ Passa | ❌ Reporta o problema: percurso não encontrado |
+
+## Como se relacionam
+
+Cada `shape_id` de `trips.txt` tem de existir em `shapes.txt`. O `continuous_pickup` da rota (`routes.txt`) e das paragens (`stop_times.txt`) decide se o `shape_id` é obrigatório.
+
+## Exemplos
+
+| `shape_id` | Situação | Resultado | Porquê |
+|---|---|---|---|
+| `1001_0_1` | Existe em `shapes.txt` | ✅ Passa | O percurso existe |
+| (vazio) | Sem embarque contínuo e campo opcional | ✅ Passa | Campo não exigido |
+| (vazio) | Rota com `continuous_pickup` preenchido | ❌ Problema | `shape_id` obrigatório |
+| `9999_0_1` | Não existe em `shapes.txt` | ❌ Problema | Percurso não encontrado |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `shape_id` obrigatório | A rota ou uma paragem da viagem tem `continuous_pickup` preenchido | Preencher `shape_id` no `trips.txt` |
+| Percurso não encontrado | Erro de digitação, ou o percurso não está em `shapes.txt` | Corrigir `shape_id` no `trips.txt`, ou acrescentar o percurso a `shapes.txt` |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `shape_id` no `trips.txt` |

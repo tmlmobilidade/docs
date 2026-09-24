@@ -1,0 +1,47 @@
+---
+title: Formato do padrão
+description: Verifica se o pattern_id segue o formato XXXX_X_X ou os formatos definidos na configuração da regra.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `trips_pattern_id_matches_feed_pattern_id_syntax` |
+| Ficheiro | `trips.txt` |
+| Campo | `pattern_id` |
+| Tipo | Identificador |
+| Severidade | Opcional (obrigatório para os Transportes Metropolitanos de Lisboa) |
+
+**Descrição do campo:** identifica o padrão a que a viagem pertence. Os padrões correspondem ao desdobramento das rotas pelos sentidos, se houver mais do que um.
+
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
+
+## Como funciona
+
+Quando o `pattern_id` está preenchido, tem de ter o formato esperado. A regra **não verifica** se o campo está preenchido nem se o padrão existe.
+
+A regra avalia cada linha do `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `pattern_id` está vazio? | Termina sem reportar nada | Segue para o passo 2 |
+| 2 | A configuração da regra define formatos permitidos? | Usa esses formatos. Se nenhum for reconhecido, usa o formato predefinido | Usa o formato predefinido: até quatro carateres, `_`, um caráter, `_`, um caráter |
+| 3 | O valor corresponde a algum dos formatos? | ✅ Passa | ❌ Reporta o problema: formato inválido |
+
+No formato predefinido, o primeiro bloco tem de 1 a 4 carateres. O segundo e o terceiro têm exatamente um. Nenhum bloco pode conter `_`.
+
+## Exemplos
+
+| `pattern_id` | Resultado | Porquê |
+|---|---|---|
+| `1001_0_1` | ✅ Passa | Formato `XXXX_X_X` |
+| `12345_0_1` | ❌ Problema | Mais de quatro carateres no primeiro bloco |
+| `1001_0` | ❌ Problema | Falta um bloco |
+| `1001_00_1` | ❌ Problema | O segundo bloco tem dois carateres |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Formato inválido | O `pattern_id` não tem três blocos separados por `_`, ou os blocos têm o tamanho errado | Corrigir `pattern_id` no `trips.txt` para o formato indicado na mensagem, por exemplo `1001_0_1` |

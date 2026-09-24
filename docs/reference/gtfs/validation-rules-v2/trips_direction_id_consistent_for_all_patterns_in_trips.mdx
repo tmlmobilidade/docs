@@ -1,0 +1,45 @@
+---
+title: Sentido igual em todo o padrão
+description: Verifica se todas as viagens com o mesmo pattern_id têm o mesmo direction_id.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `trips_direction_id_consistent_for_all_patterns_in_trips` |
+| Ficheiro | `trips.txt` |
+| Campo | `direction_id` |
+| Tipo | Enumeração |
+| Severidade | Opcional (obrigatório para os Transportes Metropolitanos de Lisboa) |
+
+**Descrição do campo:** indica o sentido de percurso da viagem: `0` ou `1`.
+
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
+
+## Como funciona
+
+Todas as viagens com o mesmo `pattern_id` têm de ter o mesmo `direction_id`. A regra só avalia viagens com `pattern_id` preenchido. **Não verifica** se o valor existe noutros ficheiros. Só é reportado um problema por padrão, na primeira viagem do grupo.
+
+A regra avalia cada grupo de viagens com o mesmo `pattern_id` no `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | Há mais do que um valor de `direction_id` entre as viagens do grupo? | ❌ Reporta o problema: valores diferentes no mesmo padrão | ✅ Passa |
+
+## Como se relacionam
+
+Um padrão (`pattern_id`) agrupa as viagens que fazem o mesmo percurso no mesmo sentido. Por isso, o `direction_id` não pode mudar entre viagens do mesmo `pattern_id`.
+
+## Exemplos
+
+| Viagens do mesmo `pattern_id` | Resultado | Porquê |
+|---|---|---|
+| `1001_0_1`: sentido `0` em todas | ✅ Passa | Sentido único |
+| `1001_0_1`: sentidos `0` e `1` | ❌ Problema | Dois sentidos no mesmo padrão |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Sentidos diferentes no mesmo padrão | Uma viagem tem o sentido trocado, ou o `pattern_id` foi reutilizado | Corrigir `direction_id` ou `pattern_id` das viagens indicadas no `trips.txt`, para que cada padrão tenha um só sentido |

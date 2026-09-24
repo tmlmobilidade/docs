@@ -1,0 +1,50 @@
+---
+title: Serviço da viagem existe
+description: Verifica se cada viagem tem um service_id preenchido e se esse serviço existe em calendar.txt ou em calendar_dates.txt.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `trips_service_id_references_calendar_service` |
+| Ficheiros | `trips.txt`, `calendar.txt`, `calendar_dates.txt` |
+| Campo | `service_id` |
+| Tipo | Chave estrangeira (calendar.service_id ou calendar_dates.service_id) |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** identifica os dias em que a viagem circula.
+
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips), [calendar.txt](/reference/gtfs/schedule/calendar), [calendar_dates.txt](/reference/gtfs/schedule/calendar_dates).
+
+## Como funciona
+
+Cada viagem tem de indicar um serviço definido em `calendar.txt` ou em `calendar_dates.txt`. A regra **não verifica** se as datas do serviço são válidas nem se o serviço circula em algum dia.
+
+A regra avalia cada linha do `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `service_id` está vazio? | ❌ Reporta o problema: campo em falta | Segue para o passo 2 |
+| 2 | O `service_id` existe em `calendar.txt`? | ✅ Passa | Segue para o passo 3 |
+| 3 | O `service_id` existe em `calendar_dates.txt`? | ✅ Passa | ❌ Reporta o problema: serviço não encontrado |
+
+## Como se relacionam
+
+Cada `service_id` de `trips.txt` tem de existir em `calendar.txt` ou em `calendar_dates.txt`. Basta existir num deles.
+
+## Exemplos
+
+| `service_id` em `trips.txt` | Resultado | Porquê |
+|---|---|---|
+| `DU`, existe em `calendar.txt` | ✅ Passa | O serviço existe |
+| `FERIADO`, só em `calendar_dates.txt` | ✅ Passa | O serviço existe |
+| (vazio) | ❌ Problema | Campo em falta |
+| `XX`, não existe em nenhum | ❌ Problema | Serviço não encontrado |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | A célula de `service_id` está vazia | Preencher `service_id` no `trips.txt` |
+| Serviço não encontrado | Erro de digitação, ou o serviço não foi definido | Corrigir `service_id` no `trips.txt`, ou acrescentar o serviço a `calendar.txt` ou a `calendar_dates.txt` |

@@ -1,0 +1,44 @@
+---
+title: Bloco da viagem
+description: Verifica se o block_id está preenchido, quando a configuração da regra o exige, e se não está preenchido quando é proibido.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `trips_block_id_in_allowed_set` |
+| Ficheiro | `trips.txt` |
+| Campo | `block_id` |
+| Tipo | Identificador |
+| Severidade | Opcional |
+
+**Descrição do campo:** identifica o bloco a que a viagem pertence. Um bloco é uma viagem ou várias viagens seguidas feitas pelo mesmo veículo, com os mesmos dias de serviço e o mesmo `block_id`. Para indicar transbordos sem sair do veículo, deve usar-se o `transfers.txt` com `transfer_type` igual a `4`.
+
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
+
+## Como funciona
+
+A regra confirma que o `block_id` respeita a configuração da regra: preenchido quando é exigido ou recomendado, vazio quando é proibido. Apesar do nome, **não verifica** o valor contra uma lista de blocos permitidos e não confirma que as viagens do bloco não se sobrepõem.
+
+A regra avalia cada linha do `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | ✅ Passa |
+
+## Exemplos
+
+| Valor de `block_id` | Resultado | Porquê |
+|---|---|---|
+| `BLK_12` | ✅ Passa | Campo preenchido |
+| (vazio, campo exigido) | ❌ Problema | Campo em falta |
+| `BLK_12` (campo proibido) | ❌ Problema | Campo não devia ter valor |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `block_id` no `trips.txt` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `block_id` no `trips.txt` |

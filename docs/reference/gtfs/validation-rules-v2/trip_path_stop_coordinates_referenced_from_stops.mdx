@@ -1,0 +1,55 @@
+---
+title: Paragens perto do percurso
+description: Verifica se as paragens de cada viagem estão a menos de 100 metros do percurso (shape) da viagem.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `trip_path_stop_coordinates_referenced_from_stops` |
+| Ficheiros | `trips.txt`, `stop_times.txt`, `stops.txt`, `shapes.txt` |
+| Campos | `shape_id`, `stop_id`, `stop_lat`, `stop_lon` |
+| Tipo | Coordenadas |
+| Severidade | Opcional |
+
+**Descrição dos campos:**
+
+- `shape_id`: identifica o percurso geográfico da viagem.
+- `stop_id`: identifica cada paragem da viagem no `stop_times.txt`.
+- `stop_lat`: latitude da paragem, em `stops.txt`.
+- `stop_lon`: longitude da paragem, em `stops.txt`.
+
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips), [stop_times.txt](/reference/gtfs/schedule/stop_times), [stops.txt](/reference/gtfs/schedule/stops), [shapes.txt](/reference/gtfs/schedule/shapes).
+
+## Como funciona
+
+Para cada viagem com percurso, a regra confirma que cada paragem da viagem fica a menos de 100 metros do ponto do percurso mais próximo. A regra **não verifica** a ordem em que as paragens são percorridas, nem se o percurso é contínuo.
+
+A regra avalia cada linha do `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A viagem não tem `shape_id`? | Termina sem reportar nada | Segue para o passo 2 |
+| 2 | Cada paragem da viagem (sem repetições) existe em `stops.txt`? | Segue para o passo 3 | Essa paragem é ignorada |
+| 3 | A distância da paragem ao ponto do percurso mais próximo é superior a 100 metros? | ❌ Reporta o problema: paragem longe do percurso | ✅ Passa |
+
+O problema é reportado uma vez por paragem e por viagem. Por isso, uma paragem mal posicionada pode aparecer em muitas viagens.
+
+## Como se relacionam
+
+A viagem (`trips.txt`) liga o percurso (`shape_id`, em `shapes.txt`) às paragens (`stop_times.txt` e `stops.txt`). A distância é medida entre a paragem e o ponto do percurso mais próximo.
+
+## Exemplos
+
+| Paragem | Resultado | Porquê |
+|---|---|---|
+| A `35` m do percurso | ✅ Passa | Distância dentro do limite |
+| A `250` m do percurso | ❌ Problema | Distância superior a 100 metros |
+| Viagem sem `shape_id` | ✅ Passa | Não há percurso para comparar |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Paragem longe do percurso | Coordenadas da paragem erradas, ou percurso que não passa pela paragem | Corrigir `stop_lat` e `stop_lon` em `stops.txt`, ou corrigir os pontos do percurso em `shapes.txt` |

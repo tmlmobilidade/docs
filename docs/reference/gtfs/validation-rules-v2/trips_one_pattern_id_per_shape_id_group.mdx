@@ -1,0 +1,49 @@
+---
+title: Um padrão por percurso
+description: Verifica se todas as viagens com o mesmo shape_id pertencem ao mesmo pattern_id.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `trips_one_pattern_id_per_shape_id_group` |
+| Ficheiro | `trips.txt` |
+| Campos | `shape_id`, `pattern_id` |
+| Tipo | Identificador |
+| Severidade | Opcional (obrigatório para os Transportes Metropolitanos de Lisboa) |
+
+**Descrição dos campos:**
+
+- `shape_id`: identifica o percurso geográfico da viagem.
+- `pattern_id`: identifica o padrão a que a viagem pertence.
+
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
+
+## Como funciona
+
+Todas as viagens com o mesmo `shape_id` têm de pertencer ao mesmo `pattern_id`. A regra só avalia viagens com `shape_id` preenchido. Não repete um problema que a regra de um percurso por padrão já reportou para o mesmo par. Só é reportado um problema por percurso, na primeira viagem do grupo.
+
+A regra avalia cada grupo de viagens com o mesmo `shape_id` no `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | Há mais do que um `pattern_id` entre as viagens do grupo? | Segue para o passo 2 | ✅ Passa |
+| 2 | Esse par de `pattern_id` e `shape_id` já foi reportado pela regra de um percurso por padrão? | Não reporta de novo | ❌ Reporta o problema: percurso usado em vários padrões |
+
+## Como se relacionam
+
+Um percurso (`shape_id`) só pode pertencer a um padrão (`pattern_id`). É a regra inversa de um percurso por padrão.
+
+## Exemplos
+
+| Viagens do mesmo `shape_id` | Resultado | Porquê |
+|---|---|---|
+| Percurso `1001_0_1`: padrão `1001_0_1` em todas | ✅ Passa | Padrão único |
+| Percurso `A`: padrões `1001_0_1` e `1001_0_2` | ❌ Problema | Dois padrões no mesmo percurso |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Percurso usado em vários padrões | Padrões diferentes partilham o mesmo percurso | Corrigir `pattern_id` ou `shape_id` das viagens indicadas no `trips.txt`, para que cada percurso pertença a um só padrão |

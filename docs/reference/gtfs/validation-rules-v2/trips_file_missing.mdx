@@ -1,0 +1,40 @@
+---
+title: Ficheiro de viagens
+description: Verifica se o ficheiro trips.txt existe no feed, quando a configuração da regra o exige ou recomenda.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `trips_file_missing` |
+| Ficheiro | `trips.txt` |
+| Campo | Se aplica em todo o ficheiro |
+| Tipo | Ficheiro |
+| Severidade | Obrigatório |
+
+## Como funciona
+
+O `trips.txt` tem de existir no feed quando a configuração da regra o exige ou recomenda. A regra **não verifica** o conteúdo do ficheiro. Isso é feito pelas outras regras.
+
+A regra avalia o feed, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O ficheiro `trips.txt` existe no feed? | ✅ Passa | Verifica a configuração da regra: se o exige, reporta um problema. Se o recomenda, reporta um aviso. Caso contrário, aceita |
+
+Sem ficheiro de configuração de regras, o `trips.txt` é considerado obrigatório.
+
+## Exemplos
+
+| Situação | Resultado | Porquê |
+|---|---|---|
+| Feed com `trips.txt` | ✅ Passa | O ficheiro existe |
+| Feed sem `trips.txt`, ficheiro exigido | ❌ Problema | Ficheiro em falta |
+| Feed sem `trips.txt`, ficheiro recomendado | ❌ Problema | Ficheiro em falta (com gravidade de aviso) |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Ficheiro em falta | O `trips.txt` não foi incluído no ficheiro ZIP do feed, ou tem outro nome | Acrescentar o `trips.txt` ao feed, com o nome exato em minúsculas |

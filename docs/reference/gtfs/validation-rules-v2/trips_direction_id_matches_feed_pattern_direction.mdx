@@ -1,0 +1,57 @@
+---
+title: Sentido igual ao do padrão
+description: Verifica se o direction_id da viagem coincide com o sentido indicado no pattern_id.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `trips_direction_id_matches_feed_pattern_direction` |
+| Ficheiro | `trips.txt` |
+| Campos | `direction_id`, `pattern_id` |
+| Tipo | Enumeração e identificador |
+| Severidade | Obrigatório |
+
+**Descrição dos campos:**
+
+- `direction_id`: indica o sentido de percurso da viagem: `0` ou `1`.
+- `pattern_id`: identifica o padrão a que a viagem pertence. No formato esperado tem três blocos separados por `_`, e o segundo bloco é o sentido, por exemplo `1001_0_1`.
+
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
+
+## Como funciona
+
+O `direction_id` de cada viagem tem de ser igual ao sentido escrito no `pattern_id`. A regra **não verifica** se os outros blocos do `pattern_id` estão certos. Para isso serve a regra do formato do padrão.
+
+A regra avalia cada linha do `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `pattern_id` ou o `direction_id` está vazio? | ❌ Reporta o problema: campos em falta | Segue para o passo 2 |
+| 2 | O `pattern_id` não tem exatamente três blocos separados por `_`? | ❌ Reporta o problema: padrão inválido | Segue para o passo 3 |
+| 3 | O segundo bloco do `pattern_id` não é `0` nem `1`? | ❌ Reporta o problema: sentido do padrão inválido | Segue para o passo 4 |
+| 4 | O `direction_id` é diferente do segundo bloco? | ❌ Reporta o problema: sentidos diferentes | ✅ Passa |
+
+## Como se relacionam
+
+No `trips.txt`, o `direction_id` da viagem tem de ser igual ao segundo bloco do `pattern_id` da mesma viagem.
+
+## Exemplos
+
+| `pattern_id` | `direction_id` | Resultado | Porquê |
+|---|---|---|---|
+| `1001_0_1` | `0` | ✅ Passa | Sentido igual |
+| `1001_0_1` | `1` | ❌ Problema | Sentidos diferentes |
+| `1001_0` | `0` | ❌ Problema | Faltam blocos no padrão |
+| `1001_2_1` | `0` | ❌ Problema | Sentido do padrão fora de `0` e `1` |
+| `1001_0_1` | (vazio) | ❌ Problema | Campo em falta |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campos em falta | `pattern_id` ou `direction_id` vazios | Preencher os dois campos no `trips.txt` |
+| Padrão inválido | O `pattern_id` não tem três blocos separados por `_` | Corrigir `pattern_id` no `trips.txt`, por exemplo para `1001_0_1` |
+| Sentido do padrão inválido | O segundo bloco do `pattern_id` não é `0` nem `1` | Corrigir o segundo bloco do `pattern_id` no `trips.txt` |
+| Sentidos diferentes | O `direction_id` e o `pattern_id` foram preenchidos de forma diferente | Corrigir `direction_id` ou `pattern_id` no `trips.txt` para o mesmo sentido |

@@ -1,0 +1,48 @@
+---
+title: Rota da viagem existe
+description: Verifica se cada viagem tem um route_id preenchido e se essa rota existe em routes.txt.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `trips_route_id_references_routes_table` |
+| Ficheiros | `trips.txt`, `routes.txt` |
+| Campo | `route_id` |
+| Tipo | Chave estrangeira (routes.route_id) |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** identifica a rota da viagem.
+
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips), [routes.txt](/reference/gtfs/schedule/routes).
+
+## Como funciona
+
+Cada viagem tem de indicar uma rota que exista em `routes.txt`. A regra **não verifica** se a rota tem viagens válidas nem se é a rota certa para o percurso.
+
+A regra avalia cada linha do `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `route_id` está vazio? | ❌ Reporta o problema: campo em falta | Segue para o passo 2 |
+| 2 | O `route_id` existe em `routes.txt`? | ✅ Passa | ❌ Reporta o problema: rota não encontrada |
+
+## Como se relacionam
+
+Cada `route_id` de `trips.txt` tem de existir em `routes.txt`.
+
+## Exemplos
+
+| `route_id` em `trips.txt` | Resultado | Porquê |
+|---|---|---|
+| `1001`, existe em `routes.txt` | ✅ Passa | A rota existe |
+| (vazio) | ❌ Problema | Campo em falta |
+| `9999`, não existe em `routes.txt` | ❌ Problema | Rota não encontrada |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | A célula de `route_id` está vazia | Preencher `route_id` no `trips.txt` com uma rota de `routes.txt` |
+| Rota não encontrada | Erro de digitação, ou a rota foi removida de `routes.txt` | Corrigir `route_id` no `trips.txt`, ou acrescentar a rota em falta ao `routes.txt` |

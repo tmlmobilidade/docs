@@ -1,0 +1,44 @@
+---
+title: Nome curto da viagem
+description: Verifica se o trip_short_name está preenchido, quando a configuração da regra o exige, e se não está preenchido quando é proibido.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `trip_short_name_exclusivity` |
+| Ficheiro | `trips.txt` |
+| Campo | `trip_short_name` |
+| Tipo | Texto |
+| Severidade | Opcional |
+
+**Descrição do campo:** texto público que identifica a viagem para os passageiros, por exemplo o número de um comboio suburbano. Se os passageiros não usam nomes de viagem, deve ficar vazio. Não serve para nomes de destino nem para designar serviços rápidos ou diretos.
+
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
+
+## Como funciona
+
+A regra confirma que o `trip_short_name` respeita a configuração da regra: preenchido quando é exigido ou recomendado, vazio quando é proibido. Apesar do nome, **não verifica** que o valor é único no dia de serviço nem que é diferente do `trip_headsign`.
+
+A regra avalia cada linha do `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | ✅ Passa |
+
+## Exemplos
+
+| Valor de `trip_short_name` | Resultado | Porquê |
+|---|---|---|
+| `1234` | ✅ Passa | Campo preenchido |
+| (vazio, campo exigido) | ❌ Problema | Campo em falta |
+| `1234` (campo proibido) | ❌ Problema | Campo não devia ter valor |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `trip_short_name` no `trips.txt` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `trip_short_name` no `trips.txt` |

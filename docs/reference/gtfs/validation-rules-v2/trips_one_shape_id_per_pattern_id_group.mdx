@@ -1,0 +1,45 @@
+---
+title: Um percurso por padrão
+description: Verifica se todas as viagens com o mesmo pattern_id usam o mesmo shape_id.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `trips_one_shape_id_per_pattern_id_group` |
+| Ficheiro | `trips.txt` |
+| Campo | `shape_id` |
+| Tipo | Chave estrangeira (shapes.shape_id) |
+| Severidade | Opcional (obrigatório para os Transportes Metropolitanos de Lisboa) |
+
+**Descrição do campo:** identifica o percurso geográfico da viagem.
+
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
+
+## Como funciona
+
+Todas as viagens com o mesmo `pattern_id` têm de ter o mesmo `shape_id`. A regra só avalia viagens com `pattern_id` preenchido. **Não verifica** se o valor existe noutros ficheiros. Só é reportado um problema por padrão, na primeira viagem do grupo.
+
+A regra avalia cada grupo de viagens com o mesmo `pattern_id` no `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | Há mais do que um valor de `shape_id` entre as viagens do grupo? | ❌ Reporta o problema: valores diferentes no mesmo padrão | ✅ Passa |
+
+## Como se relacionam
+
+Um padrão (`pattern_id`) agrupa as viagens que fazem o mesmo percurso no mesmo sentido. Por isso, o `shape_id` não pode mudar entre viagens do mesmo `pattern_id`.
+
+## Exemplos
+
+| Viagens do mesmo `pattern_id` | Resultado | Porquê |
+|---|---|---|
+| `1001_0_1`: percurso `1001_0_1` em todas | ✅ Passa | Percurso único |
+| `1001_0_1`: percursos `A` e `B` | ❌ Problema | Dois percursos no mesmo padrão |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Percursos diferentes no mesmo padrão | Uma viagem foi ligada a outro percurso, ou o `pattern_id` foi reutilizado | Corrigir `shape_id` ou `pattern_id` das viagens indicadas no `trips.txt`, para que cada padrão tenha um só percurso |

@@ -1,0 +1,50 @@
+---
+title: Mesma sequência de paragens no padrão
+description: Verifica se todas as viagens com o mesmo pattern_id têm a mesma sequência de paragens.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `trips_pattern_id_single_trip_signature_per_pattern` |
+| Ficheiros | `trips.txt`, `stop_times.txt` |
+| Campos | `pattern_id`, `stop_id`, `stop_sequence`, `shape_dist_traveled` |
+| Tipo | Identificador |
+| Severidade | Opcional (obrigatório para os Transportes Metropolitanos de Lisboa) |
+
+**Descrição dos campos:**
+
+- `pattern_id`: identifica o padrão a que a viagem pertence.
+- `stop_id`: paragem de cada linha da viagem, em `stop_times.txt`.
+- `stop_sequence`: ordem das paragens na viagem.
+- `shape_dist_traveled`: distância percorrida ao longo do percurso até cada paragem.
+
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips), [stop_times.txt](/reference/gtfs/schedule/stop_times).
+
+## Como funciona
+
+Todas as viagens de um padrão têm de passar pelas mesmas paragens, pela mesma ordem e com as mesmas distâncias. A regra compara a sequência inteira de cada viagem. **Não compara** as horas de passagem.
+
+A regra avalia cada grupo de viagens com o mesmo `pattern_id`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | As viagens do grupo têm sequências de paragens diferentes (paragem, distância e `stop_sequence`)? | ❌ Reporta o problema: várias sequências no mesmo padrão | ✅ Passa |
+
+## Como se relacionam
+
+As viagens do `trips.txt` que partilham um `pattern_id` têm de ter as mesmas linhas no `stop_times.txt` (mesma paragem, ordem e distância).
+
+## Exemplos
+
+| Viagens do mesmo `pattern_id` | Resultado | Porquê |
+|---|---|---|
+| Todas com `P1`, `P2`, `P3` | ✅ Passa | Mesma sequência |
+| Uma viagem com `P1`, `P2`, `P3` e outra com `P1`, `P3` | ❌ Problema | Sequências diferentes |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Várias sequências no mesmo padrão | Uma viagem salta ou acrescenta paragens, ou o `pattern_id` foi reutilizado | Corrigir o `stop_times.txt` das viagens indicadas para terem a mesma sequência, ou atribuir-lhes outro `pattern_id` no `trips.txt` |

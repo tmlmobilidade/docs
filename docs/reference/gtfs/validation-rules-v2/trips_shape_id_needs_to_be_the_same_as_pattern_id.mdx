@@ -1,0 +1,50 @@
+---
+title: Percurso igual ao padrão
+description: Verifica se o shape_id da viagem é igual ao pattern_id.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `trips_shape_id_needs_to_be_the_same_as_pattern_id` |
+| Ficheiro | `trips.txt` |
+| Campos | `shape_id`, `pattern_id` |
+| Tipo | Identificador |
+| Severidade | Opcional |
+
+**Descrição dos campos:**
+
+- `shape_id`: identifica o percurso geográfico do veículo durante a viagem.
+- `pattern_id`: identifica o padrão a que a viagem pertence. Um padrão é o desdobramento de uma rota por sentido.
+
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
+
+## Como funciona
+
+Quando a viagem tem os dois campos, o `shape_id` tem de ser exatamente igual ao `pattern_id`. A regra **não verifica** se o percurso ou o padrão existem noutros ficheiros.
+
+A regra avalia cada linha do `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `shape_id` ou o `pattern_id` está vazio? | Termina sem reportar nada | Segue para o passo 2 |
+| 2 | O `shape_id` é diferente do `pattern_id`? | ❌ Reporta o problema | ✅ Passa |
+
+## Como se relacionam
+
+Em `trips.txt`, o `shape_id` e o `pattern_id` da mesma viagem têm de ter o mesmo valor.
+
+## Exemplos
+
+| `shape_id` | `pattern_id` | Resultado | Porquê |
+|---|---|---|---|
+| `1001_0_1` | `1001_0_1` | ✅ Passa | Iguais |
+| `1001_0_1` | `1001_0_2` | ❌ Problema | Diferentes |
+| `1001_0_1` | (vazio) | ✅ Passa | Nada para comparar |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Percurso diferente do padrão | O `shape_id` e o `pattern_id` foram preenchidos com valores distintos | Usar o mesmo valor em `shape_id` e em `pattern_id` no `trips.txt` |
