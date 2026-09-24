@@ -2,9 +2,15 @@
 title: shapes.txt
 description: Define os percursos geográficos das viagens, através de uma sequência de pontos que representam o trajeto do veículo.
 ---
-**Presença**: Opcional
 
-**Chave primária**: `shape_id`, `shape_pt_sequence`
+| Versão                                                                        | Presença             |
+| ----------------------------------------------------------------------------- | -------------------- |
+| [GTFS Standard](https://gtfs.org/documentation/schedule/reference/#shapestxt) | Ficheiro optional    |
+| GTFS v30 (GO)                                                                 | Ficheiro obrigatório |
+
+## Chave Primária
+
+O conteúdo deste ficheiro é identificado pelos valores da coluna `shape_id` e `shape_pt_sequence` .
 
 ---
 

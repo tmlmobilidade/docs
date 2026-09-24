@@ -2,9 +2,15 @@
 title: stop_times.txt
 description: Define os horários de chegada e partida dos veículos em cada paragem de uma viagem.
 ---
-**Presença**: Obrigatório
 
-**Chave primária**: `trip_id`, `stop_sequence`
+| Versão                                                                            | Presença             |
+| --------------------------------------------------------------------------------- | -------------------- |
+| [GTFS Standard](https://gtfs.org/documentation/schedule/reference/#stop_timestxt) | Ficheiro obrigatório |
+| GTFS v30 (GO)                                                                     | Ficheiro obrigatório |
+
+## Chave Primária
+
+O conteúdo deste ficheiro é identificado pelos valores da coluna `trip_id` e `stop_sequence` .
 
 ---
 ### Campos GTFS Standard
