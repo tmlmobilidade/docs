@@ -1,0 +1,50 @@
+---
+title: Valores numéricos das linhas
+description: Verifica se os campos numéricos de routes.txt têm um valor que o validador consegue ler como número inteiro.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `routes_values_parse` |
+| Ficheiro | `routes.txt` |
+| Campos | `route_type`, `route_sort_order` |
+| Tipo | Enumeração, número inteiro não negativo |
+| Severidade | Obrigatório, Opcional (recomendado) |
+
+**Descrição dos campos:**
+
+- `route_type`: indica o tipo de transporte usado na linha, por exemplo `3` para autocarro.
+- `route_sort_order`: ordena as linhas para apresentação aos passageiros. As linhas com valores mais pequenos aparecem primeiro.
+
+Mais informação em [routes.txt](/reference/gtfs/schedule/routes).
+
+## Como funciona
+
+O `route_type` e o `route_sort_order` têm de ser escritos como números inteiros, sem casas decimais. Se algum não for, a linha inteira deixa de ser avaliada pelas outras regras do `routes.txt`. A regra **não verifica se o valor faz sentido**, por exemplo se o `route_type` é um tipo válido ou se o `route_sort_order` é positivo. Isso fica para outras regras.
+
+A regra avalia cada linha do `routes.txt`, seguindo o passo abaixo, que dá o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `route_type` ou o `route_sort_order` tem um valor que não se lê como número inteiro? | ❌ Reporta o problema, um por cada campo inválido. A linha deixa de ser avaliada pelas outras regras | ✅ Passa |
+
+Um campo vazio não é um problema nesta regra. Os outros campos do `routes.txt` são texto e aceitam qualquer valor.
+
+## Exemplos
+
+| Campo | Valor | Resultado | Porquê |
+|---|---|---|---|
+| `route_type` | `3` | ✅ Passa | Número inteiro |
+| `route_sort_order` | `10` | ✅ Passa | Número inteiro |
+| `route_type` | `3.5` | ❌ Problema | Tem casas decimais |
+| `route_type` | `autocarro` | ❌ Problema | Texto em vez de número |
+| `route_sort_order` | `primeira` | ❌ Problema | Texto em vez de número |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor inválido em `route_type` | O valor tem texto ou casas decimais | Em `routes.txt`, escrever o `route_type` como número inteiro, por exemplo `3` |
+| Valor inválido em `route_sort_order` | O valor tem texto ou casas decimais | Em `routes.txt`, escrever o `route_sort_order` como número inteiro, por exemplo `10` |

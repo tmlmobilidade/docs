@@ -1,0 +1,60 @@
+---
+title: Tipo de transporte da linha
+description: Verifica se o route_type de routes.txt está preenchido com um valor GTFS válido e, quando configurado, permitido.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `route_type_valid_gtfs_enum` |
+| Ficheiro | `routes.txt` |
+| Campo | `route_type` |
+| Tipo | Enumeração (`0` a `7`, `11` e `12`) |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** indica o tipo de transporte usado na linha.
+
+- `0`: elétrico, ou metro ligeiro.
+- `1`: metro.
+- `2`: comboio.
+- `3`: autocarro.
+- `4`: barco.
+- `5`: elétrico de cabo.
+- `6`: teleférico.
+- `7`: funicular.
+- `11`: troleicarro.
+- `12`: monocarril.
+
+Mais informação em [routes.txt](/reference/gtfs/schedule/routes).
+
+## Como funciona
+
+Cada linha do `routes.txt` tem de ter um `route_type` com um dos valores acima. Se a configuração da regra tiver uma lista de valores permitidos, o valor também tem de constar dessa lista. A regra **não verifica se o tipo corresponde ao transporte real**.
+
+A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `route_type` está vazio? | ❌ Reporta o problema: `route_type` obrigatório | Segue para o passo 2 |
+| 2 | O `route_type` é `0` a `7`, `11` ou `12`? | Segue para o passo 3 | ❌ Reporta o problema: valor inválido |
+| 3 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 4 | ✅ Passa |
+| 4 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `3` | ✅ Passa | Autocarro |
+| `11` | ✅ Passa | Troleicarro |
+| `8` | ❌ Problema | Não é um valor GTFS válido |
+| *(vazio)* | ❌ Problema | Falta o tipo |
+| `2` (lista permitida = `3`) | ❌ Problema | Valor válido, mas fora da lista |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `route_type` obrigatório | A linha não tem `route_type` | Preencher o `route_type` em `routes.txt` com um dos valores acima, por exemplo `3` |
+| Valor inválido | O valor não é `0` a `7`, `11` nem `12` | Corrigir o `route_type` em `routes.txt` para um valor da lista |
+| Valor não permitido | O valor é válido, mas a configuração da regra não o permite | Usar um valor da lista permitida, ou pedir ao administrador que o adicione |

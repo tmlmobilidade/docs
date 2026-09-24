@@ -1,0 +1,45 @@
+---
+title: Nome completo da linha
+description: Verifica se o route_long_name de routes.txt está preenchido.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `route_long_name_or_short_name_present` |
+| Ficheiro | `routes.txt` |
+| Campo | `route_long_name` |
+| Tipo | Texto |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** nome completo da linha. Costuma ser mais descritivo que o `route_short_name` e incluir o destino ou uma paragem. Podem estar definidos o `route_short_name` e o `route_long_name`.
+
+Mais informação em [routes.txt](/reference/gtfs/schedule/routes).
+
+## Como funciona
+
+Cada linha do `routes.txt` tem de ter um `route_long_name` preenchido. Apesar do nome da regra, ela **não aceita o `route_short_name` como alternativa**: os dois campos têm de estar preenchidos. Se a configuração da regra tiver uma lista de valores permitidos, o valor também tem de constar dessa lista.
+
+A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `route_long_name` está vazio? | ❌ Reporta o problema: `route_long_name` obrigatório | Segue para o passo 2 |
+| 2 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 3 | ✅ Passa |
+| 3 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `Prior Velho - Sacavém` | ✅ Passa | Preenchido |
+| *(vazio)* | ❌ Problema | Falta o nome completo |
+| `Prior Velho - Sacavém` (lista permitida = `Sacavém - Oriente`) | ❌ Problema | Fora da lista |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `route_long_name` obrigatório | A linha não tem `route_long_name` | Preencher o `route_long_name` em `routes.txt` com o nome completo da linha |
+| Valor não permitido | O valor não está na lista da configuração da regra | Usar um valor da lista permitida, ou pedir ao administrador que o adicione |

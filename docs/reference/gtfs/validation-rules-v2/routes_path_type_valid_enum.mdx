@@ -1,0 +1,48 @@
+---
+title: Tipo de percurso da linha
+description: Verifica se o path_type de routes.txt, campo específico da TML, cumpre a configuração da regra.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `routes_path_type_valid_enum` |
+| Ficheiro | `routes.txt` |
+| Campo | `path_type` |
+| Tipo | Enumeração (`1`, `2` ou `3`) |
+| Severidade | Opcional |
+
+**Descrição do campo:** tipo de percurso da linha. Este campo é uma extensão da TML ao GTFS. Os valores são `1`, `2` e `3`.
+
+Mais informação em [routes.txt](/reference/gtfs/schedule/routes).
+
+## Como funciona
+
+O `path_type` é opcional. Um campo vazio é aceite, salvo se a configuração da regra o exigir ou recomendar. Se a configuração da regra tiver uma lista de valores permitidos, o valor tem de constar dessa lista. A regra **não verifica por si só se o valor é `1`, `2` ou `3`**: isso só acontece através da lista da configuração da regra.
+
+A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `path_type` está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 4 | ✅ Passa |
+| 4 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `1` | ✅ Passa | Sem lista de valores na configuração |
+| *(vazio)* | ✅ Passa | Campo opcional |
+| `3` (lista permitida = `1`, `2`) | ❌ Problema | Fora da lista |
+| *(vazio)* com campo exigido na configuração | ❌ Problema | A configuração da regra exige o campo |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor não permitido | O valor não está na lista da configuração da regra | Usar um valor da lista permitida, ou pedir ao administrador que o adicione |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `path_type` em `routes.txt` com `1`, `2` ou `3` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `path_type` em `routes.txt` |

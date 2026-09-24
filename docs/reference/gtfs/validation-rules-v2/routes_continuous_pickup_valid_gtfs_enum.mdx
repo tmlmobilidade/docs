@@ -1,0 +1,51 @@
+---
+title: Recolha contínua na linha
+description: Verifica se o continuous_pickup de routes.txt não conflita com janelas de recolha e largada nas paragens da linha.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `routes_continuous_pickup_valid_gtfs_enum` |
+| Ficheiros | `routes.txt`, `trips.txt`, `stop_times.txt` |
+| Campo | `continuous_pickup` |
+| Tipo | Enumeração (`0` a `3`) |
+| Severidade | Opcional (proibido com valor diferente de `1` ou vazio quando há janelas de recolha e largada) |
+
+**Descrição do campo:** indica que o passageiro pode entrar no veículo em qualquer ponto do percurso descrito em `shapes.txt`, em todas as viagens da linha. Os valores são `0` (paragem contínua), `1` ou vazio (sem paragem contínua), `2` (é preciso telefonar ao operador) e `3` (é preciso combinar com o motorista). Pode ser substituído por valores do mesmo campo em `stop_times.txt`.
+
+Mais informação em [routes.txt](/reference/gtfs/schedule/routes) e [stop_times.txt](/reference/gtfs/schedule/stop_times).
+
+## Como funciona
+
+Um `continuous_pickup` diferente de `1` e de vazio não pode existir numa linha cujas viagens tenham janelas de recolha e largada (`start_pickup_drop_off_window` ou `end_pickup_drop_off_window`) em `stop_times.txt`. Se a configuração da regra tiver uma lista de valores permitidos, o valor também tem de constar dessa lista. A regra **não verifica se o valor é `0`, `1`, `2` ou `3`**, só o conflito com as janelas e a lista.
+
+A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `continuous_pickup` está vazio ou é `1`? | ✅ Passa | Segue para o passo 2 |
+| 2 | Alguma viagem desta linha tem janelas de recolha e largada em `stop_times.txt`? | ❌ Reporta o problema: valor proibido com janelas | Segue para o passo 3 |
+| 3 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 4 | ✅ Passa |
+| 4 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+## Como se relacionam
+
+O `route_id` da linha liga o `routes.txt` às viagens do `trips.txt`. Essas viagens ligam-se às linhas do `stop_times.txt` onde estão as janelas de recolha e largada.
+
+## Exemplos
+
+| `continuous_pickup` | Janelas em `stop_times.txt` | Resultado | Porquê |
+|---|---|---|---|
+| `1` | Sim | ✅ Passa | Sem paragem contínua |
+| *(vazio)* | Sim | ✅ Passa | Campo vazio é aceite |
+| `0` | Não | ✅ Passa | Sem janelas, sem conflito |
+| `0` | Sim | ❌ Problema | Paragem contínua com janelas |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor proibido com janelas | O `continuous_pickup` é diferente de `1` e as viagens da linha têm janelas em `stop_times.txt` | Em `routes.txt`, escrever `1` ou deixar vazio o `continuous_pickup`. Em alternativa, remover as janelas em `stop_times.txt` |
+| Valor não permitido | O valor não está na lista da configuração da regra | Usar um valor da lista permitida, ou pedir ao administrador que o adicione |

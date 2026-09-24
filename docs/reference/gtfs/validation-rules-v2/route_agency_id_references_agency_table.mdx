@@ -1,0 +1,47 @@
+---
+title: Operador da linha
+description: Verifica se o agency_id de routes.txt, quando preenchido, existe em agency.txt.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `route_agency_id_references_agency_table` |
+| Ficheiros | `routes.txt`, `agency.txt` |
+| Campo | `agency_id` |
+| Tipo | ID externo (refere `agency_id` de `agency.txt`) |
+| Severidade | Opcional |
+
+**Descrição do campo:** operador da linha.
+
+Mais informação em [routes.txt](/reference/gtfs/schedule/routes) e [agency.txt](/reference/gtfs/schedule/agency).
+
+## Como funciona
+
+Se o `agency_id` estiver preenchido, o valor tem de existir em `agency.txt`. Um campo vazio é sempre aceite. A regra **não verifica se o `agency_id` é obrigatório** quando há vários operadores. Só verifica se o valor existe.
+
+A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `agency_id` está vazio? | ✅ Passa | Segue para o passo 2 |
+| 2 | O `agency_id` existe em `agency.txt`? | ✅ Passa | ❌ Reporta o problema: `agency_id` não encontrado |
+
+## Como se relacionam
+
+Cada `agency_id` de `routes.txt` tem de existir como `agency_id` em `agency.txt`.
+
+## Exemplos
+
+| `agency_id` em `routes.txt` | `agency_id` em `agency.txt` | Resultado | Porquê |
+|---|---|---|---|
+| `CP` | `CP`, `METRO` | ✅ Passa | Existe em `agency.txt` |
+| *(vazio)* | `CP`, `METRO` | ✅ Passa | Campo vazio é aceite |
+| `XPTO` | `CP`, `METRO` | ❌ Problema | Não existe em `agency.txt` |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `agency_id` não encontrado | O valor tem um erro de escrita ou o operador não está em `agency.txt` | Corrigir o `agency_id` em `routes.txt`, ou adicionar o operador em `agency.txt` |
