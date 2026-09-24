@@ -2,20 +2,22 @@
 title: calendar_dates.txt
 description: Define alterações ao funcionamento dos serviços em dias específicos.
 ---
-**Presença**: Condicionalmente Obrigatório
-- **Obrigatório**, exceto quando todas as datas de serviço estão definidas em `calendar.txt`.
 
-**Chave primária**: `service_id`, `date`
-
----
+| Versão                                                                          | Presença             |
+| ------------------------------------------------------------------------------- | -------------------- |
+| [GTFS Standard](https://gtfs.org/documentation/schedule/reference/#calendartxt) | Ficheiro obrigatório |
+| GTFS v30 (GO)                                                                   | Ficheiro obrigatório |
 
 A tabela `calendar_dates.txt` define explicitamente, para cada data, se um serviço está ativo ou inativo. Pode ser utilizada de duas formas:
 Recomendado: Utilizar `calendar_dates.txt` em conjunto com `calendar.txt` para definir exceções aos padrões de funcionamento predefinidos em `calendar.txt`. Esta abordagem é adequada quando o serviço é geralmente regular, mas existem algumas alterações em datas específicas (por exemplo, para acomodar serviços especiais durante eventos ou horários escolares). Neste caso, `calendar_dates.service_id` é um ID externo que referencia `calendar.service_id`.
 
 Alternativa: Omitir `calendar.txt` e especificar cada dia de funcionamento em `calendar_dates.txt`. Esta abordagem permite uma maior variação dos serviços e acomoda serviços que não seguem horários semanais regulares. Neste caso, service_id é um ID.
 
----
-### Campos GTFS Standard
+## Chave Primária
+
+O conteúdo deste ficheiro é identificado pelos valores da coluna `service_id`.
+
+## Estrutura
 
 | Nome do Campo    | Tipo                                                         | Presença    | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | ---------------- | ------------------------------------------------------------ | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
