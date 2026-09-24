@@ -7,8 +7,7 @@ import { createFromSource } from 'fumadocs-core/search/server';
 
 export const revalidate = false; // it should be cached forever
 
-export const { GET } = createFromSource(sourceReference, {
-	// https://docs.orama.com/docs/orama-js/supported-languages
+export const { staticGET: GET } = createFromSource(sourceReference, {
 	buildIndex: page => ({
 		description: page.data.description,
 		id: page.url,
