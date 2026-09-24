@@ -1,0 +1,27 @@
+---
+title: Regras de validação GTFS v30
+description: Índice das regras de validação
+---
+
+import { getPageTreePeers } from 'fumadocs-core/page-tree';
+import { sourceReference } from '@/lib/source';
+
+<table>
+	<thead>
+		<tr>
+			<th>Regra</th>
+		</tr>
+	</thead>
+	<tbody>
+		{getPageTreePeers(
+			sourceReference.getPageTree(),
+			'/reference/gtfs/validation-rules',
+		).map(peer => (
+			<tr key={peer.url}>
+				<td>
+					<a href={peer.url}>{peer.name}</a>
+				</td>
+			</tr>
+		))}
+	</tbody>
+</table>
