@@ -1,0 +1,58 @@
+---
+title: Paragem de origem da transferência
+description: Verifica se o from_stop_id de transfers.txt existe em stops.txt, é uma paragem ou estação e cumpre o transfer_type.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `transfer_from_stop_id_references_stops_table` |
+| Ficheiros | `transfers.txt`, `stops.txt` |
+| Campos | `from_stop_id`, `transfer_type` |
+| Tipo | ID externo (refere `stop_id` de `stops.txt`), enumeração (`0` a `5`) |
+| Severidade | Condicional (obrigatório quando o `transfer_type` é `1`, `2` ou `3`), Obrigatório |
+
+**Descrição dos campos:**
+
+- `from_stop_id`: identifica a paragem (`location_type` `0`) ou estação (`location_type` `1`) onde a ligação começa. Se for uma estação, a regra aplica-se a todas as paragens dessa estação. Tem de ser uma paragem quando o `transfer_type` é `4` ou `5`. É obrigatório quando o `transfer_type` é `1`, `2` ou `3` e opcional quando é `4` ou `5`.
+- `transfer_type`: tipo de ligação. `0` ou vazio é um ponto de transferência recomendado, `1` é uma transferência com horário (o veículo espera), `2` exige um tempo mínimo de transferência, `3` não permite transferência, `4` permite continuar no mesmo veículo (transferência em lugar) e `5` não permite continuar no mesmo veículo.
+
+Mais informação em [transfers.txt](/reference/gtfs/schedule/transfers) e [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+Quando o `from_stop_id` está preenchido, tem de existir em `stops.txt` e ser uma paragem ou estação. Com `transfer_type` `4` ou `5`, tem de ser uma paragem. Quando o `from_stop_id` está vazio, só é reportado para `transfer_type` `1`, `2` ou `3`. A regra **não verifica as viagens nem as linhas** da transferência.
+
+A regra avalia cada linha do `transfers.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `from_stop_id` está vazio e o `transfer_type` é `1`, `2` ou `3`? | Se a configuração da regra não ignora o campo, ❌ reporta o problema: em falta (recomendado, ou obrigatório se a configuração da regra o exigir). Se ignora, ✅ passa | Segue para o passo 2 |
+| 2 | O `from_stop_id` está vazio? | ✅ Passa (não é reportado nenhum problema) | Segue para o passo 3 |
+| 3 | O `from_stop_id` existe em `stops.txt`? | Segue para o passo 4 | ❌ Reporta o problema: `from_stop_id` não encontrado |
+| 4 | O `location_type` desse local é diferente de `0`, `1` e vazio? | ❌ Reporta o problema: tipo de local inválido (só paragem ou estação) | Segue para o passo 5 |
+| 5 | O `transfer_type` é `4` ou `5` e o `location_type` do local é diferente de `0` e de vazio? | ❌ Reporta o problema: tem de ser uma paragem, não uma estação | ✅ Passa |
+
+## Como se relacionam
+
+O `from_stop_id` de `transfers.txt` tem de existir como `stop_id` em `stops.txt`. O `location_type` desse local e o `transfer_type` da mesma linha decidem se é aceite.
+
+## Exemplos
+
+| `from_stop_id` | `transfer_type` | Resultado | Porquê |
+|---|---|---|---|
+| `PV01` (paragem) | `1` | ✅ Passa | Paragem existente |
+| `PV_ESTACAO` (estação) | `2` | ✅ Passa | Estação aceite |
+| `PV_ESTACAO` (estação) | `4` | ❌ Problema | Com `4` ou `5` tem de ser paragem |
+| `XPTO` | `1` | ❌ Problema | Não existe em `stops.txt` |
+| *(vazio)* | `2` | ❌ Problema | Obrigatório com `2`, se a configuração da regra o pedir |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `from_stop_id` em falta | O `from_stop_id` está vazio e o `transfer_type` é `1`, `2` ou `3` | Preencher o `from_stop_id` em `transfers.txt` com um `stop_id` de `stops.txt` |
+| `from_stop_id` não encontrado | O valor tem um erro de escrita ou o local não está em `stops.txt` | Corrigir o `from_stop_id` em `transfers.txt`, ou adicionar o local em `stops.txt` |
+| Tipo de local inválido | O local não é paragem, plataforma nem estação | Em `transfers.txt`, usar o `stop_id` de uma paragem ou estação |
+| Tem de ser uma paragem | O `transfer_type` é `4` ou `5` e o local é uma estação | Em `transfers.txt`, usar o `stop_id` de uma paragem |

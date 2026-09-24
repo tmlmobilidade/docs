@@ -1,0 +1,57 @@
+---
+title: Linha de destino da transferência
+description: Verifica se o to_route_id de transfers.txt, quando preenchido, existe em routes.txt e é a linha do to_trip_id.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `transfer_to_route_id_references_routes_table` |
+| Ficheiros | `transfers.txt`, `routes.txt`, `trips.txt` |
+| Campos | `to_route_id`, `to_trip_id` |
+| Tipo | ID externo (refere `route_id` de `routes.txt`), ID externo (refere `trip_id` de `trips.txt`) |
+| Severidade | Opcional, Condicional (obrigatório quando o `transfer_type` é `4` ou `5`) |
+
+**Descrição dos campos:**
+
+- `to_route_id`: identifica a linha onde a ligação termina. Se estiver preenchido, a transferência aplica-se à viagem de partida nessa linha, na paragem indicada. Se o `to_trip_id` também estiver preenchido, a viagem tem de pertencer à linha e o `to_trip_id` tem prioridade.
+- `to_trip_id`: identifica a viagem de partida. Tem de pertencer à linha do `to_route_id`, se ambos estiverem preenchidos.
+
+Mais informação em [transfers.txt](/reference/gtfs/schedule/transfers) e [routes.txt](/reference/gtfs/schedule/routes) e [trips.txt](/reference/gtfs/schedule/trips).
+
+## Como funciona
+
+Se o `to_route_id` estiver preenchido, tem de existir em `routes.txt`. Se o `to_trip_id` também estiver preenchido, a viagem tem de pertencer a essa linha. Um `to_route_id` vazio só dá aviso quando o `to_trip_id` também está vazio. A regra **não verifica as paragens** da transferência.
+
+A regra avalia cada linha do `transfers.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `to_route_id` está vazio? | Se o `to_trip_id` está preenchido, ✅ passa. Se não, e a configuração da regra não ignora o campo, ❌ reporta o problema, como aviso: `to_route_id` recomendado | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O `to_route_id` existe em `routes.txt`? | Segue para o passo 4 | ❌ Reporta o problema: `to_route_id` não encontrado |
+| 4 | O `to_trip_id` está preenchido, existe em `trips.txt` e a sua linha é diferente do `to_route_id`? | ❌ Reporta o problema: a viagem não pertence à linha | ✅ Passa |
+
+## Como se relacionam
+
+O `to_route_id` tem de existir como `route_id` em `routes.txt`. O `route_id` da viagem do `to_trip_id` em `trips.txt` tem de ser igual ao `to_route_id`.
+
+## Exemplos
+
+| `to_route_id` | `to_trip_id` | Resultado | Porquê |
+|---|---|---|---|
+| `L1` (existe) | *(vazio)* | ✅ Passa | Linha existente |
+| `L1` | `VIAGEM_1` (da linha `L1`) | ✅ Passa | A viagem pertence à linha |
+| `L1` | `VIAGEM_9` (da linha `L2`) | ❌ Problema | A viagem não pertence à linha |
+| `XPTO` | *(vazio)* | ❌ Problema | Não existe em `routes.txt` |
+| *(vazio)* | *(vazio)* | ❌ Problema | Campo recomendado, dado como aviso |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `to_route_id` não encontrado | O valor tem um erro de escrita ou a linha não está em `routes.txt` | Corrigir o `to_route_id` em `transfers.txt`, ou adicionar a linha em `routes.txt` |
+| A viagem não pertence à linha | O `to_route_id` e o `to_trip_id` referem linhas diferentes | Em `transfers.txt`, corrigir o `to_route_id` ou o `to_trip_id` |
+| `to_route_id` recomendado | O `to_route_id` e o `to_trip_id` estão vazios | Preencher o `to_route_id` ou o `to_trip_id` em `transfers.txt` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `to_route_id` em `transfers.txt` |

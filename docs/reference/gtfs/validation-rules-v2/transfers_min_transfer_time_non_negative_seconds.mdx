@@ -1,0 +1,47 @@
+---
+title: Tempo mínimo de transferência
+description: Verifica se o min_transfer_time de transfers.txt, quando preenchido, não é negativo.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `transfers_min_transfer_time_non_negative_seconds` |
+| Ficheiro | `transfers.txt` |
+| Campo | `min_transfer_time` |
+| Tipo | Número inteiro não negativo |
+| Severidade | Opcional |
+
+**Descrição do campo:** tempo, em segundos, que tem de haver para permitir a transferência entre linhas nas paragens indicadas. Deve ser suficiente para um passageiro típico ir de uma paragem à outra, com folga para atrasos em cada linha.
+
+Mais informação em [transfers.txt](/reference/gtfs/schedule/transfers).
+
+## Como funciona
+
+Se o `min_transfer_time` estiver preenchido, não pode ser negativo. Um campo vazio é aceite, salvo se a configuração da regra o exigir ou recomendar. A regra **não verifica se o tempo chega para a distância entre as paragens**. Um valor que não seja um número inteiro é tratado pela regra `transfers_values_parse`.
+
+A regra avalia cada linha do `transfers.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `min_transfer_time` está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | O `min_transfer_time` é um número negativo? | ❌ Reporta o problema: valor inválido | Segue para o passo 3 |
+| 3 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | ✅ Passa |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `120` | ✅ Passa | Dois minutos, em segundos |
+| `0` | ✅ Passa | Zero não é negativo |
+| *(vazio)* | ✅ Passa | Campo opcional |
+| `-30` | ❌ Problema | Valor negativo |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor inválido | O `min_transfer_time` é um número negativo | Em `transfers.txt`, escrever o `min_transfer_time` com um número de segundos igual ou superior a `0` |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `min_transfer_time` em `transfers.txt` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `min_transfer_time` em `transfers.txt` |

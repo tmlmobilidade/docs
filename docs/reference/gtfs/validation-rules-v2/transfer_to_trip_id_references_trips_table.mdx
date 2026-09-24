@@ -1,0 +1,57 @@
+---
+title: Viagem de destino da transferência
+description: Verifica se o to_trip_id de transfers.txt existe em trips.txt e pertence ao to_route_id.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `transfer_to_trip_id_references_trips_table` |
+| Ficheiros | `transfers.txt`, `trips.txt`, `routes.txt` |
+| Campos | `to_trip_id`, `to_route_id`, `transfer_type` |
+| Tipo | ID externo (refere `trip_id` de `trips.txt`), ID externo, enumeração (`0` a `5`) |
+| Severidade | Condicional (obrigatório quando o `transfer_type` é `4` ou `5`), Opcional, Obrigatório |
+
+**Descrição dos campos:**
+
+- `to_trip_id`: identifica a viagem onde a ligação termina. Se estiver preenchido, a transferência aplica-se à viagem de partida na paragem indicada. É obrigatório quando o `transfer_type` é `4` ou `5`.
+- `to_route_id`: identifica a linha. Se estiver preenchido, a viagem tem de pertencer a essa linha.
+- `transfer_type`: tipo de ligação. `4` e `5` dizem respeito a transferências em lugar, sem sair do veículo.
+
+Mais informação em [transfers.txt](/reference/gtfs/schedule/transfers) e [trips.txt](/reference/gtfs/schedule/trips) e [routes.txt](/reference/gtfs/schedule/routes).
+
+## Como funciona
+
+O `to_trip_id` tem de estar preenchido quando o `transfer_type` é `4` ou `5`. Quando preenchido, tem de existir em `trips.txt` e, se o `to_route_id` também estiver preenchido, a viagem tem de pertencer a essa linha. Nos outros tipos, um campo vazio dá só um aviso. A regra **não verifica as paragens** da transferência.
+
+A regra avalia cada linha do `transfers.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `to_trip_id` está vazio e o `transfer_type` é `4` ou `5`? | Se a configuração da regra não ignora o campo, ❌ reporta o problema: `to_trip_id` obrigatório. Se ignora, ✅ passa | Segue para o passo 2 |
+| 2 | O `to_trip_id` está vazio? | Se a configuração da regra não ignora o campo, ❌ reporta o problema, como aviso: `to_trip_id` recomendado. Se ignora, ✅ passa | Segue para o passo 3 |
+| 3 | O `to_trip_id` existe em `trips.txt`? | Segue para o passo 4 | ❌ Reporta o problema: `to_trip_id` não encontrado |
+| 4 | O `to_route_id` está preenchido e a linha da viagem é diferente do `to_route_id`? | ❌ Reporta o problema: a viagem não pertence à linha | ✅ Passa |
+
+## Como se relacionam
+
+O `to_trip_id` tem de existir como `trip_id` em `trips.txt`. O `route_id` dessa viagem tem de ser igual ao `to_route_id`, se este estiver preenchido.
+
+## Exemplos
+
+| `to_trip_id` | `transfer_type` | Resultado | Porquê |
+|---|---|---|---|
+| `VIAGEM_1` (existe) | `4` | ✅ Passa | Viagem existente |
+| *(vazio)* | `4` | ❌ Problema | Obrigatório com `4` ou `5` |
+| *(vazio)* | `1` | ❌ Problema | Campo recomendado, dado como aviso |
+| `XPTO` | `4` | ❌ Problema | Não existe em `trips.txt` |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `to_trip_id` obrigatório | O `transfer_type` é `4` ou `5` e o campo está vazio | Preencher o `to_trip_id` em `transfers.txt` com um `trip_id` de `trips.txt` |
+| `to_trip_id` recomendado | O campo está vazio noutros tipos de transferência | Se aplicável, preencher o `to_trip_id` em `transfers.txt` |
+| `to_trip_id` não encontrado | O valor tem um erro de escrita ou a viagem não está em `trips.txt` | Corrigir o `to_trip_id` em `transfers.txt`, ou adicionar a viagem em `trips.txt` |
+| A viagem não pertence à linha | O `to_trip_id` e o `to_route_id` referem linhas diferentes | Em `transfers.txt`, corrigir o `to_trip_id` ou o `to_route_id` |

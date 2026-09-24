@@ -1,0 +1,49 @@
+---
+title: Valores numéricos das transferências
+description: Verifica se os campos numéricos de transfers.txt têm um valor que o validador consegue ler como número inteiro.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `transfers_values_parse` |
+| Ficheiro | `transfers.txt` |
+| Campos | `transfer_type`, `min_transfer_time` |
+| Tipo | Enumeração (`0` a `5`), número inteiro não negativo |
+| Severidade | Obrigatório, Opcional |
+
+**Descrição dos campos:**
+
+- `transfer_type`: indica o tipo de ligação, de `0` (ponto de transferência recomendado) a `5` (transferência em lugar não permitida).
+- `min_transfer_time`: tempo mínimo, em segundos, para a transferência.
+
+Mais informação em [transfers.txt](/reference/gtfs/schedule/transfers).
+
+## Como funciona
+
+O `transfer_type` e o `min_transfer_time` têm de ser escritos como números inteiros, sem casas decimais. Se algum não for, a linha inteira deixa de ser avaliada pelas outras regras do `transfers.txt`. A regra **não verifica se o valor faz sentido**, por exemplo se o `transfer_type` está entre `0` e `5`. Isso fica para outras regras.
+
+A regra avalia cada linha do `transfers.txt`, seguindo o passo abaixo, que dá o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `transfer_type` ou o `min_transfer_time` tem um valor que não se lê como número inteiro? | ❌ Reporta o problema, um por cada campo inválido. A linha deixa de ser avaliada pelas outras regras | ✅ Passa |
+
+Um campo vazio não é um problema nesta regra. Os outros campos do `transfers.txt` são texto e aceitam qualquer valor.
+
+## Exemplos
+
+| Campo | Valor | Resultado | Porquê |
+|---|---|---|---|
+| `transfer_type` | `2` | ✅ Passa | Número inteiro |
+| `min_transfer_time` | `120` | ✅ Passa | Número inteiro |
+| `min_transfer_time` | `120.5` | ❌ Problema | Tem casas decimais |
+| `transfer_type` | `horário` | ❌ Problema | Texto em vez de número |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor inválido em `transfer_type` | O valor tem texto ou casas decimais | Em `transfers.txt`, escrever o `transfer_type` como número inteiro de `0` a `5` |
+| Valor inválido em `min_transfer_time` | O valor tem texto ou casas decimais | Em `transfers.txt`, escrever o `min_transfer_time` como número inteiro de segundos, por exemplo `120` |

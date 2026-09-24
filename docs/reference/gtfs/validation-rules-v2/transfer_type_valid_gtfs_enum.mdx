@@ -1,0 +1,55 @@
+---
+title: Tipo de transferência
+description: Verifica se o transfer_type de transfers.txt está preenchido com um valor entre 0 e 5 e, quando configurado, permitido.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `transfer_type_valid_gtfs_enum` |
+| Ficheiro | `transfers.txt` |
+| Campo | `transfer_type` |
+| Tipo | Enumeração (`0` a `5`) |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** indica o tipo de ligação para o par de paragens (`from_stop_id`, `to_stop_id`).
+
+- `0` ou vazio: ponto de transferência recomendado entre duas linhas.
+- `1`: ponto de transferência com horário. O veículo de partida espera pelo de chegada.
+- `2`: transferência que exige um tempo mínimo, indicado em `min_transfer_time`.
+- `3`: transferência não possível.
+- `4`: transferência em lugar, o passageiro continua no mesmo veículo.
+- `5`: transferência em lugar não permitida.
+
+Mais informação em [transfers.txt](/reference/gtfs/schedule/transfers).
+
+## Como funciona
+
+Cada linha do `transfers.txt` deve ter um `transfer_type` de `0` a `5`. Se a configuração da regra tiver uma lista de valores permitidos, o valor também tem de constar dessa lista. Um campo vazio só é reportado se a configuração da regra não ignorar o campo. A regra **não verifica se o tipo faz sentido para as paragens** indicadas.
+
+A regra avalia cada linha do `transfers.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `transfer_type` está vazio? | Se a configuração da regra não ignora o campo, ❌ reporta o problema: `transfer_type` obrigatório. Se ignora, ✅ passa | Segue para o passo 2 |
+| 2 | O `transfer_type` é um valor de `0` a `5`? | Segue para o passo 3 | ❌ Reporta o problema: valor inválido |
+| 3 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 4 | ✅ Passa |
+| 4 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `2` | ✅ Passa | Exige tempo mínimo |
+| `6` | ❌ Problema | Só são aceites de `0` a `5` |
+| *(vazio)* | ❌ Problema | Falta o tipo (se a configuração da regra não ignorar o campo) |
+| `3` (lista permitida = `1`, `2`) | ❌ Problema | Valor válido, mas fora da lista |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `transfer_type` obrigatório | A linha não tem `transfer_type` | Preencher o `transfer_type` em `transfers.txt` com um valor de `0` a `5` |
+| Valor inválido | O valor é um número fora de `0` a `5` | Corrigir o `transfer_type` em `transfers.txt` para um valor de `0` a `5` |
+| Valor não permitido | O valor é válido, mas a configuração da regra não o permite | Usar um valor da lista permitida, ou pedir ao administrador que o adicione |
