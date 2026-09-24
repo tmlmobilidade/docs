@@ -1,0 +1,48 @@
+---
+title: Tipo de propulsão
+description: Verifica se o propulsion de vehicles.txt está preenchido com um valor válido (1, 2, 3, 4, 5, 6, 7, 8, 9) e, quando configurado, se consta da lista de valores permitidos.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `vehicles_propulsion_type_valid_enum` |
+| Ficheiro | `vehicles.txt` |
+| Campo | `propulsion` |
+| Tipo | Enumeração |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** indica o tipo de propulsão do veículo. Valores válidos: `1` (gasolina), `2` (gasóleo), `3` (GPL auto), `4` (mistura), `5` (biodiesel), `6` (eletricidade), `7` (híbrido), `8` (gás natural), `9` (hidrogénio).
+
+Mais informação em [vehicles.txt](/reference/gtfs/schedule/vehicles).
+
+## Como funciona
+
+Cada veículo tem de ter o `propulsion` preenchido com um valor válido e que respeite a configuração da regra. A regra **não confirma** que a informação corresponde à realidade do veículo.
+
+A regra avalia cada linha do `vehicles.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | ❌ Reporta o problema: campo em falta | Segue para o passo 2 |
+| 2 | O valor está fora de `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`? | ❌ Reporta o problema: valor inválido | Segue para o passo 3 |
+| 3 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 4 | ✅ Passa |
+| 4 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `1` | ✅ Passa | Valor válido |
+| (vazio) | ❌ Problema | Campo em falta |
+| `10` | ❌ Problema | Fora de `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9` |
+| `1` (lista permitida = `9`) | ❌ Problema | Válido, mas fora da lista |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | A célula de `propulsion` está vazia | Preencher `propulsion` no `vehicles.txt` |
+| Valor inválido | Foi escrito um valor fora de `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9` | Usar um dos valores `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9` em `propulsion` no `vehicles.txt` |
+| Valor não permitido | O valor é válido mas não consta da lista da configuração da regra | Usar um valor da lista, ou pedir ao administrador que o acrescente |

@@ -1,0 +1,45 @@
+---
+title: Lugares sentados
+description: Verifica se o available_seats de vehicles.txt está preenchido com um número maior do que zero.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `vehicles_available_seats_non_negative` |
+| Ficheiro | `vehicles.txt` |
+| Campo | `available_seats` |
+| Tipo | Número inteiro |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** número de lugares sentados disponíveis no veículo.
+
+Mais informação em [vehicles.txt](/reference/gtfs/schedule/vehicles).
+
+## Como funciona
+
+Cada veículo tem de ter o `available_seats` preenchido com um número inteiro maior do que zero. Apesar do nome da regra (`non_negative`), o valor `0` **não é aceite**.
+
+A regra avalia cada linha do `vehicles.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | ❌ Reporta o problema: campo em falta | Segue para o passo 2 |
+| 2 | O valor é zero ou negativo? | ❌ Reporta o problema: número inválido | ✅ Passa |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `40` | ✅ Passa | Maior do que zero |
+| (vazio) | ❌ Problema | Campo em falta |
+| `0` | ❌ Problema | Zero não é aceite |
+| `-3` | ❌ Problema | Valor negativo |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | A célula de `available_seats` está vazia | Preencher `available_seats` no `vehicles.txt` |
+| Número inválido | O valor é `0` ou negativo | Corrigir `available_seats` no `vehicles.txt` para um número inteiro maior do que zero |

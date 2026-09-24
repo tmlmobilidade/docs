@@ -1,0 +1,46 @@
+---
+title: Identificador único do veículo
+description: Verifica se cada veículo de vehicles.txt tem um vehicle_id preenchido e se esse valor não se repete no ficheiro.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `vehicle_id_unique` |
+| Ficheiro | `vehicles.txt` |
+| Campo | `vehicle_id` |
+| Tipo | Identificador único |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** identifica um veículo.
+
+Mais informação em [vehicles.txt](/reference/gtfs/schedule/vehicles).
+
+## Como funciona
+
+Cada linha do `vehicles.txt` tem de ter um `vehicle_id` e esse valor só pode aparecer uma vez.
+
+A regra avalia cada linha do `vehicles.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `vehicle_id` está vazio? | ❌ Reporta o problema: campo em falta | Segue para o passo 2 |
+| 2 | O mesmo `vehicle_id` aparece em mais do que uma linha? | ❌ Reporta o problema: identificador duplicado | ✅ Passa |
+
+Quando há duplicados, o problema é reportado em todas as linhas que repetem o valor.
+
+## Exemplos
+
+| Valor de `vehicle_id` | Resultado | Porquê |
+|---|---|---|
+| `V001`, só numa linha | ✅ Passa | Aparece uma vez |
+| (vazio) | ❌ Problema | Campo em falta |
+| `V001` em duas linhas | ❌ Problema | Identificador duplicado |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | A célula de `vehicle_id` está vazia | Preencher `vehicle_id` no `vehicles.txt` |
+| Identificador duplicado | Dois veículos com o mesmo `vehicle_id` | Atribuir um `vehicle_id` diferente a cada veículo no `vehicles.txt` |

@@ -1,0 +1,41 @@
+---
+title: Proprietário do veículo
+description: Verifica se o owner de cada veículo em vehicles.txt está preenchido.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `vehicle_owner_required` |
+| Ficheiro | `vehicles.txt` |
+| Campo | `owner` |
+| Tipo | Texto |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** proprietário do veículo.
+
+Mais informação em [vehicles.txt](/reference/gtfs/schedule/vehicles).
+
+## Como funciona
+
+Cada veículo tem de ter o `owner` preenchido. A regra **não verifica** o conteúdo do texto.
+
+A regra avalia cada linha do `vehicles.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | ❌ Reporta o problema: campo em falta | ✅ Passa |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `Operador Prior Velho` | ✅ Passa | Campo preenchido |
+| (vazio) | ❌ Problema | Campo em falta |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | A célula de `owner` está vazia | Preencher `owner` no `vehicles.txt` |

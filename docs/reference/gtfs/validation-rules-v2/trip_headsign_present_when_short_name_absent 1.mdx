@@ -1,0 +1,44 @@
+---
+title: Destino da viagem
+description: Verifica se o trip_headsign está preenchido, quando a configuração da regra o exige, e se não está preenchido quando é proibido.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `trip_headsign_present_when_short_name_absent` |
+| Ficheiro | `trips.txt` |
+| Campo | `trip_headsign` |
+| Tipo | Texto |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** texto que aparece na sinalética e identifica o destino da viagem para os passageiros. É recomendado para os serviços que mostram o destino no veículo e que servem para distinguir viagens da mesma rota.
+
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
+
+## Como funciona
+
+A regra confirma que o `trip_headsign` respeita a configuração da regra: preenchido quando é exigido ou recomendado, vazio quando é proibido. Apesar do nome, **não relaciona** este campo com o `trip_short_name`.
+
+A regra avalia cada linha do `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | ✅ Passa |
+
+## Exemplos
+
+| Valor de `trip_headsign` | Resultado | Porquê |
+|---|---|---|
+| `Prior Velho` | ✅ Passa | Campo preenchido |
+| (vazio, campo exigido) | ❌ Problema | Campo em falta |
+| `Prior Velho` (campo proibido) | ❌ Problema | Campo não devia ter valor |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `trip_headsign` no `trips.txt` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `trip_headsign` no `trips.txt` |

@@ -1,0 +1,48 @@
+---
+title: Classe de emissões
+description: Verifica se o emission de vehicles.txt está preenchido com um valor válido (0, 1, 2, 3, 4, 5, 6, 7) e, quando configurado, se consta da lista de valores permitidos.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `vehicles_emission_code_valid_for_propulsion_type` |
+| Ficheiro | `vehicles.txt` |
+| Campo | `emission` |
+| Tipo | Enumeração |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** indica a classe de emissões do veículo. Valores válidos: `0` (sem emissões), `1` (Euro I), `2` (Euro II), `3` (Euro III), `4` (Euro IV), `5` (Euro V), `6` (Euro VI), `7` (Euro VII).
+
+Mais informação em [vehicles.txt](/reference/gtfs/schedule/vehicles).
+
+## Como funciona
+
+Cada veículo tem de ter o `emission` preenchido com um valor válido e que respeite a configuração da regra. A regra **não confirma** que a informação corresponde à realidade do veículo. Apesar do nome, a regra **não compara** a classe com o tipo de propulsão.
+
+A regra avalia cada linha do `vehicles.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | ❌ Reporta o problema: campo em falta | Segue para o passo 2 |
+| 2 | O valor está fora de `0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`? | ❌ Reporta o problema: valor inválido | Segue para o passo 3 |
+| 3 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 4 | ✅ Passa |
+| 4 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `0` | ✅ Passa | Valor válido |
+| (vazio) | ❌ Problema | Campo em falta |
+| `8` | ❌ Problema | Fora de `0`, `1`, `2`, `3`, `4`, `5`, `6`, `7` |
+| `0` (lista permitida = `7`) | ❌ Problema | Válido, mas fora da lista |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | A célula de `emission` está vazia | Preencher `emission` no `vehicles.txt` |
+| Valor inválido | Foi escrito um valor fora de `0`, `1`, `2`, `3`, `4`, `5`, `6`, `7` | Usar um dos valores `0`, `1`, `2`, `3`, `4`, `5`, `6`, `7` em `emission` no `vehicles.txt` |
+| Valor não permitido | O valor é válido mas não consta da lista da configuração da regra | Usar um valor da lista, ou pedir ao administrador que o acrescente |

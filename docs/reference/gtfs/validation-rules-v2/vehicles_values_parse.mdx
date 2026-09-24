@@ -1,0 +1,66 @@
+---
+title: Leitura dos valores de vehicles.txt
+description: Verifica se os campos numéricos de vehicles.txt têm um número inteiro.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `vehicles_values_parse` |
+| Ficheiro | `vehicles.txt` |
+| Campos | `available_seats`, `available_standing`, `propulsion`, `emission`, `climatization`, `wheelchair`, `lowered_floor`, `ramp`, `kneeling`, `static_information`, `onboard_monitor`, `front_display`, `rear_display`, `side_display`, `internal_sound`, `external_sound`, `consumption_meter`, `bicycles`, `passenger_counting`, `video_surveillance` |
+| Tipo | Inteiro |
+| Severidade | Obrigatório |
+
+**Descrição dos campos:**
+
+- `available_seats`: lugares sentados.
+- `available_standing`: lugares em pé.
+- `propulsion`: tipo de propulsão.
+- `emission`: classe de emissões.
+- `climatization`: climatização.
+- `wheelchair`: acessibilidade em cadeira de rodas.
+- `lowered_floor`: piso rebaixado.
+- `ramp`: rampa de acesso.
+- `kneeling`: suspensão rebaixável.
+- `static_information`: informação estática.
+- `onboard_monitor`: monitor a bordo.
+- `front_display`: painel de destino frontal.
+- `rear_display`: painel de destino traseiro.
+- `side_display`: painel de destino lateral.
+- `internal_sound`: informação sonora interior.
+- `external_sound`: informação sonora exterior.
+- `consumption_meter`: medição de consumo.
+- `bicycles`: transporte de bicicletas.
+- `passenger_counting`: contagem de passageiros.
+- `video_surveillance`: videovigilância.
+
+Mais informação em [vehicles.txt](/reference/gtfs/schedule/vehicles).
+
+## Como funciona
+
+Cada um destes campos tem de estar vazio ou ter um número inteiro. Os restantes campos de `vehicles.txt` são texto e não podem falhar nesta leitura. A regra **não verifica** se o número é permitido. Isso é feito pelas regras de cada campo.
+
+A regra avalia cada linha do `vehicles.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O valor de algum dos campos acima não é um número inteiro? | ❌ Reporta o problema: valor não numérico | ✅ Passa |
+
+Quando uma linha falha esta leitura, esse veículo **não é avaliado por nenhuma outra regra** do `vehicles.txt`. Convém corrigir primeiro estes problemas.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `1` | ✅ Passa | Número inteiro |
+| (vazio) | ✅ Passa | Campo vazio (tratado pelas regras de cada campo) |
+| `sim` | ❌ Problema | Não é um número |
+| `1.5` | ❌ Problema | Não é um número inteiro |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor não numérico | Texto ou decimal num campo que só aceita números inteiros | Corrigir o campo indicado no `vehicles.txt` para um número inteiro |

@@ -1,0 +1,38 @@
+---
+title: Ficheiro de veículos
+description: Verifica se o ficheiro vehicles.txt existe no feed, quando a configuração da regra o exige ou recomenda.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `vehicles_file_missing` |
+| Ficheiro | `vehicles.txt` |
+| Campo | Se aplica em todo o ficheiro |
+| Tipo | Ficheiro |
+| Severidade | Obrigatório |
+
+## Como funciona
+
+O `vehicles.txt` tem de existir no feed quando a configuração da regra o exige ou recomenda. A regra **não verifica** o conteúdo do ficheiro. Isso é feito pelas outras regras.
+
+A regra avalia o feed, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O ficheiro `vehicles.txt` existe no feed? | ✅ Passa | Verifica a configuração da regra: se o exige, reporta um problema. Se o recomenda, reporta um aviso. Caso contrário, aceita |
+
+## Exemplos
+
+| Situação | Resultado | Porquê |
+|---|---|---|
+| Feed com `vehicles.txt` | ✅ Passa | O ficheiro existe |
+| Feed sem `vehicles.txt`, ficheiro exigido | ❌ Problema | Ficheiro em falta |
+| Feed sem `vehicles.txt`, ficheiro recomendado | ❌ Problema | Ficheiro em falta (com gravidade de aviso) |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Ficheiro em falta | O `vehicles.txt` não foi incluído no ficheiro ZIP do feed, ou tem outro nome | Acrescentar o `vehicles.txt` ao feed, com o nome exato em minúsculas |

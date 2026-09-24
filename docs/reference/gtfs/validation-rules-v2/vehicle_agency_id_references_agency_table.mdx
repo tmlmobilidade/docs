@@ -1,0 +1,48 @@
+---
+title: Operador do veículo existe
+description: Verifica se cada veículo tem um agency_id preenchido e se esse operador existe em agency.txt.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `vehicle_agency_id_references_agency_table` |
+| Ficheiros | `vehicles.txt`, `agency.txt` |
+| Campo | `agency_id` |
+| Tipo | Chave estrangeira (agency.agency_id) |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** operador a que o veículo pertence.
+
+Mais informação em [vehicles.txt](/reference/gtfs/schedule/vehicles), [agency.txt](/reference/gtfs/schedule/agency).
+
+## Como funciona
+
+Cada veículo tem de indicar um operador que exista em `agency.txt`. O campo é sempre exigido, mesmo que o feed só tenha um operador.
+
+A regra avalia cada linha do `vehicles.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `agency_id` está vazio? | ❌ Reporta o problema: campo em falta | Segue para o passo 2 |
+| 2 | O `agency_id` existe em `agency.txt`? | ✅ Passa | ❌ Reporta o problema: operador não encontrado |
+
+## Como se relacionam
+
+Cada `agency_id` de `vehicles.txt` tem de existir em `agency.txt`.
+
+## Exemplos
+
+| `agency_id` em `vehicles.txt` | Resultado | Porquê |
+|---|---|---|
+| `PV`, existe em `agency.txt` | ✅ Passa | Operador existe |
+| (vazio) | ❌ Problema | Campo em falta |
+| `XX`, não existe | ❌ Problema | Operador não encontrado |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | A célula de `agency_id` está vazia | Preencher `agency_id` no `vehicles.txt` |
+| Operador não encontrado | Erro de digitação, ou operador em falta em `agency.txt` | Corrigir `agency_id` no `vehicles.txt`, ou acrescentar o operador ao `agency.txt` |

@@ -1,0 +1,49 @@
+---
+title: Matrícula do veículo
+description: Verifica se a matrícula tem um formato válido e se não se repete no ficheiro.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `vehicles_license_plate_format_per_market_rules` |
+| Ficheiro | `vehicles.txt` |
+| Campo | `license_plate` |
+| Tipo | Texto |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** matrícula do veículo.
+
+Mais informação em [vehicles.txt](/reference/gtfs/schedule/vehicles).
+
+## Como funciona
+
+A matrícula tem de ter seis carateres num dos formatos portugueses e não pode repetir-se. Os hífenes, espaços, pontos e sublinhados são ignorados, e as letras minúsculas contam como maiúsculas. A regra **não confirma** que a matrícula existe.
+
+A regra avalia cada linha do `vehicles.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | ❌ Reporta o problema: campo em falta | Segue para o passo 2 |
+| 2 | Sem separadores, a matrícula tem seis carateres num destes formatos: duas letras, dois números, duas letras / dois números, duas letras, dois números / quatro números, duas letras / duas letras, quatro números? | Segue para o passo 3 | ❌ Reporta o problema: formato inválido |
+| 3 | Outra linha do `vehicles.txt` tem a mesma matrícula? | ❌ Reporta o problema: matrícula duplicada | ✅ Passa |
+
+Os quatro formatos aceites são `LLNNLL`, `NNLLNN`, `NNNNLL` e `LLNNNN`, em que L é uma letra e N um número. Apesar do nome (regras por mercado), só existe este conjunto de formatos.
+
+## Exemplos
+
+| `license_plate` | Resultado | Porquê |
+|---|---|---|
+| `AA-12-BB` | ✅ Passa | Formato aceite |
+| `12-34-AB` | ✅ Passa | Formato aceite |
+| `ABC-123` | ❌ Problema | Formato inválido |
+| `AA-12-BB` em duas linhas | ❌ Problema | Matrícula duplicada |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | A célula de `license_plate` está vazia | Preencher `license_plate` no `vehicles.txt` |
+| Formato inválido | Erro de digitação, ou formato não aceite | Corrigir `license_plate` no `vehicles.txt` para um formato aceite, por exemplo `AA-12-BB` |
+| Matrícula duplicada | O mesmo veículo aparece duas vezes, ou matrícula copiada | Remover a linha repetida ou corrigir `license_plate` no `vehicles.txt` |

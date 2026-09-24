@@ -1,0 +1,48 @@
+---
+title: Medição de consumo
+description: Verifica se o consumption_meter de vehicles.txt está preenchido com um valor válido (0, 1) e, quando configurado, se consta da lista de valores permitidos.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `vehicles_consumption_meter_valid_format` |
+| Ficheiro | `vehicles.txt` |
+| Campo | `consumption_meter` |
+| Tipo | Enumeração |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** indica se o veículo tem medição de consumo. Valores válidos: `0` (não), `1` (sim).
+
+Mais informação em [vehicles.txt](/reference/gtfs/schedule/vehicles).
+
+## Como funciona
+
+Cada veículo tem de ter o `consumption_meter` preenchido com um valor válido e que respeite a configuração da regra. A regra **não confirma** que a informação corresponde à realidade do veículo. Apesar do nome, a regra valida uma enumeração e não um formato.
+
+A regra avalia cada linha do `vehicles.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | ❌ Reporta o problema: campo em falta | Segue para o passo 2 |
+| 2 | O valor está fora de `0`, `1`? | ❌ Reporta o problema: valor inválido | Segue para o passo 3 |
+| 3 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 4 | ✅ Passa |
+| 4 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `0` | ✅ Passa | Valor válido |
+| (vazio) | ❌ Problema | Campo em falta |
+| `2` | ❌ Problema | Fora de `0`, `1` |
+| `0` (lista permitida = `1`) | ❌ Problema | Válido, mas fora da lista |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | A célula de `consumption_meter` está vazia | Preencher `consumption_meter` no `vehicles.txt` |
+| Valor inválido | Foi escrito um valor fora de `0`, `1` | Usar um dos valores `0`, `1` em `consumption_meter` no `vehicles.txt` |
+| Valor não permitido | O valor é válido mas não consta da lista da configuração da regra | Usar um valor da lista, ou pedir ao administrador que o acrescente |

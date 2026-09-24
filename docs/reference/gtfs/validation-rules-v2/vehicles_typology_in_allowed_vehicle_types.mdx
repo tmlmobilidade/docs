@@ -1,0 +1,45 @@
+---
+title: Tipologia do veículo
+description: Verifica se a tipologia do veículo está preenchida e, quando configurado, se consta da lista de tipologias permitidas.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `vehicles_typology_in_allowed_vehicle_types` |
+| Ficheiro | `vehicles.txt` |
+| Campo | `typology` |
+| Tipo | Texto |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** tipologia do veículo, por exemplo `3.3` para autocarro urbano standard.
+
+Mais informação em [vehicles.txt](/reference/gtfs/schedule/vehicles).
+
+## Como funciona
+
+Cada veículo tem de ter a `typology` preenchida e, se a configuração da regra tiver uma lista, o valor tem de constar dela. A regra **não verifica** o valor contra o conjunto geral de tipologias (essa verificação está desligada no código).
+
+A regra avalia cada linha do `vehicles.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | ❌ Reporta o problema: campo em falta | Segue para o passo 2 |
+| 2 | A configuração da regra tem uma lista de tipologias permitidas? | Segue para o passo 3 | ✅ Passa |
+| 3 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: tipologia não permitida |
+
+## Exemplos
+
+| `typology` | Resultado | Porquê |
+|---|---|---|
+| `3.3` | ✅ Passa | Preenchido, sem lista |
+| (vazio) | ❌ Problema | Campo em falta |
+| `3.7` (lista permitida = `3.3`) | ❌ Problema | Fora da lista |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | A célula de `typology` está vazia | Preencher `typology` no `vehicles.txt` |
+| Tipologia não permitida | O valor não consta da lista da configuração da regra | Usar uma tipologia da lista no `vehicles.txt`, ou pedir ao administrador que a acrescente |
