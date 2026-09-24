@@ -1,0 +1,43 @@
+---
+title: Índice do nível
+description: Verifica se o level_index de levels.txt está preenchido.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `level_index_required` |
+| Ficheiro | `levels.txt` |
+| Campo | `level_index` |
+| Tipo | Número decimal |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** número que indica a posição do nível em relação aos outros. Os níveis com índice mais alto ficam acima dos níveis com índice mais baixo.
+
+Mais informação em [levels.txt](/reference/gtfs/schedule/levels).
+
+## Como funciona
+
+Cada linha do `levels.txt` tem de ter um `level_index` preenchido. A regra **não verifica o valor**, só se está preenchido. Um valor que não seja um número é tratado pela regra `levels_parse`.
+
+A regra avalia cada linha do `levels.txt`, seguindo o passo abaixo, que dá o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `level_index` está vazio? | ❌ Reporta o problema: `level_index` obrigatório | ✅ Passa |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `0` | ✅ Passa | Preenchido |
+| `-1` | ✅ Passa | Preenchido (nível abaixo do piso `0`) |
+| `1.5` | ✅ Passa | Preenchido |
+| *(vazio)* | ❌ Problema | Falta o índice |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `level_index` obrigatório | A linha não tem `level_index` | Preencher o `level_index` em `levels.txt` com um número, por exemplo `0` para o piso da rua e `-1` para o piso inferior |

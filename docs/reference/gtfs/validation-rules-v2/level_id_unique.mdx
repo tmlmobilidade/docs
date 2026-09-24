@@ -1,0 +1,47 @@
+---
+title: Identificador do nível
+description: Verifica se o level_id de levels.txt não se repete e, quando a configuração o exige, se está preenchido.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `level_id_unique` |
+| Ficheiro | `levels.txt` |
+| Campo | `level_id` |
+| Tipo | ID único |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** identifica um nível, que pode ser referido no `stops.txt`.
+
+Mais informação em [levels.txt](/reference/gtfs/schedule/levels).
+
+## Como funciona
+
+Cada linha do `levels.txt` deve ter um `level_id` diferente das outras linhas. Se a configuração da regra exigir o campo, também tem de estar preenchido. A regra **não verifica se o `level_id` é usado no `stops.txt`**. Só verifica se é único no `levels.txt`.
+
+A regra avalia cada linha do `levels.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `level_id` está vazio? | Verifica se a configuração da regra exige este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | Outra linha do `levels.txt` tem o mesmo `level_id`? | ❌ Reporta o problema: `level_id` duplicado | ✅ Passa |
+
+Quando há duplicados, o problema é reportado em todas as linhas que repetem o `level_id`.
+
+## Exemplos
+
+| `level_id` nas linhas do `levels.txt` | Resultado | Porquê |
+|---|---|---|
+| `L0`, `L1` | ✅ Passa | Preenchidos e diferentes |
+| `L0`, `L0` | ❌ Problema | `level_id` repetido |
+| *(vazio)* | ✅ Passa | Sem configuração, o campo vazio é aceite |
+| *(vazio)* com campo exigido na configuração | ❌ Problema | A configuração da regra exige o campo |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `level_id` duplicado | Duas ou mais linhas do `levels.txt` têm o mesmo `level_id` | Em `levels.txt`, dar a cada nível um `level_id` diferente. Se for o mesmo nível, remover a linha repetida |
+| `level_id` obrigatório | A configuração da regra exige o campo e a linha não tem `level_id` | Preencher o `level_id` em `levels.txt` com um identificador único |

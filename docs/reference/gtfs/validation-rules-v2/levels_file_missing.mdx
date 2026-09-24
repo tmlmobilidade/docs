@@ -1,0 +1,47 @@
+---
+title: Ficheiro levels.txt em falta
+description: Verifica se o ficheiro levels.txt existe quando é necessário, isto é, quando pathways.txt tem elevadores ou a configuração da regra o exige.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `levels_file_missing` |
+| Ficheiros | `levels.txt`, `pathways.txt` |
+| Campo | Se aplica em todo o ficheiro |
+| Tipo | Presença de ficheiro |
+| Severidade | Condicional (obrigatório quando o `pathways.txt` tem elevadores) |
+
+## Como funciona
+
+O `levels.txt` tem de existir quando o `pathways.txt` tem pelo menos um percurso com elevador (`pathway_mode` igual a `5`). A configuração da regra também pode exigir ou recomendar o ficheiro. A regra **não verifica o conteúdo do `levels.txt`**, só se existe.
+
+A regra avalia o conjunto de dados, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra exige ou recomenda o `levels.txt` e o ficheiro não existe? | ❌ Reporta o problema: `levels.txt` em falta (como erro se exigido, como aviso se recomendado) | Segue para o passo 2 |
+| 2 | O `pathways.txt` tem alguma linha com `pathway_mode` igual a `5` (elevador)? | Segue para o passo 3 | ✅ Passa |
+| 3 | O `levels.txt` existe? | ✅ Passa | ❌ Reporta o problema: `levels.txt` em falta |
+
+Nos passos 1 e 3, o problema só é reportado se a configuração da regra não o ignorar. O problema é reportado uma só vez por ficheiro.
+
+## Como se relacionam
+
+Os elevadores definidos no `pathways.txt` obrigam a descrever os níveis em `levels.txt`.
+
+## Exemplos
+
+| `pathways.txt` | `levels.txt` | Resultado | Porquê |
+|---|---|---|---|
+| Sem elevadores | Não existe | ✅ Passa | O ficheiro é opcional neste caso |
+| Com `pathway_mode` `5` | Existe | ✅ Passa | Os níveis estão descritos |
+| Com `pathway_mode` `5` | Não existe | ❌ Problema | Falta o `levels.txt` |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `levels.txt` em falta | O `pathways.txt` tem elevadores e o ZIP não inclui `levels.txt` | Adicionar o `levels.txt` ao ZIP com os níveis das estações, ou remover os percursos com elevador do `pathways.txt` |
+| `levels.txt` exigido ou recomendado | A configuração da regra exige ou recomenda o ficheiro | Adicionar o `levels.txt` ao ZIP |
