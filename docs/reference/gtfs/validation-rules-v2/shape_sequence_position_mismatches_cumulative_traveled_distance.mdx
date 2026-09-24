@@ -1,0 +1,52 @@
+---
+title: Pontos do percurso demasiado afastados
+description: Verifica se pontos seguidos do mesmo percurso em shapes.txt não estão demasiado afastados.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `shape_sequence_position_mismatches_cumulative_traveled_distance` |
+| Ficheiro | `shapes.txt` |
+| Campos | `shape_pt_lat`, `shape_pt_lon`, `shape_pt_sequence` |
+| Tipo | Latitude, longitude, número inteiro não negativo |
+| Severidade | Obrigatório, Obrigatório, Obrigatório |
+
+**Descrição dos campos:**
+
+- `shape_pt_lat`: latitude de um ponto do percurso.
+- `shape_pt_lon`: longitude de um ponto do percurso.
+- `shape_pt_sequence`: ordem pela qual os pontos se ligam para formar o percurso.
+
+Mais informação em [shapes.txt](/reference/gtfs/schedule/shapes).
+
+## Como funciona
+
+Dentro de cada percurso, os pontos são ordenados pelo `shape_pt_sequence`. Cada ponto não pode estar a mais de 1000 metros do ponto anterior. A configuração da regra pode indicar outra distância, em metros. A regra **não verifica se o percurso segue a rede** nem a distância percorrida. Só usa os pontos que têm `shape_id`, `shape_pt_sequence`, `shape_pt_lat` e `shape_pt_lon`.
+
+A regra avalia cada grupo de pontos com o mesmo `shape_id`, seguindo o passo abaixo, que dá o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | Algum ponto está a mais da distância máxima do ponto anterior? | ❌ Reporta o problema: pontos demasiado afastados, na linha desse ponto | ✅ Passa |
+
+Se houver mais de 100 pontos com este problema em todos os percursos, a regra reporta uma mensagem geral em cada linha afetada, em vez da mensagem com as coordenadas.
+
+## Como se relacionam
+
+A distância entre dois pontos seguidos é calculada com a latitude e a longitude. O `shape_pt_sequence` decide quais são os pontos seguidos.
+
+## Exemplos
+
+| Pontos seguidos do percurso | Resultado | Porquê |
+|---|---|---|
+| A 300 metros um do outro | ✅ Passa | Distância aceitável |
+| A 5000 metros um do outro | ❌ Problema | Acima de 1000 metros |
+| Latitude e longitude trocadas num ponto | ❌ Problema | O ponto fica muito longe do anterior |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Pontos demasiado afastados | Faltam pontos no percurso, há coordenadas erradas ou a ordem está trocada | Em `shapes.txt`, corrigir as coordenadas do ponto indicado, acrescentar pontos intermédios ou corrigir o `shape_pt_sequence` |

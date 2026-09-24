@@ -1,0 +1,44 @@
+---
+title: Latitude do ponto do percurso
+description: Verifica se o shape_pt_lat de shapes.txt está preenchido e entre -90 e 90.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `shape_pt_lat_valid_latitude` |
+| Ficheiro | `shapes.txt` |
+| Campo | `shape_pt_lat` |
+| Tipo | Latitude |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** latitude de um ponto do percurso. Cada linha do `shapes.txt` é um ponto do percurso.
+
+Mais informação em [shapes.txt](/reference/gtfs/schedule/shapes).
+
+## Como funciona
+
+Cada linha do `shapes.txt` tem de ter um `shape_pt_lat` preenchido, com um número entre `-90` e `90`. A regra **não verifica se o ponto está no sítio certo** nem se acompanha a linha. Só verifica se o valor é possível. Um valor que não seja um número é tratado pela regra `shapes_values_parse`.
+
+A regra avalia cada linha do `shapes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `shape_pt_lat` está vazio? | ❌ Reporta o problema: `shape_pt_lat` obrigatório | Segue para o passo 2 |
+| 2 | O `shape_pt_lat` está entre `-90` e `90`? | ✅ Passa | ❌ Reporta o problema: valor inválido |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `38.7823` | ✅ Passa | Valor possível |
+| `91.5` | ❌ Problema | Fora do intervalo de `-90` a `90` |
+| *(vazio)* | ❌ Problema | Falta o valor |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `shape_pt_lat` obrigatório | A linha não tem `shape_pt_lat` | Preencher o `shape_pt_lat` em `shapes.txt` com um número entre `-90` e `90` |
+| Valor inválido | O valor está fora do intervalo, ou a latitude e a longitude estão trocadas | Corrigir o `shape_pt_lat` em `shapes.txt` para um valor entre `-90` e `90` |

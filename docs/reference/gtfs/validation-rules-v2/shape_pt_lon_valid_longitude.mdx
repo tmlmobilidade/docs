@@ -1,0 +1,44 @@
+---
+title: Longitude do ponto do percurso
+description: Verifica se o shape_pt_lon de shapes.txt está preenchido e entre -180 e 180.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `shape_pt_lon_valid_longitude` |
+| Ficheiro | `shapes.txt` |
+| Campo | `shape_pt_lon` |
+| Tipo | Longitude |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** longitude de um ponto do percurso.
+
+Mais informação em [shapes.txt](/reference/gtfs/schedule/shapes).
+
+## Como funciona
+
+Cada linha do `shapes.txt` tem de ter um `shape_pt_lon` preenchido, com um número entre `-180` e `180`. A regra **não verifica se o ponto está no sítio certo** nem se acompanha a linha. Só verifica se o valor é possível. Um valor que não seja um número é tratado pela regra `shapes_values_parse`.
+
+A regra avalia cada linha do `shapes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `shape_pt_lon` está vazio? | ❌ Reporta o problema: `shape_pt_lon` obrigatório | Segue para o passo 2 |
+| 2 | O `shape_pt_lon` está entre `-180` e `180`? | ✅ Passa | ❌ Reporta o problema: valor inválido |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `-9.1002` | ✅ Passa | Valor possível |
+| `190.3` | ❌ Problema | Fora do intervalo de `-180` a `180` |
+| *(vazio)* | ❌ Problema | Falta o valor |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `shape_pt_lon` obrigatório | A linha não tem `shape_pt_lon` | Preencher o `shape_pt_lon` em `shapes.txt` com um número entre `-180` e `180` |
+| Valor inválido | O valor está fora do intervalo, ou a latitude e a longitude estão trocadas | Corrigir o `shape_pt_lon` em `shapes.txt` para um valor entre `-180` e `180` |

@@ -1,0 +1,45 @@
+---
+title: Ordem do ponto no percurso
+description: Verifica se o shape_pt_sequence de shapes.txt está preenchido e não é negativo.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `shape_pt_sequence_not_repeated_within_shape` |
+| Ficheiro | `shapes.txt` |
+| Campo | `shape_pt_sequence` |
+| Tipo | Número inteiro não negativo |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** ordem pela qual os pontos se ligam para formar o percurso. Os valores têm de aumentar ao longo da viagem, mas não têm de ser consecutivos.
+
+Mais informação em [shapes.txt](/reference/gtfs/schedule/shapes).
+
+## Como funciona
+
+Cada linha do `shapes.txt` tem de ter um `shape_pt_sequence` preenchido e não negativo. Apesar do nome da regra, ela **não verifica se o valor se repete dentro do percurso**. Isso é verificado pela regra `shape_pt_sequence_strictly_increasing`. Um valor que não seja um número inteiro é tratado pela regra `shapes_values_parse`.
+
+A regra avalia cada linha do `shapes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `shape_pt_sequence` está vazio? | ❌ Reporta o problema: `shape_pt_sequence` obrigatório | Segue para o passo 2 |
+| 2 | O `shape_pt_sequence` é um número negativo? | ❌ Reporta o problema: valor inválido | ✅ Passa |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `0` | ✅ Passa | Número não negativo |
+| `11` | ✅ Passa | Não precisa de ser consecutivo |
+| `-1` | ❌ Problema | Valor negativo |
+| *(vazio)* | ❌ Problema | Falta a ordem |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `shape_pt_sequence` obrigatório | A linha não tem `shape_pt_sequence` | Preencher o `shape_pt_sequence` em `shapes.txt` com um número inteiro que aumente ao longo do percurso |
+| Valor inválido | O `shape_pt_sequence` é um número negativo | Em `shapes.txt`, escrever o `shape_pt_sequence` com um número inteiro igual ou superior a `0` |

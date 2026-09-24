@@ -1,0 +1,41 @@
+---
+title: Identificador do percurso
+description: Verifica se o shape_id de shapes.txt está preenchido em todos os pontos.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `shape_id_required` |
+| Ficheiro | `shapes.txt` |
+| Campo | `shape_id` |
+| Tipo | ID |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** identifica um percurso (`shape`). Vários pontos com o mesmo `shape_id` formam um percurso.
+
+Mais informação em [shapes.txt](/reference/gtfs/schedule/shapes).
+
+## Como funciona
+
+Cada linha do `shapes.txt` tem de ter um `shape_id` preenchido. A regra **não verifica se o `shape_id` é usado no `trips.txt`**, só se está preenchido. Vários pontos com o mesmo `shape_id` são normais, porque cada ponto é uma linha.
+
+A regra avalia cada linha do `shapes.txt`, seguindo o passo abaixo, que dá o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `shape_id` está vazio? | ❌ Reporta o problema: `shape_id` obrigatório | ✅ Passa |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `PERCURSO_1` | ✅ Passa | Preenchido |
+| *(vazio)* | ❌ Problema | Falta o `shape_id` |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `shape_id` obrigatório | A linha não tem `shape_id` | Preencher o `shape_id` em `shapes.txt` com o identificador do percurso a que o ponto pertence |

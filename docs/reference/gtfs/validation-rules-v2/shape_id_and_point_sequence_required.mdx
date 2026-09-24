@@ -1,0 +1,50 @@
+---
+title: Ordem dos pontos preenchida em cada percurso
+description: Verifica se todos os pontos de um percurso em shapes.txt têm shape_pt_sequence preenchido.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `shape_id_and_point_sequence_required` |
+| Ficheiro | `shapes.txt` |
+| Campos | `shape_id`, `shape_pt_sequence` |
+| Tipo | ID, número inteiro não negativo |
+| Severidade | Obrigatório, Obrigatório |
+
+**Descrição dos campos:**
+
+- `shape_id`: identifica um percurso. Vários pontos com o mesmo `shape_id` formam um percurso.
+- `shape_pt_sequence`: ordem pela qual os pontos se ligam para formar o percurso.
+
+Mais informação em [shapes.txt](/reference/gtfs/schedule/shapes).
+
+## Como funciona
+
+Cada percurso, isto é, cada grupo de pontos com o mesmo `shape_id`, tem de ter o `shape_pt_sequence` preenchido em todos os pontos. A regra só avalia as linhas que têm `shape_id`. As linhas sem `shape_id` são tratadas por `shape_id_required`. A regra **não verifica a ordem dos valores**. Isso é verificado por `shape_pt_sequence_strictly_increasing`.
+
+A regra avalia cada grupo de pontos com o mesmo `shape_id`, seguindo o passo abaixo, que dá o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | Algum ponto do grupo tem o `shape_pt_sequence` vazio? | ❌ Reporta o problema: `shape_pt_sequence` obrigatório | ✅ Passa |
+
+Quando há vários pontos sem `shape_pt_sequence` no mesmo percurso, só é reportado o primeiro problema desse percurso.
+
+## Como se relacionam
+
+Os pontos são agrupados pelo `shape_id`. O `shape_pt_sequence` de cada ponto ordena esse grupo.
+
+## Exemplos
+
+| `shape_id` | `shape_pt_sequence` dos pontos | Resultado | Porquê |
+|---|---|---|---|
+| `P1` | `0`, `6`, `11` | ✅ Passa | Todos preenchidos |
+| `P1` | `0`, *(vazio)*, `11` | ❌ Problema | Um ponto sem `shape_pt_sequence` |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `shape_pt_sequence` obrigatório | Um ponto do percurso não tem `shape_pt_sequence` | Preencher o `shape_pt_sequence` em `shapes.txt` em todos os pontos do percurso, com números que aumentem ao longo do percurso |

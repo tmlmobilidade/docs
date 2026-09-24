@@ -1,0 +1,49 @@
+---
+title: Ordem crescente dos pontos do percurso
+description: Verifica se o shape_pt_sequence dos pontos de cada percurso em shapes.txt não se repete.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `shape_pt_sequence_strictly_increasing` |
+| Ficheiro | `shapes.txt` |
+| Campos | `shape_id`, `shape_pt_sequence` |
+| Tipo | ID, número inteiro não negativo |
+| Severidade | Obrigatório, Obrigatório |
+
+**Descrição dos campos:**
+
+- `shape_id`: identifica um percurso. Vários pontos com o mesmo `shape_id` formam um percurso.
+- `shape_pt_sequence`: ordem pela qual os pontos se ligam para formar o percurso. Os valores têm de aumentar ao longo da viagem, mas não têm de ser consecutivos.
+
+Mais informação em [shapes.txt](/reference/gtfs/schedule/shapes).
+
+## Como funciona
+
+Dentro de cada percurso, o `shape_pt_sequence` de cada ponto tem de ser maior que o do ponto anterior. Na prática, a regra encontra valores repetidos, porque ordena os pontos primeiro. A regra **não verifica as coordenadas** nem a distância percorrida. Só usa os pontos que têm `shape_id` e `shape_pt_sequence`.
+
+A regra avalia cada grupo de pontos com o mesmo `shape_id`, seguindo o passo abaixo, que dá o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | Depois de ordenar os pontos, algum tem o `shape_pt_sequence` igual ou menor que o do ponto anterior? | ❌ Reporta o problema: `shape_pt_sequence` repetido, na linha desse ponto | ✅ Passa |
+
+## Como se relacionam
+
+Os pontos são agrupados pelo `shape_id`. Só valores do `shape_pt_sequence` no mesmo `shape_id` contam como repetidos.
+
+## Exemplos
+
+| `shape_id` | `shape_pt_sequence` dos pontos | Resultado | Porquê |
+|---|---|---|---|
+| `P1` | `0`, `6`, `11` | ✅ Passa | Aumentam sempre |
+| `P1` | `0`, `6`, `6` | ❌ Problema | `6` repetido |
+| `P1`, `P2` | `0` em cada um | ✅ Passa | Percursos diferentes |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `shape_pt_sequence` repetido | Dois pontos do mesmo percurso têm o mesmo `shape_pt_sequence` | Em `shapes.txt`, dar a cada ponto do percurso um `shape_pt_sequence` diferente, a aumentar ao longo do percurso |
