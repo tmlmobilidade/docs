@@ -1,0 +1,45 @@
+---
+title: Valor numérico da categoria predefinida
+description: Verifica se o is_default_fare_category de rider_categories.txt tem um valor que o validador consegue ler como número inteiro.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `rider_categories_values_parse` |
+| Ficheiro | `rider_categories.txt` |
+| Campo | `is_default_fare_category` |
+| Tipo | Enumeração (`0` ou `1`) |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** indica se a categoria é a predefinida. O valor `0` significa que não é. O valor `1` significa que é.
+
+Mais informação em [rider_categories.txt](/reference/gtfs/schedule/rider_categories).
+
+## Como funciona
+
+O `is_default_fare_category` tem de ser escrito como número inteiro. Se não for, a linha inteira deixa de ser avaliada pelas outras regras do `rider_categories.txt`. A regra **não verifica se o número é `0` ou `1`**. Isso é verificado por outra regra.
+
+A regra avalia cada linha do `rider_categories.txt`, seguindo o passo abaixo, que dá o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `is_default_fare_category` tem um valor que não se lê como número inteiro? | ❌ Reporta o problema. A linha deixa de ser avaliada pelas outras regras | ✅ Passa |
+
+Um campo vazio não é um problema nesta regra. Os outros campos são texto e aceitam qualquer valor.
+
+## Exemplos
+
+| Valor de `is_default_fare_category` | Resultado | Porquê |
+|---|---|---|
+| `1` | ✅ Passa | Número inteiro |
+| `5` | ✅ Passa | É um número inteiro, mesmo fora de `0` e `1` |
+| `1.5` | ❌ Problema | Tem casas decimais |
+| `sim` | ❌ Problema | Texto em vez de número |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor inválido em `is_default_fare_category` | O valor tem texto ou casas decimais | Em `rider_categories.txt`, escrever o `is_default_fare_category` como `0` ou `1` |

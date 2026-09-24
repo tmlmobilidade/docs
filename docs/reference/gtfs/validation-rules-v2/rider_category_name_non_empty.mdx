@@ -1,0 +1,42 @@
+---
+title: Nome da categoria de passageiro
+description: Verifica se o rider_category_name de rider_categories.txt está preenchido.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `rider_category_name_non_empty` |
+| Ficheiro | `rider_categories.txt` |
+| Campo | `rider_category_name` |
+| Tipo | Texto |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** nome da categoria de passageiro, como é mostrado ao passageiro.
+
+Mais informação em [rider_categories.txt](/reference/gtfs/schedule/rider_categories).
+
+## Como funciona
+
+Cada linha do `rider_categories.txt` tem de ter um `rider_category_name` preenchido. A regra **não verifica o conteúdo do nome**. Aceita qualquer texto preenchido.
+
+A regra avalia cada linha do `rider_categories.txt`, seguindo o passo abaixo, que dá o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `rider_category_name` está vazio? | ❌ Reporta o problema: `rider_category_name` obrigatório | ✅ Passa |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `Adulto` | ✅ Passa | Preenchido |
+| `Jovem` | ✅ Passa | Preenchido |
+| *(vazio)* | ❌ Problema | Falta o nome |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `rider_category_name` obrigatório | A linha não tem `rider_category_name` | Preencher o `rider_category_name` em `rider_categories.txt` com o nome que o passageiro vê, por exemplo `Adulto` |

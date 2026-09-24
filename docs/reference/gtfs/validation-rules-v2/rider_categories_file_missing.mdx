@@ -1,0 +1,41 @@
+---
+title: Ficheiro rider_categories.txt em falta
+description: Verifica se o ficheiro rider_categories.txt existe quando a configuração da regra o exige ou recomenda.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `rider_categories_file_missing` |
+| Ficheiro | `rider_categories.txt` |
+| Campo | Se aplica em todo o ficheiro |
+| Tipo | Presença de ficheiro |
+| Severidade | Opcional |
+
+## Como funciona
+
+O `rider_categories.txt` é opcional no GTFS. A regra só reporta um problema se a configuração da regra o exigir ou recomendar e o ficheiro não existir no conjunto de dados. A regra **não verifica o conteúdo do ficheiro**, só se existe.
+
+A regra avalia o conjunto de dados, seguindo o passo abaixo, que dá o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra exige ou recomenda o `rider_categories.txt` e o ficheiro não existe? | ❌ Reporta o problema: `rider_categories.txt` em falta (como erro se exigido, como aviso se recomendado) | ✅ Passa |
+
+Se a configuração da regra ignorar o ficheiro, não é reportado nada.
+
+## Exemplos
+
+| Configuração da regra | `rider_categories.txt` no ZIP | Resultado | Porquê |
+|---|---|---|---|
+| Sem exigência | Não existe | ✅ Passa | O ficheiro é opcional |
+| Exigido | Existe | ✅ Passa | O ficheiro está presente |
+| Exigido | Não existe | ❌ Problema | Falta o ficheiro exigido |
+| Recomendado | Não existe | ❌ Problema | Falta o ficheiro recomendado (aviso) |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `rider_categories.txt` em falta | A configuração da regra exige ou recomenda o ficheiro e o ZIP não o inclui | Adicionar o `rider_categories.txt` ao ZIP. Se o ficheiro não for necessário, pedir ao administrador que retire a exigência da configuração |

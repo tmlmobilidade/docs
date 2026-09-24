@@ -1,0 +1,46 @@
+---
+title: Identificador da categoria de passageiro
+description: Verifica se o rider_category_id de rider_categories.txt está preenchido e não se repete.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `rider_category_id_unique` |
+| Ficheiro | `rider_categories.txt` |
+| Campo | `rider_category_id` |
+| Tipo | ID único |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** identifica uma categoria de passageiro.
+
+Mais informação em [rider_categories.txt](/reference/gtfs/schedule/rider_categories).
+
+## Como funciona
+
+Cada linha do `rider_categories.txt` tem de ter um `rider_category_id` preenchido e diferente do das outras linhas. A regra **não verifica se o `rider_category_id` é usado noutros ficheiros**. Só verifica se está preenchido e é único no `rider_categories.txt`.
+
+A regra avalia cada linha do `rider_categories.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `rider_category_id` está vazio? | ❌ Reporta o problema: `rider_category_id` obrigatório | Segue para o passo 2 |
+| 2 | Outra linha do `rider_categories.txt` tem o mesmo `rider_category_id`? | ❌ Reporta o problema: `rider_category_id` duplicado | ✅ Passa |
+
+Quando há duplicados, o problema é reportado em todas as linhas que repetem o `rider_category_id`.
+
+## Exemplos
+
+| `rider_category_id` nas linhas do `rider_categories.txt` | Resultado | Porquê |
+|---|---|---|
+| `ADULTO`, `JOVEM` | ✅ Passa | Preenchidos e diferentes |
+| `ADULTO`, `ADULTO` | ❌ Problema | `rider_category_id` repetido |
+| *(vazio)* | ❌ Problema | Falta o `rider_category_id` |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `rider_category_id` obrigatório | A linha não tem `rider_category_id` | Preencher o `rider_category_id` em `rider_categories.txt` com um identificador único |
+| `rider_category_id` duplicado | Duas ou mais linhas do `rider_categories.txt` têm o mesmo `rider_category_id` | Em `rider_categories.txt`, dar a cada categoria um `rider_category_id` diferente. Se for a mesma categoria, remover a linha repetida |

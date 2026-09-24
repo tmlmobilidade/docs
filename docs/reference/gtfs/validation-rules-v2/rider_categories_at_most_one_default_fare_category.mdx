@@ -1,0 +1,49 @@
+---
+title: Categoria de passageiro predefinida
+description: Verifica se o is_default_fare_category de rider_categories.txt está preenchido com 0 ou 1.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `rider_categories_at_most_one_default_fare_category` |
+| Ficheiro | `rider_categories.txt` |
+| Campo | `is_default_fare_category` |
+| Tipo | Enumeração (`0` ou `1`) |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** indica se a categoria é a predefinida, isto é, a principal categoria mostrada ao passageiro, por exemplo `Adulto` ou `Tarifa normal`. O valor `0` significa que não é a predefinida. O valor `1` significa que é. Quando várias categorias servem o mesmo produto de tarifa (`fare_product_id`), exatamente uma tem de ser a predefinida.
+
+Mais informação em [rider_categories.txt](/reference/gtfs/schedule/rider_categories).
+
+## Como funciona
+
+Cada linha do `rider_categories.txt` tem de ter um `is_default_fare_category` de `0` ou `1`. Se a configuração da regra tiver uma lista de valores permitidos, o valor também tem de constar dessa lista. Apesar do nome da regra, ela **não verifica se há no máximo uma categoria predefinida**. Só verifica cada linha.
+
+A regra avalia cada linha do `rider_categories.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `is_default_fare_category` está vazio? | ❌ Reporta o problema: `is_default_fare_category` obrigatório | Segue para o passo 2 |
+| 2 | O `is_default_fare_category` é `0` ou `1`? | Segue para o passo 3 | ❌ Reporta o problema: valor inválido |
+| 3 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 4 | ✅ Passa |
+| 4 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `1` | ✅ Passa | Categoria predefinida |
+| `0` | ✅ Passa | Não é a predefinida |
+| `2` | ❌ Problema | Só são aceites `0` e `1` |
+| *(vazio)* | ❌ Problema | Falta o valor |
+| `1` (lista permitida = `0`) | ❌ Problema | Valor válido, mas fora da lista |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `is_default_fare_category` obrigatório | A linha não tem `is_default_fare_category` | Preencher o `is_default_fare_category` em `rider_categories.txt` com `0` ou `1` |
+| Valor inválido | O valor é um número diferente de `0` e `1` | Corrigir o `is_default_fare_category` em `rider_categories.txt` para `0` ou `1` |
+| Valor não permitido | O valor é válido, mas a configuração da regra não o permite | Usar um valor da lista permitida, ou pedir ao administrador que o adicione |
