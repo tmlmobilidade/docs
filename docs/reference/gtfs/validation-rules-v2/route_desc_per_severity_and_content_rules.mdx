@@ -1,0 +1,57 @@
+---
+title: Descrição da rota
+description: Verifica se route_desc está preenchido quando é obrigatório, se não duplica route_short_name ou route_long_name e, quando configurado, se consta da lista de valores permitidos.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `route_desc_per_severity_and_content_rules` |
+| Ficheiro | `routes.txt` |
+| Campo | `route_desc` |
+| Tipo | Texto |
+| Severidade | Condicional (obrigatório quando `route_short_name` está vazio; opcional quando `route_short_name` está preenchido) |
+
+**Descrição do campo:** descrição da rota que acrescenta informação útil e de qualidade. Não deve duplicar `route_short_name` nem `route_long_name`.
+
+Mais informação em [routes.txt](/reference/gtfs/schedule/routes).
+
+## Como funciona
+
+O campo só é obrigatório quando `route_short_name` está vazio nessa linha; quando `route_short_name` está preenchido, `route_desc` é opcional. Quando preenchido, o valor não pode repetir `route_short_name` nem `route_long_name`. A regra **não verifica se o texto é realmente informativo**, só a presença condicional e as duplicações.
+
+A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | `route_desc` está vazio e `route_short_name` também está vazio? | ❌ Reporta o problema: campo em falta | Segue para o passo 2 |
+| 2 | `route_desc` está vazio (com `route_short_name` preenchido)? | ✅ Passa | Segue para o passo 3 |
+| 3 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 4 |
+| 4 | O valor é igual a `route_short_name`? | Regista um aviso de duplicação e segue para o passo 5 | Segue para o passo 5 |
+| 5 | O valor é igual a `route_long_name`? | Regista um aviso de duplicação e segue para o passo 6 | Segue para o passo 6 |
+| 6 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 7 | ✅ Passa |
+| 7 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+## Como se relacionam
+
+`route_desc` só é obrigatório quando `route_short_name` está vazio nessa linha. O valor de `route_desc` também não pode ser igual ao de `route_short_name` nem ao de `route_long_name`.
+
+## Exemplos
+
+| Valor de `route_desc` | Resultado | Porquê |
+|---|---|---|
+| `Liga Sintra a Lisboa via A16` (`route_short_name` preenchido) | ✅ Passa | Texto informativo, `route_short_name` já preenchido |
+| _(vazio)_ (`route_short_name` preenchido) | ✅ Passa | Opcional quando `route_short_name` está preenchido |
+| _(vazio)_ (`route_short_name` vazio) | ❌ Problema | Obrigatório quando `route_short_name` está vazio |
+| `32` (igual ao `route_short_name` = `32`) | ❌ Problema | Duplica o `route_short_name` |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | `route_short_name` e `route_desc` estão ambos vazios nessa linha | Preencher `route_short_name` ou `route_desc` em `routes.txt` |
+| Duplica `route_short_name` | `route_desc` tem o mesmo valor de `route_short_name` | Escrever uma descrição diferente do código curto da rota |
+| Duplica `route_long_name` | `route_desc` tem o mesmo valor de `route_long_name` | Escrever uma descrição diferente do nome longo da rota |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `route_desc` |
+| Valor não permitido | O valor não consta da lista definida na configuração da regra | Usar um valor da lista, ou pedir ao administrador que o adicione |

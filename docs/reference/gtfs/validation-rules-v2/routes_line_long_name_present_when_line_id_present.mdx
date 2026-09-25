@@ -1,0 +1,50 @@
+---
+title: Nome longo da linha
+description: Verifica se line_long_name está preenchido quando line_id está preenchido, conforme a presença definida na configuração da regra.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `routes_line_long_name_present_when_line_id_present` |
+| Ficheiro | `routes.txt` |
+| Campo | `line_long_name` |
+| Tipo | Texto |
+| Severidade | Condicional (ignorado quando `line_id` está vazio; a configuração da regra determina se é obrigatório, recomendado, ignorado ou proibido quando `line_id` está preenchido) |
+
+**Descrição do campo:** nome longo da linha a que a rota pertence. É um campo específico da TML, sem correspondência direta na especificação GTFS.
+
+Mais informação em [routes.txt](/reference/gtfs/schedule/routes).
+
+## Como funciona
+
+A regra só avalia este campo quando `line_id` está preenchido nessa linha; se `line_id` estiver vazio, `line_long_name` é ignorado por completo. Com `line_id` preenchido, o resultado depende da configuração da regra caso o campo esteja vazio. A regra não verifica o conteúdo do texto.
+
+A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | `line_id` está vazio nesta linha? | ✅ Passa (campo ignorado) | Segue para o passo 2 |
+| 2 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 3 |
+| 3 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | ✅ Passa |
+
+## Como se relacionam
+
+`line_long_name` só é avaliado quando `line_id` está preenchido na mesma linha.
+
+## Exemplos
+
+| Valor de `line_long_name` | Valor de `line_id` | Resultado | Porquê |
+|---|---|---|---|
+| _(vazio)_ | _(vazio)_ | ✅ Passa | `line_id` vazio: campo ignorado |
+| `Linha Verde` | `100` | ✅ Passa | `line_id` preenchido e campo preenchido |
+| _(vazio, configuração da regra exige o campo)_ | `100` | ❌ Problema | Campo em falta com `line_id` preenchido |
+| `Linha Verde` (configuração da regra proíbe o campo) | `100` | ❌ Problema | Campo preenchido quando não devia |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | `line_id` está preenchido e a configuração da regra exige ou recomenda `line_long_name` | Preencher `line_long_name` em `routes.txt` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `line_long_name` |

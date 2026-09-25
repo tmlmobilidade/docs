@@ -1,0 +1,51 @@
+---
+title: Cor da rota
+description: Verifica se route_color está preenchido, se é uma cor hexadecimal de 6 carateres válida e, quando configurado, se consta da lista de valores permitidos.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `route_color_valid_hex_string` |
+| Ficheiro | `routes.txt` |
+| Campo | `route_color` |
+| Tipo | Cor (hexadecimal) |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** cor da rota, usada nos materiais públicos (por exemplo, sinalética e mapas). A diferença entre `route_color` e `route_text_color` deve dar contraste suficiente quando vista a preto e branco.
+
+Mais informação em [routes.txt](/reference/gtfs/schedule/routes).
+
+## Como funciona
+
+O campo é sempre obrigatório. O valor tem de ser um código hexadecimal de exatamente 6 carateres (`0-9`, `A-F`), sem o símbolo `#`. A configuração da regra pode ainda restringir os valores aceites a uma lista específica. A regra **não verifica o contraste com `route_text_color`**, só o formato do código.
+
+A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | ❌ Reporta o problema: campo em falta | Segue para o passo 2 |
+| 2 | O valor tem exatamente 6 carateres hexadecimais (`0-9`, `A-F`)? | Segue para o passo 3 | ❌ Reporta o problema: formato inválido |
+| 3 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 4 | ✅ Passa |
+| 4 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+Letras minúsculas são aceites: o valor é convertido para maiúsculas antes de validar o formato.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `FF0000` | ✅ Passa | Hexadecimal válido de 6 carateres |
+| _(vazio)_ | ❌ Problema | Campo em falta |
+| `FF00` | ❌ Problema | Não tem 6 carateres |
+| `GG0000` | ❌ Problema | Carateres fora do intervalo `0-9`/`A-F` |
+| `00FF00` (lista permitida = `FF0000`, `0000FF`) | ❌ Problema | Formato válido, mas fora da lista permitida |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | `route_color` não foi preenchido | Preencher `route_color` em `routes.txt`, por exemplo `FF0000` |
+| Formato inválido | Faltam ou sobram carateres, ou há carateres fora de `0-9`/`A-F`, ou o `#` foi incluído | Escrever exatamente 6 carateres hexadecimais, sem `#` |
+| Valor não permitido | O valor não consta da lista definida na configuração da regra | Usar um valor da lista, ou pedir ao administrador que o adicione |

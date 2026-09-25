@@ -1,0 +1,54 @@
+---
+title: Rede da rota
+description: Verifica se network_id respeita a presença definida na configuração da regra, se é proibido quando existe route_networks.txt e, quando configurado, se consta da lista de valores permitidos.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `routes_network_id_references_networks_table` |
+| Ficheiro | `routes.txt` |
+| Campo | `network_id` |
+| Tipo | Identificador |
+| Severidade | Condicional (proibido quando existe o ficheiro `route_networks.txt`; opcional caso contrário, conforme a configuração da regra) |
+
+**Descrição do campo:** identifica um grupo de rotas. Várias linhas de `routes.txt` podem ter o mesmo `network_id`, ao contrário de `route_id`.
+
+Mais informação em [routes.txt](/reference/gtfs/schedule/routes).
+
+## Como funciona
+
+Se `route_networks.txt` existir no feed, `network_id` não pode estar preenchido em `routes.txt` — a rede da rota passa a ser definida nesse outro ficheiro. Caso `route_networks.txt` não exista, o campo é opcional e a presença é definida pela configuração da regra. A regra **não verifica se a rede identificada faz sentido para a rota**, só a presença e, quando aplicável, a lista de valores permitidos.
+
+A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O ficheiro `route_networks.txt` existe e tem pelo menos uma linha? | ❌ Reporta o problema: campo proibido quando `route_networks.txt` existe | Segue para o passo 4 |
+| 4 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 5 | ✅ Passa |
+| 5 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+## Como se relacionam
+
+Quando o feed tem um ficheiro `route_networks.txt` com dados, esse ficheiro passa a ser a única fonte da rede de cada rota e `network_id` em `routes.txt` deixa de poder ser usado.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `REDE1` (`route_networks.txt` não existe ou está vazio) | ✅ Passa | Preenchido e `route_networks.txt` não define a rede |
+| `REDE1` (`route_networks.txt` existe com dados) | ❌ Problema | Campo proibido quando `route_networks.txt` existe |
+| _(vazio, configuração da regra exige o campo)_ | ❌ Problema | Campo em falta |
+| `REDE3` (lista permitida = `REDE1`, `REDE2`) | ❌ Problema | Valor fora da lista permitida |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo proibido quando `route_networks.txt` existe | O feed já define redes através de `route_networks.txt` | Remover `network_id` de `routes.txt` e usar `route_networks.txt` |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `network_id` em `routes.txt` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `network_id` |
+| Valor não permitido | O valor não consta da lista definida na configuração da regra | Usar um valor da lista, ou pedir ao administrador que o adicione |

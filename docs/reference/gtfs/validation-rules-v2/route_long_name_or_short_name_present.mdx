@@ -1,0 +1,45 @@
+---
+title: Nome longo da rota
+description: Verifica se route_long_name está preenchido e, quando configurado, se consta da lista de valores permitidos.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `route_long_name_or_short_name_present` |
+| Ficheiro | `routes.txt` |
+| Campo | `route_long_name` |
+| Tipo | Texto |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** nome completo da rota. É geralmente mais descritivo do que `route_short_name` e inclui muitas vezes o destino ou a paragem final da rota. Tanto `route_short_name` como `route_long_name` podem estar preenchidos ao mesmo tempo.
+
+Mais informação em [routes.txt](/reference/gtfs/schedule/routes).
+
+## Como funciona
+
+O campo `route_long_name` é sempre obrigatório: mesmo que `route_short_name` esteja preenchido, a falta deste campo é sempre reportada como problema. A configuração da regra pode ainda restringir os valores aceites. A regra **não verifica o conteúdo do texto**, só a presença e, quando aplicável, a lista de valores permitidos.
+
+A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | ❌ Reporta o problema: campo em falta | Segue para o passo 2 |
+| 2 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 3 | ✅ Passa |
+| 3 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `Linha Verde entre Sintra e Lisboa` | ✅ Passa | Preenchido |
+| _(vazio)_ | ❌ Problema | Campo em falta |
+| `X` (lista permitida = `Linha Verde`, `Linha Azul`) | ❌ Problema | Valor fora da lista permitida |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | `route_long_name` não foi preenchido | Preencher `route_long_name` em `routes.txt` com um nome descritivo da rota |
+| Valor não permitido | O valor não consta da lista definida na configuração da regra | Usar um valor da lista, ou pedir ao administrador que o adicione |

@@ -1,0 +1,52 @@
+---
+title: Identificador da linha
+description: Verifica se line_id respeita a presença definida na configuração da regra e se, quando preenchido, é igual ao route_short_name da rota.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `routes_line_id_required` |
+| Ficheiro | `routes.txt` |
+| Campo | `line_id` |
+| Tipo | Texto |
+| Severidade | Opcional (a configuração da regra determina se é obrigatório, recomendado, ignorado ou proibido) |
+
+**Descrição do campo:** identificador da linha a que a rota pertence. É um campo específico da TML, sem correspondência direta na especificação GTFS.
+
+Mais informação em [routes.txt](/reference/gtfs/schedule/routes).
+
+## Como funciona
+
+Se o campo estiver vazio, o resultado depende da configuração da regra: pode ser ignorado, recomendado ou obrigatório. Quando preenchido, o valor tem de ser igual ao `route_short_name` dessa mesma linha. A regra não verifica se o identificador de linha corresponde a uma linha real do operador.
+
+A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | `route_short_name` está preenchido nesta linha? | Segue para o passo 4 | ✅ Passa |
+| 4 | O valor de `line_id` é igual ao de `route_short_name`? | ✅ Passa | ❌ Reporta o problema: diferente de `route_short_name` |
+
+## Como se relacionam
+
+Quando `route_short_name` está preenchido, `line_id` tem de ter exatamente o mesmo valor, na mesma linha de `routes.txt`.
+
+## Exemplos
+
+| Valor de `line_id` | Valor de `route_short_name` | Resultado | Porquê |
+|---|---|---|---|
+| `100` | `100` | ✅ Passa | Valores iguais |
+| `100` | `101` | ❌ Problema | Valores diferentes |
+| _(vazio, configuração da regra exige o campo)_ | `100` | ❌ Problema | Campo em falta |
+| `100` (configuração da regra proíbe o campo) | `100` | ❌ Problema | Campo preenchido quando não devia |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `line_id` em `routes.txt` |
+| Diferente de `route_short_name` | `line_id` e `route_short_name` têm valores diferentes nessa linha | Corrigir `line_id` para ter o mesmo valor de `route_short_name` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `line_id` |

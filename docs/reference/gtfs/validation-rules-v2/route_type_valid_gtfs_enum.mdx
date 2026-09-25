@@ -1,0 +1,48 @@
+---
+title: Tipo de transporte da rota
+description: Verifica se route_type está preenchido, se é um dos valores do enum GTFS e, quando configurado, se consta da lista de valores permitidos.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `route_type_valid_gtfs_enum` |
+| Ficheiro | `routes.txt` |
+| Campo | `route_type` |
+| Tipo | Número (enum) |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** indica o tipo de transporte usado na rota. Os valores válidos do GTFS são: `0` Elétrico/metro ligeiro de superfície, `1` Metropolitano subterrâneo, `2` Comboio, `3` Autocarro, `4` Ferry, `5` Teleférico de rua com cabo debaixo do veículo, `6` Teleférico suspenso, `7` Funicular, `11` Trólei, `12` Monocarril.
+
+Mais informação em [routes.txt](/reference/gtfs/schedule/routes).
+
+## Como funciona
+
+O valor tem de ser um número preenchido e tem de corresponder a um dos tipos de transporte definidos pelo GTFS. A configuração da regra pode ainda restringir os valores aceites a um subconjunto desses tipos. **Todos os problemas desta regra são sempre reportados como erro**, mesmo que a configuração da regra defina outra gravidade. A regra não verifica se o tipo de transporte indicado corresponde à realidade do serviço.
+
+A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | ❌ Reporta o problema: campo em falta | Segue para o passo 2 |
+| 2 | O valor é um dos tipos válidos do GTFS (`0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `11`, `12`)? | Segue para o passo 3 | ❌ Reporta o problema: valor inválido |
+| 3 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 4 | ✅ Passa |
+| 4 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `3` | ✅ Passa | Autocarro, valor válido do GTFS |
+| _(vazio)_ | ❌ Problema | Campo em falta |
+| `13` | ❌ Problema | Não é um dos valores do enum GTFS |
+| `2` (lista permitida = `0`, `1`, `3`) | ❌ Problema | Valor válido no GTFS, mas fora da lista definida na configuração da regra |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | `route_type` não foi preenchido | Preencher `route_type` em `routes.txt` com o número do tipo de transporte |
+| Valor inválido | Número que não corresponde a nenhum tipo de transporte do GTFS | Usar um dos valores válidos, por exemplo `3` para autocarro |
+| Valor não permitido | O valor é um tipo GTFS válido mas não consta da lista definida na configuração da regra | Usar um valor da lista, ou pedir ao administrador que o adicione |

@@ -1,0 +1,48 @@
+---
+title: Formato dos valores de routes.txt
+description: Verifica se route_type e route_sort_order em routes.txt são números inteiros, antes de qualquer outra regra ser avaliada.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `routes_values_parse` |
+| Ficheiro | `routes.txt` |
+| Campos | `route_type`, `route_sort_order` |
+| Tipo | Número inteiro |
+| Severidade | Obrigatório |
+
+**Descrição dos campos:**
+
+- `route_type`: tipo de transporte usado na rota.
+- `route_sort_order`: ordem de apresentação da rota aos passageiros.
+
+Mais informação em [routes.txt](/reference/gtfs/schedule/routes).
+
+## Como funciona
+
+Antes de qualquer outra regra correr sobre uma linha de `routes.txt`, o validador tenta ler cada campo com o tipo que lhe corresponde. Os restantes campos de `routes.txt` são texto e nunca falham nesta etapa. Só `route_type` e `route_sort_order` têm de ser números: se o texto escrito não for um número inteiro, a linha falha aqui e nenhuma outra regra de `routes.txt` é avaliada para essa linha. Um campo vazio não é um erro de formato — passa para as outras regras, que decidem se o campo é ou não obrigatório.
+
+A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | `route_type` está vazio? | Segue para o passo 2 | O texto é um número inteiro? Se sim, segue para o passo 2. Se não, ❌ reporta o problema |
+| 2 | `route_sort_order` está vazio? | ✅ Passa | O texto é um número inteiro? Se sim, ✅ passa. Se não, ❌ reporta o problema |
+
+## Exemplos
+
+| Campo | Valor | Resultado | Porquê |
+|---|---|---|---|
+| `route_type` | `3` | ✅ Passa | Número inteiro válido |
+| `route_type` | `Autocarro` | ❌ Problema | Texto não é um número |
+| `route_sort_order` | `1` | ✅ Passa | Número inteiro válido |
+| `route_sort_order` | `1.5` | ❌ Problema | Não é um número inteiro |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `route_type` não é um número | O ficheiro tem texto, um valor decimal ou outro carácter em vez de um número inteiro | Escrever um número inteiro em `route_type`, por exemplo `3` |
+| `route_sort_order` não é um número | O ficheiro tem texto, um valor decimal ou outro carácter em vez de um número inteiro | Escrever um número inteiro em `route_sort_order`, por exemplo `1` |

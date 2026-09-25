@@ -1,0 +1,43 @@
+---
+title: Ficheiro routes.txt em falta
+description: Verifica se o ficheiro routes.txt existe no feed, conforme a presença definida na configuração da regra.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `routes_file_missing` |
+| Ficheiro | `routes.txt` |
+| Campo | Aplica-se a todo o ficheiro |
+| Tipo | Presença de ficheiro |
+| Severidade | Condicional (obrigatório quando não existe configuração de regras; com configuração, esta determina se o ficheiro é obrigatório, gera aviso, é proibido ou é ignorado) |
+
+## Como funciona
+
+A regra confirma que o feed tem um ficheiro `routes.txt` com pelo menos uma tabela de dados. Não verifica o conteúdo desse ficheiro — só a sua presença. O conteúdo é validado por outras regras, uma por cada campo de `routes.txt`.
+
+A regra avalia o feed como um todo, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra define `routes.txt` como obrigatório (ou não existe nenhuma configuração de regras)? | Segue para o passo 2 | Segue para o passo 3 |
+| 2 | O ficheiro `routes.txt` existe no feed? | ✅ Passa | ❌ Reporta o problema: ficheiro em falta |
+| 3 | A configuração da regra define `routes.txt` como recomendado? | Segue para o passo 4 | ✅ Passa (o ficheiro está a ser ignorado ou proibido por outra regra) |
+| 4 | O ficheiro `routes.txt` existe no feed? | ✅ Passa | ❌ Reporta o problema: ficheiro em falta (aviso) |
+
+## Exemplos
+
+| Situação | Resultado | Porquê |
+|---|---|---|
+| `routes.txt` presente, sem configuração de regras | ✅ Passa | `routes.txt` é obrigatório por predefinição |
+| `routes.txt` em falta, sem configuração de regras | ❌ Problema | `routes.txt` é obrigatório por predefinição |
+| `routes.txt` em falta, configuração define o ficheiro como obrigatório | ❌ Problema | Ficheiro obrigatório em falta |
+| `routes.txt` em falta, configuração define o ficheiro como recomendado | ❌ Problema | Ficheiro recomendado em falta, reportado como aviso |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Ficheiro em falta (obrigatório) | O feed não inclui `routes.txt`, ou o nome do ficheiro está errado | Adicionar `routes.txt` ao feed, com pelo menos uma rota |
+| Ficheiro em falta (aviso) | A configuração da regra recomenda `routes.txt` e o ficheiro não está no feed | Adicionar `routes.txt` ao feed, ou confirmar que a ausência é intencional |
