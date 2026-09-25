@@ -1,0 +1,56 @@
+---
+title: Página de quem publica o conjunto de dados
+description: Verifica se o endereço do sítio da organização que publica o conjunto de dados, indicado em feed_info.txt, é um endereço web http ou https bem escrito.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `feed_publisher_url_valid_http_url` |
+| Ficheiro | `feed_info.txt` |
+| Campo | `feed_publisher_url` |
+| Tipo | URL |
+| Severidade | Opcional (obrigatório ou recomendado quando a configuração da regra o define) |
+
+**Descrição do campo:** endereço do sítio web da organização que publica o conjunto de dados. Pode ser igual a um dos valores de `agency_url`.
+
+Mais informação em [feed_info.txt](/reference/gtfs/schedule/feed_info).
+
+## Como funciona
+
+Se o campo estiver preenchido, o valor tem de ser um endereço web `http` ou `https`, com nome de sítio e sem carateres proibidos. A regra **não confirma que a página existe nem que está acessível**. Só verifica o formato.
+
+A regra avalia cada linha do `feed_info.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Segue para o passo 2 | Segue para o passo 3 |
+| 2 | A configuração da regra ignora ou proíbe este campo? | ✅ Aceita | ❌ Reporta o problema: campo obrigatório ou recomendado, conforme a configuração da regra |
+| 3 | O valor é um endereço web `http` ou `https` válido? | ✅ Aceita | ❌ Reporta o problema: URL inválido |
+
+Um endereço válido tem de cumprir todas estas condições:
+
+- Começa por `http://` ou `https://`.
+- Tem um nome de sítio depois do início, por exemplo `www.exemplo.pt`.
+- Não tem espaços nem os carateres `"`, `'`, `<`, `>`, `{`, `}`, `|` e `^`.
+- Cada `%` é seguido de dois carateres hexadecimais, por exemplo `%20`.
+
+Os espaços no início e no fim do endereço são ignorados na verificação.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `https://www.exemplo.pt` | ✅ Passa | Endereço `https` válido |
+| `www.exemplo.pt` | ❌ Problema | Falta `http://` ou `https://` |
+| `ftp://exemplo.pt` | ❌ Problema | Só se aceitam `http` e `https` |
+| `https://exemplo.pt/a b` | ❌ Problema | Tem um espaço |
+| Vazio, e a configuração da regra o exige | ❌ Problema | Falta um campo obrigatório |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| O campo `feed_publisher_url` é obrigatório ou recomendado | O campo está vazio no `feed_info.txt` | Preencher `feed_publisher_url` no `feed_info.txt` com o endereço do sítio da organização. Se não se aplica, pedir à equipa responsável que ajuste a configuração da regra |
+| O campo `feed_publisher_url` não é um URL válido | Falta `http://` ou `https://`, ou o endereço tem espaços ou carateres proibidos | Corrigir `feed_publisher_url` no `feed_info.txt`. Escrever o endereço completo, começado por `https://`, e substituir os espaços por `%20` |

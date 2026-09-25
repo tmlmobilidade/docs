@@ -1,0 +1,48 @@
+---
+title: Nome de quem publica o conjunto de dados
+description: Verifica se o nome da organização que publica o conjunto de dados está preenchido em feed_info.txt, quando a configuração da regra o exige ou recomenda.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `feed_publisher_name_non_empty` |
+| Ficheiro | `feed_info.txt` |
+| Campo | `feed_publisher_name` |
+| Tipo | Texto |
+| Severidade | Opcional (obrigatório ou recomendado quando a configuração da regra o define) |
+
+**Descrição do campo:** nome completo da organização que publica o conjunto de dados. Pode ser igual a um dos valores de `agency_name`.
+
+Mais informação em [feed_info.txt](/reference/gtfs/schedule/feed_info).
+
+## Como funciona
+
+Quando a regra passa, o campo tem algum texto ou a configuração da regra não o exige nem o recomenda. A regra **só verifica se o campo está preenchido**. Não verifica se o nome corresponde a uma organização real nem se é igual ao `agency_name`.
+
+A regra avalia cada linha do `feed_info.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo tem texto? | ✅ Aceita | Segue para o passo 2 |
+| 2 | A configuração da regra ignora ou proíbe este campo? | ✅ Aceita | Segue para o passo 3 |
+| 3 | A configuração da regra define o campo como **obrigatório**? | ❌ Reporta o problema: campo obrigatório | ❌ Reporta o problema: campo recomendado |
+
+O texto não é limpo de espaços. Um valor só com espaços conta como preenchido.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `Transportes Metropolitanos` | ✅ Passa | Tem texto |
+| Vazio, e a configuração da regra ignora o campo | ✅ Passa | Campo não exigido |
+| Vazio, e a configuração da regra o recomenda | ❌ Problema | Falta um campo recomendado |
+| Vazio, e a configuração da regra o exige | ❌ Problema | Falta um campo obrigatório |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| O campo `feed_publisher_name` é obrigatório | O campo está vazio no `feed_info.txt` | Preencher `feed_publisher_name` no `feed_info.txt` com o nome da organização que publica os dados |
+| O campo `feed_publisher_name` é recomendado | O campo está vazio no `feed_info.txt` | Preencher `feed_publisher_name` no `feed_info.txt`. Se não se aplica, pedir à equipa responsável que ajuste a configuração da regra |

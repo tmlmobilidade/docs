@@ -1,0 +1,44 @@
+---
+title: Ficheiro de regras de tarifas em falta
+description: Verifica se o ficheiro fare_rules.txt está presente no conjunto de dados quando a configuração da regra o exige ou recomenda.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `fare_rules_file_missing` |
+| Ficheiro | `fare_rules.txt` |
+| Campo | Se aplica em todo o ficheiro |
+| Tipo | Presença do ficheiro |
+| Severidade | Opcional (obrigatório ou recomendado quando a configuração da regra o define) |
+
+## Como funciona
+
+Quando a regra passa, o `fare_rules.txt` existe no conjunto de dados, ou a configuração da regra não o exige nem o recomenda. A regra **não verifica o conteúdo do ficheiro**. Só verifica se ele existe.
+
+A regra avalia o ficheiro `fare_rules.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O `fare_rules.txt` existe no conjunto de dados? | ✅ Aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define o ficheiro como **obrigatório**? | ❌ Reporta o problema: ficheiro obrigatório | Segue para o passo 3 |
+| 3 | A configuração da regra define o ficheiro como **recomendado**? | ❌ Reporta o problema: ficheiro recomendado | ✅ Aceita |
+
+O problema é reportado uma só vez por ficheiro. Se a configuração da regra definir o ficheiro como **proibido**, esta regra não reporta nada. Nesse caso, um `fare_rules.txt` presente é que dá problema, noutra regra.
+
+## Exemplos
+
+| Situação | Resultado | Porquê |
+|---|---|---|
+| `fare_rules.txt` existe | ✅ Passa | O ficheiro está presente |
+| `fare_rules.txt` não existe e a configuração da regra não o exige | ✅ Passa | Ficheiro opcional |
+| `fare_rules.txt` não existe e a configuração da regra o recomenda | ❌ Problema | Falta um ficheiro recomendado |
+| `fare_rules.txt` não existe e a configuração da regra o exige | ❌ Problema | Falta um ficheiro obrigatório |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| O ficheiro `fare_rules.txt` é obrigatório | O ficheiro não foi incluído no conjunto de dados | Adicionar o `fare_rules.txt` ao conjunto de dados, com as regras que aplicam cada tarifa aos itinerários |
+| O ficheiro `fare_rules.txt` é recomendado | O ficheiro não foi incluído no conjunto de dados | Adicionar o `fare_rules.txt` ao conjunto de dados. Se não se aplica, pedir à equipa responsável que ajuste a configuração da regra |
