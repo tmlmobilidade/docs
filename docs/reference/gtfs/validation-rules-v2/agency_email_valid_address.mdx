@@ -13,7 +13,9 @@ description: Verifica se o e-mail de apoio ao cliente indicado em agency.txt est
 | Tipo | E-mail |
 | Severidade | Opcional |
 
-**Descrição do campo (GTFS):** endereço de e-mail monitorizado ativamente pelo departamento de apoio ao cliente do operador. Deve ser um ponto de contacto direto onde os passageiros podem falar com um representante do apoio ao cliente. Mais informação em [agency.txt](/reference/gtfs/schedule/agency).
+**Descrição do campo:** endereço de e-mail monitorizado ativamente pelo departamento de apoio ao cliente do operador. Deve ser um ponto de contacto direto onde os passageiros podem falar com um representante do apoio ao cliente.
+
+Mais informação em [agency.txt](/reference/gtfs/schedule/agency).
 
 ## Como funciona
 
@@ -44,7 +46,7 @@ Os espaços no início e no fim são ignorados.
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Formato inválido | Erro de digitação, `@` em falta ou espaço no meio | Escrever o endereço completo, por exemplo `apoio@operador.pt` |
+| Formato inválido | Erro de digitação, `@` em falta ou espaço no meio | Escrever no `agency_email` do `agency.txt` o endereço completo, por exemplo `apoio@operador.pt` |
 | Endereço não permitido | O e-mail é válido mas não está na lista de e-mails permitidos | Usar um e-mail da lista, ou pedir ao administrador que o adicione |
-| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher com o e-mail de apoio ao cliente |
-| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `agency_email` |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `agency_email` do `agency.txt` com o e-mail de apoio ao cliente |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `agency_email` no `agency.txt` |

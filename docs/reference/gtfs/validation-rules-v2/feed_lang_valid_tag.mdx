@@ -1,6 +1,6 @@
 ---
 title: Idioma do conjunto de dados
-description: Verifica se o feed_lang de feed_info.txt está preenchido com um código de idioma válido ou com mul.
+description: Verifica se o idioma indicado em feed_info.txt é um código de idioma válido ou o valor mul.
 ---
 
 ## Propriedades da regra
@@ -11,39 +11,38 @@ description: Verifica se o feed_lang de feed_info.txt está preenchido com um c�
 | Ficheiro | `feed_info.txt` |
 | Campo | `feed_lang` |
 | Tipo | Código de idioma |
-| Severidade | Obrigatório |
+| Severidade | Opcional |
 
-**Descrição do campo:** idioma principal dos textos do conjunto de dados. Ajuda as aplicações a escolher regras de maiúsculas e outras definições próprias do idioma. Quando os textos originais estão em vários idiomas, usa-se `mul` e as traduções vão para o `translations.txt`.
+**Descrição do campo:** idioma predefinido dos textos do conjunto de dados. Ajuda as aplicações a escolher regras de maiúsculas e outras definições próprias do idioma. Se os textos originais estiverem em vários idiomas, o campo deve ter o código `mul` e cada idioma deve ter traduções em `translations.txt`. Se todos os textos estiverem no mesmo idioma, não se deve usar `mul`.
 
 Mais informação em [feed_info.txt](/reference/gtfs/schedule/feed_info).
 
 ## Como funciona
 
-Cada linha do `feed_info.txt` tem de ter um `feed_lang` preenchido com `mul` ou com um código de idioma de duas letras, como `pt`. A regra **não verifica se os textos do conjunto de dados estão mesmo nesse idioma**. Só verifica se o código existe.
+Quando a regra passa, o `feed_lang` tem um código de idioma de duas letras reconhecido ou o valor `mul`. A regra só aceita códigos de duas letras: códigos com região, como `pt-PT`, não passam. A regra **não confirma que os textos estão escritos nesse idioma**.
 
 A regra avalia cada linha do `feed_info.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O `feed_lang` está vazio? | ❌ Reporta o problema: `feed_lang` obrigatório | Segue para o passo 2 |
-| 2 | O `feed_lang` é `mul`? | ✅ Passa | Segue para o passo 3 |
-| 3 | O `feed_lang` é um código de idioma de duas letras válido? | ✅ Passa | ❌ Reporta o problema: código de idioma inválido |
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | O valor é `mul`? | ✅ Passa | Segue para o passo 3 |
+| 3 | O valor é um código de idioma de duas letras reconhecido? | ✅ Passa | ❌ Reporta o problema: código de idioma inválido |
 
-Maiúsculas e minúsculas são tratadas da mesma forma, exceto em `mul`, que tem de ser escrito em minúsculas.
+Maiúsculas e minúsculas são equivalentes: `PT` e `pt` são aceites da mesma forma.
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `pt` | ✅ Passa | Código de idioma válido |
-| `mul` | ✅ Passa | Vários idiomas |
-| `português` | ❌ Problema | Nome do idioma, em vez do código |
-| `pt-PT` | ❌ Problema | Só são aceites códigos de duas letras |
-| *(vazio)* | ❌ Problema | Falta o idioma |
+| `pt` | ✅ Passa | Código de duas letras válido |
+| `mul` | ✅ Passa | Conjunto de dados multilingue |
+| `pt-PT` | ❌ Problema | Código com região não aceite |
+| `português` | ❌ Problema | Nome do idioma em vez do código |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| `feed_lang` obrigatório | A linha não tem `feed_lang` | Preencher o `feed_lang` em `feed_info.txt`, por exemplo `pt` |
-| Código de idioma inválido | O valor é um nome, um código com região ou um código que não existe | Escrever o `feed_lang` em `feed_info.txt` com um código de duas letras, por exemplo `pt`, ou `mul` para vários idiomas |
+| Código de idioma inválido | Nome do idioma escrito por extenso, código com região ou erro de digitação | Escrever no `feed_lang` do `feed_info.txt` o código de duas letras, por exemplo `pt`, ou `mul` se os textos estiverem em vários idiomas |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `feed_lang` do `feed_info.txt` com o código do idioma dos textos |

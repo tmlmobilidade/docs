@@ -1,6 +1,6 @@
 ---
 title: Nome do operador
-description: Verifica se o agency_name de agency.txt está preenchido e, quando configurado, se consta da lista de nomes permitidos.
+description: Verifica se o nome do operador está preenchido em agency.txt e, quando configurado, se consta da lista de nomes permitidos.
 ---
 
 ## Propriedades da regra
@@ -13,34 +13,33 @@ description: Verifica se o agency_name de agency.txt está preenchido e, quando 
 | Tipo | Texto |
 | Severidade | Obrigatório |
 
-**Descrição do campo (GTFS):** nome completo do operador de transporte. Mais informação em [agency.txt](/reference/gtfs/schedule/agency).
+**Descrição do campo:** nome completo do operador de transportes.
+
+Mais informação em [agency.txt](/reference/gtfs/schedule/agency).
 
 ## Como funciona
 
-Cada linha do `agency.txt` tem de ter um `agency_name` preenchido. Se a configuração da regra tiver uma lista de nomes permitidos, o nome também tem de constar dessa lista. A regra **não verifica se o nome está correto**, só se está preenchido e é permitido.
+O `agency_name` tem sempre de estar preenchido, mesmo que a configuração da regra defina outra severidade para este campo. A regra **não verifica o conteúdo do nome**, só que existe.
 
 A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O `agency_name` está vazio? | ❌ Reporta o problema: `agency_name` obrigatório | Segue para o passo 2 |
+| 1 | O campo está vazio? | ❌ Reporta o problema: campo em falta | Segue para o passo 2 |
 | 2 | A configuração da regra tem uma lista de nomes permitidos? | Segue para o passo 3 | ✅ Passa |
-| 3 | A lista aceita qualquer valor, ou o nome consta da lista? | ✅ Passa | ❌ Reporta o problema: nome não permitido |
-
-A comparação com a lista é exata: maiúsculas, acentos e espaços diferentes contam como nomes diferentes.
+| 3 | O nome está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: nome não permitido |
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `Carris Metropolitana` | ✅ Passa | Preenchido |
-| *(vazio)* | ❌ Problema | Falta o nome |
-| `Carris Metropolitana` (lista permitida = `Carris Metropolitana`) | ✅ Passa | Consta da lista |
-| `Carris metropolitana` (lista permitida = `Carris Metropolitana`) | ❌ Problema | Maiúscula diferente, logo fora da lista |
+| `Transportes Metropolitanos de Lisboa` | ✅ Passa | Nome preenchido |
+| vazio | ❌ Problema | Campo obrigatório |
+| `Outro Nome` (lista permitida = `Transportes Metropolitanos de Lisboa`) | ❌ Problema | Nome válido, mas fora da lista |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| `agency_name` obrigatório | A linha do operador não tem nome | Preencher o `agency_name` em `agency.txt` com o nome completo do operador |
-| Nome não permitido | O nome não consta da lista de nomes permitidos, ou tem uma diferença de escrita | Escrever em `agency_name` o nome exatamente como consta da lista, ou pedir ao administrador que o adicione |
+| Campo em falta | O campo está vazio | Preencher o `agency_name` do `agency.txt` com o nome completo do operador |
+| Nome não permitido | O nome está preenchido mas não está na lista de nomes permitidos | Usar um nome da lista, ou pedir ao administrador que o adicione |

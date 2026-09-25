@@ -1,6 +1,6 @@
 ---
-title: Página web de quem publica os dados
-description: Verifica se o feed_publisher_url de feed_info.txt, quando preenchido, é um endereço web http ou https bem escrito.
+title: Página web da entidade publicadora
+description: Verifica se o endereço da página web da entidade que publica o conjunto de dados, em feed_info.txt, é um URL http ou https bem escrito.
 ---
 
 ## Propriedades da regra
@@ -13,35 +13,35 @@ description: Verifica se o feed_publisher_url de feed_info.txt, quando preenchid
 | Tipo | URL |
 | Severidade | Opcional |
 
-**Descrição do campo:** endereço do site da organização que publica o conjunto de dados. Pode ser igual a um dos `agency_url` de `agency.txt`.
+**Descrição do campo:** endereço da página web da organização que publica o conjunto de dados. Pode ser igual a um dos valores de `agency_url` em `agency.txt`.
 
 Mais informação em [feed_info.txt](/reference/gtfs/schedule/feed_info).
 
 ## Como funciona
 
-Se o `feed_publisher_url` estiver preenchido, tem de ser um endereço web bem escrito, a começar por `http://` ou `https://`. Um campo vazio é aceite. A regra **não verifica se a página existe**, só o formato.
+Quando a regra passa, o `feed_publisher_url` é um endereço completo que começa por `http://` ou `https://` e indica um domínio. A regra **não confirma que a página existe** nem que abre, só que o endereço está bem escrito.
 
 A regra avalia cada linha do `feed_info.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O `feed_publisher_url` está vazio? | ✅ Passa | Segue para o passo 2 |
-| 2 | O texto é um endereço web válido, com `http` ou `https`, sem espaços nem carateres proibidos, e com nome de site? | ✅ Passa | ❌ Reporta o problema: URL inválido |
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | O valor é um endereço `http` ou `https` completo e sem carateres proibidos? | ✅ Passa | ❌ Reporta o problema: URL inválido |
 
-Os espaços no início e no fim são ignorados.
+Os espaços no início e no fim são ignorados. Espaços no meio, aspas e os carateres `<`, `>`, `{`, `}`, `|`, `\` e `^` tornam o endereço inválido.
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `https://www.operador.pt` | ✅ Passa | Formato correto |
-| *(vazio)* | ✅ Passa | Campo opcional |
-| `www.operador.pt` | ❌ Problema | Falta `http://` ou `https://` |
-| `ftp://operador.pt` | ❌ Problema | Só são aceites `http` e `https` |
-| `https://operador .pt` | ❌ Problema | Tem um espaço |
+| `https://www.operador.pt` | ✅ Passa | Endereço completo |
+| `www.operador.pt` | ❌ Problema | Falta `https://` |
+| `ftp://operador.pt` | ❌ Problema | Só `http` ou `https` |
+| `https://operador.pt/dados abertos` | ❌ Problema | Espaço no meio |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| URL inválido | Falta `http://` ou `https://`, há espaços ou carateres proibidos | Escrever o `feed_publisher_url` em `feed_info.txt` como endereço completo, por exemplo `https://www.operador.pt` |
+| URL inválido | Falta `https://`, protocolo diferente de `http`/`https` ou carateres proibidos | Escrever no `feed_publisher_url` do `feed_info.txt` o endereço completo, por exemplo `https://www.operador.pt`, e trocar os espaços por `%20` |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `feed_publisher_url` do `feed_info.txt` com o endereço da página web da entidade publicadora |

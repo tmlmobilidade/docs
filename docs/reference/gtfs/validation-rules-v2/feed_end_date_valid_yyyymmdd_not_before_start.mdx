@@ -1,6 +1,6 @@
 ---
 title: Data de fim do conjunto de dados
-description: Verifica se o feed_end_date de feed_info.txt está preenchido e no formato AAAAMMDD.
+description: Verifica se a data de fim do período coberto pelo conjunto de dados está preenchida em feed_info.txt e é uma data real no formato AAAAMMDD.
 ---
 
 ## Propriedades da regra
@@ -13,35 +13,33 @@ description: Verifica se o feed_end_date de feed_info.txt está preenchido e no 
 | Tipo | Data |
 | Severidade | Obrigatório |
 
-**Descrição do campo:** o conjunto de dados tem informação completa e fiável para o período entre o início do dia `feed_start_date` e o fim do dia `feed_end_date`. O feed_end_date é o último dia desse período. A `feed_end_date` não pode ser anterior à `feed_start_date`.
+**Descrição do campo:** último dia do período em que o conjunto de dados tem horários completos e fiáveis. O período vai do início do dia `feed_start_date` até ao fim do dia `feed_end_date`. O `feed_end_date` não pode ser anterior ao `feed_start_date`. Se o período se estender para lá das datas ativas de `calendar.txt` e `calendar_dates.txt`, o conjunto de dados afirma que não há serviço nesses dias.
 
 Mais informação em [feed_info.txt](/reference/gtfs/schedule/feed_info).
 
 ## Como funciona
 
-Cada linha do `feed_info.txt` tem de ter um `feed_end_date` preenchido e escrito como `AAAAMMDD`, por exemplo `20241231`. A regra **não compara a `feed_start_date` com a `feed_end_date`**, apesar de o GTFS o exigir. Só verifica se é uma data do calendário.
+Quando a regra passa, o `feed_end_date` tem uma data real escrita com 8 algarismos, no formato AAAAMMDD. A regra só é avaliada quando o `feed_start_date` passa na respetiva regra. A regra **não compara esta data com o `feed_start_date`**: uma data de fim anterior à de início não é reportada.
 
 A regra avalia cada linha do `feed_info.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O `feed_end_date` está vazio? | ❌ Reporta o problema: `feed_end_date` obrigatório | Segue para o passo 2 |
-| 2 | O `feed_end_date` tem 8 carateres e é uma data existente no formato `AAAAMMDD`? | ✅ Passa | ❌ Reporta o problema: data inválida |
-
-Uma data existente tem mês entre `01` e `12` e um dia que existe nesse mês. Por exemplo, `20240230` não existe.
+| 1 | O campo está vazio? | ❌ Reporta o problema: campo em falta | Segue para o passo 2 |
+| 2 | O valor tem 8 carateres e é uma data real no formato AAAAMMDD? | ✅ Passa | ❌ Reporta o problema: data inválida |
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `20241231` | ✅ Passa | Data válida |
-| `2024-01-01` | ❌ Problema | Tem hífenes, o formato é `AAAAMMDD` |
-| `20240230` | ❌ Problema | O dia 30 não existe em fevereiro |
-| *(vazio)* | ❌ Problema | Falta a data |
+| `20261231` | ✅ Passa | Data real no formato AAAAMMDD |
+| vazio | ❌ Problema | Campo obrigatório |
+| `31/12/2026` | ❌ Problema | Formato errado |
+| `20261301` | ❌ Problema | O mês 13 não existe |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| `feed_end_date` obrigatório | A linha não tem `feed_end_date` | Preencher o `feed_end_date` em `feed_info.txt` no formato `AAAAMMDD` |
-| Data inválida | A data tem hífenes ou barras, mais ou menos de 8 carateres, ou uma data que não existe | Escrever o `feed_end_date` em `feed_info.txt` como `AAAAMMDD`, com ano, mês e dia existentes, por exemplo `20241231` |
+| Data inválida | Data com separadores, dia ou mês trocados ou dia que não existe | Escrever no `feed_end_date` do `feed_info.txt` a data com 8 algarismos, ano, mês e dia, por exemplo `20261231` |
+| Campo em falta | O campo está vazio | Preencher o `feed_end_date` do `feed_info.txt` com o último dia coberto pelo conjunto de dados |

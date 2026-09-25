@@ -1,6 +1,6 @@
 ---
-title: Ficheiro dos operadores em falta
-description: Verifica se o ficheiro agency.txt existe no feed GTFS.
+title: Ficheiro do operador em falta
+description: Verifica se o ficheiro agency.txt existe no conjunto de dados.
 ---
 
 ## Propriedades da regra
@@ -11,21 +11,21 @@ description: Verifica se o ficheiro agency.txt existe no feed GTFS.
 | Ficheiro | `agency.txt` |
 | Campo | Se aplica em todo o ficheiro |
 | Tipo | Ficheiro |
-| Severidade | Obrigatório |
+| Severidade | Opcional (obrigatório ou recomendado, se a configuração da regra o indicar) |
 
 ## Como funciona
 
-Se a configuração da regra exigir ou recomendar o `agency.txt`, o feed tem de o incluir. A regra **não verifica o conteúdo do ficheiro**, só se ele existe. O conteúdo é verificado pelas outras regras de `agency.txt`.
+Se a configuração da regra exigir ou recomendar o `agency.txt`, o conjunto de dados tem de o incluir. A regra **não verifica o conteúdo do ficheiro**, só se ele existe. O conteúdo é verificado pelas outras regras de `agency.txt`.
 
-A regra avalia o feed uma só vez, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+A regra avalia o conjunto de dados uma só vez, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O feed inclui o `agency.txt`? | ✅ Passa | Segue para o passo 2 |
+| 1 | O conjunto de dados inclui o `agency.txt`? | ✅ Passa | Segue para o passo 2 |
 | 2 | A configuração da regra manda ignorar este ficheiro? | Não reporta | Segue para o passo 3 |
 | 3 | A configuração da regra exige o ficheiro? | ❌ Reporta o problema: ficheiro obrigatório em falta | ❌ Reporta o problema: ficheiro recomendado em falta |
 
-Sem configuração da regra, o `agency.txt` é obrigatório.
+Sem configuração da regra, o `agency.txt` é sempre obrigatório.
 
 O problema é reportado uma só vez por ficheiro.
 
@@ -33,14 +33,14 @@ O problema é reportado uma só vez por ficheiro.
 
 | Situação | Resultado | Porquê |
 |---|---|---|
-| Feed com `agency.txt` | ✅ Passa | O ficheiro existe |
-| Feed sem `agency.txt`, ficheiro exigido | ❌ Problema | Ficheiro obrigatório em falta |
-| Feed sem `agency.txt`, ficheiro recomendado | ❌ Problema | Ficheiro recomendado em falta |
-| Feed sem `agency.txt`, regra a ignorar | ✅ Passa | Nada a reportar |
+| Conjunto de dados com `agency.txt` | ✅ Passa | O ficheiro existe |
+| Conjunto de dados sem `agency.txt`, ficheiro exigido (ou sem configuração) | ❌ Problema | Ficheiro obrigatório em falta |
+| Conjunto de dados sem `agency.txt`, ficheiro recomendado | ❌ Problema | Ficheiro recomendado em falta |
+| Conjunto de dados sem `agency.txt`, regra a ignorar | ✅ Passa | Nada a reportar |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Ficheiro obrigatório em falta | O feed não inclui o `agency.txt`, ou o ficheiro tem outro nome | Adicionar ao feed o ficheiro `agency.txt`, com este nome, e uma linha por operador |
-| Ficheiro recomendado em falta | O feed não inclui o `agency.txt` e a configuração da regra recomenda-o | Adicionar ao feed o ficheiro `agency.txt`, com este nome, e uma linha por operador |
+| Ficheiro obrigatório em falta | O conjunto de dados não inclui o `agency.txt`, ou o ficheiro tem outro nome | Adicionar ao conjunto de dados o ficheiro `agency.txt`, com este nome, e uma linha por operador |
+| Ficheiro recomendado em falta | O conjunto de dados não inclui o `agency.txt` e a configuração da regra recomenda-o | Adicionar ao conjunto de dados o ficheiro `agency.txt`, com este nome, e uma linha por operador |

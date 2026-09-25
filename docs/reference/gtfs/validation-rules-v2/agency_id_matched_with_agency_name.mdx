@@ -1,6 +1,6 @@
 ---
-title: Correspondência entre o identificador e o nome do operador
-description: Verifica se cada agency_id de agency.txt tem o agency_name esperado na lista de correspondências da configuração da regra.
+title: Correspondência entre identificador e nome do operador
+description: Verifica se o par agency_id e agency_name de cada linha de agency.txt corresponde a uma lista de correspondências definida na configuração da regra.
 ---
 
 ## Propriedades da regra
@@ -11,50 +11,43 @@ description: Verifica se cada agency_id de agency.txt tem o agency_name esperado
 | Ficheiro | `agency.txt` |
 | Campos | `agency_id`, `agency_name` |
 | Tipo | Texto |
-| Severidade | Obrigatório |
+| Severidade | Opcional (só atua quando a configuração da regra tem uma lista de correspondências) |
 
 **Descrição dos campos:**
 
-- `agency_id`: identifica o operador de transporte.
-- `agency_name`: nome completo do operador de transporte.
+- `agency_id`: identifica uma marca de transporte, muitas vezes sinónimo do próprio operador.
+- `agency_name`: nome completo do operador de transportes.
 
 Mais informação em [agency.txt](/reference/gtfs/schedule/agency).
 
 ## Como funciona
 
-Cada operador tem de ter o `agency_id` e o `agency_name` com que a configuração da regra o associa. A regra **não verifica se o nome está bem escrito em geral**, só se é o nome esperado para aquele `agency_id`. Se a configuração não tiver lista de correspondências, a regra só confirma que os dois campos estão preenchidos.
+Esta regra não verifica se `agency_id` ou `agency_name` existem — isso é feito pelas regras `agency_id_unique` e `agency_name_present`. Verifica apenas se, quando a configuração da regra tem uma lista de pares `agency_id`/`agency_name` esperados, o par desta linha corresponde a um deles. Sem essa lista configurada, a regra **não reporta nada**.
 
 A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O `agency_id` ou o `agency_name` está vazio? | ❌ Reporta o problema: campos obrigatórios em falta | Segue para o passo 2 |
-| 2 | A configuração da regra manda ignorar este problema? | Não reporta | Segue para o passo 3 |
-| 3 | A configuração da regra define que estes campos **não devem ser preenchidos**? | ❌ Reporta o problema | Segue para o passo 4 |
-| 4 | A configuração da regra tem uma lista de correspondências? | Segue para o passo 5 | ✅ Passa |
-| 5 | O par `agency_id` e `agency_name` consta da lista? | ✅ Passa | ❌ Reporta o problema: nome diferente do esperado |
-
-A comparação é exata: maiúsculas, acentos e espaços diferentes contam como nomes diferentes.
+| 1 | O `agency_id` ou o `agency_name` desta linha estão vazios? | ✅ Passa (nada a comparar) | Segue para o passo 2 |
+| 2 | A configuração da regra manda ignorar ou proibir este campo? | ✅ Passa (não avalia a correspondência) | Segue para o passo 3 |
+| 3 | A configuração da regra tem uma lista de pares `agency_id`/`agency_name` esperados? | Segue para o passo 4 | ✅ Passa |
+| 4 | O par desta linha corresponde a um dos pares da lista? | ✅ Passa | ❌ Reporta o problema: correspondência inválida |
 
 ## Como se relacionam
 
-A lista de correspondências da configuração associa cada `agency_id` a um `agency_name`. Na mesma linha do `agency.txt`, os dois valores têm de formar um par da lista.
+A configuração da regra define uma lista de pares esperados, por exemplo `TML` deve vir sempre com o nome `Transportes Metropolitanos de Lisboa`. Cada linha de `agency.txt` é comparada contra essa lista pelo `agency_id`: se o `agency_id` aparece na lista, o `agency_name` dessa linha tem de ser exatamente o nome esperado.
 
 ## Exemplos
 
-Lista de correspondências da configuração: `1` = `Carris Metropolitana`.
-
 | `agency_id` | `agency_name` | Resultado | Porquê |
 |---|---|---|---|
-| `1` | `Carris Metropolitana` | ✅ Passa | O par consta da lista |
-| `1` | `Carris Metrop.` | ❌ Problema | Nome diferente do esperado para o `agency_id` `1` |
-| `2` | `Carris Metropolitana` | ❌ Problema | O `agency_id` `2` não consta da lista |
-| *(vazio)* | `Carris Metropolitana` | ❌ Problema | Falta o `agency_id` |
+| `TML` | `Transportes Metropolitanos de Lisboa` | ✅ Passa | Corresponde ao par configurado |
+| `TML` | `TML Transportes` | ❌ Problema | O nome não corresponde ao esperado para este `agency_id` |
+| vazio | `Transportes Metropolitanos de Lisboa` | ✅ Passa | Sem `agency_id`, a regra não compara |
+| `TML` | `Transportes Metropolitanos de Lisboa` (sem lista configurada) | ✅ Passa | Sem lista, a regra não reporta nada |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Campos obrigatórios em falta | O `agency_id` ou o `agency_name` está vazio | Preencher o `agency_id` e o `agency_name` em `agency.txt` |
-| Nome diferente do esperado | O `agency_name` não é o que a lista associa ao `agency_id`, ou o `agency_id` está errado | Em `agency.txt`, escrever o `agency_name` esperado, indicado na mensagem, ou corrigir o `agency_id` |
-| Campos proibidos | A configuração da regra define que estes campos não devem ter valor | Remover os valores de `agency_id` e `agency_name` em `agency.txt` |
+| Correspondência inválida | O `agency_name` desta linha não é o nome configurado para este `agency_id` | Corrigir o `agency_name` no `agency.txt` para o nome esperado, ou atualizar a lista de correspondências na configuração da regra |

@@ -1,6 +1,6 @@
 ---
 title: Versão do conjunto de dados
-description: Verifica se o feed_version de feed_info.txt está preenchido.
+description: Verifica se a versão do conjunto de dados está preenchida em feed_info.txt, quando a configuração da regra a exige ou recomenda.
 ---
 
 ## Propriedades da regra
@@ -11,32 +11,32 @@ description: Verifica se o feed_version de feed_info.txt está preenchido.
 | Ficheiro | `feed_info.txt` |
 | Campo | `feed_version` |
 | Tipo | Texto |
-| Severidade | Opcional (recomendado) |
+| Severidade | Opcional |
 
-**Descrição do campo:** texto que indica a versão atual do conjunto de dados GTFS. As aplicações podem mostrá-lo para ajudar quem publica a saber se a versão mais recente já foi incorporada.
+**Descrição do campo:** texto que indica a versão atual do conjunto de dados GTFS. As aplicações que usam os dados podem mostrar este valor. Assim, quem publica os dados consegue confirmar se a versão mais recente já foi carregada.
 
 Mais informação em [feed_info.txt](/reference/gtfs/schedule/feed_info).
 
 ## Como funciona
 
-O `feed_version` deve estar preenchido. Quando está vazio, a regra dá um aviso. A regra **não verifica o conteúdo do texto**, por exemplo se segue um formato de versão. Aceita qualquer valor preenchido.
+Quando a regra passa, o `feed_version` tem texto, ou a configuração da regra não o exige. A regra **não verifica o formato da versão**: qualquer texto é aceite. Também não compara a versão com a de um envio anterior.
 
-A regra avalia cada linha do `feed_info.txt`, seguindo o passo abaixo, que dá o resultado.
+A regra avalia cada linha do `feed_info.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O `feed_version` está vazio? | ❌ Reporta o problema, como aviso: campo recomendado | ✅ Passa |
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | ✅ Passa |
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `2024-06-01` | ✅ Passa | Preenchido |
-| `v12` | ✅ Passa | Preenchido |
-| *(vazio)* | ❌ Problema | Campo recomendado, dado como aviso |
+| `2026.09.25` | ✅ Passa | Versão preenchida |
+| `v3` | ✅ Passa | Qualquer texto é aceite |
+| vazio (configuração da regra exige o campo) | ❌ Problema | Campo em falta |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Campo recomendado | O `feed_version` está vazio | Preencher o `feed_version` em `feed_info.txt` com a versão do conjunto de dados, por exemplo a data de publicação |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `feed_version` do `feed_info.txt` com a versão do conjunto de dados, por exemplo a data de publicação `2026.09.25` |

@@ -1,6 +1,6 @@
 ---
-title: Página de contacto técnico do conjunto de dados
-description: Verifica se o feed_contact_url de feed_info.txt está preenchido e é um endereço web http ou https bem escrito.
+title: Página de contacto técnico
+description: Verifica se o endereço de contacto técnico indicado em feed_info.txt é um URL http ou https bem escrito.
 ---
 
 ## Propriedades da regra
@@ -11,37 +11,37 @@ description: Verifica se o feed_contact_url de feed_info.txt está preenchido e 
 | Ficheiro | `feed_info.txt` |
 | Campo | `feed_contact_url` |
 | Tipo | URL |
-| Severidade | Opcional (recomendado, em conjunto com `feed_contact_email`) |
+| Severidade | Opcional |
 
-**Descrição do campo:** endereço de uma página de contacto, formulário ou balcão de apoio para assuntos técnicos sobre o conjunto de dados e a sua publicação. Serve as aplicações que usam o GTFS. O contacto de apoio ao cliente indica-se no `agency.txt`. Recomenda-se preencher pelo menos um de `feed_contact_url` e `feed_contact_email`.
+**Descrição do campo:** endereço de uma página de contactos, formulário, balcão de apoio ou outra ferramenta para comunicar sobre o conjunto de dados GTFS e as práticas de publicação. É um contacto técnico para as aplicações que usam os dados. O contacto de apoio ao cliente deve ficar em `agency.txt`. Recomenda-se preencher pelo menos um dos campos `feed_contact_url` ou `feed_contact_email`.
 
 Mais informação em [feed_info.txt](/reference/gtfs/schedule/feed_info).
 
 ## Como funciona
 
-O `feed_contact_url` deve estar preenchido e ser um endereço web bem escrito, a começar por `http://` ou `https://`. Quando está vazio, a regra dá um aviso. A regra **não verifica se a página existe** nem se o `feed_contact_email` está preenchido.
+Se o conjunto de dados indicar uma página de contacto técnico, o valor tem de ser um endereço completo que começa por `http://` ou `https://` e indica um domínio. A regra **não confirma que a página existe** nem que abre, só que o endereço está bem escrito. A regra também não verifica se o `feed_contact_email` está preenchido.
 
 A regra avalia cada linha do `feed_info.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O `feed_contact_url` está vazio? | ❌ Reporta o problema, como aviso: campo recomendado | Segue para o passo 2 |
-| 2 | O texto é um endereço web válido, com `http` ou `https`, sem espaços nem carateres proibidos, e com nome de site? | ✅ Passa | ❌ Reporta o problema: URL inválido |
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | O valor é um endereço `http` ou `https` completo e sem carateres proibidos? | ✅ Passa | ❌ Reporta o problema: URL inválido |
 
-Os espaços no início e no fim são ignorados.
+Os espaços no início e no fim são ignorados. Espaços no meio, aspas e os carateres `<`, `>`, `{`, `}`, `|`, `\` e `^` tornam o endereço inválido.
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `https://www.operador.pt/contacto` | ✅ Passa | Formato correto |
-| `www.operador.pt` | ❌ Problema | Falta `http://` ou `https://` |
-| `https://operador .pt` | ❌ Problema | Tem um espaço |
-| *(vazio)* | ❌ Problema | Campo recomendado, dado como aviso |
+| `https://www.operador.pt/contactos` | ✅ Passa | Endereço completo |
+| `operador.pt/contactos` | ❌ Problema | Falta `https://` |
+| `https://` | ❌ Problema | Falta o domínio |
+| `https://operador.pt/fale connosco` | ❌ Problema | Espaço no meio |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Campo recomendado | O `feed_contact_url` está vazio | Preencher o `feed_contact_url` em `feed_info.txt` com a página de contacto técnico |
-| URL inválido | Falta `http://` ou `https://`, há espaços ou carateres proibidos | Escrever o `feed_contact_url` em `feed_info.txt` como endereço completo, por exemplo `https://www.operador.pt/contacto` |
+| URL inválido | Falta `https://`, falta o domínio ou há carateres proibidos | Escrever no `feed_contact_url` do `feed_info.txt` o endereço completo, por exemplo `https://www.operador.pt/contactos` |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `feed_contact_url` do `feed_info.txt` com o endereço da página de contacto técnico |

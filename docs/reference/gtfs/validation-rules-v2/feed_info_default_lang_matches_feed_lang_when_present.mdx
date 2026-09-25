@@ -1,6 +1,6 @@
 ---
-title: Idioma predefinido do conjunto de dados
-description: Verifica se o default_lang de feed_info.txt, quando preenchido, é um código de idioma válido.
+title: Idioma predefinido para o passageiro
+description: Verifica se o idioma predefinido indicado em feed_info.txt é um código de idioma válido.
 ---
 
 ## Propriedades da regra
@@ -13,34 +13,35 @@ description: Verifica se o default_lang de feed_info.txt, quando preenchido, é 
 | Tipo | Código de idioma |
 | Severidade | Opcional |
 
-**Descrição do campo:** idioma a usar quando a aplicação não conhece o idioma do passageiro. Costuma ser `en` (inglês).
+**Descrição do campo:** idioma a usar quando a aplicação não conhece o idioma do passageiro. Muitas vezes é `en` (inglês).
 
 Mais informação em [feed_info.txt](/reference/gtfs/schedule/feed_info).
 
 ## Como funciona
 
-Se o `default_lang` estiver preenchido, tem de ser um código de idioma de duas letras, como `en`. Um campo vazio é aceite. Apesar do nome da regra, ela **não compara o `default_lang` com o `feed_lang`**. Só verifica se o código existe.
+Quando a regra passa, o `default_lang` tem um código de idioma de duas letras reconhecido. A regra só é avaliada quando o `feed_lang` passa na respetiva regra. A regra **não compara o `default_lang` com o `feed_lang`** e não aceita o valor `mul` nem códigos com região, como `pt-PT`.
 
 A regra avalia cada linha do `feed_info.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O `default_lang` está vazio? | ✅ Passa | Segue para o passo 2 |
-| 2 | O `default_lang` é um código de idioma de duas letras válido? | ✅ Passa | ❌ Reporta o problema: código de idioma inválido |
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | O valor é um código de idioma de duas letras reconhecido? | ✅ Passa | ❌ Reporta o problema: código de idioma inválido |
 
-Maiúsculas e minúsculas são tratadas da mesma forma.
+Maiúsculas e minúsculas são equivalentes: `EN` e `en` são aceites da mesma forma.
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `en` | ✅ Passa | Código de idioma válido |
-| *(vazio)* | ✅ Passa | Campo opcional |
-| `inglês` | ❌ Problema | Nome do idioma, em vez do código |
-| `xx` | ❌ Problema | Código que não existe |
+| `en` | ✅ Passa | Código de duas letras válido |
+| `en-GB` | ❌ Problema | Código com região não aceite |
+| `mul` | ❌ Problema | `mul` não é aceite neste campo |
+| `inglês` | ❌ Problema | Nome do idioma em vez do código |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Código de idioma inválido | O valor é um nome, um código com região ou um código que não existe | Escrever o `default_lang` em `feed_info.txt` com um código de duas letras, por exemplo `en`, ou deixar o campo vazio |
+| Código de idioma inválido | Nome do idioma por extenso, código com região ou `mul` | Escrever no `default_lang` do `feed_info.txt` um código de duas letras, por exemplo `en` |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `default_lang` do `feed_info.txt` com o código do idioma a mostrar por omissão |
