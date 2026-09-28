@@ -1,6 +1,6 @@
 ---
-title: Ordem das paragens da viagem
-description: Verifica se, em cada viagem, o stop_sequence só aumenta, o shape_dist_traveled não diminui e a mesma paragem não aparece duas vezes seguidas.
+title: Sequência crescente das paragens
+description: Verifica se os valores de stop_sequence de cada viagem são crescentes e se a mesma paragem não se repete de forma consecutiva.
 ---
 
 ## Propriedades da regra
@@ -8,55 +8,46 @@ description: Verifica se, em cada viagem, o stop_sequence só aumenta, o shape_d
 | Propriedade | Valor |
 |---|---|
 | Rule ID | `trips_stop_sequence_increasing_by_one_along_trip` |
-| Ficheiros | `trips.txt`, `stop_times.txt` |
-| Campos | `stop_sequence`, `shape_dist_traveled`, `stop_id` |
-| Tipo | Inteiro não negativo, decimal e chave estrangeira |
+| Ficheiro | `stop_times.txt` |
+| Campo | `stop_sequence` |
+| Tipo | Número inteiro não negativo |
 | Severidade | Obrigatório |
 
-**Descrição dos campos:**
+**Descrição do campo:** define a ordem das paragens de uma viagem. Os valores têm de aumentar ao longo da viagem, mas não precisam de ser consecutivos.
 
-- `stop_sequence`: ordem das paragens numa viagem. Os valores têm de aumentar ao longo da viagem, mas não têm de ser consecutivos.
-- `shape_dist_traveled`: distância percorrida ao longo do percurso até à paragem. Quando existe, não pode diminuir ao longo da viagem.
-- `stop_id`: identifica a paragem. A mesma paragem não pode aparecer duas vezes seguidas na viagem.
-
-Mais informação em [trips.txt](/reference/gtfs/schedule/trips), [stop_times.txt](/reference/gtfs/schedule/stop_times).
+Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times).
 
 ## Como funciona
 
-Para cada viagem, a regra lê as linhas do `stop_times.txt` e confirma que a ordem das paragens é coerente. Apesar do nome, exige apenas que o `stop_sequence` **aumente**. Não exige que aumente de um em um. A regra **não verifica** as horas de passagem.
+Quando esta regra passa, os valores de `stop_sequence` de cada viagem aumentam sempre ao longo do trajeto e a mesma paragem nunca aparece duas vezes seguidas. A regra também verifica que, quando preenchido, o `shape_dist_traveled` aumenta ao longo da viagem. A regra não confirma que as paragens indicadas existem em `stops.txt`, nem que os horários de chegada e partida estão corretos — isso é verificado por outras regras.
 
-A regra avalia cada linha do `trips.txt`, com as paragens dessa viagem no `stop_times.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+A regra avalia cada viagem de `trips.txt`: analisa as respetivas linhas de `stop_times.txt`, ordenadas por `stop_sequence`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O `trip_id` da viagem está vazio? | Termina sem reportar nada | Segue para o passo 2 |
-| 2 | Algum `stop_sequence` da viagem não é um número inteiro? | ❌ Reporta o problema: sequência inválida | Segue para o passo 3 |
-| 3 | Algum `shape_dist_traveled` preenchido não é um número? | ❌ Reporta o problema: distância inválida | Ordena as paragens por `stop_sequence` e segue para o passo 4 |
-| 4 | Há dois `stop_sequence` iguais, ou algum não é maior do que o anterior? | ❌ Reporta o problema: sequência não crescente | Segue para o passo 5 |
-| 5 | Há um `shape_dist_traveled` menor do que o da paragem anterior? (só quando os dois estão preenchidos) | ❌ Reporta o problema: distância não crescente | Segue para o passo 6 |
-| 6 | A mesma `stop_id` aparece em duas paragens seguidas? | ❌ Reporta o problema: paragem repetida | ✅ Passa |
+| 1 | O valor de `stop_sequence` desta linha é um número inteiro válido? | Segue para o passo 2 | ❌ Reporta o problema: valor inválido |
+| 2 | O campo `shape_dist_traveled` está preenchido e não é um número válido? | ❌ Reporta o problema: valor inválido | Segue para o passo 3 |
+| 3 | Em relação à paragem anterior da mesma viagem (ordenadas por `stop_sequence`), o valor de `stop_sequence` é igual ou inferior ao anterior? | ❌ Reporta o problema: sequência não crescente | Segue para o passo 4 |
+| 4 | Ambas as paragens têm `shape_dist_traveled` preenchido e o valor atual é inferior ao anterior? | ❌ Reporta o problema: `shape_dist_traveled` não crescente | Segue para o passo 5 |
+| 5 | O `stop_id` desta paragem é igual ao da paragem anterior na sequência? | ❌ Reporta o problema: paragem repetida em seguida | ✅ Passa |
 
-Se duas linhas do `stop_times.txt` forem completamente iguais (mesma paragem, mesma distância e mesmo `stop_sequence`), contam como uma só.
-
-## Como se relacionam
-
-Cada viagem de `trips.txt` liga-se pelo `trip_id` às suas linhas em `stop_times.txt`. A ordem é avaliada por viagem. Só é reportado o primeiro problema encontrado em cada viagem.
+Linhas duplicadas (mesma paragem, mesma distância percorrida e mesma sequência) são ignoradas antes da comparação. Viagens sem `trip_id` não são avaliadas.
 
 ## Exemplos
 
-| `stop_id` por `stop_sequence` | Resultado | Porquê |
+| Valor | Resultado | Porquê |
 |---|---|---|
-| `P1`(1), `P2`(5), `P3`(9) | ✅ Passa | Sequência crescente, mesmo sem saltos de um |
-| `P1`(1), `P2`(3), `P3`(3) | ❌ Problema | `stop_sequence` repetido |
-| `P1`(1), `P2`(2), `P2`(3) | ❌ Problema | Mesma paragem seguida |
-| `P1`(1), `P2`(2) com distâncias `500` e `300` | ❌ Problema | `shape_dist_traveled` diminui |
+| `stop_sequence` `1`, `2`, `3` | ✅ Passa | Valores sempre crescentes |
+| `stop_sequence` com o texto `abc` numa linha | ❌ Problema | Valor não é um número inteiro |
+| `stop_sequence` `1`, `2`, `2` | ❌ Problema | O valor não aumentou entre a segunda e a terceira linha |
+| Mesma paragem em duas linhas seguidas (`stop_sequence` `2` e `3`) | ❌ Problema | A mesma paragem repete-se de forma consecutiva |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Sequência inválida | Existe um `stop_sequence` que não é um número inteiro | Corrigir `stop_sequence` no `stop_times.txt` |
-| Distância inválida | Existe um `shape_dist_traveled` que não é um número | Corrigir `shape_dist_traveled` no `stop_times.txt` |
-| Sequência não crescente | Valores repetidos ou fora de ordem para o mesmo `trip_id` | Corrigir os `stop_sequence` da viagem no `stop_times.txt` para que aumentem ao longo da viagem |
-| Distância não crescente | O `shape_dist_traveled` diminui de uma paragem para a seguinte | Corrigir `shape_dist_traveled` no `stop_times.txt` para que não diminua ao longo da viagem |
-| Paragem repetida | A mesma `stop_id` aparece em duas linhas seguidas da viagem | Remover a linha repetida do `stop_times.txt`, ou usar a paragem certa em cada linha |
+| Valor de `stop_sequence` inválido | O campo `stop_sequence` não é um número inteiro numa das linhas da viagem | Preencher `stop_sequence` em `stop_times.txt` com um número inteiro não negativo em cada linha |
+| Valor de `shape_dist_traveled` inválido | O campo `shape_dist_traveled` está preenchido mas não é um número válido | Corrigir ou remover o valor de `shape_dist_traveled` em `stop_times.txt` |
+| Sequência de `stop_sequence` não crescente | Duas linhas da mesma viagem têm o mesmo valor de `stop_sequence`, ou os valores não estão por ordem crescente | Corrigir os valores de `stop_sequence` em `stop_times.txt` para que aumentem ao longo da viagem |
+| `shape_dist_traveled` não crescente | O valor de `shape_dist_traveled` desce entre duas paragens consecutivas da mesma viagem | Corrigir os valores de `shape_dist_traveled` em `stop_times.txt` para que aumentem ao longo da viagem |
+| Paragem repetida em seguida | A mesma paragem (`stop_id`) aparece em duas linhas seguidas da mesma viagem | Remover a linha duplicada ou corrigir o `stop_id` em `stop_times.txt` |

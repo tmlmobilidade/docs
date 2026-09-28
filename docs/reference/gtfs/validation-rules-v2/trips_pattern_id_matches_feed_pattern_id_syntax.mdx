@@ -1,6 +1,6 @@
 ---
-title: Formato do padrão
-description: Verifica se o pattern_id segue o formato XXXX_X_X ou os formatos definidos na configuração da regra.
+title: Formato do pattern_id
+description: Verifica se o valor de pattern_id em trips.txt segue o formato esperado, predefinido ou definido na configuração da regra.
 ---
 
 ## Propriedades da regra
@@ -10,38 +10,36 @@ description: Verifica se o pattern_id segue o formato XXXX_X_X ou os formatos de
 | Rule ID | `trips_pattern_id_matches_feed_pattern_id_syntax` |
 | Ficheiro | `trips.txt` |
 | Campo | `pattern_id` |
-| Tipo | Identificador |
-| Severidade | Opcional (obrigatório para os Transportes Metropolitanos de Lisboa) |
+| Tipo | ID |
+| Severidade | Opcional |
 
-**Descrição do campo:** identifica o padrão a que a viagem pertence. Os padrões correspondem ao desdobramento das rotas pelos sentidos, se houver mais do que um.
+**Descrição do campo:** identifica o padrão de paragens a que a viagem pertence. Os padrões correspondem ao desdobramento das linhas pelos sentidos, quando existe mais do que um (ida e volta).
 
 Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
 
 ## Como funciona
 
-Quando o `pattern_id` está preenchido, tem de ter o formato esperado. A regra **não verifica** se o campo está preenchido nem se o padrão existe.
+Esta regra só valida o formato do texto de `pattern_id`. Não verifica se o valor preenchido existe em `patterns.txt`, nem se é igual em todas as viagens do mesmo padrão. Quando o campo está vazio, ou a configuração da regra marca este campo para ser ignorado ou como não permitido, o formato não é validado.
 
 A regra avalia cada linha do `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O `pattern_id` está vazio? | Termina sem reportar nada | Segue para o passo 2 |
-| 2 | A configuração da regra define formatos permitidos? | Usa esses formatos. Se nenhum for reconhecido, usa o formato predefinido | Usa o formato predefinido: até quatro carateres, `_`, um caráter, `_`, um caráter |
-| 3 | O valor corresponde a algum dos formatos? | ✅ Passa | ❌ Reporta o problema: formato inválido |
-
-No formato predefinido, o primeiro bloco tem de 1 a 4 carateres. O segundo e o terceiro têm exatamente um. Nenhum bloco pode conter `_`.
+| 1 | O campo está vazio? | ✅ Passa (o formato não é validado) | Segue para o passo 2 |
+| 2 | A configuração da regra marca este campo para ser ignorado ou como não permitido? | ✅ Passa (o formato não é validado) | Segue para o passo 3 |
+| 3 | A configuração da regra define formatos personalizados para `pattern_id`? | Usa esses formatos | Usa o formato predefinido `XXXX_X_X` |
+| 4 | O valor de `pattern_id` corresponde a um dos formatos aceites? | ✅ Passa | ❌ Reporta o problema: formato inválido |
 
 ## Exemplos
 
-| `pattern_id` | Resultado | Porquê |
+| Valor | Resultado | Porquê |
 |---|---|---|
-| `1001_0_1` | ✅ Passa | Formato `XXXX_X_X` |
-| `12345_0_1` | ❌ Problema | Mais de quatro carateres no primeiro bloco |
-| `1001_0` | ❌ Problema | Falta um bloco |
-| `1001_00_1` | ❌ Problema | O segundo bloco tem dois carateres |
+| `1001_0_6` | ✅ Passa | Segue o formato predefinido `XXXX_X_X` |
+| `1001_0_1_1` | ❌ Problema | Tem mais partes do que o formato `XXXX_X_X` permite |
+| `1001_0_12` | ❌ Problema | A última parte tem mais do que um caráter |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Formato inválido | O `pattern_id` não tem três blocos separados por `_`, ou os blocos têm o tamanho errado | Corrigir `pattern_id` no `trips.txt` para o formato indicado na mensagem, por exemplo `1001_0_1` |
+| Formato inválido | O valor de `pattern_id` não segue o formato `XXXX_X_X`, ou o formato definido na configuração da regra | Corrigir `pattern_id` em `trips.txt` para o formato esperado, por exemplo `1001_0_1` |

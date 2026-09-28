@@ -1,6 +1,6 @@
 ---
-title: Um padrão por percurso
-description: Verifica se todas as viagens com o mesmo shape_id pertencem ao mesmo pattern_id.
+title: Um único pattern_id por shape_id
+description: Verifica se o shape_id de cada grupo de viagens não é partilhado por mais do que um pattern_id.
 ---
 
 ## Propriedades da regra
@@ -9,41 +9,40 @@ description: Verifica se todas as viagens com o mesmo shape_id pertencem ao mesm
 |---|---|
 | Rule ID | `trips_one_pattern_id_per_shape_id_group` |
 | Ficheiro | `trips.txt` |
-| Campos | `shape_id`, `pattern_id` |
-| Tipo | Identificador |
-| Severidade | Opcional (obrigatório para os Transportes Metropolitanos de Lisboa) |
+| Campo | `shape_id` |
+| Tipo | ID |
+| Severidade | Configurável |
 
-**Descrição dos campos:**
-
-- `shape_id`: identifica o percurso geográfico da viagem.
-- `pattern_id`: identifica o padrão a que a viagem pertence.
+**Descrição do campo:** identifica a forma geoespacial que descreve o trajeto percorrido pelo veículo numa viagem. O mesmo `shape_id` não pode ser partilhado por viagens de mais do que um `pattern_id`.
 
 Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
 
 ## Como funciona
 
-Todas as viagens com o mesmo `shape_id` têm de pertencer ao mesmo `pattern_id`. A regra só avalia viagens com `shape_id` preenchido. Não repete um problema que a regra de um percurso por padrão já reportou para o mesmo par. Só é reportado um problema por percurso, na primeira viagem do grupo.
+Todas as viagens agrupadas pelo mesmo `shape_id` têm de pertencer a um único `pattern_id`. A regra **não verifica qual dos `pattern_id` está correto**, só que o `shape_id` não é partilhado por mais do que um. Quando o mesmo par `pattern_id`/`shape_id` já foi reportado pela regra `trips_one_shape_id_per_pattern_id_group`, esta regra não repete o problema.
 
-A regra avalia cada grupo de viagens com o mesmo `shape_id` no `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+A regra avalia cada grupo de viagens com o mesmo `shape_id` do `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | Há mais do que um `pattern_id` entre as viagens do grupo? | Segue para o passo 2 | ✅ Passa |
-| 2 | Esse par de `pattern_id` e `shape_id` já foi reportado pela regra de um percurso por padrão? | Não reporta de novo | ❌ Reporta o problema: percurso usado em vários padrões |
+| 1 | O grupo tem viagens com `pattern_id` preenchido? | Segue para o passo 2 | ✅ Passa (nada a comparar) |
+| 2 | As viagens do grupo têm mais do que um valor distinto de `pattern_id`? | Segue para o passo 3 | ✅ Passa |
+| 3 | Este par `pattern_id`/`shape_id` já foi reportado pela regra `trips_one_shape_id_per_pattern_id_group`? | ✅ Passa (não duplica o problema) | Segue para o passo 4 |
+| 4 | A configuração da regra está definida como "ignorar" ou "não permitido"? | ✅ Passa (a regra não é aplicada) | ❌ Reporta o problema |
 
-## Como se relacionam
-
-Um percurso (`shape_id`) só pode pertencer a um padrão (`pattern_id`). É a regra inversa de um percurso por padrão.
+As viagens sem `pattern_id` não contam para esta comparação.
 
 ## Exemplos
 
-| Viagens do mesmo `shape_id` | Resultado | Porquê |
-|---|---|---|
-| Percurso `1001_0_1`: padrão `1001_0_1` em todas | ✅ Passa | Padrão único |
-| Percurso `A`: padrões `1001_0_1` e `1001_0_2` | ❌ Problema | Dois padrões no mesmo percurso |
+| shape_id | pattern_id das viagens do grupo | Resultado | Porquê |
+|---|---|---|---|
+| `S1` | `P1` em todas as viagens | ✅ Passa | Só há um `pattern_id` no grupo |
+| `S1` | `P1` numa viagem, vazio noutra | ✅ Passa | As viagens sem `pattern_id` não contam para a comparação |
+| `S1` | `P1` e `P2` | ❌ Problema | O grupo tem dois valores de `pattern_id` diferentes |
+| `S1` | `P1`, `P2` e `P3` | ❌ Problema | O grupo tem três valores de `pattern_id` diferentes |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Percurso usado em vários padrões | Padrões diferentes partilham o mesmo percurso | Corrigir `pattern_id` ou `shape_id` das viagens indicadas no `trips.txt`, para que cada percurso pertença a um só padrão |
+| O `shape_id` é utilizado por mais do que um `pattern_id` | O mesmo `shape_id` foi associado a padrões diferentes, por exemplo por reutilização indevida de uma forma já existente | Corrigir o campo `shape_id` em `trips.txt` para que cada `shape_id` seja utilizado por um único `pattern_id`, ou atribuir um `shape_id` próprio a cada padrão |

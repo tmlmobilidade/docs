@@ -1,6 +1,6 @@
 ---
-title: Identificador da rota
-description: Verifica se cada rota em routes.txt tem um route_id preenchido e se esse valor não se repete noutra linha do ficheiro.
+title: Unicidade do route_id
+description: Verifica se o route_id de routes.txt está preenchido e se não se repete noutra rota.
 ---
 
 ## Propriedades da regra
@@ -10,35 +10,37 @@ description: Verifica se cada rota em routes.txt tem um route_id preenchido e se
 | Rule ID | `route_id_unique` |
 | Ficheiro | `routes.txt` |
 | Campo | `route_id` |
-| Tipo | Identificador único (texto) |
+| Tipo | Identificador único |
 | Severidade | Obrigatório |
 
-**Descrição do campo:** identifica uma rota de forma inequívoca. Cada linha de `routes.txt` tem de ter um `route_id` diferente.
+**Descrição do campo:** identifica a rota. Distingue esta rota de todas as outras em `routes.txt`.
 
 Mais informação em [routes.txt](/reference/gtfs/schedule/routes).
 
 ## Como funciona
 
-Quando a regra passa, fica garantido que a rota tem um identificador preenchido e que nenhuma outra linha de `routes.txt` usa o mesmo valor. A regra **não verifica o formato do texto**, só a presença e a unicidade.
+Quando a regra passa, fica garantido que cada rota tem um `route_id` preenchido e que esse valor não se repete noutra linha de `routes.txt`. A regra **não verifica** o formato do valor, só a presença e a unicidade. Esta verificação é sempre obrigatória: não depende da configuração da regra e não pode ser desativada.
 
 A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O campo está vazio? | ❌ Reporta o problema: campo em falta | Segue para o passo 2 |
-| 2 | Existe outra linha de `routes.txt` com o mesmo `route_id`? | ❌ Reporta o problema: valor duplicado | ✅ Passa |
+| 1 | O campo `route_id` está vazio? | ❌ Reporta o problema: campo em falta | Segue para o passo 2 |
+| 2 | O mesmo valor de `route_id` aparece em mais do que uma linha de `routes.txt`? | ❌ Reporta o problema: valor duplicado | ✅ Passa |
+
+A comparação entre valores é exata, incluindo maiúsculas e minúsculas.
 
 ## Exemplos
 
-| Valor | Resultado | Porquê |
+| route_id | Resultado | Porquê |
 |---|---|---|
-| `R32` (não repetido) | ✅ Passa | Valor preenchido e único |
-| _(vazio)_ | ❌ Problema | Campo em falta |
-| `R32` (já usado noutra linha) | ❌ Problema | Valor duplicado |
+| `1001_0` (só nesta linha) | ✅ Passa | Valor preenchido e único |
+| (vazio) | ❌ Problema | `route_id` é obrigatório |
+| `1001_0` (repetido noutra linha) | ❌ Problema | `route_id` duplicado |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Campo em falta | `route_id` não foi preenchido nessa linha | Preencher `route_id` em `routes.txt` |
-| Valor duplicado | Duas ou mais linhas de `routes.txt` usam o mesmo `route_id` | Atribuir um `route_id` diferente a cada rota |
+| Campo em falta | `route_id` não foi preenchido | Preencher `route_id` em `routes.txt` com um identificador para a rota |
+| `route_id` duplicado | O mesmo valor foi usado em mais do que uma rota | Atribuir a cada rota em `routes.txt` um `route_id` diferente |

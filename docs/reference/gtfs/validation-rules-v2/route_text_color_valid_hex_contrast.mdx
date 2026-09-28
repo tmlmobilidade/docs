@@ -1,6 +1,6 @@
 ---
 title: Cor do texto da rota
-description: Verifica se route_text_color está preenchido, se é uma cor hexadecimal de 6 carateres válida e, quando configurado, se consta da lista de valores permitidos.
+description: Verifica se a cor indicada em route_text_color de routes.txt é um valor hexadecimal válido de 6 carateres.
 ---
 
 ## Propriedades da regra
@@ -10,42 +10,42 @@ description: Verifica se route_text_color está preenchido, se é uma cor hexade
 | Rule ID | `route_text_color_valid_hex_contrast` |
 | Ficheiro | `routes.txt` |
 | Campo | `route_text_color` |
-| Tipo | Cor (hexadecimal) |
+| Tipo | Cor |
 | Severidade | Obrigatório |
 
-**Descrição do campo:** cor do texto usada sobre `route_color`, nos materiais públicos da rota. A diferença entre `route_color` e `route_text_color` deve dar contraste suficiente quando vista a preto e branco.
+**Descrição do campo:** cor do texto sobreposto a `route_color`, usada em material visível ao público como mapas e sinalética.
 
 Mais informação em [routes.txt](/reference/gtfs/schedule/routes).
 
 ## Como funciona
 
-O campo é sempre obrigatório. O valor tem de ser um código hexadecimal de exatamente 6 carateres (`0-9`, `A-F`), sem o símbolo `#`. A configuração da regra pode ainda restringir os valores aceites a uma lista específica. **Apesar do nome da regra, a regra não calcula o contraste real com `route_color`**, só verifica o formato do código.
+O campo `route_text_color` tem de estar preenchido e conter um valor hexadecimal de 6 carateres. Apesar do nome da regra, esta verificação **não calcula o contraste entre `route_text_color` e `route_color`**, apenas confirma o formato do valor de `route_text_color`.
 
 A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O campo está vazio? | ❌ Reporta o problema: campo em falta | Segue para o passo 2 |
-| 2 | O valor tem exatamente 6 carateres hexadecimais (`0-9`, `A-F`)? | Segue para o passo 3 | ❌ Reporta o problema: formato inválido |
-| 3 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 4 | ✅ Passa |
-| 4 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+| 1 | O campo está vazio? | ❌ Reporta o problema: campo obrigatório | Segue para o passo 2 |
+| 2 | O valor é uma cor hexadecimal válida de 6 carateres (`0-9`, `A-F`, sem `#`)? | Segue para o passo 3 | ❌ Reporta o problema: formato inválido |
+| 3 | A configuração da regra tem uma lista de cores permitidas? | Segue para o passo 4 | ✅ Passa |
+| 4 | A cor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: cor não permitida |
 
-Letras minúsculas são aceites: o valor é convertido para maiúsculas antes de validar o formato.
+As letras podem ser maiúsculas ou minúsculas; ambas são aceites.
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `FFFFFF` | ✅ Passa | Hexadecimal válido de 6 carateres |
-| _(vazio)_ | ❌ Problema | Campo em falta |
+| `000000` | ✅ Passa | Formato correto |
+| (vazio) | ❌ Problema | Campo obrigatório |
 | `FFF` | ❌ Problema | Não tem 6 carateres |
-| `ZZFFFF` | ❌ Problema | Carateres fora do intervalo `0-9`/`A-F` |
-| `000000` (lista permitida = `FFFFFF`) | ❌ Problema | Formato válido, mas fora da lista permitida |
+| `#000000` | ❌ Problema | Contém o carácter `#` |
+| `ZZZZZZ` | ❌ Problema | Não é um valor hexadecimal válido |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Campo em falta | `route_text_color` não foi preenchido | Preencher `route_text_color` em `routes.txt`, por exemplo `FFFFFF` |
-| Formato inválido | Faltam ou sobram carateres, ou há carateres fora de `0-9`/`A-F`, ou o `#` foi incluído | Escrever exatamente 6 carateres hexadecimais, sem `#` |
-| Valor não permitido | O valor não consta da lista definida na configuração da regra | Usar um valor da lista, ou pedir ao administrador que o adicione |
+| Campo obrigatório | O valor de `route_text_color` em `routes.txt` está vazio | Preencher `route_text_color` com uma cor hexadecimal de 6 carateres, por exemplo `000000` |
+| Formato inválido | O valor não tem 6 carateres, usa letras fora de `A-F` ou inclui o carácter `#` | Corrigir `route_text_color` em `routes.txt` para um valor como `FFFFFF`, sem `#` |
+| Cor não permitida | O valor é uma cor válida mas não consta da lista de cores permitidas na configuração da regra | Usar uma cor da lista, ou pedir ao administrador que a adicione à configuração |

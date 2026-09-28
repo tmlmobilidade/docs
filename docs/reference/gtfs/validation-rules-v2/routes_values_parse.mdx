@@ -1,6 +1,6 @@
 ---
-title: Formato dos valores de routes.txt
-description: Verifica se route_type e route_sort_order em routes.txt são números inteiros, antes de qualquer outra regra ser avaliada.
+title: Formato numérico dos campos de routes.txt
+description: Verifica se os campos route_type e route_sort_order de routes.txt, quando preenchidos, representam números inteiros válidos.
 ---
 
 ## Propriedades da regra
@@ -11,38 +11,43 @@ description: Verifica se route_type e route_sort_order em routes.txt são númer
 | Ficheiro | `routes.txt` |
 | Campos | `route_type`, `route_sort_order` |
 | Tipo | Número inteiro |
-| Severidade | Obrigatório |
+| Severidade | Condicional (aplica-se apenas quando o campo tem valor) |
 
 **Descrição dos campos:**
 
-- `route_type`: tipo de transporte usado na rota.
-- `route_sort_order`: ordem de apresentação da rota aos passageiros.
+- `route_type`: código numérico que indica o tipo de transporte da rota (por exemplo, autocarro, metro ou comboio).
+- `route_sort_order`: número que define a ordem de apresentação das rotas aos passageiros; valores mais baixos aparecem primeiro.
 
 Mais informação em [routes.txt](/reference/gtfs/schedule/routes).
 
 ## Como funciona
 
-Antes de qualquer outra regra correr sobre uma linha de `routes.txt`, o validador tenta ler cada campo com o tipo que lhe corresponde. Os restantes campos de `routes.txt` são texto e nunca falham nesta etapa. Só `route_type` e `route_sort_order` têm de ser números: se o texto escrito não for um número inteiro, a linha falha aqui e nenhuma outra regra de `routes.txt` é avaliada para essa linha. Um campo vazio não é um erro de formato — passa para as outras regras, que decidem se o campo é ou não obrigatório.
+Quando `route_type` ou `route_sort_order` têm um valor, esse valor tem de ser um número inteiro, escrito apenas com algarismos e, opcionalmente, um sinal de menos à frente. A regra **não verifica** se `route_type` corresponde a um código válido (por exemplo, entre 0 e 12) nem se `route_sort_order` é positivo — essas verificações pertencem a outras regras. Um campo vazio não é testado por esta regra.
 
-A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, para cada um dos dois campos, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | `route_type` está vazio? | Segue para o passo 2 | O texto é um número inteiro? Se sim, segue para o passo 2. Se não, ❌ reporta o problema |
-| 2 | `route_sort_order` está vazio? | ✅ Passa | O texto é um número inteiro? Se sim, ✅ passa. Se não, ❌ reporta o problema |
+| 1 | O campo está vazio? | ✅ Passa, sem testar o formato | Segue para o passo 2 |
+| 2 | O texto representa um número inteiro (por exemplo `3` ou `-1`, sem casas decimais nem letras)? | ✅ Passa | ❌ Reporta o problema: formato inválido |
+
+## Como se relacionam
+
+Os dois campos são verificados de forma independente: um problema em `route_type` não afeta o resultado de `route_sort_order`, e vice-versa. Partilham apenas o mesmo `rule_id` nas mensagens porque ambos falham pelo mesmo motivo — o texto não é um número inteiro.
 
 ## Exemplos
 
-| Campo | Valor | Resultado | Porquê |
+| `route_type` | `route_sort_order` | Resultado | Porquê |
 |---|---|---|---|
-| `route_type` | `3` | ✅ Passa | Número inteiro válido |
-| `route_type` | `Autocarro` | ❌ Problema | Texto não é um número |
-| `route_sort_order` | `1` | ✅ Passa | Número inteiro válido |
-| `route_sort_order` | `1.5` | ❌ Problema | Não é um número inteiro |
+| `3` | `5` | ✅ Passa | Ambos são números inteiros válidos |
+| (vazio) | (vazio) | ✅ Passa | Campos vazios não são testados por esta regra |
+| `bus` | `5` | ❌ Problema | `route_type` não é um número inteiro |
+| `3` | `dez` | ❌ Problema | `route_sort_order` não é um número inteiro |
+| `3.5` | `5` | ❌ Problema | `route_type` tem casas decimais, não é um número inteiro |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| `route_type` não é um número | O ficheiro tem texto, um valor decimal ou outro carácter em vez de um número inteiro | Escrever um número inteiro em `route_type`, por exemplo `3` |
-| `route_sort_order` não é um número | O ficheiro tem texto, um valor decimal ou outro carácter em vez de um número inteiro | Escrever um número inteiro em `route_sort_order`, por exemplo `1` |
+| Formato inválido em `route_type` | O texto de `route_type` em `routes.txt` não é um número inteiro (por exemplo, tem letras, espaços ou casas decimais) | Substituir o valor de `route_type` por um número inteiro, por exemplo `3` |
+| Formato inválido em `route_sort_order` | O texto de `route_sort_order` em `routes.txt` não é um número inteiro | Substituir o valor de `route_sort_order` por um número inteiro, por exemplo `1` |

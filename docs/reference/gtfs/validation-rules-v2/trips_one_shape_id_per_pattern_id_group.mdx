@@ -1,6 +1,6 @@
 ---
-title: Um percurso por padrão
-description: Verifica se todas as viagens com o mesmo pattern_id usam o mesmo shape_id.
+title: Um único shape_id por pattern_id
+description: Verifica se todas as viagens do mesmo pattern_id partilham o mesmo shape_id.
 ---
 
 ## Propriedades da regra
@@ -10,36 +10,38 @@ description: Verifica se todas as viagens com o mesmo pattern_id usam o mesmo sh
 | Rule ID | `trips_one_shape_id_per_pattern_id_group` |
 | Ficheiro | `trips.txt` |
 | Campo | `shape_id` |
-| Tipo | Chave estrangeira (shapes.shape_id) |
-| Severidade | Opcional (obrigatório para os Transportes Metropolitanos de Lisboa) |
+| Tipo | ID |
+| Severidade | Configurável |
 
-**Descrição do campo:** identifica o percurso geográfico da viagem.
+**Descrição do campo:** identifica a forma geoespacial que descreve o trajeto percorrido pelo veículo numa viagem. Todas as viagens que partilham o mesmo `pattern_id` têm de partilhar também o mesmo `shape_id`.
 
 Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
 
 ## Como funciona
 
-Todas as viagens com o mesmo `pattern_id` têm de ter o mesmo `shape_id`. A regra só avalia viagens com `pattern_id` preenchido. **Não verifica** se o valor existe noutros ficheiros. Só é reportado um problema por padrão, na primeira viagem do grupo.
+Todas as viagens agrupadas pelo mesmo `pattern_id` têm de ter um único valor de `shape_id`. A regra **não verifica qual dos valores está correto**, só que não há mais do que um valor dentro do mesmo grupo. Quando esta regra reporta um `pattern_id`, a regra `trips_one_pattern_id_per_shape_id_group` não repete o mesmo problema a partir do `shape_id` envolvido.
 
-A regra avalia cada grupo de viagens com o mesmo `pattern_id` no `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+A regra avalia cada grupo de viagens com o mesmo `pattern_id` do `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | Há mais do que um valor de `shape_id` entre as viagens do grupo? | ❌ Reporta o problema: valores diferentes no mesmo padrão | ✅ Passa |
+| 1 | O grupo tem viagens com `shape_id` preenchido? | Segue para o passo 2 | ✅ Passa (nada a comparar) |
+| 2 | As viagens do grupo têm mais do que um valor distinto de `shape_id`? | Segue para o passo 3 | ✅ Passa |
+| 3 | A configuração da regra está definida como "ignorar" ou "não permitido"? | ✅ Passa (a regra não é aplicada) | ❌ Reporta o problema |
 
-## Como se relacionam
-
-Um padrão (`pattern_id`) agrupa as viagens que fazem o mesmo percurso no mesmo sentido. Por isso, o `shape_id` não pode mudar entre viagens do mesmo `pattern_id`.
+As viagens sem `shape_id` não contam para esta comparação.
 
 ## Exemplos
 
-| Viagens do mesmo `pattern_id` | Resultado | Porquê |
-|---|---|---|
-| `1001_0_1`: percurso `1001_0_1` em todas | ✅ Passa | Percurso único |
-| `1001_0_1`: percursos `A` e `B` | ❌ Problema | Dois percursos no mesmo padrão |
+| pattern_id | shape_id das viagens do grupo | Resultado | Porquê |
+|---|---|---|---|
+| `P1` | `1001_0` em todas as viagens | ✅ Passa | Só há um valor de `shape_id` no grupo |
+| `P1` | `1001_0` numa viagem, vazio noutra | ✅ Passa | As viagens sem `shape_id` não contam para a comparação |
+| `P1` | `1001_0` e `1001_1` | ❌ Problema | O grupo tem dois valores de `shape_id` diferentes |
+| `P1` | `1001_0`, `1002_0` e `1003_0` | ❌ Problema | O grupo tem três valores de `shape_id` diferentes |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Percursos diferentes no mesmo padrão | Uma viagem foi ligada a outro percurso, ou o `pattern_id` foi reutilizado | Corrigir `shape_id` ou `pattern_id` das viagens indicadas no `trips.txt`, para que cada padrão tenha um só percurso |
+| Mais do que um `shape_id` no mesmo `pattern_id` | As viagens do mesmo `pattern_id` foram associadas a formas diferentes, por exemplo por erro de importação ou atualização parcial | Corrigir o campo `shape_id` em `trips.txt` para que todas as viagens do mesmo `pattern_id` tenham o mesmo valor |

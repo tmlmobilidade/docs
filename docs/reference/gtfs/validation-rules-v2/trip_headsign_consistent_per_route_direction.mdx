@@ -1,0 +1,47 @@
+---
+title: Destino consistente por sentido da rota
+description: Verifica se todas as viagens do mesmo route_id e do mesmo sentido (direction_id) usam o mesmo texto de trip_headsign.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `trip_headsign_consistent_per_route_direction` |
+| Ficheiro | `trips.txt` |
+| Campo | `trip_headsign` |
+| Tipo | Texto |
+| Severidade | Opcional |
+
+**Descrição do campo:** texto que aparece na sinalética do veículo e indica o destino da viagem aos passageiros.
+
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
+
+## Como funciona
+
+Quando esta regra passa, todas as viagens do mesmo `route_id` que seguem o mesmo sentido (`direction_id`) mostram o mesmo texto de `trip_headsign`. A regra não verifica se esse texto está correto ou bem escrito, nem limita o número total de textos distintos de uma rota — isso é verificado por outra regra. Viagens sem `trip_headsign` preenchido, ou com `direction_id` diferente de `0` ou `1`, não entram nesta comparação.
+
+A regra avalia cada grupo de viagens com o mesmo `route_id` de `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O grupo tem viagens com `trip_headsign` preenchido e `direction_id` igual a `0` ou `1`? | Reúne os valores distintos de `trip_headsign` usados em cada sentido (`direction_id` `0` e `direction_id` `1`) | A regra não reporta problemas para este `route_id` |
+| 2 | No sentido `0`, há mais do que um valor distinto de `trip_headsign`? | ❌ Reporta o problema para o sentido `0` | Segue para o passo 3 |
+| 3 | No sentido `1`, há mais do que um valor distinto de `trip_headsign`? | ❌ Reporta o problema para o sentido `1` | ✅ Passa |
+
+Viagens repetidas com o mesmo `trip_headsign` contam como um só valor.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| Todas as viagens do sentido `0` usam `trip_headsign` `Cascais` | ✅ Passa | Um único valor no sentido `0` |
+| Sentido `0` usa `trip_headsign` `Cascais` e sentido `1` usa `trip_headsign` `Sintra` | ✅ Passa | Sentidos diferentes podem ter textos diferentes |
+| Sentido `0` tem viagens com `trip_headsign` `Cascais` e outras com `trip_headsign` `Cascais via Oeiras` | ❌ Problema | Dois valores distintos no mesmo sentido |
+| Viagens com `direction_id` `2` e `trip_headsign` diferentes | ✅ Passa | `direction_id` inválido não entra na comparação |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Mais do que um `trip_headsign` no mesmo sentido da rota | Viagens do mesmo `route_id` e `direction_id` foram preenchidas com textos de destino diferentes, normalmente por inconsistências no preenchimento do `trip_headsign` | Corrigir o `trip_headsign` em `trips.txt` para que todas as viagens do mesmo `route_id` e `direction_id` usem o mesmo texto |

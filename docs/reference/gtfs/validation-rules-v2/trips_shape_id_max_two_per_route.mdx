@@ -1,0 +1,47 @@
+---
+title: No máximo dois shape_id por rota
+description: Verifica se cada route_id tem no máximo dois valores distintos de shape_id entre todas as suas viagens.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `trips_shape_id_max_two_per_route` |
+| Ficheiro | `trips.txt` |
+| Campo | `shape_id` |
+| Tipo | ID |
+| Severidade | Configurável |
+
+**Descrição do campo:** identifica a forma geoespacial que descreve o trajeto percorrido pelo veículo numa viagem. Cada `route_id` pode ter no máximo dois valores distintos de `shape_id`, normalmente um por sentido.
+
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
+
+## Como funciona
+
+Cada `route_id` pode ter no máximo dois valores distintos de `shape_id` entre todas as suas viagens. A regra **não verifica qual `shape_id` está correto, nem separa a contagem por sentido** — só conta quantos valores diferentes existem na rota inteira.
+
+A regra avalia cada grupo de viagens com o mesmo `route_id` do `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O grupo tem viagens com `shape_id` preenchido? | Segue para o passo 2 | ✅ Passa (nada a contar) |
+| 2 | Existem mais do que dois valores distintos de `shape_id` no grupo? | Segue para o passo 3 | ✅ Passa |
+| 3 | A configuração da regra está definida como "ignorar" ou "não permitido"? | ✅ Passa (a regra não é aplicada) | ❌ Reporta o problema |
+
+As viagens sem `shape_id`, ou com o campo vazio, não contam para esta comparação.
+
+## Exemplos
+
+| route_id | shape_id das viagens do grupo | Resultado | Porquê |
+|---|---|---|---|
+| `R1` | `A`, `A`, `B`, `B` | ✅ Passa | Só há dois valores distintos (`A` e `B`) |
+| `R1` | `A`, vazio, `B` | ✅ Passa | As viagens sem `shape_id` não contam |
+| `R1` | `A`, `B`, `C` | ❌ Problema | Três valores distintos de `shape_id` |
+| `R1` | `A`, `B`, `C`, `D` | ❌ Problema | Quatro valores distintos de `shape_id` |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Mais do que dois valores distintos de `shape_id` na mesma rota | A rota tem viagens associadas a três ou mais formas diferentes, por exemplo por sentidos adicionais mal configurados ou reaproveitamento incorreto de `shape_id` | Corrigir o campo `shape_id` em `trips.txt` para que a rota use no máximo dois valores, normalmente um por sentido |

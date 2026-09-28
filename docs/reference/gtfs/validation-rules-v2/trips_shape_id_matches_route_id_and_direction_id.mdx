@@ -1,0 +1,51 @@
+---
+title: Correspondência entre shape_id, route_id e direction_id
+description: Verifica se o shape_id de cada viagem é a composição do route_id e do direction_id, unidos por um sublinhado.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `trips_shape_id_matches_route_id_and_direction_id` |
+| Ficheiro | `trips.txt` |
+| Campo | `shape_id` |
+| Tipo | ID (referência a `shape_id` de `shapes.txt`) |
+| Severidade | Opcional |
+
+**Descrição do campo:** identifica a forma geoespacial que descreve o trajeto percorrido pelo veículo numa viagem, construída a partir da rota que serve e do sentido em que circula. O valor de `shape_id` tem de ser o `route_id` e o `direction_id` unidos por um sublinhado.
+
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
+
+## Como funciona
+
+Se a viagem tiver `route_id` e `direction_id` preenchidos, o `shape_id` tem de ser a composição destes dois campos. A regra **não verifica se o shape existe em `shapes.txt`** nem se o trajeto geométrico está correto, só se o texto do `shape_id` segue a composição esperada.
+
+A regra avalia cada linha do `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | Os campos `shape_id`, `route_id` e `direction_id` estão todos preenchidos? | Segue para o passo 2 | ✅ Passa (os campos em falta são reportados pelas respetivas regras) |
+| 2 | A configuração da regra está definida como "ignorar" ou "não permitido"? | ✅ Passa (a regra não é aplicada) | Segue para o passo 3 |
+| 3 | Os valores são utilizáveis? (`shape_id` e `route_id` não vazios, `direction_id` igual a 0 ou 1) | Segue para o passo 4 | ✅ Passa |
+| 4 | O campo `shape_id` é igual a `route_id` seguido de um sublinhado (`_`) e de `direction_id`? | ✅ Passa | ❌ Reporta o problema |
+
+## Como se relacionam
+
+O `shape_id` tem de ser a composição de `route_id` e `direction_id`, unidos por um sublinhado, na ordem `route_id_direction_id`. Por exemplo, para a rota `1001` no sentido `0`, o `shape_id` esperado é `1001_0`.
+
+## Exemplos
+
+| route_id | direction_id | shape_id | Resultado | Porquê |
+|---|---|---|---|---|
+| `1001` | `0` | `1001_0` | ✅ Passa | Composição correta |
+| `1001` | `0` | `1002_0` | ❌ Problema | Aponta para outra rota |
+| `1001` | `0` | `1001_1` | ❌ Problema | Aponta para outro sentido |
+| `1001` | `0` | `10010` | ❌ Problema | Falta o sublinhado entre `route_id` e `direction_id` |
+| `1001` | `0` | `1001_0_1` | ❌ Problema | Tem texto a mais além da composição esperada |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `shape_id` não corresponde à composição de `route_id` e `direction_id` | Erro de atribuição do shape, ou `shape_id` copiado de outra rota ou sentido | Corrigir o campo `shape_id` em `trips.txt` para `route_id` + `_` + `direction_id`, por exemplo `1001_0` |

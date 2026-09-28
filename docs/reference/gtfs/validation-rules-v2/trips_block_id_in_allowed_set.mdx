@@ -1,6 +1,6 @@
 ---
-title: Bloco da viagem
-description: Verifica se o block_id está preenchido, quando a configuração da regra o exige, e se não está preenchido quando é proibido.
+title: Identificador do bloco
+description: Verifica se o campo block_id em trips.txt está preenchido quando a configuração da regra o exige ou recomenda, e se não tem valor quando a configuração o proíbe.
 ---
 
 ## Propriedades da regra
@@ -10,16 +10,16 @@ description: Verifica se o block_id está preenchido, quando a configuração da
 | Rule ID | `trips_block_id_in_allowed_set` |
 | Ficheiro | `trips.txt` |
 | Campo | `block_id` |
-| Tipo | Identificador |
+| Tipo | Texto |
 | Severidade | Opcional |
 
-**Descrição do campo:** identifica o bloco a que a viagem pertence. Um bloco é uma viagem ou várias viagens seguidas feitas pelo mesmo veículo, com os mesmos dias de serviço e o mesmo `block_id`. Para indicar transbordos sem sair do veículo, deve usar-se o `transfers.txt` com `transfer_type` igual a `4`.
+**Descrição do campo:** identifica o bloco a que a viagem pertence. Um bloco é composto por uma viagem ou por várias viagens sequenciais feitas com o mesmo veículo, com os mesmos dias de serviço e o mesmo `block_id`. Um `block_id` pode ter viagens com dias de serviço diferentes, formando blocos distintos.
 
 Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
 
 ## Como funciona
 
-A regra confirma que o `block_id` respeita a configuração da regra: preenchido quando é exigido ou recomendado, vazio quando é proibido. Apesar do nome, **não verifica** o valor contra uma lista de blocos permitidos e não confirma que as viagens do bloco não se sobrepõem.
+Apesar do nome da regra sugerir uma lista de blocos permitidos, a implementação atual só verifica se o campo está preenchido e se a configuração da regra proíbe o seu preenchimento. A regra **não confirma** que o `block_id` corresponde a um bloco existente noutras viagens nem valida o formato do texto.
 
 A regra avalia cada linha do `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
@@ -30,15 +30,15 @@ A regra avalia cada linha do `trips.txt`, seguindo os passos abaixo por ordem, a
 
 ## Exemplos
 
-| Valor de `block_id` | Resultado | Porquê |
+| Valor | Resultado | Porquê |
 |---|---|---|
-| `BLK_12` | ✅ Passa | Campo preenchido |
-| (vazio, campo exigido) | ❌ Problema | Campo em falta |
-| `BLK_12` (campo proibido) | ❌ Problema | Campo não devia ter valor |
+| `RED_LOOP` | ✅ Passa | Valor preenchido, aceite sem mais validações |
+| (vazio) | ❌ Problema | A configuração da regra exige ou recomenda este campo e está vazio |
+| `RED_LOOP` (configuração define `block_id` como proibido) | ❌ Problema | Campo preenchido quando a configuração exige que esteja vazio |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `block_id` no `trips.txt` |
-| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `block_id` no `trips.txt` |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `block_id` em `trips.txt` com o identificador do bloco |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `block_id` em `trips.txt` |

@@ -1,6 +1,6 @@
 ---
-title: Padrão da viagem preenchido
-description: Verifica se o pattern_id está preenchido, quando a configuração da regra o exige ou recomenda.
+title: Preenchimento do pattern_id
+description: Verifica se o campo pattern_id de trips.txt está preenchido, ou vazio, de acordo com a configuração da regra.
 ---
 
 ## Propriedades da regra
@@ -10,33 +10,35 @@ description: Verifica se o pattern_id está preenchido, quando a configuração 
 | Rule ID | `trips_pattern_id_present_and_references_consistent` |
 | Ficheiro | `trips.txt` |
 | Campo | `pattern_id` |
-| Tipo | Identificador |
-| Severidade | Opcional (obrigatório para os Transportes Metropolitanos de Lisboa) |
+| Tipo | ID |
+| Severidade | Obrigatório |
 
-**Descrição do campo:** identifica o padrão a que a viagem pertence. Os padrões correspondem ao desdobramento das rotas pelos sentidos. As viagens com o mesmo `pattern_id` têm de ter o mesmo `route_id`, `trip_headsign`, `direction_id`, `shape_id` e a mesma sequência de paragens.
+**Descrição do campo:** identifica o padrão de paragens a que a viagem pertence. Viagens com o mesmo `pattern_id` têm de ter o mesmo `route_id`, `trip_headsign`, `direction_id`, `shape_id` e a mesma sequência de paragens.
 
 Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
 
 ## Como funciona
 
-A regra confirma que a viagem tem `pattern_id`, quando a configuração da regra o exige ou recomenda. Apesar do nome, **não confirma** que o padrão existe noutro ficheiro nem que as viagens do padrão são coerentes. Isso é feito por outras regras. As viagens com `pattern_id` entram nessas regras de grupo.
+Apesar do nome da regra, esta validação confirma apenas se o campo está preenchido, ou vazio, de acordo com a configuração. Não verifica se o valor de `pattern_id` existe noutra viagem, nem se as viagens com o mesmo `pattern_id` partilham `route_id`, `trip_headsign`, `direction_id`, `shape_id` ou sequência de paragens — essas verificações são feitas por outras regras.
 
 A regra avalia cada linha do `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O `pattern_id` está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | ✅ Passa |
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo não deve ser preenchido? | ❌ Reporta o problema | ✅ Passa |
 
 ## Exemplos
 
-| `pattern_id` | Resultado | Porquê |
+| Valor | Resultado | Porquê |
 |---|---|---|
 | `1001_0_1` | ✅ Passa | Campo preenchido |
-| (vazio, campo exigido) | ❌ Problema | Campo em falta |
-| (vazio, campo opcional) | ✅ Passa | Campo não exigido |
+| (vazio) | ❌ Problema | A configuração da regra exige ou recomenda o campo `pattern_id` |
+| `1001_0_1` (configuração define o campo como não permitido) | ❌ Problema | O campo está preenchido mas a configuração não permite o preenchimento |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `pattern_id` no `trips.txt` |
+| Campo em falta | A configuração da regra exige ou recomenda o preenchimento de `pattern_id` | Preencher `pattern_id` em `trips.txt` com o identificador do padrão de paragens da viagem |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `pattern_id` em `trips.txt` |

@@ -1,0 +1,45 @@
+---
+title: Número máximo de destinos por rota
+description: Verifica se as viagens do mesmo route_id usam, no total, no máximo dois textos distintos de trip_headsign.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `trip_headsign_max_two_per_route` |
+| Ficheiro | `trips.txt` |
+| Campo | `trip_headsign` |
+| Tipo | Texto |
+| Severidade | Opcional |
+
+**Descrição do campo:** texto que aparece na sinalética do veículo e indica o destino da viagem aos passageiros.
+
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
+
+## Como funciona
+
+Quando esta regra passa, todas as viagens do mesmo `route_id` usam, no total, no máximo dois textos distintos de `trip_headsign`. A regra não verifica se esses textos estão corretos ou bem escritos, nem se cada sentido da rota usa sempre o mesmo texto — isso é verificado por outra regra. Viagens sem `trip_headsign` preenchido não entram nesta contagem.
+
+A regra avalia cada grupo de viagens com o mesmo `route_id` de `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O grupo tem viagens com `trip_headsign` preenchido? | Reúne os valores distintos de `trip_headsign` usados no grupo | A regra não reporta problemas para este `route_id` |
+| 2 | Existem mais do que dois valores distintos de `trip_headsign` no grupo? | ❌ Reporta o problema | ✅ Passa |
+
+Viagens repetidas com o mesmo `trip_headsign` contam como um só valor.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| Todas as viagens usam `trip_headsign` `Cascais` | ✅ Passa | Um único valor no grupo |
+| As viagens usam `trip_headsign` `Cascais` ou `Sintra` | ✅ Passa | Dois valores distintos, dentro do limite |
+| As viagens usam `trip_headsign` `Cascais`, `Sintra` e `Cascais via Oeiras` | ❌ Problema | Três valores distintos, acima do limite |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Mais de dois valores distintos de `trip_headsign` na mesma rota | As viagens do `route_id` foram associadas a mais textos de destino do que os dois permitidos, normalmente por inconsistências no preenchimento do `trip_headsign` | Rever o `trip_headsign` de cada viagem em `trips.txt` e reduzir os valores distintos usados pelo mesmo `route_id` para, no máximo, dois |

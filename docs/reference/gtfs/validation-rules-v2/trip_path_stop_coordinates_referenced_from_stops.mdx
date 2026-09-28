@@ -1,6 +1,6 @@
 ---
-title: Paragens perto do percurso
-description: Verifica se as paragens de cada viagem estão a menos de 100 metros do percurso (shape) da viagem.
+title: Proximidade das paragens à shape
+description: Verifica se as coordenadas de cada paragem servida por uma viagem estão suficientemente próximas da shape atribuída a essa viagem.
 ---
 
 ## Propriedades da regra
@@ -8,48 +8,43 @@ description: Verifica se as paragens de cada viagem estão a menos de 100 metros
 | Propriedade | Valor |
 |---|---|
 | Rule ID | `trip_path_stop_coordinates_referenced_from_stops` |
-| Ficheiros | `trips.txt`, `stop_times.txt`, `stops.txt`, `shapes.txt` |
-| Campos | `shape_id`, `stop_id`, `stop_lat`, `stop_lon` |
+| Ficheiro | `stop_times.txt` |
+| Campo | `stop_id` |
 | Tipo | Coordenadas |
 | Severidade | Opcional |
 
-**Descrição dos campos:**
+**Descrição do campo:** identifica a paragem servida pela viagem. As suas coordenadas (`stop_lat`, `stop_lon`) vêm de `stops.txt` e são comparadas com a shape, o trajeto geográfico da viagem.
 
-- `shape_id`: identifica o percurso geográfico da viagem.
-- `stop_id`: identifica cada paragem da viagem no `stop_times.txt`.
-- `stop_lat`: latitude da paragem, em `stops.txt`.
-- `stop_lon`: longitude da paragem, em `stops.txt`.
-
-Mais informação em [trips.txt](/reference/gtfs/schedule/trips), [stop_times.txt](/reference/gtfs/schedule/stop_times), [stops.txt](/reference/gtfs/schedule/stops), [shapes.txt](/reference/gtfs/schedule/shapes).
+Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times).
 
 ## Como funciona
 
-Para cada viagem com percurso, a regra confirma que cada paragem da viagem fica a menos de 100 metros do ponto do percurso mais próximo. A regra **não verifica** a ordem em que as paragens são percorridas, nem se o percurso é contínuo.
+Quando esta regra passa, todas as paragens servidas por uma viagem estão a, no máximo, 100 metros da shape atribuída a essa viagem. A regra não confirma que a shape está correta nem que a ordem das paragens faz sentido, só mede a distância entre cada paragem e o ponto mais próximo da shape. Viagens sem `shape_id` preenchido não são avaliadas por esta regra.
 
-A regra avalia cada linha do `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+A regra avalia cada viagem de `trips.txt`: mede a distância entre cada paragem servida (através de `stop_times.txt`) e a shape associada, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | A viagem não tem `shape_id`? | Termina sem reportar nada | Segue para o passo 2 |
-| 2 | Cada paragem da viagem (sem repetições) existe em `stops.txt`? | Segue para o passo 3 | Essa paragem é ignorada |
-| 3 | A distância da paragem ao ponto do percurso mais próximo é superior a 100 metros? | ❌ Reporta o problema: paragem longe do percurso | ✅ Passa |
+| 1 | A viagem tem um `shape_id` preenchido em `trips.txt`? | Segue para o passo 2 | A regra não avalia esta viagem |
+| 2 | A configuração da regra está definida para não aplicar esta verificação? | A regra não avalia esta viagem | Segue para o passo 3 |
+| 3 | A distância entre a paragem (`stop_lat`, `stop_lon` em `stops.txt`) e o ponto mais próximo da shape (`shapes.txt`) é superior a 100 metros? | ❌ Reporta o problema para essa paragem | ✅ Passa |
 
-O problema é reportado uma vez por paragem e por viagem. Por isso, uma paragem mal posicionada pode aparecer em muitas viagens.
+Cada paragem só é avaliada uma vez por viagem, mesmo que apareça em várias linhas de `stop_times.txt`.
 
 ## Como se relacionam
 
-A viagem (`trips.txt`) liga o percurso (`shape_id`, em `shapes.txt`) às paragens (`stop_times.txt` e `stops.txt`). A distância é medida entre a paragem e o ponto do percurso mais próximo.
+O `stop_id` de `stop_times.txt` identifica a paragem visitada pela viagem; as suas coordenadas vêm de `stop_lat` e `stop_lon` em `stops.txt`. O `shape_id` da viagem, em `trips.txt`, identifica o trajeto geográfico cujos pontos estão em `shapes.txt`. A regra compara a paragem com o ponto mais próximo desse trajeto.
 
 ## Exemplos
 
-| Paragem | Resultado | Porquê |
+| Valor | Resultado | Porquê |
 |---|---|---|
-| A `35` m do percurso | ✅ Passa | Distância dentro do limite |
-| A `250` m do percurso | ❌ Problema | Distância superior a 100 metros |
-| Viagem sem `shape_id` | ✅ Passa | Não há percurso para comparar |
+| Paragem a 40 metros da shape mais próxima | ✅ Passa | Dentro do limite de 100 metros |
+| Paragem a 250 metros da shape mais próxima | ❌ Problema | Fora do limite de 100 metros |
+| Viagem sem `shape_id` preenchido | ✅ Passa | A regra não avalia esta viagem |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Paragem longe do percurso | Coordenadas da paragem erradas, ou percurso que não passa pela paragem | Corrigir `stop_lat` e `stop_lon` em `stops.txt`, ou corrigir os pontos do percurso em `shapes.txt` |
+| Paragem demasiado longe da shape da viagem | As coordenadas `stop_lat`/`stop_lon` da paragem em `stops.txt` estão incorretas, ou a shape em `shapes.txt` não passa junto da paragem, ou o `shape_id` atribuído à viagem em `trips.txt` está errado | Corrigir as coordenadas da paragem em `stops.txt`, ajustar a shape em `shapes.txt`, ou associar o `shape_id` correto à viagem em `trips.txt` |

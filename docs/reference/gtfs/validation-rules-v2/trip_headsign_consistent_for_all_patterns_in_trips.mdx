@@ -1,6 +1,6 @@
 ---
-title: Destino igual em todo o padrão
-description: Verifica se todas as viagens com o mesmo pattern_id têm o mesmo trip_headsign.
+title: Consistência do destino da viagem no padrão
+description: Verifica se todas as viagens com o mesmo pattern_id em trips.txt têm o mesmo trip_headsign, incluindo se o campo está preenchido da mesma forma em todas.
 ---
 
 ## Propriedades da regra
@@ -13,34 +13,33 @@ description: Verifica se todas as viagens com o mesmo pattern_id têm o mesmo tr
 | Tipo | Texto |
 | Severidade | Obrigatório |
 
-**Descrição do campo:** texto que aparece na sinalética e identifica o destino da viagem.
+**Descrição do campo:** texto que aparece na sinalética e identifica o destino da viagem para os passageiros.
 
 Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
 
 ## Como funciona
 
-Todas as viagens com o mesmo `pattern_id` têm de ter o mesmo `trip_headsign`. Um destino vazio numa viagem e preenchido noutra também conta como diferença. A regra só avalia viagens com `pattern_id` preenchido. **Não verifica** se o valor existe noutros ficheiros. Só é reportado um problema por padrão, na primeira viagem do grupo.
+Viagens com o mesmo `pattern_id` seguem o mesmo trajeto e têm de mostrar aos passageiros o mesmo destino. A regra confirma que o `trip_headsign` é igual em todas as viagens de um mesmo `pattern_id`, incluindo quando o campo está vazio: se só algumas viagens do grupo tiverem o campo preenchido, isso também conta como inconsistência. Não verifica se o texto do `trip_headsign` está correto ou é o mais adequado, só que é igual dentro do mesmo `pattern_id`.
 
-A regra avalia cada grupo de viagens com o mesmo `pattern_id` no `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+A regra avalia cada grupo de viagens com o mesmo `pattern_id` em `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | Há mais do que um valor de `trip_headsign` entre as viagens do grupo? | ❌ Reporta o problema: valores diferentes no mesmo padrão | ✅ Passa |
+| 1 | Todas as viagens do grupo têm o mesmo valor de `trip_headsign`, incluindo estar vazio ou preenchido? | ✅ Passa | Segue para o passo 2 |
+| 2 | A configuração da regra está definida para não aplicar esta verificação? | Aceita, sem reportar problema | ❌ Reporta o problema: viagens do mesmo `pattern_id` com `trip_headsign` diferentes |
 
-## Como se relacionam
-
-Um padrão (`pattern_id`) agrupa as viagens que fazem o mesmo percurso no mesmo sentido. Por isso, o `trip_headsign` não pode mudar entre viagens do mesmo `pattern_id`.
+Um `trip_headsign` vazio conta como um valor diferente de um `trip_headsign` preenchido; nos valores reportados aparece identificado como `[empty]`.
 
 ## Exemplos
 
-| Viagens do mesmo `pattern_id` | Resultado | Porquê |
+| Valor | Resultado | Porquê |
 |---|---|---|
-| `1001_0_1`: destino `Prior Velho` em todas | ✅ Passa | Destino único |
-| `1001_0_1`: `Prior Velho` e `Sacavém` | ❌ Problema | Dois destinos no mesmo padrão |
-| `1001_0_1`: `Prior Velho` e vazio | ❌ Problema | Destino em falta numa viagem |
+| `Cascais`, `Cascais`, `Cascais` (mesmo `pattern_id`) | ✅ Passa | Todas as viagens têm o mesmo destino |
+| `Cascais`, `Oeiras` (mesmo `pattern_id`) | ❌ Problema | O `pattern_id` tem viagens com destinos diferentes |
+| `Cascais`, (vazio) (mesmo `pattern_id`) | ❌ Problema | Só algumas viagens do `pattern_id` têm o campo preenchido |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Destinos diferentes no mesmo padrão | Uma viagem tem o destino escrito de forma diferente, ou em falta | Uniformizar `trip_headsign` das viagens do padrão no `trips.txt` |
+| Viagens do mesmo `pattern_id` com `trip_headsign` diferentes | As viagens deste `pattern_id` têm destinos diferentes ou só algumas têm o campo preenchido | Preencher o `trip_headsign` de forma igual e consistente em todas as viagens do mesmo `pattern_id` em `trips.txt` |

@@ -1,6 +1,6 @@
 ---
 title: Desembarque contínuo da rota
-description: Verifica se continuous_drop_off tem um valor válido, se não é usado quando existem janelas de horário nos stop_times da rota e, quando configurado, se consta da lista de valores permitidos.
+description: Verifica se o valor de continuous_drop_off em routes.txt é compatível com as janelas de horário da rota e, quando aplicável, consta da lista de valores permitidos pela configuração da regra.
 ---
 
 ## Propriedades da regra
@@ -10,43 +10,42 @@ description: Verifica se continuous_drop_off tem um valor válido, se não é us
 | Rule ID | `routes_continuous_drop_off_valid_gtfs_enum` |
 | Ficheiro | `routes.txt` |
 | Campo | `continuous_drop_off` |
-| Tipo | Enum |
-| Severidade | Condicional (proibido ter um valor diferente de `1` ou vazio quando existem viagens da rota com `start_pickup_drop_off_window` ou `end_pickup_drop_off_window` definidos em `stop_times.txt`; opcional caso contrário) |
+| Tipo | Enumeração |
+| Severidade | Opcional (proibido qualquer valor diferente de `1` ou vazio quando a rota tem viagens com `start_pickup_drop_off_window` ou `end_pickup_drop_off_window` definidos em `stop_times.txt`) |
 
-**Descrição do campo:** indica que o passageiro pode desembarcar em qualquer ponto do percurso do veículo descrito em `shapes.txt`, em todas as viagens da rota. Os valores `0` (desembarque contínuo), `2` (só por telefone à agência) e `3` (só combinando com o condutor) descrevem o tipo de desembarque contínuo; `1` ou vazio significa que não há desembarque contínuo. O valor em `routes.continuous_drop_off` pode ser substituído por `stop_times.continuous_drop_off` para paragens específicas.
+**Descrição do campo:** indica se os passageiros podem sair do veículo em qualquer ponto do trajeto descrito em `shapes.txt`, em todas as viagens da rota. Um valor definido em `stop_times.txt` para uma paragem específica substitui este valor.
 
 Mais informação em [routes.txt](/reference/gtfs/schedule/routes).
 
 ## Como funciona
 
-Um valor vazio ou `1` significa "sem desembarque contínuo" e é sempre aceite. Qualquer outro valor só é aceite se nenhuma viagem da rota tiver `start_pickup_drop_off_window` ou `end_pickup_drop_off_window` definidos em `stop_times.txt` — essas janelas de horário são incompatíveis com o desembarque contínuo. A configuração da regra pode ainda restringir os valores aceites a uma lista específica. A regra não verifica se o desembarque contínuo é fisicamente possível no percurso da rota.
+Quando a regra passa, o valor de `continuous_drop_off` não entra em conflito com as janelas de horário das viagens da rota e, quando a configuração da regra tem uma lista de valores permitidos, o valor consta dessa lista. A regra **não verifica se o valor é um dos códigos `0`, `1`, `2` ou `3` da norma GTFS**: isso depende inteiramente da lista de valores permitidos definida na configuração da regra.
 
 A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O valor está vazio ou é `1`? | ✅ Passa | Segue para o passo 2 |
+| 1 | O campo está vazio ou tem o valor `1`? | ✅ Passa (significa que não há desembarque contínuo) | Segue para o passo 2 |
 | 2 | Alguma viagem desta rota tem `start_pickup_drop_off_window` ou `end_pickup_drop_off_window` definidos em `stop_times.txt`? | ❌ Reporta o problema: valor proibido com janela de horário | Segue para o passo 3 |
 | 3 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 4 | ✅ Passa |
 | 4 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
 
 ## Como se relacionam
 
-O valor só pode ser diferente de `1` ou vazio se nenhuma viagem desta rota tiver `start_pickup_drop_off_window` nem `end_pickup_drop_off_window` definidos em `stop_times.txt`.
+O passo 2 depende de `stop_times.txt`: se qualquer viagem da rota tiver `start_pickup_drop_off_window` ou `end_pickup_drop_off_window` preenchidos, `continuous_drop_off` só pode ser `1` ou vazio nessa rota.
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| _(vazio)_ | ✅ Passa | Sem desembarque contínuo |
-| `1` | ✅ Passa | Sem desembarque contínuo |
-| `0` (rota sem janelas de horário nos `stop_times`) | ✅ Passa | Desembarque contínuo válido, sem conflito |
-| `0` (rota com viagens com `end_pickup_drop_off_window` definido) | ❌ Problema | Proibido quando existem janelas de horário |
-| `2` (lista permitida = `0`, `1`) | ❌ Problema | Valor fora da lista permitida |
+| `1` (ou vazio) | ✅ Passa | Significa que não há desembarque contínuo |
+| `0` (rota com viagens com `start_pickup_drop_off_window` definido) | ❌ Problema | Só é permitido `1` ou vazio quando há janela de horário |
+| `2` (rota sem janelas de horário, valor permitido pela configuração) | ✅ Passa | Está na lista de valores permitidos |
+| `5` (rota sem janelas de horário, valor fora da lista permitida) | ❌ Problema | Valor fora da lista de valores permitidos |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Valor proibido com janela de horário | A rota tem viagens com `start_pickup_drop_off_window` ou `end_pickup_drop_off_window` em `stop_times.txt`, incompatíveis com desembarque contínuo | Definir `continuous_drop_off` como `1` ou deixar vazio nessa rota |
-| Valor não permitido | O valor não consta da lista definida na configuração da regra | Usar um valor da lista, ou pedir ao administrador que o adicione |
+| Valor proibido com janela de horário | A rota tem viagens com `start_pickup_drop_off_window` ou `end_pickup_drop_off_window` definidos em `stop_times.txt`, mas `continuous_drop_off` em `routes.txt` não é `1` nem está vazio | Alterar `continuous_drop_off` em `routes.txt` para `1` ou deixar o campo vazio |
+| Valor não permitido | O valor de `continuous_drop_off` não consta da lista de valores permitidos pela configuração da regra | Alterar `continuous_drop_off` em `routes.txt` para um dos valores permitidos, normalmente `0`, `1`, `2` ou `3` |
