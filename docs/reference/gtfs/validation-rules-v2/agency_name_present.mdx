@@ -1,6 +1,6 @@
 ---
-title: Nome do operador
-description: Verifica se o nome do operador está preenchido em agency.txt e, quando configurado, se consta da lista de nomes permitidos.
+title: Nome da agência
+description: Verifica se cada linha de agency.txt tem o nome completo da agência preenchido.
 ---
 
 ## Propriedades da regra
@@ -13,33 +13,33 @@ description: Verifica se o nome do operador está preenchido em agency.txt e, qu
 | Tipo | Texto |
 | Severidade | Obrigatório |
 
-**Descrição do campo:** nome completo do operador de transportes.
+**Descrição do campo:** nome completo da agência de transporte, tal como deve aparecer aos passageiros.
 
 Mais informação em [agency.txt](/reference/gtfs/schedule/agency).
 
 ## Como funciona
 
-O `agency_name` tem sempre de estar preenchido, mesmo que a configuração da regra defina outra severidade para este campo. A regra **não verifica o conteúdo do nome**, só que existe.
+Quando esta regra passa, garante-se que todas as linhas de `agency.txt` têm um `agency_name` preenchido. A regra **não verifica** o conteúdo do texto, apenas que existe um valor.
 
 A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O campo está vazio? | ❌ Reporta o problema: campo em falta | Segue para o passo 2 |
-| 2 | A configuração da regra tem uma lista de nomes permitidos? | Segue para o passo 3 | ✅ Passa |
-| 3 | O nome está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: nome não permitido |
+| 1 | O campo está vazio? | ❌ Reporta o problema | Segue para o passo 2 |
+| 2 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 3 | ✅ Passa |
+| 3 | O valor está na lista (ou a lista aceita qualquer valor)? | ✅ Passa | ❌ Reporta o problema: valor não permitido |
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `Transportes Metropolitanos de Lisboa` | ✅ Passa | Nome preenchido |
-| vazio | ❌ Problema | Campo obrigatório |
-| `Outro Nome` (lista permitida = `Transportes Metropolitanos de Lisboa`) | ❌ Problema | Nome válido, mas fora da lista |
+| `Metro de Lisboa` | ✅ Passa | Campo preenchido |
+| (vazio) | ❌ Problema | Campo obrigatório em falta |
+| `Metro de Lisboa` (lista permitida = `Carris`, `CP`) | ❌ Problema | Valor válido mas fora da lista |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Campo em falta | O campo está vazio | Preencher o `agency_name` do `agency.txt` com o nome completo do operador |
-| Nome não permitido | O nome está preenchido mas não está na lista de nomes permitidos | Usar um nome da lista, ou pedir ao administrador que o adicione |
+| Campo em falta | A linha de `agency.txt` não tem valor em `agency_name` | Preencher `agency_name` com o nome completo da agência |
+| Valor não permitido | A configuração da regra tem uma lista de nomes permitidos e este valor não consta dela | Usar um nome da lista, ou pedir ao administrador que o adicione |

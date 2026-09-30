@@ -1,6 +1,6 @@
 ---
-title: Página de tarifas do operador
-description: Verifica se o endereço da página de tarifas indicado em agency.txt é um URL http ou https bem escrito e, quando configurado, se consta da lista de endereços permitidos.
+title: Página de tarifários da agência
+description: Verifica se o URL da página de compra de bilhetes ou informação de tarifários indicado em agency.txt está bem formado e, quando configurado, se consta da lista de URLs permitidos.
 ---
 
 ## Propriedades da regra
@@ -13,13 +13,13 @@ description: Verifica se o endereço da página de tarifas indicado em agency.tx
 | Tipo | URL |
 | Severidade | Opcional |
 
-**Descrição do campo:** endereço de uma página onde o passageiro pode comprar bilhetes ou outros títulos de transporte do operador, ou uma página com informação sobre as tarifas do operador.
+**Descrição do campo:** página onde o passageiro pode comprar bilhetes ou outros títulos de transporte da agência, ou uma página com informação sobre os tarifários da agência.
 
 Mais informação em [agency.txt](/reference/gtfs/schedule/agency).
 
 ## Como funciona
 
-Se o operador indicar uma página de tarifas, o valor tem de ser um endereço completo que começa por `http://` ou `https://` e indica um domínio. Se a configuração da regra tiver uma lista de endereços permitidos, o endereço também tem de constar dessa lista. A regra **não confirma que a página existe** nem que abre, só que o endereço está bem escrito.
+Se a agência indicar este URL, o valor tem de começar por `http://` ou `https://`, ter um domínio válido e não conter espaços nem carateres não permitidos. Se a configuração da regra tiver uma lista de URLs permitidos, o valor também tem de constar dessa lista. A regra **não confirma** que a página existe ou está acessível, só que o formato está correto.
 
 A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
@@ -27,26 +27,25 @@ A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, 
 |---|---|---|---|
 | 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
 | 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
-| 3 | O valor é um endereço `http` ou `https` completo e sem carateres proibidos? | Segue para o passo 4 | ❌ Reporta o problema: URL inválido |
-| 4 | A configuração da regra tem uma lista de endereços permitidos? | Segue para o passo 5 | ✅ Passa |
-| 5 | O endereço está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: endereço não permitido |
-
-Os espaços no início e no fim são ignorados. Espaços no meio, aspas e os carateres `<`, `>`, `{`, `}`, `|`, `\` e `^` tornam o endereço inválido.
+| 3 | O texto é um URL válido (começa por `http://` ou `https://`, tem domínio e não tem espaços nem carateres como `<`, `>`, `{`, `}`, `\|`)? | Segue para o passo 4 | ❌ Reporta o problema: formato inválido |
+| 4 | A configuração da regra tem uma lista de URLs permitidos? | Segue para o passo 5 | ✅ Passa |
+| 5 | O valor está na lista (ou a lista aceita qualquer valor)? | ✅ Passa | ❌ Reporta o problema: valor não permitido |
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `https://www.operador.pt/bilhetes` | ✅ Passa | Endereço completo |
-| `www.operador.pt/bilhetes` | ❌ Problema | Falta `https://` |
-| `https://` | ❌ Problema | Falta o domínio |
-| `https://outro.pt` (lista permitida = `https://www.operador.pt/bilhetes`) | ❌ Problema | Formato válido, mas fora da lista |
+| `https://www.metro.pt/bilhetes` | ✅ Passa | Formato correto |
+| `www.metro.pt/bilhetes` | ❌ Problema | Falta `http://` ou `https://` |
+| `ftp://www.metro.pt/bilhetes` | ❌ Problema | Protocolo não permitido |
+| `https://www.metro.pt/os nossos bilhetes` | ❌ Problema | Contém espaços |
+| `https://outro.pt` (lista permitida = `https://www.metro.pt/bilhetes`) | ❌ Problema | Formato válido, mas fora da lista |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| URL inválido | Falta `https://`, falta o domínio ou há carateres proibidos | Escrever no `agency_fare_url` do `agency.txt` o endereço completo, por exemplo `https://www.operador.pt/bilhetes` |
-| Endereço não permitido | O endereço é válido mas não está na lista de endereços permitidos | Usar um endereço da lista, ou pedir ao administrador que o adicione |
-| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `agency_fare_url` do `agency.txt` com o endereço da página de tarifas |
-| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `agency_fare_url` no `agency.txt` |
+| Formato inválido | Falta `http://` ou `https://`, o domínio está incompleto, ou o texto tem espaços ou carateres não permitidos | Escrever o URL completo, por exemplo `https://www.metro.pt/bilhetes` |
+| Valor não permitido | O URL é válido mas não está na lista de URLs permitidos | Usar um URL da lista, ou pedir ao administrador que o adicione |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher com o URL da página de tarifários ou compra de bilhetes |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `agency_fare_url` |

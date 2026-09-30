@@ -1,6 +1,6 @@
 ---
-title: Fuso horário do operador
-description: Verifica se o fuso horário indicado em agency.txt é um identificador de fuso horário reconhecido e, quando configurado, se consta da lista de fusos permitidos.
+title: Fuso horário da agência
+description: Verifica se o fuso horário indicado em agency.txt é um identificador de fuso horário válido e, quando configurado, se consta da lista de fusos permitidos.
 ---
 
 ## Propriedades da regra
@@ -13,13 +13,13 @@ description: Verifica se o fuso horário indicado em agency.txt é um identifica
 | Tipo | Fuso horário |
 | Severidade | Opcional |
 
-**Descrição do campo:** fuso horário onde o operador de transportes está localizado. Se existir mais do que um operador no conjunto de dados, todos têm de indicar o mesmo `agency_timezone`.
+**Descrição do campo:** fuso horário onde a agência de transporte está localizada. Quando o conjunto de dados tem mais do que uma agência, todas devem indicar o mesmo fuso horário.
 
 Mais informação em [agency.txt](/reference/gtfs/schedule/agency).
 
 ## Como funciona
 
-Se o operador indicar um fuso horário, o valor tem de ser um identificador de fuso horário reconhecido, como `Europe/Lisbon`. Se a configuração da regra tiver uma lista de fusos permitidos, o valor também tem de constar dessa lista. A regra **não confirma que todos os operadores do conjunto de dados partilham o mesmo fuso horário**, só valida o formato de cada linha.
+Se a agência indicar um fuso horário, o valor tem de ser um identificador reconhecido, como `Europe/Lisbon`. Se a configuração da regra tiver uma lista de fusos permitidos, o valor também tem de constar dessa lista. A regra **não verifica** se todas as agências do conjunto de dados usam o mesmo fuso horário, nem remove espaços em branco no início ou no fim do valor — um valor com espaços extra é tratado como inválido.
 
 A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
@@ -27,26 +27,25 @@ A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, 
 |---|---|---|---|
 | 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
 | 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
-| 3 | O valor é um identificador de fuso horário reconhecido? | Segue para o passo 4 | ❌ Reporta o problema: fuso horário inválido |
+| 3 | O texto é um identificador de fuso horário reconhecido? | Segue para o passo 4 | ❌ Reporta o problema: formato inválido |
 | 4 | A configuração da regra tem uma lista de fusos permitidos? | Segue para o passo 5 | ✅ Passa |
-| 5 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: fuso não permitido |
-
-O valor tem de corresponder exatamente ao identificador da base de dados de fusos horários (maiúsculas e minúsculas incluídas), como `Europe/Lisbon` ou `UTC`. Não há remoção de espaços no início ou no fim.
+| 5 | O valor está na lista (ou a lista aceita qualquer valor)? | ✅ Passa | ❌ Reporta o problema: valor não permitido |
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
 | `Europe/Lisbon` | ✅ Passa | Identificador reconhecido |
-| `UTC` | ✅ Passa | Identificador reconhecido |
-| `europe/lisbon` | ❌ Problema | Maiúsculas e minúsculas não coincidem com o identificador |
-| `Not/A_Timezone` | ❌ Problema | Não existe na base de dados de fusos horários |
+| `WET` | ❌ Problema | Não é um identificador de fuso horário reconhecido |
+| `Europe/Lisboa` | ❌ Problema | Nome incorreto (o identificador correto é `Europe/Lisbon`) |
+| ` Europe/Lisbon` (com espaço no início) | ❌ Problema | O espaço não é removido e o valor deixa de ser reconhecido |
+| `America/New_York` (lista permitida = `Europe/Lisbon`) | ❌ Problema | Identificador válido, mas fora da lista |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Fuso horário inválido | Nome inventado, maiúsculas/minúsculas erradas ou espaço a mais | Escrever no `agency_timezone` do `agency.txt` o identificador exato, por exemplo `Europe/Lisbon` |
-| Fuso não permitido | O valor é válido mas não está na lista de fusos permitidos | Usar um fuso da lista, ou pedir ao administrador que o adicione |
-| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `agency_timezone` do `agency.txt` com o fuso horário do operador |
-| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `agency_timezone` no `agency.txt` |
+| Formato inválido | O identificador não existe, tem um erro de escrita, ou tem espaços a mais | Escrever o identificador exato, por exemplo `Europe/Lisbon` |
+| Valor não permitido | O fuso horário é válido mas não está na lista de fusos permitidos | Usar um fuso da lista, ou pedir ao administrador que o adicione |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher com o fuso horário da agência, por exemplo `Europe/Lisbon` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `agency_timezone` |

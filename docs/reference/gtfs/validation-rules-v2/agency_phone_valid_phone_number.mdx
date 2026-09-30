@@ -1,6 +1,6 @@
 ---
-title: Telefone do operador
-description: Verifica se o número de telefone indicado em agency.txt tem um formato válido e, quando configurado, se consta da lista de números permitidos.
+title: Telefone da agência
+description: Verifica se o número de telefone indicado em agency.txt usa só carateres permitidos e tem dígitos suficientes e, quando configurado, se consta da lista de números permitidos.
 ---
 
 ## Propriedades da regra
@@ -13,13 +13,13 @@ description: Verifica se o número de telefone indicado em agency.txt tem um for
 | Tipo | Número de telefone |
 | Severidade | Opcional |
 
-**Descrição do campo:** número de telefone de contacto do operador. Pode conter sinais de pontuação para agrupar os algarismos. É permitido texto marcável (por exemplo, `RIDE` num teclado telefónico), mas o campo não pode conter outro texto descritivo.
+**Descrição do campo:** número de telefone de voz da agência de transporte, no formato habitual na área servida. Pode ter pontuação a separar os dígitos. Texto marcável (por exemplo, "808-208-208") é permitido, mas o campo não pode conter outro texto descritivo.
 
 Mais informação em [agency.txt](/reference/gtfs/schedule/agency).
 
 ## Como funciona
 
-Se o operador indicar um telefone, o valor tem de ter um formato válido. Se a configuração da regra tiver uma lista de números permitidos, o valor também tem de constar dessa lista. A regra **não confirma que o número existe** nem que está ativo, só que o formato é aceitável.
+Se a agência indicar um telefone, o texto só pode conter dígitos, letras, espaços, hífen (`-`) ou o sinal `+`, e tem de ter pelo menos 7 dígitos. Se a configuração da regra tiver uma lista de números permitidos, o valor também tem de constar dessa lista. A regra **não aceita parênteses nem pontos** a separar os dígitos, apesar de serem comuns na formatação de telefones.
 
 A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
@@ -27,26 +27,25 @@ A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, 
 |---|---|---|---|
 | 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
 | 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
-| 3 | O valor só tem algarismos, letras, espaços, `-`, `+`, `(` ou `)`, e pelo menos 7 algarismos no total? | Segue para o passo 4 | ❌ Reporta o problema: número inválido |
+| 3 | O texto só tem dígitos, letras, espaços, hífen ou `+`, e tem pelo menos 7 dígitos? | Segue para o passo 4 | ❌ Reporta o problema: formato inválido |
 | 4 | A configuração da regra tem uma lista de números permitidos? | Segue para o passo 5 | ✅ Passa |
-| 5 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: número não permitido |
-
-Os espaços no início e no fim são ignorados.
+| 5 | O valor está na lista (ou a lista aceita qualquer valor)? | ✅ Passa | ❌ Reporta o problema: valor não permitido |
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `+351 21 000 0000` | ✅ Passa | Formato válido, com 11 algarismos |
-| `21#000000` | ❌ Problema | O caráter `#` não é permitido |
-| `abc` | ❌ Problema | Sem algarismos suficientes |
-| `21 000 0000` (lista permitida = `+351 21 000 0000`) | ❌ Problema | Formato válido, mas fora da lista |
+| `210 000 000` | ✅ Passa | Só dígitos e espaços, com 9 dígitos |
+| `21 000 0000` | ✅ Passa | Só dígitos e espaços, com 8 dígitos |
+| `(21) 000 0000` | ❌ Problema | Os parênteses não são um carater permitido |
+| `21.000.0000` | ❌ Problema | Os pontos não são um carater permitido |
+| `210000` | ❌ Problema | Tem menos de 7 dígitos |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Número inválido | Menos de 7 algarismos, ou carateres como `#`, `@` ou texto descritivo | Escrever no `agency_phone` do `agency.txt` um número com pelo menos 7 algarismos, usando apenas algarismos, letras, espaços, `-`, `+`, `(` ou `)` |
-| Número não permitido | O número é válido mas não está na lista de números permitidos | Usar um número da lista, ou pedir ao administrador que o adicione |
-| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `agency_phone` do `agency.txt` com o telefone de contacto do operador |
-| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `agency_phone` no `agency.txt` |
+| Formato inválido | O número tem parênteses, pontos ou outro carater não permitido, ou tem menos de 7 dígitos | Escrever o número só com dígitos, espaços, hífen ou `+`, por exemplo `210 000 000` |
+| Valor não permitido | O número é válido mas não está na lista de números permitidos | Usar um número da lista, ou pedir ao administrador que o adicione |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher com o telefone de contacto da agência |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `agency_phone` |
