@@ -1,6 +1,6 @@
 ---
-title: Identificador da linha
-description: Verifica se o campo line_id em routes.txt, quando preenchido, tem o mesmo valor do campo route_short_name.
+title: Identificador da linha da rota
+description: Verifica se o line_id de routes.txt, quando preenchido, é igual ao route_short_name da mesma rota.
 ---
 
 ## Propriedades da regra
@@ -19,31 +19,32 @@ Mais informação em [routes.txt](/reference/gtfs/schedule/routes).
 
 ## Como funciona
 
-Quando o campo `line_id` está preenchido, o valor tem de ser igual ao valor de `route_short_name` na mesma linha de `routes.txt`. A regra não verifica se o identificador corresponde a uma linha real nalgum sistema externo, só compara os dois campos entre si.
+Quando a regra passa, o `line_id` está vazio ou é igual ao `route_short_name` da rota. A regra **não verifica se a linha existe noutro ficheiro**.
 
 A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O campo `line_id` está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
 | 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
-| 3 | O campo `route_short_name` está preenchido e tem um valor diferente de `line_id`? | ❌ Reporta o problema: valores diferentes | ✅ Passa |
+| 3 | A rota tem `route_short_name` e este é diferente do `line_id`? | ❌ Reporta o problema: valores diferentes | ✅ Passa |
 
 ## Como se relacionam
 
-O campo `line_id` tem de ter o mesmo valor do campo `route_short_name`, quando este está preenchido. Se `route_short_name` estiver vazio, não há comparação e a regra não reporta problema por essa via.
+O `line_id` tem de ser igual ao `route_short_name` da mesma linha. Se `route_short_name` estiver vazio, não há nada para comparar e a regra aceita o valor.
 
 ## Exemplos
 
-| `line_id` | `route_short_name` | Resultado | Porquê |
+| line_id | route_short_name | Resultado | Porquê |
 |---|---|---|---|
-| `100` | `100` | ✅ Passa | Valores iguais |
-| `100` | `101` | ❌ Problema | Valores diferentes |
+| `1001` | `1001` | ✅ Passa | Valores iguais |
+| `1001` | `1002` | ❌ Problema | Valores diferentes |
+| `1001` | (vazio) | ✅ Passa | Nada para comparar |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Valores diferentes | `line_id` e `route_short_name` têm valores distintos na mesma linha | Corrigir `line_id` em `routes.txt` para ter o mesmo valor de `route_short_name` |
-| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `line_id` em `routes.txt` com o identificador da linha |
+| `line_id` diferente de `route_short_name` | Os dois campos foram preenchidos com valores diferentes | Corrigir `line_id` ou `route_short_name` em `routes.txt` para ficarem iguais |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `line_id` em `routes.txt` |
 | Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `line_id` em `routes.txt` |

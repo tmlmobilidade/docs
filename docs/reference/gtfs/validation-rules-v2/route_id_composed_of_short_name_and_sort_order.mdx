@@ -1,6 +1,6 @@
 ---
-title: Composição do route_id
-description: Verifica se o route_id de routes.txt corresponde à junção de route_short_name e route_sort_order.
+title: Composição do identificador da rota
+description: Verifica se o route_id de routes.txt é igual ao route_short_name e ao route_sort_order unidos por um sublinhado.
 ---
 
 ## Propriedades da regra
@@ -9,47 +9,41 @@ description: Verifica se o route_id de routes.txt corresponde à junção de rou
 |---|---|
 | Rule ID | `route_id_composed_of_short_name_and_sort_order` |
 | Ficheiro | `routes.txt` |
-| Campos | `route_id`, `route_short_name`, `route_sort_order` |
-| Tipo | Identificador único, Texto, Número inteiro não negativo |
+| Campo | `route_id` |
+| Tipo | ID único |
 | Severidade | Opcional |
 
-**Descrição dos campos:**
-
-- `route_id`: identifica a rota, construído a partir da linha a que pertence e da respetiva ordem de apresentação.
-- `route_short_name`: nome abreviado da rota, usado pelos passageiros para a identificar (por exemplo `32`, `100X`).
-- `route_sort_order`: define a ordem de apresentação das rotas aos passageiros; valores mais baixos aparecem primeiro.
+**Descrição do campo:** identifica uma rota, formado a partir da linha a que pertence e da sua ordem de apresentação. O `route_id` tem de ser a combinação de `route_short_name` e `route_sort_order`, unidos por um sublinhado (`_`). Exemplo: as duas direções da linha `1001` são publicadas como duas rotas, `1001_0` e `1001_1`.
 
 Mais informação em [routes.txt](/reference/gtfs/schedule/routes).
 
 ## Como funciona
 
-Quando a regra passa, fica garantido que `route_id` pode ser recalculado a partir de `route_short_name` e `route_sort_order`, evitando identificadores escritos à mão de forma inconsistente. A regra **não verifica** se `route_id`, `route_short_name` ou `route_sort_order` estão preenchidos, nem se `route_sort_order` é um número válido — essas verificações pertencem a outras regras.
+Quando a regra passa, o `route_id` é igual a `route_short_name`, um sublinhado e `route_sort_order`. As linhas sem `route_id`, `route_short_name` ou `route_sort_order` não são avaliadas, porque não há valores para combinar. Essa falta é reportada pelas outras regras do ficheiro.
 
 A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | A configuração da regra desativa esta verificação? | Aceita sem verificar | Segue para o passo 2 |
-| 2 | Falta `route_id`, falta ou está vazio `route_short_name`, ou falta `route_sort_order`? | Aceita sem verificar (a ausência destes campos é reportada por outras regras) | Segue para o passo 3 |
-| 3 | `route_id` é igual à junção de `route_short_name` e `route_sort_order`, separados por um sublinhado (`_`)? | ✅ Passa | ❌ Problema |
-
-A comparação é feita de forma exata, incluindo maiúsculas e minúsculas.
+| 1 | A configuração da regra ignora esta regra ou define o campo como proibido? | ✅ Passa (a regra não avalia) | Segue para o passo 2 |
+| 2 | O `route_id`, o `route_short_name` ou o `route_sort_order` está vazio? | ✅ Passa (nada para combinar) | Segue para o passo 3 |
+| 3 | O `route_id` é igual a `route_short_name_route_sort_order`? | ✅ Passa | ❌ Reporta o problema: identificador diferente do esperado |
 
 ## Como se relacionam
 
-`route_id` tem de ser exatamente `route_short_name` seguido de `_` e do valor de `route_sort_order`. Por exemplo, se `route_short_name` for `1001` e `route_sort_order` for `0`, o `route_id` esperado é `1001_0`. Quando `route_short_name` ou `route_sort_order` não estão preenchidos, esta regra não verifica nada nessa linha.
+O `route_id` tem de ser `route_short_name`, seguido de `_`, seguido de `route_sort_order`. Por exemplo, `route_short_name` `1001` e `route_sort_order` `0` dão o `route_id` `1001_0`.
 
 ## Exemplos
 
 | route_id | route_short_name | route_sort_order | Resultado | Porquê |
 |---|---|---|---|---|
-| `1001_0` | `1001` | `0` | ✅ Passa | Composição correta |
-| `1001` | `1001` | `0` | ❌ Problema | Falta o sufixo com `route_sort_order` |
-| `1001_1` | `1001` | `0` | ❌ Problema | `route_sort_order` não corresponde (devia ser `1001_0`) |
-| `1001-0` | `1001` | `0` | ❌ Problema | Separador errado, devia ser `_` |
+| `1001_0` | `1001` | `0` | ✅ Passa | Igual a `1001_0` |
+| `1001-0` | `1001` | `0` | ❌ Problema | Devia ser `1001_0` |
+| `1001_1` | `1001` | `0` | ❌ Problema | Devia ser `1001_0` |
+| `rota1` | (vazio) | `0` | ✅ Passa | Falta `route_short_name`, a regra não avalia |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| `route_id` não corresponde à composição esperada | `route_id` foi escrito manualmente ou não foi atualizado depois de alterar `route_short_name` ou `route_sort_order` | Corrigir `route_id` em `routes.txt` para `route_short_name` + `_` + `route_sort_order`, por exemplo `1001_0` |
+| Identificador diferente do esperado | O `route_id` não corresponde ao `route_short_name` e ao `route_sort_order` da mesma linha | Alterar `route_id` em `routes.txt` para o valor indicado na mensagem, ou corrigir `route_short_name` ou `route_sort_order` |

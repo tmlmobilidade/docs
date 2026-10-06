@@ -1,6 +1,6 @@
 ---
 title: Tipo de transporte da rota
-description: Verifica se o route_type de routes.txt está preenchido e corresponde a um código de tipo de transporte válido na norma GTFS.
+description: Verifica se o route_type de routes.txt é um dos valores previstos pelo GTFS e, quando configurado, se consta da lista de valores permitidos.
 ---
 
 ## Propriedades da regra
@@ -13,49 +13,38 @@ description: Verifica se o route_type de routes.txt está preenchido e correspon
 | Tipo | Enumeração |
 | Severidade | Obrigatório |
 
-**Descrição do campo:** indica o tipo de transporte usado na rota. Os valores válidos são:
-
-- `0`: elétrico, light rail. Sistema ferroviário ligeiro ou ao nível da rua numa área metropolitana.
-- `1`: metro. Sistema ferroviário subterrâneo numa área metropolitana.
-- `2`: comboio. Usado em viagens interurbanas ou de longa distância.
-- `3`: autocarro. Usado em linhas de autocarro de curta ou longa distância.
-- `4`: ferry. Usado em serviços de barco de curta ou longa distância.
-- `5`: elétrico por cabo. Veículos ao nível da rua movidos por um cabo por baixo do veículo.
-- `6`: teleférico suspenso (gôndola ou teleférico aéreo). Cabines ou cadeiras suspensas por um ou mais cabos.
-- `7`: funicular. Sistema ferroviário concebido para inclinações acentuadas.
-- `11`: trólei. Autocarros elétricos alimentados por cabos aéreos através de troles.
-- `12`: monocarril. Via férrea composta por um único carril ou viga.
+**Descrição do campo:** indica o tipo de transporte usado na rota. Os valores válidos são `0` (elétrico ou metro ligeiro), `1` (metro), `2` (comboio), `3` (autocarro), `4` (barco), `5` (elétrico de cabo), `6` (teleférico), `7` (funicular), `11` (troleicarro) e `12` (monocarril).
 
 Mais informação em [routes.txt](/reference/gtfs/schedule/routes).
 
 ## Como funciona
 
-Quando a regra passa, fica garantido que `route_type` está preenchido e que o valor corresponde a um dos códigos de tipo de transporte definidos pela norma GTFS. Se a configuração da regra restringir os tipos permitidos, fica também garantido que o valor consta dessa lista. A regra **não verifica** se o tipo de transporte indicado corresponde à realidade do serviço. Esta verificação é sempre obrigatória: não depende da configuração da regra e não pode ser desativada.
+Quando a regra passa, o `route_type` é um dos valores previstos e, se a configuração da regra tiver uma lista de valores permitidos, consta dessa lista.
 
 A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O campo `route_type` está vazio? | ❌ Reporta o problema: campo em falta | Segue para o passo 2 |
-| 2 | O valor é um dos códigos GTFS válidos (`0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `11`, `12`)? | Segue para o passo 3 | ❌ Reporta o problema: valor inválido |
-| 3 | A configuração da regra tem uma lista de tipos permitidos? | Segue para o passo 4 | ✅ Passa |
-| 4 | O valor está nessa lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
-
-Os códigos `8`, `9` e `10` não existem na norma GTFS e são sempre considerados inválidos.
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor é `0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `11` ou `12`? | Segue para o passo 4 | ❌ Reporta o problema: valor inválido |
+| 4 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 5 | ✅ Passa |
+| 5 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
 
 ## Exemplos
 
-| route_type | Resultado | Porquê |
+| Valor | Resultado | Porquê |
 |---|---|---|
-| `3` | ✅ Passa | Autocarro, código GTFS válido |
-| (vazio) | ❌ Problema | `route_type` é obrigatório |
-| `9` | ❌ Problema | Código não existe na norma GTFS |
-| `2` (lista permitida = `3`, `4`) | ❌ Problema | Código válido, mas fora da lista permitida |
+| `3` | ✅ Passa | Valor previsto (autocarro) |
+| `8` | ❌ Problema | Valor não previsto |
+| `3` (lista permitida = `1`, `2`) | ❌ Problema | Valor válido, mas fora da lista |
+| (vazio) | ❌ Problema | Campo obrigatório sem valor |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Campo em falta | `route_type` não foi preenchido | Preencher `route_type` em `routes.txt` com um dos códigos GTFS válidos |
-| Valor inválido | O código usado não existe na norma GTFS (por exemplo `8`, `9`, `10`, ou texto) | Substituir `route_type` em `routes.txt` por um código GTFS válido |
-| Valor não permitido | O código é válido na norma GTFS, mas não consta da lista de tipos permitidos pela configuração da regra | Usar um dos tipos da lista permitida, ou pedir ao administrador que adicione este tipo à lista |
+| Valor inválido | O valor não está entre `0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `11` e `12` | Corrigir `route_type` em `routes.txt` para um valor previsto |
+| Valor não permitido | O valor está fora da lista de valores permitidos da configuração da regra | Usar um valor da lista em `route_type` em `routes.txt`, ou pedir ao administrador que o adicione |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `route_type` em `routes.txt` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `route_type` em `routes.txt` |

@@ -1,6 +1,6 @@
 ---
-title: Agência da rota
-description: Verifica se o agency_id indicado em routes.txt corresponde a uma agência que existe em agency.txt.
+title: Operador da rota
+description: Verifica se o agency_id de routes.txt, quando preenchido, existe em agency.txt.
 ---
 
 ## Propriedades da regra
@@ -10,16 +10,16 @@ description: Verifica se o agency_id indicado em routes.txt corresponde a uma ag
 | Rule ID | `route_agency_id_references_agency_table` |
 | Ficheiro | `routes.txt` |
 | Campo | `agency_id` |
-| Tipo | Identificador (referência a `agency.txt`) |
+| Tipo | ID externo (agency.txt) |
 | Severidade | Opcional |
 
-**Descrição do campo:** identifica a agência responsável pela rota. O valor tem de corresponder a um `agency_id` existente em `agency.txt`.
+**Descrição do campo:** operador responsável pela rota.
 
 Mais informação em [routes.txt](/reference/gtfs/schedule/routes).
 
 ## Como funciona
 
-Quando a regra passa, fica garantido que o `agency_id` indicado corresponde a uma agência que existe em `agency.txt`. A regra **não confirma que a rota está associada à agência correta**, só que a agência referida existe.
+Quando a regra passa, o `agency_id` está vazio ou existe em `agency.txt`. A regra **não verifica se o operador está associado a outras rotas**.
 
 A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
@@ -27,20 +27,23 @@ A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, 
 |---|---|---|---|
 | 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
 | 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
-| 3 | O valor existe em `agency.txt` (na coluna `agency_id`)? | ✅ Passa | ❌ Reporta o problema: agência não encontrada |
+| 3 | O `agency_id` não existe em `agency.txt`? | ❌ Reporta o problema: operador não encontrado | ✅ Passa |
+
+## Como se relacionam
+
+Cada `agency_id` de `routes.txt` tem de existir em `agency.txt`.
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `TML` (existe em `agency.txt`) | ✅ Passa | O `agency_id` existe em `agency.txt` |
-| `XPTO` (não existe em `agency.txt`) | ❌ Problema | Não há nenhuma agência com esse `agency_id` |
-| `TML` (configuração da regra = campo proibido) | ❌ Problema | O campo está preenchido, mas a configuração não permite valor |
+| `CM`  (existe em `agency.txt`) | ✅ Passa | Operador encontrado |
+| `XX`  (não existe em `agency.txt`) | ❌ Problema | Operador desconhecido |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Agência não encontrada | O `agency_id` em `routes.txt` não corresponde a nenhum `agency_id` de `agency.txt` | Corrigir o `agency_id` em `routes.txt` para um valor existente em `agency.txt`, ou adicionar essa agência a `agency.txt` |
-| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `agency_id` em `routes.txt` com um `agency_id` existente em `agency.txt` |
+| Operador não encontrado | O `agency_id` tem erro de escrita ou o operador não consta de `agency.txt` | Corrigir `agency_id` em `routes.txt` ou acrescentar o operador a `agency.txt` |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `agency_id` em `routes.txt`. A mensagem indica que o campo é obrigatório quando existe mais do que um operador em `agency.txt` |
 | Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `agency_id` em `routes.txt` |

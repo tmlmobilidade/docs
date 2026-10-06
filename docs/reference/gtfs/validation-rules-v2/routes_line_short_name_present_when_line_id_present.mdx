@@ -1,6 +1,6 @@
 ---
 title: Nome curto da linha
-description: Verifica se o campo line_short_name em routes.txt está preenchido sempre que a rota tem um line_id e se tem o mesmo valor do campo route_short_name.
+description: Verifica se o line_short_name está preenchido sempre que a rota tem line_id e se é igual ao route_short_name.
 ---
 
 ## Propriedades da regra
@@ -11,7 +11,7 @@ description: Verifica se o campo line_short_name em routes.txt está preenchido 
 | Ficheiro | `routes.txt` |
 | Campo | `line_short_name` |
 | Tipo | Texto |
-| Severidade | Condicional (obrigatório quando `line_id` está preenchido) |
+| Severidade | Condicional (obrigatório quando existe `line_id`) |
 
 **Descrição do campo:** nome curto da linha a que a rota pertence.
 
@@ -19,34 +19,34 @@ Mais informação em [routes.txt](/reference/gtfs/schedule/routes).
 
 ## Como funciona
 
-Se a rota tiver o campo `line_id` preenchido, o campo `line_short_name` também tem de ter um valor, e esse valor tem de ser igual ao de `route_short_name`. Se `line_id` estiver vazio, a regra não verifica `line_short_name`.
+Quando a regra passa, as rotas com `line_id` têm `line_short_name` igual ao `route_short_name`. Nas rotas sem `line_id`, a regra não avalia nada.
 
 A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O campo `line_id` está preenchido? | Segue para o passo 2 | ✅ Passa (o campo `line_short_name` não é verificado) |
-| 2 | O campo `line_short_name` está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 3 |
+| 1 | O `line_id` está vazio? | ✅ Passa (a regra não se aplica) | Segue para o passo 2 |
+| 2 | O `line_short_name` está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 3 |
 | 3 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 4 |
-| 4 | O campo `route_short_name` está preenchido e tem um valor diferente de `line_short_name`? | ❌ Reporta o problema: valores diferentes | ✅ Passa |
+| 4 | A rota tem `route_short_name` e este é diferente do `line_short_name`? | ❌ Reporta o problema: valores diferentes | ✅ Passa |
 
 ## Como se relacionam
 
-O campo `line_short_name` só é exigido ou recomendado quando `line_id` está preenchido nessa linha. Quando está preenchido, tem de ter o mesmo valor do campo `route_short_name`; se `route_short_name` estiver vazio, não há comparação e a regra não reporta problema por essa via.
+A regra só se aplica quando `line_id` está preenchido. Nesse caso, `line_short_name` tem de existir e ser igual a `route_short_name`.
 
 ## Exemplos
 
-| `line_id` | `line_short_name` | `route_short_name` | Resultado | Porquê |
+| line_id | line_short_name | route_short_name | Resultado | Porquê |
 |---|---|---|---|---|
-| (vazio) | (vazio) | `100` | ✅ Passa | `line_id` não está preenchido, o campo não é verificado |
-| `100` | `100` | `100` | ✅ Passa | Preenchido e igual a `route_short_name` |
-| `100` | (vazio) | `100` | ❌ Problema | `line_id` preenchido mas falta `line_short_name` |
-| `100` | `100` | `101` | ❌ Problema | Valores diferentes de `route_short_name` |
+| `1001` | `1001` | `1001` | ✅ Passa | Valores iguais |
+| (vazio) | (vazio) | `1001` | ✅ Passa | Sem `line_id`, a regra não se aplica |
+| `1001` | `1002` | `1001` | ❌ Problema | Difere de `route_short_name` |
+| `1001` | (vazio) | `1001` | ❌ Problema | Falta `line_short_name` |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Valores diferentes | `line_short_name` e `route_short_name` têm valores distintos na mesma linha | Corrigir `line_short_name` em `routes.txt` para ter o mesmo valor de `route_short_name` |
-| Campo em falta | `line_id` está preenchido, mas `line_short_name` está vazio, e a configuração da regra exige ou recomenda este campo | Preencher `line_short_name` em `routes.txt` com o nome curto da linha |
+| `line_short_name` diferente de `route_short_name` | Os dois campos foram preenchidos com valores diferentes | Corrigir `line_short_name` ou `route_short_name` em `routes.txt` para ficarem iguais |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `line_short_name` em `routes.txt` com o nome curto da linha |
 | Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `line_short_name` em `routes.txt` |

@@ -1,6 +1,6 @@
 ---
-title: Nome completo da rota
-description: Verifica se o campo route_long_name de routes.txt está preenchido e, quando configurado, se o valor consta da lista de valores permitidos.
+title: Nome longo da rota
+description: Verifica se o route_long_name está preenchido e, quando configurado, se consta da lista de valores permitidos.
 ---
 
 ## Propriedades da regra
@@ -13,33 +13,35 @@ description: Verifica se o campo route_long_name de routes.txt está preenchido 
 | Tipo | Texto |
 | Severidade | Obrigatório |
 
-**Descrição do campo:** nome completo da rota. É normalmente mais descritivo do que o `route_short_name` e costuma incluir o destino ou a paragem da rota. Tanto o `route_short_name` como o `route_long_name` podem estar preenchidos ao mesmo tempo.
+**Descrição do campo:** nome completo da rota. É normalmente mais descritivo do que o `route_short_name` e inclui muitas vezes o destino ou uma paragem da rota. Podem existir `route_short_name` e `route_long_name` na mesma rota.
 
 Mais informação em [routes.txt](/reference/gtfs/schedule/routes).
 
 ## Como funciona
 
-O `route_long_name` tem sempre de estar preenchido. Apesar do nome da regra sugerir que basta um dos dois campos (`route_long_name` ou `route_short_name`) estar presente, a versão atual da regra não tem essa alternativa: mesmo que `route_short_name` esteja preenchido, a ausência de `route_long_name` é sempre um problema. A regra também **não confirma** que o nome descreve corretamente a rota, só que existe texto e, quando aplicável, que consta da lista de valores permitidos.
+Quando a regra passa, o `route_long_name` está preenchido e, se a configuração da regra tiver uma lista de valores permitidos, consta dessa lista. A regra **não confirma que existe pelo menos um dos dois nomes da rota** nem que o texto descreve bem a rota. Avalia só este campo.
 
 A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O campo `route_long_name` está vazio? | ❌ Reporta o problema: campo em falta | Segue para o passo 2 |
-| 2 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 3 | ✅ Passa |
-| 3 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 4 | ✅ Passa |
+| 4 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `Circular Urbana` | ✅ Passa | Campo preenchido, sem lista de valores permitidos |
-| (vazio) | ❌ Problema | Falta o `route_long_name` |
-| `Verde` (lista permitida = `Circular Urbana`, `Linha Azul`) | ❌ Problema | Texto válido mas fora da lista |
+| `Lisboa - Porto` | ✅ Passa | Nome longo preenchido |
+| `Lisboa - Porto` (lista permitida = `Faro - Lagos`) | ❌ Problema | Valor fora da lista |
+| (vazio) | ❌ Problema | Campo obrigatório sem valor |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Campo em falta | O `route_long_name` não foi preenchido em `routes.txt` | Preencher `route_long_name` com o nome completo da rota, mesmo que `route_short_name` já tenha um valor |
-| Valor não permitido | O texto preenchido não consta da lista de valores permitidos da configuração da regra | Usar um dos valores da lista, ou pedir ao administrador que a atualize |
+| Valor não permitido | O valor está fora da lista de valores permitidos da configuração da regra | Usar um valor da lista em `route_long_name` em `routes.txt`, ou pedir ao administrador que o adicione |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `route_long_name` em `routes.txt` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `route_long_name` em `routes.txt` |

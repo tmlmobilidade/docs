@@ -1,6 +1,6 @@
 ---
 title: Ordem de apresentação da rota
-description: Verifica se o route_sort_order de routes.txt, quando preenchido, é um número inteiro igual ou maior que zero.
+description: Verifica se o route_sort_order de routes.txt não é um número negativo.
 ---
 
 ## Propriedades da regra
@@ -13,13 +13,13 @@ description: Verifica se o route_sort_order de routes.txt, quando preenchido, é
 | Tipo | Número inteiro não negativo |
 | Severidade | Opcional |
 
-**Descrição do campo:** ordena as rotas de forma ideal para apresentação aos passageiros. Rotas com valores mais baixos de `route_sort_order` devem aparecer primeiro.
+**Descrição do campo:** ordena as rotas da forma mais adequada para apresentação aos clientes. As rotas com valores mais pequenos são mostradas primeiro.
 
 Mais informação em [routes.txt](/reference/gtfs/schedule/routes).
 
 ## Como funciona
 
-Quando a regra passa, fica garantido que, se `route_sort_order` estiver preenchido, o valor é um número inteiro igual ou maior que zero. A regra **não verifica** se a ordem resultante faz sentido para os passageiros, só o formato do valor.
+Quando a regra passa, o `route_sort_order` é `0` ou um número positivo. A regra **não verifica se existem valores repetidos** nem se o texto é um número inteiro. A leitura do valor como número é feita antes das regras.
 
 A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
@@ -27,19 +27,20 @@ A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, 
 |---|---|---|---|
 | 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
 | 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
-| 3 | O valor é um número negativo? | ❌ Reporta o problema: valor inválido | ✅ Passa |
+| 3 | O valor é menor do que `0`? | ❌ Reporta o problema: número negativo | ✅ Passa |
 
 ## Exemplos
 
-| route_sort_order | Resultado | Porquê |
+| Valor | Resultado | Porquê |
 |---|---|---|
-| `0` | ✅ Passa | Número inteiro não negativo |
-| `-1` | ❌ Problema | O valor é negativo |
+| `10` | ✅ Passa | Número positivo |
+| `0` | ✅ Passa | Zero é aceite |
+| `-1` | ❌ Problema | Número negativo |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Valor inválido | `route_sort_order` está preenchido com um número negativo | Corrigir `route_sort_order` em `routes.txt` para um número inteiro igual ou maior que zero |
-| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `route_sort_order` em `routes.txt` com um número inteiro igual ou maior que zero |
+| Número negativo | O `route_sort_order` é menor do que `0` | Corrigir `route_sort_order` em `routes.txt` para `0` ou um número positivo |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `route_sort_order` em `routes.txt` |
 | Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `route_sort_order` em `routes.txt` |
