@@ -1,6 +1,6 @@
 ---
-title: Longitude do ponto do percurso
-description: Verifica se o shape_pt_lon de shapes.txt está preenchido e entre -180 e 180.
+title: Longitude do ponto da forma
+description: Verifica se shape_pt_lon está entre -180 e 180 graus.
 ---
 
 ## Propriedades da regra
@@ -13,32 +13,37 @@ description: Verifica se o shape_pt_lon de shapes.txt está preenchido e entre -
 | Tipo | Longitude |
 | Severidade | Obrigatório |
 
-**Descrição do campo:** longitude de um ponto do percurso.
+**Descrição do campo:** longitude do ponto usado para definir a forma.
 
 Mais informação em [shapes.txt](/reference/gtfs/schedule/shapes).
 
 ## Como funciona
 
-Cada linha do `shapes.txt` tem de ter um `shape_pt_lon` preenchido, com um número entre `-180` e `180`. A regra **não verifica se o ponto está no sítio certo** nem se acompanha a linha. Só verifica se o valor é possível. Um valor que não seja um número é tratado pela regra `shapes_values_parse`.
+Quando a regra passa, `shape_pt_lon` está preenchido e situa-se entre `-180` e `180`. A regra **não confirma se o ponto pertence ao percurso esperado**.
 
 A regra avalia cada linha do `shapes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O `shape_pt_lon` está vazio? | ❌ Reporta o problema: `shape_pt_lon` obrigatório | Segue para o passo 2 |
-| 2 | O `shape_pt_lon` está entre `-180` e `180`? | ✅ Passa | ❌ Reporta o problema: valor inválido |
+| 1 | O campo está vazio? | Aplica a configuração da regra | Segue para o passo 2 |
+| 2 | A configuração proíbe o campo? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor está entre `-180` e `180`? | ✅ Passa | ❌ Reporta o problema: longitude inválida |
+
+O valor tem de poder ser lido como número decimal antes desta regra.
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `-9.1002` | ✅ Passa | Valor possível |
-| `190.3` | ❌ Problema | Fora do intervalo de `-180` a `180` |
-| *(vazio)* | ❌ Problema | Falta o valor |
+| `-9.1393` | ✅ Passa | Está no intervalo permitido |
+| `181` | ❌ Problema | Excede 180 graus |
+| vazio | ❌ Problema | Falta um campo obrigatório |
+| `-9` com o campo proibido | ❌ Problema | A configuração proíbe o campo |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| `shape_pt_lon` obrigatório | A linha não tem `shape_pt_lon` | Preencher o `shape_pt_lon` em `shapes.txt` com um número entre `-180` e `180` |
-| Valor inválido | O valor está fora do intervalo, ou a latitude e a longitude estão trocadas | Corrigir o `shape_pt_lon` em `shapes.txt` para um valor entre `-180` e `180` |
+| Longitude inválida | `shape_pt_lon` está fora do intervalo permitido | Corrigir `shape_pt_lon` em `shapes.txt` para um valor entre `-180` e `180` |
+| Campo em falta | A configuração exige ou recomenda `shape_pt_lon` | Preencher `shape_pt_lon` em `shapes.txt` |
+| Campo preenchido quando não devia | A configuração proíbe `shape_pt_lon` | Remover `shape_pt_lon` de `shapes.txt` ou rever a configuração da regra |

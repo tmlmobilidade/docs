@@ -1,6 +1,6 @@
 ---
-title: Identificador do percurso
-description: Verifica se o shape_id de shapes.txt está preenchido em todos os pontos.
+title: Identificador da forma
+description: Verifica a presença de shape_id em cada ponto de shapes.txt.
 ---
 
 ## Propriedades da regra
@@ -10,32 +10,37 @@ description: Verifica se o shape_id de shapes.txt está preenchido em todos os p
 | Rule ID | `shape_id_required` |
 | Ficheiro | `shapes.txt` |
 | Campo | `shape_id` |
-| Tipo | ID |
+| Tipo | Identificador |
 | Severidade | Obrigatório |
 
-**Descrição do campo:** identifica um percurso (`shape`). Vários pontos com o mesmo `shape_id` formam um percurso.
+**Descrição do campo:** identifica a forma à qual pertence o ponto.
 
 Mais informação em [shapes.txt](/reference/gtfs/schedule/shapes).
 
 ## Como funciona
 
-Cada linha do `shapes.txt` tem de ter um `shape_id` preenchido. A regra **não verifica se o `shape_id` é usado no `trips.txt`**, só se está preenchido. Vários pontos com o mesmo `shape_id` são normais, porque cada ponto é uma linha.
+Quando a regra passa, cada linha processada tem `shape_id`. A regra **não verifica a unicidade nem a utilização do identificador em trips.txt**.
 
-A regra avalia cada linha do `shapes.txt`, seguindo o passo abaixo, que dá o resultado.
+A regra avalia cada linha do `shapes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O `shape_id` está vazio? | ❌ Reporta o problema: `shape_id` obrigatório | ✅ Passa |
+| 1 | O campo está vazio? | Aplica a configuração da regra e reporta quando é exigido ou recomendado | Segue para o passo 2 |
+| 2 | A configuração proíbe o campo? | ❌ Reporta o problema | ✅ Passa |
+
+O texto não é normalizado. Uma linha totalmente vazia é ignorada antes desta regra.
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `PERCURSO_1` | ✅ Passa | Preenchido |
-| *(vazio)* | ❌ Problema | Falta o `shape_id` |
+| `A_shp` | ✅ Passa | O identificador está preenchido |
+| vazio | ❌ Problema | Falta um campo obrigatório |
+| `A_shp` com o campo proibido | ❌ Problema | A configuração proíbe o campo |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| `shape_id` obrigatório | A linha não tem `shape_id` | Preencher o `shape_id` em `shapes.txt` com o identificador do percurso a que o ponto pertence |
+| Campo em falta | A configuração exige ou recomenda `shape_id` | Preencher `shape_id` em `shapes.txt` |
+| Campo preenchido quando não devia | A configuração proíbe `shape_id` | Remover `shape_id` de `shapes.txt` ou rever a configuração da regra |

@@ -1,6 +1,6 @@
 ---
-title: Distância percorrida total de cada troço do percurso
-description: Verifica se o shape_dist_traveled total de cada troço do percurso em shapes.txt corresponde à distância entre as coordenadas.
+title: Distância total por troço
+description: Compara a distância acumulada de cada troço com a soma das distâncias geográficas dos seus segmentos.
 ---
 
 ## Propriedades da regra
@@ -9,45 +9,49 @@ description: Verifica se o shape_dist_traveled total de cada troço do percurso 
 |---|---|
 | Rule ID | `shape_dist_traveled_delta_mismatches_haversine_block` |
 | Ficheiro | `shapes.txt` |
-| Campos | `shape_dist_traveled`, `shape_pt_lat`, `shape_pt_lon`, `shape_pt_sequence` |
-| Tipo | Número decimal não negativo, latitude, longitude, número inteiro não negativo |
-| Severidade | Opcional, Obrigatório, Obrigatório, Obrigatório |
+| Campos | `shape_id`, `shape_pt_sequence`, `shape_pt_lat`, `shape_pt_lon`, `shape_dist_traveled` |
+| Tipo | Identificador, Número inteiro, Latitude, Longitude, Número decimal |
+| Severidade | Condicional |
 
 **Descrição dos campos:**
 
-- `shape_dist_traveled`: distância real percorrida ao longo do percurso, desde o primeiro ponto até ao ponto desta linha.
-- `shape_pt_lat`: latitude de um ponto do percurso.
-- `shape_pt_lon`: longitude de um ponto do percurso.
-- `shape_pt_sequence`: ordem pela qual os pontos se ligam para formar o percurso.
+- `shape_id`: agrupa os pontos da forma.
+- `shape_pt_sequence`: define a ordem dos pontos.
+- `shape_pt_lat`: indica a latitude.
+- `shape_pt_lon`: indica a longitude.
+- `shape_dist_traveled`: indica a distância acumulada e inicia um troço quando vale `0`.
 
 Mais informação em [shapes.txt](/reference/gtfs/schedule/shapes).
 
 ## Como funciona
 
-Um troço vai de um ponto com `shape_dist_traveled` igual a `0` até ao ponto anterior ao próximo `0`, ou ao fim do percurso. Se todos os pares de pontos do troço passarem na verificação por pares, a regra compara o `shape_dist_traveled` final do troço com a soma das distâncias entre as coordenadas. A diferença não pode passar de 20 metros. A configuração da regra pode indicar outra tolerância, em metros. A unidade do `shape_dist_traveled` é deduzida pelo maior valor do percurso: abaixo de 800 é quilómetros, a partir de 800 é metros. A regra **não verifica se o percurso segue a rede** e só usa pontos com `shape_id`, `shape_pt_sequence`, `shape_pt_lat` e `shape_pt_lon`.
+Quando a regra passa, a distância final de cada troço iniciado em `0` aproxima-se da soma geométrica dos segmentos. A tolerância predefinida é `20` metros. A regra **ignora troços com segmentos já incompatíveis ou sem distância comparável**.
 
-A regra avalia cada grupo de pontos com o mesmo `shape_id`, seguindo o passo abaixo, que dá o resultado.
+A regra avalia cada grupo de pontos com o mesmo `shape_id`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | Nos troços em que todos os pares de pontos passam, a diferença entre o `shape_dist_traveled` final e a soma das distâncias entre coordenadas passa da tolerância? | ❌ Reporta o problema: distância total diferente, na linha do último ponto do troço | ✅ Passa |
+| 1 | O ponto tem `shape_dist_traveled` igual a `0`? | Inicia um troço | Procura o ponto seguinte |
+| 2 | O troço tem pelo menos um segmento comparável? | Segue para o passo 3 | Ignora o troço |
+| 3 | Todos os segmentos respeitam individualmente a tolerância? | Segue para o passo 4 | Ignora o troço para evitar duplicar problemas |
+| 4 | A diferença total excede a tolerância? | ❌ Reporta o problema na última linha do troço | ✅ Passa |
 
-Se algum par de pontos do troço já falhar na verificação por pares, o troço é ignorado por esta regra. Isso é reportado pela regra `shape_dist_traveled_delta_mismatches_haversine_segment`.
+A primeira opção define a tolerância em metros. A unidade é inferida: um máximo inferior a `800` é tratado como quilómetros; esta regra não aceita uma unidade explícita.
 
 ## Como se relacionam
 
-O `shape_dist_traveled` é comparado com a distância calculada a partir de `shape_pt_lat` e `shape_pt_lon`. O `shape_pt_sequence` decide quais são os pontos seguidos.
+Os pontos são ordenados por `shape_pt_sequence`. Cada `0` em `shape_dist_traveled` inicia um troço cuja distância final é comparada com as coordenadas.
 
 ## Exemplos
 
-| Situação | Resultado | Porquê |
-|---|---|---|
-| `shape_dist_traveled` aumenta 1.00 (km) e os pontos estão a cerca de 1000 metros | ✅ Passa | Distâncias iguais |
-| `shape_dist_traveled` aumenta 5.00 (km) e os pontos estão a cerca de 1000 metros | ❌ Problema | Diferença de cerca de 4000 metros |
-| `shape_dist_traveled` vazio nos pontos | ✅ Passa | Sem valores para comparar |
+| Distância final | Soma geométrica | Resultado | Porquê |
+|---|---|---|---|
+| `1000 m` | `1010 m` | ✅ Passa | Diferença dentro de 20 metros |
+| `1000 m` | `1050 m` | ❌ Problema | Diferença superior a 20 metros |
+| sem ponto inicial `0` | `1050 m` | ✅ Passa | Não existe um troço comparável |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Distâncias diferentes | O `shape_dist_traveled` está numa unidade diferente ou as coordenadas estão erradas | Em `shapes.txt`, corrigir o `shape_dist_traveled` (usar sempre a mesma unidade) ou as coordenadas dos pontos indicados |
+| Distância total diferente da geometria | Distância acumulada, coordenadas, unidade ou sequência incorreta | Corrigir `shape_dist_traveled`, as coordenadas ou `shape_pt_sequence` no troço de `shapes.txt`, ou rever a tolerância |

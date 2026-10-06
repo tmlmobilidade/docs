@@ -1,6 +1,6 @@
 ---
-title: Ordem crescente dos pontos do percurso
-description: Verifica se o shape_pt_sequence dos pontos de cada percurso em shapes.txt não se repete.
+title: Sequência crescente dos pontos
+description: Verifica se uma forma não tem valores repetidos de shape_pt_sequence depois da ordenação.
 ---
 
 ## Propriedades da regra
@@ -10,40 +10,42 @@ description: Verifica se o shape_pt_sequence dos pontos de cada percurso em shap
 | Rule ID | `shape_pt_sequence_strictly_increasing` |
 | Ficheiro | `shapes.txt` |
 | Campos | `shape_id`, `shape_pt_sequence` |
-| Tipo | ID, número inteiro não negativo |
-| Severidade | Obrigatório, Obrigatório |
+| Tipo | Identificador, Número inteiro |
+| Severidade | Condicional |
 
 **Descrição dos campos:**
 
-- `shape_id`: identifica um percurso. Vários pontos com o mesmo `shape_id` formam um percurso.
-- `shape_pt_sequence`: ordem pela qual os pontos se ligam para formar o percurso. Os valores têm de aumentar ao longo da viagem, mas não têm de ser consecutivos.
+- `shape_id`: agrupa os pontos da mesma forma.
+- `shape_pt_sequence`: define a ordem dos pontos.
 
 Mais informação em [shapes.txt](/reference/gtfs/schedule/shapes).
 
 ## Como funciona
 
-Dentro de cada percurso, o `shape_pt_sequence` de cada ponto tem de ser maior que o do ponto anterior. Na prática, a regra encontra valores repetidos, porque ordena os pontos primeiro. A regra **não verifica as coordenadas** nem a distância percorrida. Só usa os pontos que têm `shape_id` e `shape_pt_sequence`.
+Quando a regra passa, os valores ordenados de `shape_pt_sequence` não se repetem dentro da forma. A regra **ordena os valores antes da comparação**, por isso não reporta linhas fora de ordem no ficheiro.
 
-A regra avalia cada grupo de pontos com o mesmo `shape_id`, seguindo o passo abaixo, que dá o resultado.
+A regra avalia cada grupo de pontos com o mesmo `shape_id`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | Depois de ordenar os pontos, algum tem o `shape_pt_sequence` igual ou menor que o do ponto anterior? | ❌ Reporta o problema: `shape_pt_sequence` repetido, na linha desse ponto | ✅ Passa |
+| 1 | Depois de ordenar, o valor atual é igual ou inferior ao anterior? | ❌ Reporta o problema | ✅ Passa |
+
+Os valores não precisam de ser consecutivos.
 
 ## Como se relacionam
 
-Os pontos são agrupados pelo `shape_id`. Só valores do `shape_pt_sequence` no mesmo `shape_id` contam como repetidos.
+A regra compara `shape_pt_sequence` apenas entre pontos com o mesmo `shape_id`.
 
 ## Exemplos
 
-| `shape_id` | `shape_pt_sequence` dos pontos | Resultado | Porquê |
+| `shape_id` | Valores na ordem do ficheiro | Resultado | Porquê |
 |---|---|---|---|
-| `P1` | `0`, `6`, `11` | ✅ Passa | Aumentam sempre |
-| `P1` | `0`, `6`, `6` | ❌ Problema | `6` repetido |
-| `P1`, `P2` | `0` em cada um | ✅ Passa | Percursos diferentes |
+| `A_shp` | `0`, `6`, `11` | ✅ Passa | Não existem repetições |
+| `A_shp` | `0`, `6`, `6` | ❌ Problema | O valor `6` repete-se |
+| `A_shp` | `11`, `0`, `6` | ✅ Passa | A regra ordena antes de comparar |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| `shape_pt_sequence` repetido | Dois pontos do mesmo percurso têm o mesmo `shape_pt_sequence` | Em `shapes.txt`, dar a cada ponto do percurso um `shape_pt_sequence` diferente, a aumentar ao longo do percurso |
+| Sequência não crescente | Dois pontos da mesma forma usam o mesmo `shape_pt_sequence` | Atribuir valores diferentes de `shape_pt_sequence` aos pontos em `shapes.txt` |

@@ -1,6 +1,6 @@
 ---
-title: Distância percorrida no percurso
-description: Verifica se o shape_dist_traveled de shapes.txt, quando preenchido, não é negativo.
+title: Distância percorrida não negativa
+description: Verifica se shape_dist_traveled está preenchido e não é negativo.
 ---
 
 ## Propriedades da regra
@@ -11,37 +11,39 @@ description: Verifica se o shape_dist_traveled de shapes.txt, quando preenchido,
 | Ficheiro | `shapes.txt` |
 | Campo | `shape_dist_traveled` |
 | Tipo | Número decimal não negativo |
-| Severidade | Opcional |
+| Severidade | Obrigatório |
 
-**Descrição do campo:** distância real percorrida ao longo do percurso, desde o primeiro ponto até ao ponto desta linha. Serve para mostrar no mapa a parte certa do percurso. Os valores têm de aumentar com o `shape_pt_sequence` e usar as mesmas unidades do `stop_times.txt`. É recomendado em linhas que cruzam ou repetem o mesmo trajeto.
+**Descrição do campo:** distância real percorrida ao longo da forma desde o primeiro ponto até ao ponto desta linha.
 
 Mais informação em [shapes.txt](/reference/gtfs/schedule/shapes).
 
 ## Como funciona
 
-Se o `shape_dist_traveled` estiver preenchido, não pode ser negativo. Um campo vazio é aceite, salvo se a configuração da regra o exigir ou recomendar. Apesar do nome da regra, ela **não verifica se os valores aumentam**. Isso é verificado pela regra `shape_dist_traveled_non_decreasing_with_sequence`. Um valor que não seja um número é tratado pela regra `shapes_values_parse`.
+Quando a regra passa, `shape_dist_traveled` está preenchido e não é negativo. Apesar do nome, a regra **não verifica aqui se os valores são crescentes**.
 
 A regra avalia cada linha do `shapes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O `shape_dist_traveled` está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
-| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
-| 3 | O `shape_dist_traveled` é um número negativo? | ❌ Reporta o problema: valor inválido | ✅ Passa |
+| 1 | O campo está vazio? | Aplica a configuração da regra | Segue para o passo 2 |
+| 2 | A configuração proíbe o campo? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor é negativo? | ❌ Reporta o problema | ✅ Passa |
+
+O valor tem de poder ser lido como número decimal antes desta regra.
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `6.831` | ✅ Passa | Número não negativo |
-| `0` | ✅ Passa | Primeiro ponto do percurso |
-| *(vazio)* | ✅ Passa | Campo opcional |
-| `-2` | ❌ Problema | Valor negativo |
+| `0` | ✅ Passa | Zero não é negativo |
+| `-0.1` | ❌ Problema | O valor é negativo |
+| vazio | ❌ Problema | Falta um campo obrigatório |
+| `10` com o campo proibido | ❌ Problema | A configuração proíbe o campo |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Valor inválido | O `shape_dist_traveled` é um número negativo | Em `shapes.txt`, escrever o `shape_dist_traveled` com um número igual ou superior a `0` |
-| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `shape_dist_traveled` em `shapes.txt` |
-| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `shape_dist_traveled` em `shapes.txt` |
+| Valor negativo | `shape_dist_traveled` é inferior a zero | Corrigir `shape_dist_traveled` em `shapes.txt` para zero ou mais |
+| Campo em falta | A configuração exige ou recomenda `shape_dist_traveled` | Preencher `shape_dist_traveled` em `shapes.txt` |
+| Campo preenchido quando não devia | A configuração proíbe `shape_dist_traveled` | Remover `shape_dist_traveled` de `shapes.txt` ou rever a configuração da regra |

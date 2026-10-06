@@ -1,6 +1,6 @@
 ---
-title: Latitude do ponto do percurso
-description: Verifica se o shape_pt_lat de shapes.txt está preenchido e entre -90 e 90.
+title: Latitude do ponto da forma
+description: Verifica se shape_pt_lat está entre -90 e 90 graus.
 ---
 
 ## Propriedades da regra
@@ -13,32 +13,37 @@ description: Verifica se o shape_pt_lat de shapes.txt está preenchido e entre -
 | Tipo | Latitude |
 | Severidade | Obrigatório |
 
-**Descrição do campo:** latitude de um ponto do percurso. Cada linha do `shapes.txt` é um ponto do percurso.
+**Descrição do campo:** latitude do ponto usado para definir a forma.
 
 Mais informação em [shapes.txt](/reference/gtfs/schedule/shapes).
 
 ## Como funciona
 
-Cada linha do `shapes.txt` tem de ter um `shape_pt_lat` preenchido, com um número entre `-90` e `90`. A regra **não verifica se o ponto está no sítio certo** nem se acompanha a linha. Só verifica se o valor é possível. Um valor que não seja um número é tratado pela regra `shapes_values_parse`.
+Quando a regra passa, `shape_pt_lat` está preenchido e situa-se entre `-90` e `90`. A regra **não confirma se o ponto pertence ao percurso esperado**.
 
 A regra avalia cada linha do `shapes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O `shape_pt_lat` está vazio? | ❌ Reporta o problema: `shape_pt_lat` obrigatório | Segue para o passo 2 |
-| 2 | O `shape_pt_lat` está entre `-90` e `90`? | ✅ Passa | ❌ Reporta o problema: valor inválido |
+| 1 | O campo está vazio? | Aplica a configuração da regra | Segue para o passo 2 |
+| 2 | A configuração proíbe o campo? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor está entre `-90` e `90`? | ✅ Passa | ❌ Reporta o problema: latitude inválida |
+
+O valor tem de poder ser lido como número decimal antes desta regra.
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `38.7823` | ✅ Passa | Valor possível |
-| `91.5` | ❌ Problema | Fora do intervalo de `-90` a `90` |
-| *(vazio)* | ❌ Problema | Falta o valor |
+| `38.7223` | ✅ Passa | Está no intervalo permitido |
+| `91` | ❌ Problema | Excede 90 graus |
+| vazio | ❌ Problema | Falta um campo obrigatório |
+| `38` com o campo proibido | ❌ Problema | A configuração proíbe o campo |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| `shape_pt_lat` obrigatório | A linha não tem `shape_pt_lat` | Preencher o `shape_pt_lat` em `shapes.txt` com um número entre `-90` e `90` |
-| Valor inválido | O valor está fora do intervalo, ou a latitude e a longitude estão trocadas | Corrigir o `shape_pt_lat` em `shapes.txt` para um valor entre `-90` e `90` |
+| Latitude inválida | `shape_pt_lat` está fora do intervalo permitido | Corrigir `shape_pt_lat` em `shapes.txt` para um valor entre `-90` e `90` |
+| Campo em falta | A configuração exige ou recomenda `shape_pt_lat` | Preencher `shape_pt_lat` em `shapes.txt` |
+| Campo preenchido quando não devia | A configuração proíbe `shape_pt_lat` | Remover `shape_pt_lat` de `shapes.txt` ou rever a configuração da regra |

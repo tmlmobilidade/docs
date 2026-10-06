@@ -1,6 +1,6 @@
 ---
-title: Distância percorrida entre pontos seguidos
-description: Verifica se o aumento do shape_dist_traveled entre pontos seguidos em shapes.txt corresponde à distância entre as coordenadas.
+title: Distância declarada por segmento
+description: Compara o incremento de shape_dist_traveled com a distância geográfica de cada segmento.
 ---
 
 ## Propriedades da regra
@@ -9,45 +9,50 @@ description: Verifica se o aumento do shape_dist_traveled entre pontos seguidos 
 |---|---|
 | Rule ID | `shape_dist_traveled_delta_mismatches_haversine_segment` |
 | Ficheiro | `shapes.txt` |
-| Campos | `shape_dist_traveled`, `shape_pt_lat`, `shape_pt_lon`, `shape_pt_sequence` |
-| Tipo | Número decimal não negativo, latitude, longitude, número inteiro não negativo |
-| Severidade | Opcional, Obrigatório, Obrigatório, Obrigatório |
+| Campos | `shape_id`, `shape_pt_sequence`, `shape_pt_lat`, `shape_pt_lon`, `shape_dist_traveled` |
+| Tipo | Identificador, Número inteiro, Latitude, Longitude, Número decimal |
+| Severidade | Condicional |
 
 **Descrição dos campos:**
 
-- `shape_dist_traveled`: distância real percorrida ao longo do percurso, desde o primeiro ponto até ao ponto desta linha.
-- `shape_pt_lat`: latitude de um ponto do percurso.
-- `shape_pt_lon`: longitude de um ponto do percurso.
-- `shape_pt_sequence`: ordem pela qual os pontos se ligam para formar o percurso.
+- `shape_id`: agrupa os pontos da forma.
+- `shape_pt_sequence`: define a ordem dos pontos.
+- `shape_pt_lat`: indica a latitude.
+- `shape_pt_lon`: indica a longitude.
+- `shape_dist_traveled`: indica a distância acumulada.
 
 Mais informação em [shapes.txt](/reference/gtfs/schedule/shapes).
 
 ## Como funciona
 
-A regra compara, para cada par de pontos seguidos do percurso, o aumento do `shape_dist_traveled` com a distância em linha reta entre as coordenadas. A diferença não pode passar de 20 metros. A configuração da regra pode indicar outra tolerância, em metros. A unidade do `shape_dist_traveled` é deduzida pelo maior valor do percurso: abaixo de 800 é quilómetros, a partir de 800 é metros. A regra **não verifica se o percurso segue a rede** e só usa pontos com `shape_id`, `shape_pt_sequence`, `shape_pt_lat` e `shape_pt_lon`.
+Quando a regra passa, a diferença entre o incremento declarado e a distância de Haversine não excede a tolerância. A tolerância predefinida é `20` metros. A regra **ignora pares com dados inválidos, em falta ou com distância decrescente**.
 
-A regra avalia cada grupo de pontos com o mesmo `shape_id`, seguindo o passo abaixo, que dá o resultado.
+A regra avalia cada grupo de pontos com o mesmo `shape_id`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | Para algum par de pontos seguidos, a diferença entre o aumento do `shape_dist_traveled` e a distância entre as coordenadas passa da tolerância? | ❌ Reporta o problema: distâncias diferentes, na linha do segundo ponto | ✅ Passa |
+| 1 | O par tem sequência, coordenadas e distâncias válidas? | Segue para o passo 2 | Ignora o par |
+| 2 | A distância declarada diminui? | Ignora o par | Segue para o passo 3 |
+| 3 | A diferença absoluta excede a tolerância? | ❌ Reporta o problema | ✅ Passa |
+| 4 | Existem mais de 100 ocorrências? | Resume os problemas por linha | Mantém o detalhe de cada segmento |
 
-Os pares em que um dos pontos tem `shape_dist_traveled` igual a `0` (início ou reinício do percurso) ou em que o aumento é praticamente nulo são ignorados. Se houver mais de 100 pontos com este problema em todos os percursos, a regra reporta uma mensagem geral em cada linha afetada.
+A primeira opção define a tolerância em metros. A segunda pode fixar a unidade declarada como `m` ou `km`; sem ela, valores máximos abaixo de `800` são tratados como quilómetros.
 
 ## Como se relacionam
 
-O `shape_dist_traveled` é comparado com a distância calculada a partir de `shape_pt_lat` e `shape_pt_lon`. O `shape_pt_sequence` decide quais são os pontos seguidos.
+O incremento de `shape_dist_traveled` entre dois pontos deve aproximar-se da distância calculada pelas respetivas coordenadas.
 
 ## Exemplos
 
-| Situação | Resultado | Porquê |
-|---|---|---|
-| `shape_dist_traveled` aumenta 1.00 (km) e os pontos estão a cerca de 1000 metros | ✅ Passa | Distâncias iguais |
-| `shape_dist_traveled` aumenta 5.00 (km) e os pontos estão a cerca de 1000 metros | ❌ Problema | Diferença de cerca de 4000 metros |
-| `shape_dist_traveled` vazio nos pontos | ✅ Passa | Sem valores para comparar |
+| Incremento declarado | Distância geográfica | Resultado | Porquê |
+|---|---|---|---|
+| `100 m` | `110 m` | ✅ Passa | Diferença dentro de 20 metros |
+| `100 m` | `140 m` | ❌ Problema | Diferença superior a 20 metros |
+| valor em falta | `140 m` | ✅ Passa | O par é ignorado |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Distâncias diferentes | O `shape_dist_traveled` está numa unidade diferente ou as coordenadas estão erradas | Em `shapes.txt`, corrigir o `shape_dist_traveled` (usar sempre a mesma unidade) ou as coordenadas dos pontos indicados |
+| Incremento diferente do segmento | Distância, coordenadas, unidade ou sequência incorreta | Corrigir `shape_dist_traveled`, as coordenadas ou `shape_pt_sequence` em `shapes.txt`, ou configurar a unidade correta |
+| Muitos incrementos diferentes | A forma tem mais de 100 ocorrências | Rever em conjunto as distâncias, unidades, coordenadas e sequências em `shapes.txt` |

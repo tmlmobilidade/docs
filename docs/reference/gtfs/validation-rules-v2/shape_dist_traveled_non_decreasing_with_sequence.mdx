@@ -1,6 +1,6 @@
 ---
-title: Distância percorrida sempre a crescer
-description: Verifica se o shape_dist_traveled de cada percurso em shapes.txt não diminui ao longo do shape_pt_sequence.
+title: Distância crescente ao longo da forma
+description: Verifica se shape_dist_traveled não diminui quando os pontos são ordenados por shape_pt_sequence.
 ---
 
 ## Propriedades da regra
@@ -9,42 +9,45 @@ description: Verifica se o shape_dist_traveled de cada percurso em shapes.txt n�
 |---|---|
 | Rule ID | `shape_dist_traveled_non_decreasing_with_sequence` |
 | Ficheiro | `shapes.txt` |
-| Campos | `shape_dist_traveled`, `shape_pt_sequence`, `shape_id` |
-| Tipo | Número decimal não negativo, número inteiro não negativo, ID |
-| Severidade | Opcional, Obrigatório, Obrigatório |
+| Campos | `shape_id`, `shape_pt_sequence`, `shape_dist_traveled` |
+| Tipo | Identificador, Número inteiro, Número decimal |
+| Severidade | Condicional |
 
 **Descrição dos campos:**
 
-- `shape_dist_traveled`: distância real percorrida ao longo do percurso, desde o primeiro ponto até ao ponto desta linha. Os valores têm de aumentar com o `shape_pt_sequence`.
-- `shape_pt_sequence`: ordem pela qual os pontos se ligam para formar o percurso.
-- `shape_id`: identifica o percurso a que os pontos pertencem.
+- `shape_id`: agrupa os pontos da mesma forma.
+- `shape_pt_sequence`: define a ordem dos pontos.
+- `shape_dist_traveled`: indica a distância acumulada até cada ponto.
 
 Mais informação em [shapes.txt](/reference/gtfs/schedule/shapes).
 
 ## Como funciona
 
-Dentro de cada percurso, os pontos são ordenados pelo `shape_pt_sequence`. O `shape_dist_traveled` de cada ponto não pode ser menor que o do ponto anterior. A regra só compara pontos que têm o `shape_dist_traveled` preenchido nos dois. A regra **não verifica se as distâncias batem certo com as coordenadas**. Isso é verificado por outras regras.
+Quando a regra passa, a distância não diminui entre pontos consecutivos na ordem da sequência. Valores iguais são aceites. A regra **ignora comparações em que falta uma das distâncias**.
 
-A regra avalia cada grupo de pontos com o mesmo `shape_id`, seguindo o passo abaixo, que dá o resultado.
+A regra avalia cada grupo de pontos com o mesmo `shape_id`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O ponto e o ponto anterior têm ambos `shape_dist_traveled` e o do ponto é menor que o do anterior? | ❌ Reporta o problema: `shape_dist_traveled` não cresce, na linha desse ponto | ✅ Passa |
+| 1 | Os dois pontos consecutivos têm distância? | Segue para o passo 2 | Ignora este par |
+| 2 | A distância atual é inferior à anterior? | ❌ Reporta o problema | ✅ Passa |
+
+Os pontos são ordenados por `shape_pt_sequence` antes da comparação.
 
 ## Como se relacionam
 
-Os pontos são agrupados pelo `shape_id` e ordenados pelo `shape_pt_sequence`. O `shape_dist_traveled` compara-se entre pontos seguidos.
+Para cada `shape_id`, `shape_pt_sequence` define a ordem em que `shape_dist_traveled` deve manter-se ou aumentar.
 
 ## Exemplos
 
 | `shape_pt_sequence` | `shape_dist_traveled` | Resultado | Porquê |
 |---|---|---|---|
-| `0`, `6`, `11` | `0`, `6.83`, `15.88` | ✅ Passa | Só aumenta |
-| `0`, `6`, `11` | `0`, `6.83`, `5.10` | ❌ Problema | Diminui do segundo para o terceiro ponto |
-| `0`, `6`, `11` | `0`, *(vazio)*, `5` | ✅ Passa | Sem valor no ponto do meio, não há comparação |
+| `0`, `6`, `11` | `0`, `6.8`, `15.9` | ✅ Passa | A distância aumenta |
+| `0`, `6`, `11` | `0`, `8`, `7` | ❌ Problema | A distância diminui no último ponto |
+| `0`, `6`, `11` | `0`, vazio, `7` | ✅ Passa | Os pares com valores em falta são ignorados |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| `shape_dist_traveled` não cresce | A distância diminui de um ponto para o seguinte | Em `shapes.txt`, corrigir o `shape_dist_traveled` para que aumente com o `shape_pt_sequence`, ou corrigir a ordem dos pontos |
+| Distância decrescente | Os valores não acompanham a ordem dos pontos | Corrigir `shape_dist_traveled` ou `shape_pt_sequence` nas linhas da forma em `shapes.txt` |
