@@ -1,6 +1,6 @@
 ---
-title: Nome do nível
-description: Verifica se o level_name de levels.txt está preenchido, quando a configuração da regra o exige ou recomenda.
+title: Nome do piso
+description: Verifica a presença de level_name em levels.txt de acordo com a configuração da regra.
 ---
 
 ## Propriedades da regra
@@ -13,33 +13,34 @@ description: Verifica se o level_name de levels.txt está preenchido, quando a c
 | Tipo | Texto |
 | Severidade | Opcional |
 
-**Descrição do campo:** nome do nível como o passageiro o vê dentro do edifício ou da estação. Por exemplo, `Cais`, `Átrio` ou `-1`.
+**Descrição do campo:** nome do piso apresentado ao passageiro no interior do edifício ou da estação, como `Mezanino`, `Plataforma` ou `-1`.
 
 Mais informação em [levels.txt](/reference/gtfs/schedule/levels).
 
 ## Como funciona
 
-O `level_name` é opcional. Um campo vazio é aceite, salvo se a configuração da regra o exigir ou recomendar. A regra **não verifica o conteúdo do nome**. Aceita qualquer texto preenchido.
+Quando a regra passa, a presença de `level_name` respeita a configuração da regra. Qualquer texto não vazio é aceite. A regra **não verifica o significado, o idioma nem a unicidade do nome**.
 
 A regra avalia cada linha do `levels.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O `level_name` está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
 | 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | ✅ Passa |
+
+O texto é usado exatamente como está escrito. Os espaços no início e no fim não são removidos. Uma linha com todos os campos vazios é ignorada antes desta regra.
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `Átrio` | ✅ Passa | Preenchido |
-| *(vazio)* | ✅ Passa | Campo opcional |
-| *(vazio)* com campo exigido na configuração | ❌ Problema | A configuração da regra exige o campo |
-| `Átrio` com campo proibido na configuração | ❌ Problema | A configuração da regra proíbe o campo |
+| `Mezanino` | ✅ Passa | O campo contém texto |
+| vazio quando o campo é obrigatório | ❌ Problema | Falta um campo exigido pela configuração |
+| `Plataforma` com o campo proibido | ❌ Problema | A configuração proíbe o campo |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `level_name` em `levels.txt` com o nome que os passageiros conhecem |
-| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `level_name` em `levels.txt` |
+| Campo em falta | A configuração da regra exige ou recomenda `level_name` | Preencher `level_name` em `levels.txt` com o nome apresentado ao passageiro |
+| Campo preenchido quando não devia | A configuração da regra proíbe `level_name` | Remover o valor de `level_name` em `levels.txt` ou rever a configuração da regra |

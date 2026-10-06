@@ -1,6 +1,6 @@
 ---
-title: Índice do nível
-description: Verifica se o level_index de levels.txt está preenchido.
+title: Índice não negativo do piso
+description: Verifica se level_index está preenchido e tem um valor numérico igual ou superior a zero.
 ---
 
 ## Propriedades da regra
@@ -10,34 +10,40 @@ description: Verifica se o level_index de levels.txt está preenchido.
 | Rule ID | `level_index_required` |
 | Ficheiro | `levels.txt` |
 | Campo | `level_index` |
-| Tipo | Número decimal |
+| Tipo | Número decimal não negativo |
 | Severidade | Obrigatório |
 
-**Descrição do campo:** número que indica a posição do nível em relação aos outros. Os níveis com índice mais alto ficam acima dos níveis com índice mais baixo.
+**Descrição do campo:** índice numérico que indica a posição relativa do piso. Um índice superior representa um piso acima de outro com índice inferior.
 
 Mais informação em [levels.txt](/reference/gtfs/schedule/levels).
 
 ## Como funciona
 
-Cada linha do `levels.txt` tem de ter um `level_index` preenchido. A regra **não verifica o valor**, só se está preenchido. Um valor que não seja um número é tratado pela regra `levels_parse`.
+Quando a regra passa, `level_index` está preenchido e tem um valor numérico igual ou superior a zero. A regra aceita valores decimais. A regra **não confirma se a ordem dos índices corresponde à disposição real dos pisos**.
 
-A regra avalia cada linha do `levels.txt`, seguindo o passo abaixo, que dá o resultado.
+A regra avalia cada linha do `levels.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O `level_index` está vazio? | ❌ Reporta o problema: `level_index` obrigatório | ✅ Passa |
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor é inferior a zero? | ❌ Reporta o problema: valor negativo | ✅ Passa |
+
+O valor não é arredondado. Um valor que não possa ser lido como número é reportado pela validação de leitura de `levels.txt`, antes desta regra. Uma linha com todos os campos vazios é ignorada.
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `0` | ✅ Passa | Preenchido |
-| `-1` | ✅ Passa | Preenchido (nível abaixo do piso `0`) |
-| `1.5` | ✅ Passa | Preenchido |
-| *(vazio)* | ❌ Problema | Falta o índice |
+| `0.5` | ✅ Passa | Os valores decimais não negativos são aceites |
+| `-1` | ❌ Problema | O valor é negativo |
+| vazio | ❌ Problema | Falta um campo obrigatório |
+| `0` com o campo proibido | ❌ Problema | A configuração proíbe o campo |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| `level_index` obrigatório | A linha não tem `level_index` | Preencher o `level_index` em `levels.txt` com um número, por exemplo `0` para o piso da rua e `-1` para o piso inferior |
+| Valor negativo | `level_index` é inferior a zero | Corrigir `level_index` em `levels.txt` para um número igual ou superior a zero |
+| Campo em falta | A configuração da regra exige ou recomenda `level_index` | Preencher `level_index` em `levels.txt` com um número igual ou superior a zero |
+| Campo preenchido quando não devia | A configuração da regra proíbe `level_index` | Remover o valor de `level_index` em `levels.txt` ou rever a configuração da regra |
