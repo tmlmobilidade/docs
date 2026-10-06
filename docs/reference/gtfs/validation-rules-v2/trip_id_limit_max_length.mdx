@@ -1,6 +1,6 @@
 ---
 title: Comprimento do identificador da viagem
-description: Verifica se o trip_id indicado em trips.txt não ultrapassa 36 carateres.
+description: Verifica se `trip_id` tem no máximo 36 carateres.
 ---
 
 ## Propriedades da regra
@@ -10,33 +10,34 @@ description: Verifica se o trip_id indicado em trips.txt não ultrapassa 36 cara
 | Rule ID | `trip_id_limit_max_length` |
 | Ficheiro | `trips.txt` |
 | Campo | `trip_id` |
-| Tipo | Texto (limite de carateres) |
-| Severidade | Obrigatório |
+| Tipo | Identificador |
+| Severidade | Obrigatório (regra TML) |
 
-**Descrição do campo:** identifica a viagem. Esta é uma regra específica da TML, que impõe um limite de comprimento ao `trip_id` além do que a especificação GTFS exige.
+**Descrição do campo:** identifica uma viagem e, nesta regra TML, não pode exceder 36 carateres.
 
 Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
 
 ## Como funciona
 
-Quando `trip_id` está preenchido, a regra garante que o valor não ultrapassa 36 carateres. A regra **não verifica** se o `trip_id` está preenchido nem se é único — isso é verificado por outra regra — e o resultado depende da configuração definida para esta regra.
+Quando existe, o identificador pode ter no máximo 36 carateres. A regra não verifica se está vazio, se é único ou que carateres contém.
 
 A regra avalia cada linha do `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O campo `trip_id` está vazio? | ✅ Passa (esta regra não se aplica) | Segue para o passo 2 |
-| 2 | O valor de `trip_id` tem mais de 36 carateres? | ❌ Reporta o problema | ✅ Passa |
+| 1 | `trip_id` está vazio? | ✅ Aceita; a presença é verificada por outra regra | Segue para o passo 2 |
+| 2 | O valor tem mais de 36 carateres? | ❌ Reporta o problema | ✅ Passa |
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `short_trip_id` | ✅ Passa | Tem 36 carateres ou menos |
-| `1234567890123456789012345678901234567890` | ❌ Problema | Tem 40 carateres, mais do que o limite |
+| `VIAGEM_100` | ✅ Passa | Menos de 36 carateres |
+| `123456789012345678901234567890123456` | ✅ Passa | Exatamente 36 carateres |
+| `1234567890123456789012345678901234567` | ❌ Problema | Tem 37 carateres |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| `trip_id` demasiado longo | O valor de `trip_id` em `trips.txt` tem mais de 36 carateres | Encurtar o `trip_id` em `trips.txt` para 36 carateres ou menos |
+| Identificador demasiado longo | `trip_id` tem mais de 36 carateres | Encurtar `trip_id` em `trips.txt` para 36 carateres ou menos e atualizar as referências |

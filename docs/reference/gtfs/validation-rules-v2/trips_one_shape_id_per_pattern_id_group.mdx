@@ -1,6 +1,6 @@
 ---
-title: Um único shape_id por pattern_id
-description: Verifica se todas as viagens do mesmo pattern_id partilham o mesmo shape_id.
+title: Uma forma por padrão
+description: Verifica se cada `pattern_id` está associado a um único `shape_id`.
 ---
 
 ## Propriedades da regra
@@ -9,39 +9,43 @@ description: Verifica se todas as viagens do mesmo pattern_id partilham o mesmo 
 |---|---|
 | Rule ID | `trips_one_shape_id_per_pattern_id_group` |
 | Ficheiro | `trips.txt` |
-| Campo | `shape_id` |
-| Tipo | ID |
-| Severidade | Configurável |
+| Campos | `pattern_id`, `shape_id` |
+| Tipo | Identificador |
+| Severidade | Condicional |
 
-**Descrição do campo:** identifica a forma geoespacial que descreve o trajeto percorrido pelo veículo numa viagem. Todas as viagens que partilham o mesmo `pattern_id` têm de partilhar também o mesmo `shape_id`.
+**Descrição dos campos:**
+
+- `pattern_id`: identifica o padrão da viagem.
+- `shape_id`: identifica a forma geográfica da viagem.
 
 Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
 
 ## Como funciona
 
-Todas as viagens agrupadas pelo mesmo `pattern_id` têm de ter um único valor de `shape_id`. A regra **não verifica qual dos valores está correto**, só que não há mais do que um valor dentro do mesmo grupo. Quando esta regra reporta um `pattern_id`, a regra `trips_one_pattern_id_per_shape_id_group` não repete o mesmo problema a partir do `shape_id` envolvido.
+Todas as viagens do mesmo padrão têm de usar uma única forma. Valores vazios não contam como associações. A regra não verifica se os identificadores existem noutros dados.
 
-A regra avalia cada grupo de viagens com o mesmo `pattern_id` do `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+A regra avalia cada grupo de viagens com o mesmo `pattern_id`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O grupo tem viagens com `shape_id` preenchido? | Segue para o passo 2 | ✅ Passa (nada a comparar) |
-| 2 | As viagens do grupo têm mais do que um valor distinto de `shape_id`? | Segue para o passo 3 | ✅ Passa |
-| 3 | A configuração da regra está definida como "ignorar" ou "não permitido"? | ✅ Passa (a regra não é aplicada) | ❌ Reporta o problema |
+| 1 | O grupo está vazio? | ✅ Passa | Segue para o passo 2 |
+| 2 | Existe mais de um `shape_id` não vazio no padrão? | Segue para o passo 3 | ✅ Passa |
+| 3 | A configuração da regra desativa a validação? | ✅ Passa | ❌ Reporta o problema e regista as associações para não as repetir na regra inversa |
 
-As viagens sem `shape_id` não contam para esta comparação.
+## Como se relacionam
+
+`pattern_id` e `shape_id` devem formar uma associação de um para um. O validador avalia primeiro o lado do padrão para evitar reportar duas vezes a mesma associação incorreta.
 
 ## Exemplos
 
-| pattern_id | shape_id das viagens do grupo | Resultado | Porquê |
+| `pattern_id` | `shape_id` no grupo | Resultado | Porquê |
 |---|---|---|---|
-| `P1` | `1001_0` em todas as viagens | ✅ Passa | Só há um valor de `shape_id` no grupo |
-| `P1` | `1001_0` numa viagem, vazio noutra | ✅ Passa | As viagens sem `shape_id` não contam para a comparação |
-| `P1` | `1001_0` e `1001_1` | ❌ Problema | O grupo tem dois valores de `shape_id` diferentes |
-| `P1` | `1001_0`, `1002_0` e `1003_0` | ❌ Problema | O grupo tem três valores de `shape_id` diferentes |
+| `P1` | `S1, S1` | ✅ Passa | Uma única forma |
+| `P1` | `S1, S2` | ❌ Problema | Duas formas distintas |
+| `P1` | `S1, vazio` | ✅ Passa | O vazio é ignorado |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Mais do que um `shape_id` no mesmo `pattern_id` | As viagens do mesmo `pattern_id` foram associadas a formas diferentes, por exemplo por erro de importação ou atualização parcial | Corrigir o campo `shape_id` em `trips.txt` para que todas as viagens do mesmo `pattern_id` tenham o mesmo valor |
+| Várias formas no mesmo padrão | Viagens com o mesmo `pattern_id` usam vários `shape_id` | Corrigir `shape_id` ou `pattern_id` nas linhas afetadas de `trips.txt` |

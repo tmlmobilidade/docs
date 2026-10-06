@@ -1,6 +1,6 @@
 ---
-title: Consistência do sentido da viagem
-description: Verifica se todas as viagens com o mesmo pattern_id em trips.txt têm o mesmo direction_id.
+title: Sentido consistente no padrão
+description: Verifica se todas as viagens do mesmo `pattern_id` usam um único `direction_id`.
 ---
 
 ## Propriedades da regra
@@ -9,37 +9,42 @@ description: Verifica se todas as viagens com o mesmo pattern_id em trips.txt t�
 |---|---|
 | Rule ID | `trips_direction_id_consistent_for_all_patterns_in_trips` |
 | Ficheiro | `trips.txt` |
-| Campo | `direction_id` |
-| Tipo | Enum |
+| Campos | `pattern_id`, `direction_id` |
+| Tipo | Enumeração |
 | Severidade | Opcional |
 
-**Descrição do campo:** indica o sentido de circulação da viagem, por exemplo ida ou volta. Distingue viagens que percorrem o mesmo padrão em sentidos opostos.
+**Descrição dos campos:**
+
+- `pattern_id`: identifica o padrão que agrupa as viagens.
+- `direction_id`: identifica o sentido da viagem.
 
 Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
 
 ## Como funciona
 
-Viagens com o mesmo `pattern_id` percorrem a mesma sequência de paragens, pelo que têm sempre de seguir o mesmo sentido de circulação. A regra confirma que o `direction_id` é igual em todas as viagens de um mesmo `pattern_id`. Não verifica se o valor de `direction_id` em si é válido (0 ou 1), nem se o campo está preenchido em cada viagem — isso é verificado por outras regras.
+Todas as viagens do mesmo padrão têm de usar o mesmo `direction_id`. Valores vazios de `direction_id` são ignorados. A regra não valida o formato nem a referência do valor.
 
-A regra avalia cada grupo de viagens com o mesmo `pattern_id` em `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+A regra avalia cada grupo de viagens com o mesmo `pattern_id`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O grupo tem mais do que um valor de `direction_id` diferente entre as viagens do mesmo `pattern_id`? | Segue para o passo 2 | ✅ Passa |
-| 2 | A configuração da regra está definida para não aplicar esta verificação? | Aceita, sem reportar problema | ❌ Reporta o problema: viagens do mesmo `pattern_id` com `direction_id` diferentes |
+| 1 | Recolhe mais de um valor distinto de `direction_id` no grupo? | Segue para o passo 2 | ✅ Passa |
+| 2 | A configuração da regra desativa a validação? | ✅ Passa | ❌ Reporta o problema na primeira viagem do padrão |
 
-Viagens sem `direction_id` preenchido não entram nesta comparação.
+## Como se relacionam
+
+`pattern_id` define o grupo. `direction_id` tem de ser consistente dentro desse grupo.
 
 ## Exemplos
 
-| Valor | Resultado | Porquê |
+| Valores no padrão | Resultado | Porquê |
 |---|---|---|
-| `0`, `0`, `0` (mesmo `pattern_id`) | ✅ Passa | Todas as viagens têm o mesmo `direction_id` |
-| `0`, `1` (mesmo `pattern_id`) | ❌ Problema | O `pattern_id` tem viagens em sentidos diferentes |
-| `0`, (vazio) (mesmo `pattern_id`) | ✅ Passa | O valor vazio não entra na comparação, só há um valor preenchido |
+| `0, 0` | ✅ Passa | Um único sentido |
+| `0, 1` | ❌ Problema | Dois sentidos distintos |
+| `0, vazio` | ✅ Passa | O vazio é ignorado |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Viagens do mesmo `pattern_id` com `direction_id` diferentes | As viagens deste padrão foram associadas a sentidos de circulação diferentes por engano | Corrigir o `direction_id` das viagens em `trips.txt` para que todas as viagens do mesmo `pattern_id` tenham o mesmo sentido |
+| Valores diferentes no mesmo padrão | Viagens com o mesmo `pattern_id` usam vários valores de `direction_id` | Corrigir `direction_id` ou `pattern_id` nas linhas afetadas de `trips.txt` |

@@ -1,6 +1,6 @@
 ---
-title: Sequência de paragens única por pattern_id
-description: Verifica se todas as viagens com o mesmo pattern_id em trips.txt seguem exatamente a mesma sequência de paragens.
+title: Sequência única por padrão
+description: Verifica se todas as viagens do mesmo `pattern_id` têm a mesma assinatura de paragens.
 ---
 
 ## Propriedades da regra
@@ -8,38 +8,45 @@ description: Verifica se todas as viagens com o mesmo pattern_id em trips.txt se
 | Propriedade | Valor |
 |---|---|
 | Rule ID | `trips_pattern_id_single_trip_signature_per_pattern` |
-| Ficheiro | `trips.txt` |
-| Campo | `pattern_id` |
-| Tipo | ID |
-| Severidade | Obrigatório |
+| Ficheiros | `trips.txt`, `stop_times.txt` |
+| Campos | `pattern_id`, `stop_id`, `shape_dist_traveled`, `stop_sequence` |
+| Tipo | Identificador, Identificador, Número decimal, Número inteiro |
+| Severidade | Condicional |
 
-**Descrição do campo:** identifica o padrão de paragens que a viagem segue. Viagens com o mesmo `pattern_id` devem representar sempre o mesmo trajeto físico, com a mesma sequência de paragens.
+**Descrição dos campos:**
 
-Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
+- `pattern_id`: identifica o padrão que agrupa as viagens.
+- `stop_id`: identifica cada paragem da viagem.
+- `shape_dist_traveled`: indica a distância acumulada até à paragem.
+- `stop_sequence`: indica a posição da paragem.
+
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips) e [stop_times.txt](/reference/gtfs/schedule/stop_times).
 
 ## Como funciona
 
-Duas viagens com o mesmo `pattern_id` têm de passar exatamente pelas mesmas paragens, pela mesma ordem e com a mesma distância percorrida acumulada em cada paragem. A regra confirma que todas as viagens de um `pattern_id` partilham essa sequência. Não indica qual das viagens está errada, só assinala que existem viagens divergentes dentro do mesmo `pattern_id`. A regra só corre depois de a sequência de paragens de cada viagem ter sido validada com sucesso.
+Todas as viagens do mesmo padrão têm de produzir a mesma sequência de paragens, distâncias e posições. A comparação usa uma assinatura dos três valores em cada posição. Não compara horas de chegada ou partida.
 
-A regra avalia cada grupo de viagens com o mesmo `pattern_id` em `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+A regra avalia cada grupo de viagens com o mesmo `pattern_id`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | As viagens do grupo têm mais do que uma sequência de paragens diferente (combinação de paragem, distância percorrida e ordem)? | Segue para o passo 2 | ✅ Passa |
-| 2 | A configuração da regra está definida para não aplicar esta verificação? | Aceita, sem reportar problema | ❌ Reporta o problema: múltiplas variações de sequência de paragens no mesmo `pattern_id` |
+| 1 | O grupo contém mais de uma assinatura distinta? | Segue para o passo 2 | ✅ Passa |
+| 2 | A configuração da regra desativa a validação? | ✅ Passa | ❌ Reporta o problema na primeira viagem do padrão |
 
-A comparação usa a sequência de paragens de cada viagem já ordenada e sem duplicados.
+## Como se relacionam
+
+`pattern_id` agrupa as viagens. Para cada viagem, `stop_id`, `shape_dist_traveled` e `stop_sequence` de `stop_times.txt` formam a assinatura comparada.
 
 ## Exemplos
 
-| Valor | Resultado | Porquê |
-|---|---|---|
-| Viagens A e B do mesmo `pattern_id` param nas mesmas paragens, pela mesma ordem | ✅ Passa | Sequência de paragens igual |
-| Viagens A e B do mesmo `pattern_id` param em paragens diferentes ou por ordem diferente | ❌ Problema | O `pattern_id` tem mais do que uma sequência de paragens |
-| Viagens A e B do mesmo `pattern_id` têm as mesmas paragens mas com distância percorrida diferente | ❌ Problema | O `pattern_id` tem mais do que uma variação de distância percorrida |
+| Viagem A | Viagem B | Resultado | Porquê |
+|---|---|---|---|
+| `A-0-1, B-5-2` | `A-0-1, B-5-2` | ✅ Passa | Assinaturas iguais |
+| `A-0-1, B-5-2` | `A-0-1, C-5-2` | ❌ Problema | Paragem diferente |
+| `A-0-1, B-5-2` | `A-0-1, B-6-2` | ❌ Problema | Distância diferente |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Múltiplas variações de sequência de paragens no mesmo `pattern_id` | As viagens deste `pattern_id` foram associadas a percursos diferentes, com paragens, ordem ou distância percorrida diferentes | Corrigir o `pattern_id` das viagens em `trips.txt`, ou os `stop_times.txt` associados, para que todas as viagens do mesmo `pattern_id` sigam exatamente a mesma sequência de paragens |
+| Variações no mesmo padrão | As viagens com o mesmo `pattern_id` têm sequências, distâncias ou paragens diferentes | Corrigir `pattern_id` em `trips.txt` ou alinhar `stop_id`, `shape_dist_traveled` e `stop_sequence` em `stop_times.txt` |

@@ -1,6 +1,6 @@
 ---
-title: shape_id igual ao pattern_id
-description: Verifica se o shape_id de cada viagem é exatamente igual ao pattern_id da viagem.
+title: Forma igual ao padrão
+description: Verifica se `shape_id` é exatamente igual a `pattern_id`.
 ---
 
 ## Propriedades da regra
@@ -9,40 +9,43 @@ description: Verifica se o shape_id de cada viagem é exatamente igual ao patter
 |---|---|
 | Rule ID | `trips_shape_id_needs_to_be_the_same_as_pattern_id` |
 | Ficheiro | `trips.txt` |
-| Campo | `shape_id` |
-| Tipo | ID |
-| Severidade | Opcional |
+| Campos | `shape_id`, `pattern_id` |
+| Tipo | Identificador |
+| Severidade | Opcional (recomendado) |
 
-**Descrição do campo:** identifica a forma geoespacial que descreve o trajeto percorrido pelo veículo numa viagem. O valor de `shape_id` tem de ser igual ao `pattern_id` da viagem, para que a forma possa ser derivada diretamente do padrão.
+**Descrição dos campos:**
+
+- `shape_id`: identifica a forma geográfica da viagem.
+- `pattern_id`: identifica o padrão da viagem.
 
 Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
 
 ## Como funciona
 
-Se a viagem tiver `shape_id` e `pattern_id` preenchidos, os dois valores têm de ser exatamente iguais. A regra **não verifica se o shape existe em `shapes.txt`** nem se o `pattern_id` é válido, só compara o texto dos dois campos.
+Quando ambos existem, os dois valores têm de ser exatamente iguais. Se algum estiver vazio, a regra não compara nada. A regra não verifica se a forma existe em `shapes.txt`.
 
 A regra avalia cada linha do `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | Os campos `shape_id` e `pattern_id` estão ambos preenchidos? | Segue para o passo 2 | ✅ Passa (os campos em falta são reportados pelas respetivas regras) |
-| 2 | A configuração da regra está definida como "ignorar" ou "não permitido"? | ✅ Passa (a regra não é aplicada) | Segue para o passo 3 |
-| 3 | O campo `shape_id` é exatamente igual ao campo `pattern_id`? | ✅ Passa | ❌ Reporta o problema |
+| 1 | `shape_id` ou `pattern_id` está vazio? | ✅ Passa | Segue para o passo 2 |
+| 2 | A configuração da regra desativa a validação? | ✅ Passa | Segue para o passo 3 |
+| 3 | Os dois valores são iguais? | ✅ Passa | ❌ Reporta o problema |
 
 ## Como se relacionam
 
-O `shape_id` tem de ser igual, carater a carater, ao `pattern_id` da mesma viagem. Um texto vazio só é aceite se o `pattern_id` também for um texto vazio.
+A regra impõe uma associação direta: cada linha usa o mesmo texto em `shape_id` e `pattern_id`.
 
 ## Exemplos
 
-| shape_id | pattern_id | Resultado | Porquê |
+| `shape_id` | `pattern_id` | Resultado | Porquê |
 |---|---|---|---|
-| `1001_0` | `1001_0` | ✅ Passa | Os dois campos são iguais |
-| `1001_1` | `1001_0` | ❌ Problema | Os dois campos têm texto diferente |
-| (vazio) | `1001_0` | ❌ Problema | `shape_id` está vazio, `pattern_id` não |
+| `1001_0_1` | `1001_0_1` | ✅ Passa | Valores iguais |
+| `FORMA_1` | `1001_0_1` | ❌ Problema | Valores diferentes |
+| Vazio | `1001_0_1` | ✅ Passa | A regra não compara campos ausentes |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| `shape_id` diferente de `pattern_id` | Os dois campos foram preenchidos com valores distintos, ou apenas um deles foi atualizado | Corrigir o campo `shape_id` em `trips.txt` para que fique igual ao `pattern_id` da mesma viagem |
+| Forma diferente do padrão | `shape_id` e `pattern_id` têm valores diferentes | Alterar `shape_id` ou `pattern_id` em `trips.txt` para que sejam iguais |

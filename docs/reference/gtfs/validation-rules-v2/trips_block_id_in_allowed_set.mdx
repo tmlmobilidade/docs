@@ -1,6 +1,6 @@
 ---
-title: Identificador do bloco
-description: Verifica se o campo block_id em trips.txt está preenchido quando a configuração da regra o exige ou recomenda, e se não tem valor quando a configuração o proíbe.
+title: Bloco da viagem
+description: Verifica a presença de `block_id` segundo a configuração da regra.
 ---
 
 ## Propriedades da regra
@@ -13,32 +13,32 @@ description: Verifica se o campo block_id em trips.txt está preenchido quando a
 | Tipo | Texto |
 | Severidade | Opcional |
 
-**Descrição do campo:** identifica o bloco a que a viagem pertence. Um bloco é composto por uma viagem ou por várias viagens sequenciais feitas com o mesmo veículo, com os mesmos dias de serviço e o mesmo `block_id`. Um `block_id` pode ter viagens com dias de serviço diferentes, formando blocos distintos.
+**Descrição do campo:** identifica um bloco de viagens sucessivas efetuadas pelo mesmo veículo em dias de serviço compatíveis.
 
 Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
 
 ## Como funciona
 
-Apesar do nome da regra sugerir uma lista de blocos permitidos, a implementação atual só verifica se o campo está preenchido e se a configuração da regra proíbe o seu preenchimento. A regra **não confirma** que o `block_id` corresponde a um bloco existente noutras viagens nem valida o formato do texto.
+Quando o campo está vazio ou preenchido, a regra aplica apenas a presença definida na configuração. Apesar do nome da regra, a implementação não verifica qualquer conjunto de identificadores permitidos.
 
 A regra avalia cada linha do `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
-| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | ✅ Passa |
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda o campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra proíbe o campo? | ❌ Reporta o problema | ✅ Passa |
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `RED_LOOP` | ✅ Passa | Valor preenchido, aceite sem mais validações |
-| (vazio) | ❌ Problema | A configuração da regra exige ou recomenda este campo e está vazio |
-| `RED_LOOP` (configuração define `block_id` como proibido) | ❌ Problema | Campo preenchido quando a configuração exige que esteja vazio |
+| `BLOCO_1` | ✅ Passa | Campo preenchido |
+| Vazio (campo exigido pela configuração) | ❌ Problema | A configuração exige o campo |
+| `BLOCO_1` (campo proibido) | ❌ Problema | A configuração proíbe o campo |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `block_id` em `trips.txt` com o identificador do bloco |
-| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `block_id` em `trips.txt` |
+| Campo em falta | A configuração da regra exige ou recomenda `block_id` | Preencher `block_id` em `trips.txt` |
+| Campo preenchido quando não devia | A configuração da regra proíbe `block_id` | Remover `block_id` de `trips.txt` |

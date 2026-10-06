@@ -1,6 +1,6 @@
 ---
-title: Consistência da rota no padrão
-description: Verifica se todas as viagens com o mesmo pattern_id em trips.txt têm o mesmo route_id.
+title: Linha consistente no padrão
+description: Verifica se todas as viagens do mesmo `pattern_id` usam um único `route_id`.
 ---
 
 ## Propriedades da regra
@@ -9,37 +9,42 @@ description: Verifica se todas as viagens com o mesmo pattern_id em trips.txt t�
 |---|---|
 | Rule ID | `trips_route_id_consistent_for_all_patterns_in_trips` |
 | Ficheiro | `trips.txt` |
-| Campo | `route_id` |
-| Tipo | ID |
+| Campos | `pattern_id`, `route_id` |
+| Tipo | Identificador |
 | Severidade | Opcional |
 
-**Descrição do campo:** identifica a rota (linha) a que a viagem pertence. Liga a viagem a um registo de `routes.txt`.
+**Descrição dos campos:**
+
+- `pattern_id`: identifica o padrão que agrupa as viagens.
+- `route_id`: identifica a linha da viagem.
 
 Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
 
 ## Como funciona
 
-Viagens com o mesmo `pattern_id` percorrem a mesma sequência de paragens e por isso pertencem sempre à mesma rota. A regra confirma que o `route_id` é igual em todas as viagens de um mesmo `pattern_id`. Não verifica se o `route_id` existe em `routes.txt` — isso é verificado por outra regra.
+Todas as viagens do mesmo padrão têm de usar o mesmo `route_id`. Valores vazios de `route_id` são ignorados. A regra não valida o formato nem a referência do valor.
 
-A regra avalia cada grupo de viagens com o mesmo `pattern_id` em `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+A regra avalia cada grupo de viagens com o mesmo `pattern_id`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O grupo tem mais do que um valor de `route_id` diferente entre as viagens do mesmo `pattern_id`? | Segue para o passo 2 | ✅ Passa |
-| 2 | A configuração da regra está definida para não aplicar esta verificação? | Aceita, sem reportar problema | ❌ Reporta o problema: viagens do mesmo `pattern_id` com `route_id` diferentes |
+| 1 | Recolhe mais de um valor distinto de `route_id` no grupo? | Segue para o passo 2 | ✅ Passa |
+| 2 | A configuração da regra desativa a validação? | ✅ Passa | ❌ Reporta o problema na primeira viagem do padrão |
 
-Viagens sem `route_id` preenchido não entram nesta comparação.
+## Como se relacionam
+
+`pattern_id` define o grupo. `route_id` tem de ser consistente dentro desse grupo.
 
 ## Exemplos
 
-| Valor | Resultado | Porquê |
+| Valores no padrão | Resultado | Porquê |
 |---|---|---|
-| `1001`, `1001`, `1001` (mesmo `pattern_id`) | ✅ Passa | Todas as viagens têm o mesmo `route_id` |
-| `1001`, `1002` (mesmo `pattern_id`) | ❌ Problema | O `pattern_id` tem viagens associadas a rotas diferentes |
-| `1001`, (vazio) (mesmo `pattern_id`) | ✅ Passa | O valor vazio não entra na comparação, só há um valor preenchido |
+| `R1, R1` | ✅ Passa | Uma única linha |
+| `R1, R2` | ❌ Problema | Duas linhas distintas |
+| `R1, vazio` | ✅ Passa | O vazio é ignorado |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Viagens do mesmo `pattern_id` com `route_id` diferentes | As viagens deste padrão foram associadas a rotas diferentes por engano | Corrigir o `route_id` das viagens em `trips.txt` para que todas as viagens do mesmo `pattern_id` pertençam à mesma rota |
+| Valores diferentes no mesmo padrão | Viagens com o mesmo `pattern_id` usam vários valores de `route_id` | Corrigir `route_id` ou `pattern_id` nas linhas afetadas de `trips.txt` |

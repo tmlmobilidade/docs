@@ -1,6 +1,6 @@
 ---
 title: Sentido da viagem
-description: Verifica se o valor de direction_id em trips.txt está preenchido e é 0 ou 1, e se, quando configurado, consta da lista de valores permitidos.
+description: Verifica se `direction_id` usa `0` ou `1` e, quando configurado, um valor permitido.
 ---
 
 ## Propriedades da regra
@@ -13,36 +13,39 @@ description: Verifica se o valor de direction_id em trips.txt está preenchido e
 | Tipo | Enumeração |
 | Severidade | Obrigatório |
 
-**Descrição do campo:** indica o sentido de circulação da viagem. Não deve ser usado para calcular percursos; serve apenas para separar viagens por sentido ao publicar horários. `0` significa viagem num sentido (por exemplo, saída) e `1` significa viagem no sentido oposto (por exemplo, chegada).
+**Descrição do campo:** indica um dos dois sentidos da viagem. O valor separa viagens por sentido, mas não deve ser usado no cálculo de percursos.
 
 Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
 
 ## Como funciona
 
-O campo `direction_id` é sempre obrigatório: se estiver vazio, a regra reporta sempre o problema, independentemente da configuração da regra. A configuração só influencia o que acontece quando o valor está preenchido mas é inválido ou não está na lista de valores permitidos.
+O campo tem de estar preenchido com `0` ou `1`, salvo quando a configuração desativa a regra. Uma lista configurada pode restringir estes dois valores. A regra não atribui significado geográfico fixo a cada número.
 
 A regra avalia cada linha do `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O campo está vazio? | ❌ Reporta sempre o problema | Segue para o passo 2 |
-| 2 | O valor é `0` ou `1`? | Segue para o passo 3 | ❌ Reporta o problema: valor inválido |
-| 3 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 4 | ✅ Passa |
-| 4 | O valor está na lista (ou a lista aceita qualquer valor)? | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda o campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra proíbe o campo? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor é `0` ou `1`? | Segue para o passo 4 | ❌ Reporta o problema: valor inválido |
+| 4 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 5 | ✅ Passa |
+| 5 | O valor consta da lista, ou a lista aceita qualquer valor? | ✅ Passa | ❌ Reporta o problema: valor não permitido |
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `0` | ✅ Passa | Sentido de ida, valor válido |
-| (vazio) | ❌ Problema | Campo obrigatório, falta o valor |
-| `3` | ❌ Problema | Valor fora do conjunto `0`, `1` |
-| `1` (lista permitida da configuração = `0`) | ❌ Problema | Valor válido mas fora da lista permitida |
+| `0` | ✅ Passa | Valor previsto |
+| Vazio | ❌ Problema | Campo obrigatório |
+| `2` | ❌ Problema | Fora da enumeração |
+| `0` (lista permitida = `1`) | ❌ Problema | Fora da lista configurada |
+
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Campo em falta | `direction_id` está vazio em `trips.txt` | Preencher `direction_id` em `trips.txt` com `0` ou `1` |
-| Valor inválido | O valor de `direction_id` não é `0` nem `1` | Corrigir `direction_id` em `trips.txt` para um destes valores |
-| Valor não permitido | O valor é válido mas não consta da lista de valores permitidos pela configuração da regra | Usar um valor da lista permitida, ou pedir ao administrador que a atualize |
+| Campo em falta | A configuração da regra exige ou recomenda `direction_id` | Preencher `direction_id` em `trips.txt` |
+| Campo preenchido quando não devia | A configuração da regra proíbe `direction_id` | Remover `direction_id` de `trips.txt` |
+| Valor inválido | O valor não é `0` ou `1` | Corrigir `direction_id` em `trips.txt` |
+| Valor não permitido | O valor não consta da lista configurada | Usar um valor permitido em `direction_id` de `trips.txt`, ou ajustar a configuração da regra |

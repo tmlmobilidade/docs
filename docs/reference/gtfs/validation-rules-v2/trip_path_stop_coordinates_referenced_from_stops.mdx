@@ -1,6 +1,6 @@
 ---
-title: Proximidade das paragens à shape
-description: Verifica se as coordenadas de cada paragem servida por uma viagem estão suficientemente próximas da shape atribuída a essa viagem.
+title: Proximidade das paragens ao percurso
+description: Verifica se cada paragem servida fica a uma distância máxima de 100 metros da forma da viagem.
 ---
 
 ## Propriedades da regra
@@ -8,43 +8,54 @@ description: Verifica se as coordenadas de cada paragem servida por uma viagem e
 | Propriedade | Valor |
 |---|---|
 | Rule ID | `trip_path_stop_coordinates_referenced_from_stops` |
-| Ficheiro | `stop_times.txt` |
-| Campo | `stop_id` |
-| Tipo | Coordenadas |
-| Severidade | Opcional |
+| Ficheiros | `trips.txt`, `stop_times.txt`, `stops.txt`, `shapes.txt` |
+| Campos | `trip_id`, `shape_id`, `stop_id`, `stop_lat`, `stop_lon` |
+| Tipo | Identificador, Identificador, Identificador, Coordenada, Coordenada |
+| Severidade | Opcional (recomendado) |
 
-**Descrição do campo:** identifica a paragem servida pela viagem. As suas coordenadas (`stop_lat`, `stop_lon`) vêm de `stops.txt` e são comparadas com a shape, o trajeto geográfico da viagem.
+**Descrição dos campos:**
 
-Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times).
+- `trip_id`: identifica a viagem e as respetivas linhas de horários.
+- `shape_id`: identifica a forma geográfica da viagem.
+- `stop_id`: identifica cada paragem servida.
+- `stop_lat`: latitude da paragem.
+- `stop_lon`: longitude da paragem.
+
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips), [stop_times.txt](/reference/gtfs/schedule/stop_times), [stops.txt](/reference/gtfs/schedule/stops) e [shapes.txt](/reference/gtfs/schedule/shapes).
 
 ## Como funciona
 
-Quando esta regra passa, todas as paragens servidas por uma viagem estão a, no máximo, 100 metros da shape atribuída a essa viagem. A regra não confirma que a shape está correta nem que a ordem das paragens faz sentido, só mede a distância entre cada paragem e o ponto mais próximo da shape. Viagens sem `shape_id` preenchido não são avaliadas por esta regra.
+Cada paragem com coordenadas utilizáveis tem de ficar, no máximo, a 100 metros da linha densificada da forma da viagem. A regra ignora viagens sem forma e paragens sem coordenadas utilizáveis. Não confirma a ordem das paragens sobre o percurso.
 
-A regra avalia cada viagem de `trips.txt`: mede a distância entre cada paragem servida (através de `stop_times.txt`) e a shape associada, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+A regra avalia cada viagem de `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | A viagem tem um `shape_id` preenchido em `trips.txt`? | Segue para o passo 2 | A regra não avalia esta viagem |
-| 2 | A configuração da regra está definida para não aplicar esta verificação? | A regra não avalia esta viagem | Segue para o passo 3 |
-| 3 | A distância entre a paragem (`stop_lat`, `stop_lon` em `stops.txt`) e o ponto mais próximo da shape (`shapes.txt`) é superior a 100 metros? | ❌ Reporta o problema para essa paragem | ✅ Passa |
+| 1 | Existem linhas de `stop_times.txt` para o `trip_id`? | Segue para o passo 2 | Tenta carregar as linhas diretamente; se não conseguir, termina sem problema |
+| 2 | `shape_id` está vazio? | ✅ Passa | Segue para o passo 3 |
+| 3 | A configuração da regra desativa a validação? | ✅ Passa | Segue para o passo 4 |
+| 4 | A paragem já foi avaliada nesta viagem? | Ignora a repetição | Procura `stop_lat` e `stop_lon` em `stops.txt` |
+| 5 | Existem coordenadas utilizáveis para a paragem e geometria utilizável para a forma? | Segue para o passo 6 | Ignora essa paragem |
+| 6 | A distância mínima entre a paragem e a forma é superior a 100 metros? | ❌ Reporta o problema para a paragem e forma | ✅ Passa |
 
-Cada paragem só é avaliada uma vez por viagem, mesmo que apareça em várias linhas de `stop_times.txt`.
+A distância usa a fórmula de Haversine e pontos interpolados ao longo da forma, não apenas os pontos originais de `shapes.txt`. Uma distância exatamente igual a 100 metros é aceite.
 
 ## Como se relacionam
 
-O `stop_id` de `stop_times.txt` identifica a paragem visitada pela viagem; as suas coordenadas vêm de `stop_lat` e `stop_lon` em `stops.txt`. O `shape_id` da viagem, em `trips.txt`, identifica o trajeto geográfico cujos pontos estão em `shapes.txt`. A regra compara a paragem com o ponto mais próximo desse trajeto.
+`trip_id` obtém as paragens em `stop_times.txt`. Cada `stop_id` fornece coordenadas em `stops.txt`, e `shape_id` fornece o percurso em `shapes.txt`.
 
 ## Exemplos
 
-| Valor | Resultado | Porquê |
-|---|---|---|
-| Paragem a 40 metros da shape mais próxima | ✅ Passa | Dentro do limite de 100 metros |
-| Paragem a 250 metros da shape mais próxima | ❌ Problema | Fora do limite de 100 metros |
-| Viagem sem `shape_id` preenchido | ✅ Passa | A regra não avalia esta viagem |
+| Distância mínima | Dados disponíveis | Resultado | Porquê |
+|---|---|---|---|
+| `25 m` | Paragem e forma válidas | ✅ Passa | Dentro da tolerância |
+| `100 m` | Paragem e forma válidas | ✅ Passa | Igual ao limite |
+| `125 m` | Paragem e forma válidas | ❌ Problema | Superior ao limite |
+| — | `shape_id` vazio | ✅ Passa | Não existe percurso para comparar |
+| — | Coordenadas da paragem inválidas | ✅ Passa | A paragem é ignorada |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Paragem demasiado longe da shape da viagem | As coordenadas `stop_lat`/`stop_lon` da paragem em `stops.txt` estão incorretas, ou a shape em `shapes.txt` não passa junto da paragem, ou o `shape_id` atribuído à viagem em `trips.txt` está errado | Corrigir as coordenadas da paragem em `stops.txt`, ajustar a shape em `shapes.txt`, ou associar o `shape_id` correto à viagem em `trips.txt` |
+| Paragem demasiado distante da forma | As coordenadas da paragem ou a geometria da forma não representam o mesmo percurso | Corrigir `stop_lat` e `stop_lon` em `stops.txt`, `shape_id` em `trips.txt` ou os pontos em `shapes.txt` |

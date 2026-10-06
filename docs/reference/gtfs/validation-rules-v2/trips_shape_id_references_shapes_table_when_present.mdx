@@ -1,6 +1,6 @@
 ---
 title: Forma da viagem
-description: Verifica se o shape_id indicado em trips.txt está preenchido e corresponde a uma forma existente em shapes.txt.
+description: Verifica se cada `shape_id` preenchido referencia uma forma existente em shapes.txt.
 ---
 
 ## Propriedades da regra
@@ -8,37 +8,43 @@ description: Verifica se o shape_id indicado em trips.txt está preenchido e cor
 | Propriedade | Valor |
 |---|---|
 | Rule ID | `trips_shape_id_references_shapes_table_when_present` |
-| Ficheiro | `trips.txt` |
+| Ficheiros | `trips.txt`, `shapes.txt` |
 | Campo | `shape_id` |
-| Tipo | Chave estrangeira para `shapes.shape_id` |
+| Tipo | Identificador externo |
 | Severidade | Obrigatório |
 
-**Descrição do campo:** identifica o traçado geográfico que representa o percurso do veículo durante a viagem.
+**Descrição do campo:** identifica a forma geográfica que descreve o percurso do veículo.
 
-Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips) e [shapes.txt](/reference/gtfs/schedule/shapes).
 
 ## Como funciona
 
-A regra garante que cada viagem está associada a um traçado que existe em `shapes.txt`. A regra **não verifica** se o traçado corresponde de facto às paragens da viagem, só se o `shape_id` indicado existe.
+O campo tem de estar preenchido e corresponder a a um `shape_id` de `shapes.txt`, salvo quando a configuração desativa a regra. A regra não avalia os restantes dados da referência.
 
 A regra avalia cada linha do `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O campo `shape_id` está vazio? | ❌ Reporta o problema: campo em falta | Segue para o passo 2 |
-| 2 | O valor de `shape_id` existe em `shapes.txt`? | ✅ Passa | ❌ Reporta o problema: forma não encontrada |
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda o campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra proíbe o campo? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O identificador existe em `shapes.txt`? | ✅ Passa | ❌ Reporta o problema: referência inexistente |
+
+## Como se relacionam
+
+Cada `shape_id` de `trips.txt` tem de corresponder a pelo menos uma linha com esse identificador em `shapes.txt`.
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `SHP1` (existe em `shapes.txt`) | ✅ Passa | O `shape_id` corresponde a uma forma existente |
-| (vazio) | ❌ Problema | O campo `shape_id` é obrigatório |
-| `SHP99` (não existe em `shapes.txt`) | ❌ Problema | Não há nenhuma forma com este `shape_id` |
+| `FORMA_1`, existente | ✅ Passa | Referência encontrada |
+| Vazio | ❌ Problema | Campo obrigatório |
+| `FORMA_9`, inexistente | ❌ Problema | Referência inexistente |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Campo em falta | O campo `shape_id` não foi preenchido em `trips.txt` | Preencher `shape_id` com o identificador de uma forma existente |
-| Forma não encontrada | O `shape_id` indicado em `trips.txt` não existe em `shapes.txt`, por exemplo por erro de digitação ou porque a forma foi removida | Corrigir o `shape_id` em `trips.txt` para o identificador correto, ou adicionar a forma correspondente em `shapes.txt` |
+| Campo em falta | A configuração da regra exige ou recomenda `shape_id` | Preencher `shape_id` em `trips.txt` |
+| Campo preenchido quando não devia | A configuração da regra proíbe `shape_id` | Remover `shape_id` de `trips.txt` |
+| Referência inexistente | O identificador não existe em `shapes.txt` | Corrigir `shape_id` em `trips.txt` ou adicionar a referência a `shapes.txt` |

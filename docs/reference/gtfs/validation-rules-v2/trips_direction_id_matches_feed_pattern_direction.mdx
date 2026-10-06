@@ -1,6 +1,6 @@
 ---
-title: Correspondência entre direction_id e pattern_id
-description: Verifica se o sentido indicado em direction_id corresponde ao sentido codificado no pattern_id da viagem.
+title: Sentido coerente com o padrão
+description: Verifica se `direction_id` corresponde ao sentido indicado na segunda parte de `pattern_id`.
 ---
 
 ## Propriedades da regra
@@ -10,49 +10,49 @@ description: Verifica se o sentido indicado em direction_id corresponde ao senti
 | Rule ID | `trips_direction_id_matches_feed_pattern_direction` |
 | Ficheiro | `trips.txt` |
 | Campos | `pattern_id`, `direction_id` |
-| Tipo | ID |
+| Tipo | Identificador, Enumeração |
 | Severidade | Obrigatório |
 
 **Descrição dos campos:**
 
-- `pattern_id`: identifica o padrão de paragens a que a viagem pertence. O formato esperado codifica o sentido da viagem na parte central do valor, por exemplo `XXXX_0_X` para o sentido 0.
-- `direction_id`: indica o sentido de viagem (0 ou 1). Não deve ser usado para cálculo de rotas; serve para separar viagens por sentido nas tabelas de horários.
+- `pattern_id`: identifica o padrão e deve ter três partes separadas por sublinhados.
+- `direction_id`: indica o sentido da viagem e tem de corresponder à segunda parte do padrão.
 
 Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
 
 ## Como funciona
 
-A regra confirma que o sentido indicado em `direction_id` é o mesmo que está codificado no `pattern_id` da viagem. Não valida o formato geral de `pattern_id` — isso é feito pela regra `trips_pattern_id_matches_feed_pattern_id_syntax` — nem confirma que o `pattern_id` existe em `patterns.txt`.
+O padrão tem de ter exatamente três partes. A segunda parte tem de ser `0` ou `1` e coincidir com `direction_id`. A regra não valida as restantes partes do padrão.
 
 A regra avalia cada linha do `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | Falta o `pattern_id` ou o `direction_id`? | Verifica se a configuração da regra exige este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
-| 2 | A configuração da regra marca este campo para ser ignorado ou como não permitido? | ✅ Passa (a correspondência não é validada) | Segue para o passo 3 |
-| 3 | O `pattern_id` tem exatamente três partes separadas por `_`? | Segue para o passo 4 | ❌ Reporta o problema: formato inválido |
-| 4 | A parte central do `pattern_id` é um número inteiro entre 0 e 1? | Segue para o passo 5 | ❌ Reporta o problema: sentido inválido no `pattern_id` |
-| 5 | O valor de `direction_id` corresponde ao sentido extraído do `pattern_id`? | ✅ Passa | ❌ Reporta o problema: sentidos não correspondem |
+| 1 | `pattern_id` ou `direction_id` está vazio? | Se a configuração da regra estiver ativa, reporta o problema | Segue para o passo 2 |
+| 2 | A configuração da regra desativa a validação? | ✅ Passa | Segue para o passo 3 |
+| 3 | `pattern_id` tem exatamente três partes separadas por sublinhados? | Segue para o passo 4 | ❌ Reporta o problema: padrão inválido |
+| 4 | A segunda parte é o número `0` ou `1`? | Segue para o passo 5 | ❌ Reporta o problema: sentido inválido no padrão |
+| 5 | A segunda parte coincide com `direction_id`? | ✅ Passa | ❌ Reporta o problema: sentidos diferentes |
 
 ## Como se relacionam
 
-O `pattern_id` tem de estar dividido em três partes separadas por `_`, em que a parte central representa o sentido da viagem. Esse valor tem de ser igual ao `direction_id` preenchido na mesma linha.
+Em `1001_0_1`, a segunda parte é `0`. Por isso, a mesma linha tem de usar `direction_id=0`.
 
 ## Exemplos
 
-| pattern_id | direction_id | Resultado | Porquê |
+| `pattern_id` | `direction_id` | Resultado | Porquê |
 |---|---|---|---|
-| `1001_0_1` | `0` | ✅ Passa | O sentido corresponde |
-| (vazio) | `0` | ❌ Problema | Falta o `pattern_id` |
-| `1001_0_1` | `1` | ❌ Problema | `direction_id` não corresponde ao sentido do `pattern_id` |
-| `1001_0_1_1` | `0` | ❌ Problema | `pattern_id` não tem o formato `XXXX_D_X` |
-| `1001_2_1` | `0` | ❌ Problema | A parte do sentido no `pattern_id` não é `0` nem `1` |
+| `1001_0_1` | `0` | ✅ Passa | Sentidos iguais |
+| Vazio | `0` | ❌ Problema | Falta o padrão |
+| `1001_0` | `0` | ❌ Problema | Faltam partes |
+| `1001_X_1` | `0` | ❌ Problema | Sentido não numérico |
+| `1001_1_1` | `0` | ❌ Problema | Sentidos diferentes |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Campos em falta | A configuração da regra exige `pattern_id` e `direction_id` para validar a correspondência entre ambos | Preencher `pattern_id` e `direction_id` em `trips.txt` |
-| Formato do pattern_id inválido | O `pattern_id` não tem exatamente três partes separadas por `_` | Corrigir `pattern_id` em `trips.txt` para o formato `XXXX_D_X`, em que `D` é o sentido (0 ou 1), por exemplo `1001_0_1` |
-| Sentido inválido no pattern_id | A parte central do `pattern_id` não é `0` nem `1` | Corrigir a parte central do `pattern_id` em `trips.txt` para `0` ou `1` |
-| Sentidos não correspondem | O valor de `direction_id` é diferente do sentido codificado no `pattern_id` | Corrigir `direction_id` ou `pattern_id` em `trips.txt` para que ambos indiquem o mesmo sentido |
+| Campos em falta | `pattern_id` ou `direction_id` está vazio | Preencher `pattern_id` e `direction_id` em `trips.txt` |
+| Padrão inválido | `pattern_id` não tem três partes | Corrigir `pattern_id` em `trips.txt` para três partes separadas por sublinhados |
+| Sentido inválido no padrão | A segunda parte de `pattern_id` não é `0` nem `1` | Corrigir a segunda parte de `pattern_id` em `trips.txt` |
+| Sentidos diferentes | `direction_id` difere da segunda parte de `pattern_id` | Alinhar `direction_id` e `pattern_id` na linha de `trips.txt` |

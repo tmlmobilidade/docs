@@ -1,6 +1,6 @@
 ---
 title: Serviço da viagem
-description: Verifica se o service_id indicado em trips.txt está preenchido e corresponde a um serviço existente em calendar.txt ou calendar_dates.txt.
+description: Verifica se cada `service_id` existe em calendar.txt ou calendar_dates.txt.
 ---
 
 ## Propriedades da regra
@@ -8,39 +8,43 @@ description: Verifica se o service_id indicado em trips.txt está preenchido e c
 | Propriedade | Valor |
 |---|---|
 | Rule ID | `trips_service_id_references_calendar_service` |
-| Ficheiro | `trips.txt` |
+| Ficheiros | `trips.txt`, `calendar.txt`, `calendar_dates.txt` |
 | Campo | `service_id` |
-| Tipo | Chave estrangeira para `calendar.service_id` ou `calendar_dates.service_id` |
+| Tipo | Identificador externo |
 | Severidade | Obrigatório |
 
-**Descrição do campo:** identifica o serviço (os dias em que a viagem opera) a que a viagem pertence.
+**Descrição do campo:** identifica o conjunto de datas em que a viagem está disponível.
 
-Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips), [calendar.txt](/reference/gtfs/schedule/calendar) e [calendar_dates.txt](/reference/gtfs/schedule/calendar_dates).
 
 ## Como funciona
 
-A regra garante que cada viagem está associada a um serviço que existe em `calendar.txt` ou em `calendar_dates.txt`. A regra **não verifica** se o serviço tem datas válidas ou se está ativo em algum dia, só se o `service_id` indicado existe nalgum dos dois ficheiros.
+O campo tem de estar preenchido e corresponder a a um serviço de `calendar.txt` ou `calendar_dates.txt`, salvo quando a configuração desativa a regra. A regra não avalia os restantes dados da referência.
 
 A regra avalia cada linha do `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O campo `service_id` está vazio? | ❌ Reporta o problema: campo em falta | Segue para o passo 2 |
-| 2 | O valor de `service_id` existe em `calendar.txt`? | ✅ Passa | Segue para o passo 3 |
-| 3 | O valor de `service_id` existe em `calendar_dates.txt`? | ✅ Passa | ❌ Reporta o problema: serviço não encontrado |
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda o campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra proíbe o campo? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O identificador existe em `calendar.txt` ou `calendar_dates.txt`? | ✅ Passa | ❌ Reporta o problema: referência inexistente |
+
+## Como se relacionam
+
+O serviço pode ser definido em qualquer um dos dois ficheiros de calendário. Basta existir em um deles.
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `SERV1` (existe em `calendar.txt`) | ✅ Passa | O `service_id` corresponde a um serviço em `calendar.txt` |
-| `SERV2` (existe apenas em `calendar_dates.txt`) | ✅ Passa | O `service_id` corresponde a um serviço em `calendar_dates.txt` |
-| (vazio) | ❌ Problema | O campo `service_id` é obrigatório |
-| `SERV99` (não existe em nenhum dos dois ficheiros) | ❌ Problema | Não há nenhum serviço com este `service_id` |
+| `DIAS_UTEIS`, existente | ✅ Passa | Referência encontrada |
+| Vazio | ❌ Problema | Campo obrigatório |
+| `SERVICO_X`, inexistente | ❌ Problema | Referência inexistente |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Campo em falta | O campo `service_id` não foi preenchido em `trips.txt` | Preencher `service_id` com o identificador de um serviço existente |
-| Serviço não encontrado | O `service_id` indicado em `trips.txt` não existe em `calendar.txt` nem em `calendar_dates.txt`, por exemplo por erro de digitação ou porque o serviço foi removido | Corrigir o `service_id` em `trips.txt` para o identificador correto, ou adicionar o serviço correspondente em `calendar.txt` ou `calendar_dates.txt` |
+| Campo em falta | A configuração da regra exige ou recomenda `service_id` | Preencher `service_id` em `trips.txt` |
+| Campo preenchido quando não devia | A configuração da regra proíbe `service_id` | Remover `service_id` de `trips.txt` |
+| Referência inexistente | O identificador não existe em `calendar.txt` ou `calendar_dates.txt` | Corrigir `service_id` em `trips.txt` ou adicionar a referência a `calendar.txt` ou `calendar_dates.txt` |

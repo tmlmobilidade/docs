@@ -1,6 +1,6 @@
 ---
-title: Rota da viagem
-description: Verifica se o route_id indicado em trips.txt está preenchido e corresponde a uma rota existente em routes.txt.
+title: Linha da viagem
+description: Verifica se cada `route_id` de trips.txt referencia uma linha existente em routes.txt.
 ---
 
 ## Propriedades da regra
@@ -8,37 +8,43 @@ description: Verifica se o route_id indicado em trips.txt está preenchido e cor
 | Propriedade | Valor |
 |---|---|
 | Rule ID | `trips_route_id_references_routes_table` |
-| Ficheiro | `trips.txt` |
+| Ficheiros | `trips.txt`, `routes.txt` |
 | Campo | `route_id` |
-| Tipo | Chave estrangeira para `routes.route_id` |
+| Tipo | Identificador externo |
 | Severidade | Obrigatório |
 
-**Descrição do campo:** identifica a rota a que a viagem pertence.
+**Descrição do campo:** identifica a linha a que pertence a viagem.
 
-Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips) e [routes.txt](/reference/gtfs/schedule/routes).
 
 ## Como funciona
 
-A regra garante que cada viagem está associada a uma rota que existe mesmo em `routes.txt`. A regra **não verifica** se a rota está corretamente configurada, só se o `route_id` indicado existe.
+O campo tem de estar preenchido e corresponder a a um `route_id` de `routes.txt`, salvo quando a configuração desativa a regra. A regra não avalia os restantes dados da referência.
 
 A regra avalia cada linha do `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O campo `route_id` está vazio? | ❌ Reporta o problema: campo em falta | Segue para o passo 2 |
-| 2 | O valor de `route_id` existe em `routes.txt`? | ✅ Passa | ❌ Reporta o problema: rota não encontrada |
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda o campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra proíbe o campo? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O identificador existe em `routes.txt`? | ✅ Passa | ❌ Reporta o problema: referência inexistente |
+
+## Como se relacionam
+
+Cada `route_id` de `trips.txt` tem de corresponder exatamente a um `route_id` definido em `routes.txt`.
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `R1` (existe em `routes.txt`) | ✅ Passa | O `route_id` corresponde a uma rota existente |
-| (vazio) | ❌ Problema | O campo `route_id` é obrigatório |
-| `R99` (não existe em `routes.txt`) | ❌ Problema | Não há nenhuma rota com este `route_id` |
+| `R100`, existente | ✅ Passa | Referência encontrada |
+| Vazio | ❌ Problema | Campo obrigatório |
+| `R999`, inexistente | ❌ Problema | Referência inexistente |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Campo em falta | O campo `route_id` não foi preenchido em `trips.txt` | Preencher `route_id` com o identificador de uma rota existente |
-| Rota não encontrada | O `route_id` indicado em `trips.txt` não existe em `routes.txt`, por exemplo por erro de digitação ou porque a rota foi removida | Corrigir o `route_id` em `trips.txt` para o identificador correto, ou adicionar a rota correspondente em `routes.txt` |
+| Campo em falta | A configuração da regra exige ou recomenda `route_id` | Preencher `route_id` em `trips.txt` |
+| Campo preenchido quando não devia | A configuração da regra proíbe `route_id` | Remover `route_id` de `trips.txt` |
+| Referência inexistente | O identificador não existe em `routes.txt` | Corrigir `route_id` em `trips.txt` ou adicionar a referência a `routes.txt` |

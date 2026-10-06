@@ -1,6 +1,6 @@
 ---
-title: Shape consistente por sentido da rota
-description: Verifica se todas as viagens do mesmo route_id e do mesmo sentido (direction_id) usam a mesma shape_id.
+title: Forma consistente por linha e sentido
+description: Verifica se cada combinação de `route_id` e `direction_id` usa um único `shape_id`.
 ---
 
 ## Propriedades da regra
@@ -9,39 +9,45 @@ description: Verifica se todas as viagens do mesmo route_id e do mesmo sentido (
 |---|---|
 | Rule ID | `trips_shape_id_consistent_per_route_direction` |
 | Ficheiro | `trips.txt` |
-| Campo | `shape_id` |
-| Tipo | Chave estrangeira que referencia `shapes.shape_id` |
-| Severidade | Opcional |
+| Campos | `route_id`, `direction_id`, `shape_id` |
+| Tipo | Identificador, Enumeração, Identificador |
+| Severidade | Condicional |
 
-**Descrição do campo:** identifica a shape, o trajeto geográfico que descreve o percurso do veículo numa viagem.
+**Descrição dos campos:**
+
+- `route_id`: identifica a linha que agrupa as viagens.
+- `direction_id`: identifica o sentido `0` ou `1`.
+- `shape_id`: identifica a forma geográfica da viagem.
 
 Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
 
 ## Como funciona
 
-Quando esta regra passa, todas as viagens do mesmo `route_id` que seguem o mesmo sentido (`direction_id`) usam a mesma `shape_id`. A regra não verifica se essa `shape_id` existe em `shapes.txt`, nem limita o número total de shapes distintas de uma rota — isso é verificado por outra regra. Viagens sem `shape_id` preenchido, ou com `direction_id` diferente de `0` ou `1`, não entram nesta comparação.
+Dentro de uma linha, cada sentido válido pode usar apenas uma forma. Valores vazios de `shape_id` são ignorados. Sentidos vazios ou diferentes de `0` e `1` não entram na comparação por sentido. A regra não valida os valores individualmente.
 
-A regra avalia cada grupo de viagens com o mesmo `route_id` de `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+A regra avalia cada grupo de viagens com o mesmo `route_id`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O grupo tem viagens com `shape_id` preenchido e `direction_id` igual a `0` ou `1`? | Reúne os valores distintos de `shape_id` usados em cada sentido (`direction_id` `0` e `direction_id` `1`) | A regra não reporta problemas para este `route_id` |
-| 2 | No sentido `0`, há mais do que um valor distinto de `shape_id`? | ❌ Reporta o problema para o sentido `0` | Segue para o passo 3 |
-| 3 | No sentido `1`, há mais do que um valor distinto de `shape_id`? | ❌ Reporta o problema para o sentido `1` | ✅ Passa |
+| 1 | O grupo tem viagens? | Segue para o passo 2 | ✅ Passa |
+| 2 | Para o sentido `0`, existe mais de um `shape_id` não vazio? | Se a regra estiver ativa, reporta o problema | Segue para o passo 3 |
+| 3 | Para o sentido `1`, existe mais de um `shape_id` não vazio? | Se a regra estiver ativa, reporta o problema | ✅ Passa |
 
-Viagens repetidas com o mesmo `shape_id` contam como um só valor.
+## Como se relacionam
+
+`route_id` e `direction_id` formam o grupo comparado. Todas as viagens desse grupo têm de partilhar o mesmo `shape_id`.
 
 ## Exemplos
 
-| Valor | Resultado | Porquê |
-|---|---|---|
-| Todas as viagens do sentido `0` usam `shape_id` `A` | ✅ Passa | Um único valor no sentido `0` |
-| Sentido `0` usa `shape_id` `A` e sentido `1` usa `shape_id` `B` | ✅ Passa | Sentidos diferentes podem ter shapes diferentes |
-| Sentido `0` tem viagens com `shape_id` `A` e outras com `shape_id` `B` | ❌ Problema | Dois valores distintos no mesmo sentido |
-| Viagens com `direction_id` `2` e `shape_id` diferentes | ✅ Passa | `direction_id` inválido não entra na comparação |
+| `route_id` | `direction_id` | Formas | Resultado | Porquê |
+|---|---|---|---|---|
+| `R1` | `0` | `S1, S1` | ✅ Passa | Uma forma no sentido |
+| `R1` | `0` | `S1, S2` | ❌ Problema | Duas formas no mesmo sentido |
+| `R1` | `0 e 1` | `S1 e S2` | ✅ Passa | Uma forma por sentido |
+| `R1` | `2` | `S1, S2` | ✅ Passa | Sentido inválido ignorado |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Mais do que um `shape_id` no mesmo sentido da rota | Viagens do mesmo `route_id` e `direction_id` foram associadas a shapes diferentes, normalmente por engano na atribuição da `shape_id` | Corrigir o `shape_id` em `trips.txt` para que todas as viagens do mesmo `route_id` e `direction_id` usem o mesmo valor |
+| Formas diferentes no mesmo sentido | Uma combinação de `route_id` e `direction_id` usa vários `shape_id` | Corrigir `shape_id`, `route_id` ou `direction_id` nas linhas afetadas de `trips.txt` |

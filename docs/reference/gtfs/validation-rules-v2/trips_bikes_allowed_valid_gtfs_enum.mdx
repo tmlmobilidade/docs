@@ -1,6 +1,6 @@
 ---
-title: Bicicletas permitidas na viagem
-description: Verifica se o valor de bikes_allowed em trips.txt é um dos códigos válidos (0, 1 ou 2) e, quando configurado, se consta da lista de valores permitidos.
+title: Transporte de bicicletas
+description: Verifica se `bikes_allowed` usa `0`, `1` ou `2` e, quando configurado, um valor permitido.
 ---
 
 ## Propriedades da regra
@@ -13,37 +13,39 @@ description: Verifica se o valor de bikes_allowed em trips.txt é um dos código
 | Tipo | Enumeração |
 | Severidade | Opcional |
 
-**Descrição do campo:** indica se são permitidas bicicletas na viagem. O valor `0` ou vazio significa que não há informação sobre bicicletas, `1` significa que o veículo usado nesta viagem pode acomodar pelo menos uma bicicleta e `2` significa que não são permitidas bicicletas nesta viagem.
+**Descrição do campo:** indica se a viagem transporta bicicletas: `0` sem informação, `1` permite pelo menos uma bicicleta e `2` não permite bicicletas.
 
 Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
 
 ## Como funciona
 
-Quando preenchido, o valor de `bikes_allowed` tem de ser `0`, `1` ou `2`. A regra não verifica se a informação está correta para a viagem em causa, só se o código usado é válido.
+Quando existe, o valor tem de ser `0`, `1` ou `2`. Uma lista configurada pode restringir estes valores. A ausência é aceite apenas quando a configuração não exige nem recomenda o campo.
 
 A regra avalia cada linha do `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
-| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda o campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra proíbe o campo? | ❌ Reporta o problema | Segue para o passo 3 |
 | 3 | O valor é `0`, `1` ou `2`? | Segue para o passo 4 | ❌ Reporta o problema: valor inválido |
 | 4 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 5 | ✅ Passa |
-| 5 | O valor está na lista (ou a lista aceita qualquer valor)? | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+| 5 | O valor consta da lista, ou a lista aceita qualquer valor? | ✅ Passa | ❌ Reporta o problema: valor não permitido |
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `1` | ✅ Passa | Veículo pode acomodar bicicletas, valor válido |
-| `5` | ❌ Problema | Valor fora do conjunto `0`, `1`, `2` |
-| `2` (lista permitida da configuração = `0`, `1`) | ❌ Problema | Valor válido mas fora da lista permitida |
+| `1` | ✅ Passa | Valor previsto |
+
+| `3` | ❌ Problema | Fora da enumeração |
+| `1` (lista permitida = `2`) | ❌ Problema | Fora da lista configurada |
+
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Valor inválido | O valor de `bikes_allowed` não é `0`, `1` nem `2` | Corrigir `bikes_allowed` em `trips.txt` para um destes valores |
-| Valor não permitido | O valor é válido mas não consta da lista de valores permitidos pela configuração da regra | Usar um valor da lista permitida, ou pedir ao administrador que a atualize |
-| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `bikes_allowed` em `trips.txt` |
-| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `bikes_allowed` em `trips.txt` |
+| Campo em falta | A configuração da regra exige ou recomenda `bikes_allowed` | Preencher `bikes_allowed` em `trips.txt` |
+| Campo preenchido quando não devia | A configuração da regra proíbe `bikes_allowed` | Remover `bikes_allowed` de `trips.txt` |
+| Valor inválido | O valor não é `0`, `1` ou `2` | Corrigir `bikes_allowed` em `trips.txt` |
+| Valor não permitido | O valor não consta da lista configurada | Usar um valor permitido em `bikes_allowed` de `trips.txt`, ou ajustar a configuração da regra |

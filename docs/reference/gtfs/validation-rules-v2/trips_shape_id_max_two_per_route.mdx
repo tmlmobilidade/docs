@@ -1,6 +1,6 @@
 ---
-title: No máximo dois shape_id por rota
-description: Verifica se cada route_id tem no máximo dois valores distintos de shape_id entre todas as suas viagens.
+title: Máximo de duas formas por linha
+description: Verifica se cada `route_id` usa, no máximo, dois valores distintos de `shape_id`.
 ---
 
 ## Propriedades da regra
@@ -9,39 +9,44 @@ description: Verifica se cada route_id tem no máximo dois valores distintos de 
 |---|---|
 | Rule ID | `trips_shape_id_max_two_per_route` |
 | Ficheiro | `trips.txt` |
-| Campo | `shape_id` |
-| Tipo | ID |
-| Severidade | Configurável |
+| Campos | `route_id`, `shape_id` |
+| Tipo | Identificador, Identificador |
+| Severidade | Condicional |
 
-**Descrição do campo:** identifica a forma geoespacial que descreve o trajeto percorrido pelo veículo numa viagem. Cada `route_id` pode ter no máximo dois valores distintos de `shape_id`, normalmente um por sentido.
+**Descrição dos campos:**
+
+- `route_id`: identifica a linha que agrupa as viagens.
+- `shape_id`: identifica a forma geográfica da viagem.
 
 Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
 
 ## Como funciona
 
-Cada `route_id` pode ter no máximo dois valores distintos de `shape_id` entre todas as suas viagens. A regra **não verifica qual `shape_id` está correto, nem separa a contagem por sentido** — só conta quantos valores diferentes existem na rota inteira.
+Uma linha pode usar zero, uma ou duas formas distintas. Com três ou mais formas, a regra reporta o problema. Valores vazios de `shape_id` são ignorados.  A regra não valida os valores individualmente.
 
-A regra avalia cada grupo de viagens com o mesmo `route_id` do `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+A regra avalia cada grupo de viagens com o mesmo `route_id`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O grupo tem viagens com `shape_id` preenchido? | Segue para o passo 2 | ✅ Passa (nada a contar) |
-| 2 | Existem mais do que dois valores distintos de `shape_id` no grupo? | Segue para o passo 3 | ✅ Passa |
-| 3 | A configuração da regra está definida como "ignorar" ou "não permitido"? | ✅ Passa (a regra não é aplicada) | ❌ Reporta o problema |
+| 1 | O grupo tem viagens? | Segue para o passo 2 | ✅ Passa |
+| 2 | Existem mais de dois `shape_id` distintos e não vazios? | Segue para o passo 3 | ✅ Passa |
+| 3 | A configuração da regra desativa a validação? | ✅ Passa | ❌ Reporta o problema na primeira viagem com forma |
 
-As viagens sem `shape_id`, ou com o campo vazio, não contam para esta comparação.
+## Como se relacionam
+
+`route_id` define a linha. A regra conta todos os `shape_id` não vazios usados pelas viagens dessa linha, independentemente do sentido.
 
 ## Exemplos
 
-| route_id | shape_id das viagens do grupo | Resultado | Porquê |
+| `route_id` | Formas | Resultado | Porquê |
 |---|---|---|---|
-| `R1` | `A`, `A`, `B`, `B` | ✅ Passa | Só há dois valores distintos (`A` e `B`) |
-| `R1` | `A`, vazio, `B` | ✅ Passa | As viagens sem `shape_id` não contam |
-| `R1` | `A`, `B`, `C` | ❌ Problema | Três valores distintos de `shape_id` |
-| `R1` | `A`, `B`, `C`, `D` | ❌ Problema | Quatro valores distintos de `shape_id` |
+| `R1` | `S1` | ✅ Passa | Uma forma |
+| `R1` | `S1, S2` | ✅ Passa | Duas formas |
+| `R1` | `S1, S2, S3` | ❌ Problema | Três formas distintas |
+| `R1` | `S1, vazio` | ✅ Passa | O vazio é ignorado |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Mais do que dois valores distintos de `shape_id` na mesma rota | A rota tem viagens associadas a três ou mais formas diferentes, por exemplo por sentidos adicionais mal configurados ou reaproveitamento incorreto de `shape_id` | Corrigir o campo `shape_id` em `trips.txt` para que a rota use no máximo dois valores, normalmente um por sentido |
+| Mais de duas formas na linha | As viagens do mesmo `route_id` usam pelo menos três `shape_id` | Corrigir `shape_id` ou `route_id` nas linhas afetadas de `trips.txt` |
