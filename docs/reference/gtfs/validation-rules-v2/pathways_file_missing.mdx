@@ -1,6 +1,6 @@
 ---
-title: Ficheiro pathways.txt em falta
-description: Verifica se o ficheiro pathways.txt existe quando a configuração da regra o exige ou recomenda.
+title: Presença do ficheiro de percursos
+description: Verifica se pathways.txt está presente quando a configuração da regra o exige ou recomenda.
 ---
 
 ## Propriedades da regra
@@ -10,32 +10,32 @@ description: Verifica se o ficheiro pathways.txt existe quando a configuração 
 | Rule ID | `pathways_file_missing` |
 | Ficheiro | `pathways.txt` |
 | Campo | Se aplica em todo o ficheiro |
-| Tipo | Presença de ficheiro |
+| Tipo | Ficheiro |
 | Severidade | Opcional |
 
 ## Como funciona
 
-O `pathways.txt` é opcional no GTFS. A regra só reporta um problema se a configuração da regra o exigir ou recomendar e o ficheiro não existir no conjunto de dados. A regra **não verifica o conteúdo do ficheiro**, só se existe.
+Quando a regra passa, `pathways.txt` está presente ou a configuração da regra permite a sua ausência. A regra **não verifica o conteúdo nem as colunas do ficheiro**.
 
-A regra avalia o conjunto de dados, seguindo o passo abaixo, que dá o resultado.
+A regra avalia a presença do ficheiro `pathways.txt` no conjunto GTFS, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | A configuração da regra exige ou recomenda o `pathways.txt` e o ficheiro não existe? | ❌ Reporta o problema: `pathways.txt` em falta (como erro se exigido, como aviso se recomendado) | ✅ Passa |
-
-Se a configuração da regra ignorar o ficheiro, não é reportado nada.
+| 1 | O ficheiro `pathways.txt` está presente? | ✅ Passa | Segue para o passo 2 |
+| 2 | A configuração da regra recomenda o ficheiro? | ❌ Reporta o problema: ficheiro recomendado em falta | Segue para o passo 3 |
+| 3 | A configuração da regra exige o ficheiro? | ❌ Reporta o problema: ficheiro obrigatório em falta | ✅ Passa |
 
 ## Exemplos
 
-| Configuração da regra | `pathways.txt` no ZIP | Resultado | Porquê |
-|---|---|---|---|
-| Sem exigência | Não existe | ✅ Passa | O ficheiro é opcional |
-| Exigido | Existe | ✅ Passa | O ficheiro está presente |
-| Exigido | Não existe | ❌ Problema | Falta o ficheiro exigido |
-| Recomendado | Não existe | ❌ Problema | Falta o ficheiro recomendado (aviso) |
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `pathways.txt` presente | ✅ Passa | O ficheiro existe |
+| `pathways.txt` ausente e obrigatório | ❌ Problema | Falta um ficheiro obrigatório |
+| `pathways.txt` ausente e recomendado | ❌ Problema | Falta um ficheiro recomendado |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| `pathways.txt` em falta | A configuração da regra exige ou recomenda o ficheiro e o ZIP não o inclui | Adicionar o `pathways.txt` ao ZIP. Se o ficheiro não for necessário, pedir ao administrador que retire a exigência da configuração |
+| Ficheiro obrigatório em falta | A configuração da regra exige `pathways.txt` | Adicionar `pathways.txt` ao conjunto GTFS ou rever a configuração da regra |
+| Ficheiro recomendado em falta | A configuração da regra recomenda `pathways.txt` | Adicionar `pathways.txt` ao conjunto GTFS ou rever a configuração da regra |

@@ -1,6 +1,6 @@
 ---
-title: Tempo de travessia do percurso
-description: Verifica se o traversal_time de pathways.txt, quando preenchido, não é negativo.
+title: Tempo de percurso
+description: Verifica se traversal_time está vazio ou contém um número inteiro não negativo de segundos.
 ---
 
 ## Propriedades da regra
@@ -10,38 +10,39 @@ description: Verifica se o traversal_time de pathways.txt, quando preenchido, n�
 | Rule ID | `pathway_traversal_time_non_negative_seconds` |
 | Ficheiro | `pathways.txt` |
 | Campo | `traversal_time` |
-| Tipo | Número inteiro positivo |
+| Tipo | Número inteiro não negativo |
 | Severidade | Opcional |
 
-**Descrição do campo:** tempo, em segundos, necessário para percorrer o percurso de `from_stop_id` até `to_stop_id`.
+**Descrição do campo:** tempo, em segundos, necessário para percorrer o percurso desde `from_stop_id` até `to_stop_id`.
 
 Mais informação em [pathways.txt](/reference/gtfs/schedule/pathways).
 
 ## Como funciona
 
-O `traversal_time` é opcional. Um campo vazio é aceite, salvo se a configuração da regra o exigir ou recomendar. A regra **não verifica se o tempo é realista**. Só verifica se não é negativo. Um valor que não seja um número inteiro é tratado pela regra `pathways_values_parse`.
+Quando a regra passa, `traversal_time` está vazio ou tem um número inteiro igual ou superior a zero. O valor `0` é aceite. A regra **não compara o tempo com o comprimento do percurso**.
 
 A regra avalia cada linha do `pathways.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O `traversal_time` está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
-| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
-| 3 | O `traversal_time` é um número negativo? | ❌ Reporta o problema: valor negativo | ✅ Passa |
+| 1 | O campo está vazio? | Aplica a configuração da regra e aceita quando esta permite a ausência | Segue para o passo 2 |
+| 2 | A configuração da regra proíbe o campo? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor é negativo? | ❌ Reporta o problema | ✅ Passa |
+
+O valor tem de poder ser lido como número inteiro. Caso contrário, a validação de leitura reporta o problema antes desta regra.
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `60` | ✅ Passa | Preenchido |
-| *(vazio)* | ✅ Passa | Campo opcional |
-| *(vazio)* com campo exigido na configuração | ❌ Problema | A configuração da regra exige o campo |
-| `-30` | ❌ Problema | Valor negativo |
+| `0` | ✅ Passa | Zero não é negativo |
+| `-1` | ❌ Problema | O tempo é negativo |
+| `120` com o campo proibido | ❌ Problema | A configuração proíbe o campo |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `traversal_time` em `pathways.txt` |
-| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `traversal_time` em `pathways.txt` |
-| Valor negativo | O `traversal_time` é um número negativo | Em `pathways.txt`, escrever o `traversal_time` com um número de segundos igual ou superior a `0` |
+| Valor negativo | `traversal_time` é inferior a zero | Corrigir `traversal_time` em `pathways.txt` para zero ou mais segundos |
+| Campo em falta | A configuração exige ou recomenda `traversal_time` | Preencher `traversal_time` em `pathways.txt` com um número inteiro não negativo |
+| Campo preenchido quando não devia | A configuração proíbe `traversal_time` | Remover `traversal_time` de `pathways.txt` ou rever a configuração da regra |

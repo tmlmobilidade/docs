@@ -1,6 +1,6 @@
 ---
-title: Tipo de percurso
-description: Verifica se o pathway_mode de pathways.txt está preenchido com um valor entre 1 e 7 e, quando configurado, se é um dos valores permitidos.
+title: Modo do percurso
+description: Verifica se pathway_mode identifica um dos sete modos de percurso aceites.
 ---
 
 ## Propriedades da regra
@@ -10,47 +10,44 @@ description: Verifica se o pathway_mode de pathways.txt está preenchido com um 
 | Rule ID | `pathway_mode_valid_gtfs_enum` |
 | Ficheiro | `pathways.txt` |
 | Campo | `pathway_mode` |
-| Tipo | Enumeração (`1` a `7`) |
+| Tipo | Enumeração |
 | Severidade | Obrigatório |
 
-**Descrição do campo:** indica o tipo de percurso.
-
-- `1`: passagem a pé.
-- `2`: escadas.
-- `3`: tapete rolante.
-- `4`: escada rolante.
-- `5`: elevador.
-- `6`: cancela de pagamento.
-- `7`: cancela de saída.
+**Descrição do campo:** indica o modo usado no percurso: `1` passagem pedonal, `2` escadas, `3` tapete rolante, `4` escada rolante, `5` elevador, `6` porta de controlo tarifário ou `7` porta de saída.
 
 Mais informação em [pathways.txt](/reference/gtfs/schedule/pathways).
 
 ## Como funciona
 
-Cada linha do `pathways.txt` tem de ter um `pathway_mode` entre `1` e `7`. Se a configuração da regra tiver uma lista de valores permitidos, o valor também tem de constar dessa lista. O valor `0` é tratado como vazio. A regra **não verifica se o tipo faz sentido para o percurso**.
+Quando a regra passa, `pathway_mode` tem um valor inteiro entre `1` e `7`. Uma lista configurada pode limitar estes valores. A regra **não confirma se os restantes campos são adequados ao modo**.
 
 A regra avalia cada linha do `pathways.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O `pathway_mode` está vazio (ou é `0`)? | ❌ Reporta o problema: `pathway_mode` obrigatório | Segue para o passo 2 |
-| 2 | O `pathway_mode` é um valor de `1` a `7`? | Segue para o passo 3 | ❌ Reporta o problema: valor inválido |
-| 3 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 4 | ✅ Passa |
-| 4 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+| 1 | O campo está vazio ou tem o valor `0`? | Verifica se a configuração da regra exige ou recomenda o campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra proíbe o campo? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor está entre `1` e `7`? | Segue para o passo 4 | ❌ Reporta o problema: valor inválido |
+| 4 | Existe uma lista configurada de valores permitidos? | Verifica a lista | ✅ Passa |
+| 5 | O valor consta da lista, ou a lista aceita todos os valores? | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+O valor tem de poder ser lido como número inteiro. Caso contrário, a validação de leitura de `pathways.txt` reporta o problema antes desta regra.
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `2` | ✅ Passa | Escadas |
-| `8` | ❌ Problema | Só são aceites valores de `1` a `7` |
-| *(vazio)* | ❌ Problema | Falta o valor |
-| `5` (lista permitida = `1`, `2`) | ❌ Problema | Valor válido, mas fora da lista |
+| `5` | ✅ Passa | Identifica um elevador |
+| `8` | ❌ Problema | Não é um modo aceite |
+| `4` (lista permitida = `1`, `2`) | ❌ Problema | Não consta da lista permitida |
+| vazio | ❌ Problema | Falta um campo obrigatório |
+| `1` com o campo proibido | ❌ Problema | A configuração proíbe o campo |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| `pathway_mode` obrigatório | A linha não tem `pathway_mode` (ou tem `0`) | Preencher o `pathway_mode` em `pathways.txt` com um valor de `1` a `7` |
-| Valor inválido | O valor é um número fora do intervalo `1` a `7` | Corrigir o `pathway_mode` em `pathways.txt` para um valor de `1` a `7` |
-| Valor não permitido | O valor é válido, mas a configuração da regra não o permite | Usar um valor da lista permitida, ou pedir ao administrador que o adicione |
+| Valor inválido | `pathway_mode` não está entre `1` e `7` | Corrigir `pathway_mode` em `pathways.txt` para um valor entre `1` e `7` |
+| Valor não permitido | O modo é válido, mas não consta da lista configurada | Usar em `pathway_mode` um valor permitido ou rever a configuração da regra |
+| Campo em falta | A configuração da regra exige ou recomenda `pathway_mode` | Preencher `pathway_mode` em `pathways.txt` |
+| Campo preenchido quando não devia | A configuração da regra proíbe `pathway_mode` | Remover `pathway_mode` de `pathways.txt` ou rever a configuração da regra |

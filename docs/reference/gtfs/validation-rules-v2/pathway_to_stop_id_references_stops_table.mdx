@@ -1,6 +1,6 @@
 ---
-title: Local de destino do percurso
-description: Verifica se o to_stop_id de pathways.txt está preenchido, existe em stops.txt e refere um tipo de local permitido.
+title: Destino do percurso
+description: Verifica se to_stop_id referencia em stops.txt um local permitido como destino de um percurso.
 ---
 
 ## Propriedades da regra
@@ -10,49 +10,54 @@ description: Verifica se o to_stop_id de pathways.txt está preenchido, existe e
 | Rule ID | `pathway_to_stop_id_references_stops_table` |
 | Ficheiros | `pathways.txt`, `stops.txt` |
 | Campo | `to_stop_id` |
-| Tipo | ID externo (refere `stop_id` de `stops.txt`) |
+| Tipo | Identificador externo |
 | Severidade | Obrigatório |
 
-**Descrição do campo:** identifica o local onde o percurso acaba. Tem de ser o `stop_id` de uma plataforma (`location_type` `0` ou vazio), de uma entrada ou saída (`2`), de um nó genérico (`3`) ou de uma área de embarque (`4`). Estações (`location_type` `1`) e paragens com `stop_access` igual a `1` são proibidas.
+**Descrição do campo:** identifica o local onde o percurso termina. Pode referenciar uma plataforma, entrada ou saída, nó genérico ou área de embarque.
 
 Mais informação em [pathways.txt](/reference/gtfs/schedule/pathways) e [stops.txt](/reference/gtfs/schedule/stops).
 
 ## Como funciona
 
-Cada linha do `pathways.txt` tem de ter um `to_stop_id` preenchido que exista em `stops.txt` e que refira um local onde o percurso possa começar ou acabar. A regra **não verifica se os dois extremos do percurso são diferentes** nem se estão na mesma estação.
+Quando a regra passa, `to_stop_id` existe em `stops.txt` e referencia um tipo de local permitido. Uma plataforma com `stop_access` igual a `1` não é aceite. A regra **não compara o destino com `from_stop_id`**.
 
 A regra avalia cada linha do `pathways.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O `to_stop_id` está vazio? | ❌ Reporta o problema: `to_stop_id` obrigatório | Segue para o passo 2 |
-| 2 | O `to_stop_id` existe em `stops.txt`? | Segue para o passo 3 | ❌ Reporta o problema: `to_stop_id` não encontrado |
-| 3 | O `location_type` dessa paragem é `1` (estação)? | ❌ Reporta o problema: estações são proibidas | Segue para o passo 4 |
-| 4 | O `location_type` é `0`, vazio, `2`, `3` ou `4`? | Segue para o passo 5 | ❌ Reporta o problema: tipo de local inválido |
-| 5 | O `location_type` é `0` ou vazio e o `stop_access` é `1`? | ❌ Reporta o problema: paragem com `stop_access` `1` é proibida | ✅ Passa |
+| 1 | `to_stop_id` está vazio? | Verifica se a configuração exige ou recomenda o campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra proíbe o campo? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O identificador existe em `stops.txt`? | Segue para o passo 4 | ❌ Reporta o problema: local não encontrado |
+| 4 | `location_type` está vazio ou é um número inteiro? | Segue para o passo 5 | Termina sem reportar outro problema nesta regra |
+| 5 | `location_type` é `1`? | ❌ Reporta o problema: estação não permitida | Segue para o passo 6 |
+| 6 | `location_type` é `0`, `2`, `3` ou `4`? | Segue para o passo 7 | ❌ Reporta o problema: tipo de local não permitido |
+| 7 | `location_type` é `0` ou está vazio? | Verifica `stop_access` | ✅ Passa |
+| 8 | `stop_access` está vazio ou é um número inteiro? | Segue para o passo 9 | Termina sem reportar outro problema nesta regra |
+| 9 | `stop_access` é `1`? | ❌ Reporta o problema: plataforma não permitida | ✅ Passa |
 
-Se o `location_type` ou o `stop_access` da paragem não for um número, esta verificação é ignorada.
+Os identificadores são comparados exatamente como estão escritos. `location_type` e `stop_access` vazios são tratados como `0`.
 
 ## Como se relacionam
 
-O `to_stop_id` de cada linha do `pathways.txt` tem de existir como `stop_id` em `stops.txt`. O `location_type` e o `stop_access` dessa paragem decidem se pode ser usada.
+`to_stop_id` liga a linha de `pathways.txt` a uma linha de `stops.txt`. A regra usa `location_type` e, nas plataformas, `stop_access` dessa linha.
 
 ## Exemplos
 
-| `to_stop_id` | Local em `stops.txt` | Resultado | Porquê |
+| `to_stop_id` | Dados em `stops.txt` | Resultado | Porquê |
 |---|---|---|---|
-| `PV_PLAT1` | Plataforma (`location_type` vazio, `stop_access` vazio) | ✅ Passa | Local permitido |
-| `PV_ESTACAO` | Estação (`location_type` `1`) | ❌ Problema | Estações são proibidas |
-| `PV_PLAT2` | Plataforma com `stop_access` `1` | ❌ Problema | `stop_access` `1` é proibido |
-| `XPTO` | Não existe | ❌ Problema | Não existe em `stops.txt` |
-| *(vazio)* | — | ❌ Problema | Falta o `to_stop_id` |
+| `S2` | `location_type=3` | ✅ Passa | Um nó genérico é permitido |
+| `S9` | identificador inexistente | ❌ Problema | O local não existe |
+| `S2` | `location_type=1` | ❌ Problema | Uma estação não é permitida |
+| `S2` | `location_type=6` | ❌ Problema | O tipo de local não é permitido |
+| `S2` | `location_type=0`, `stop_access=1` | ❌ Problema | A plataforma proíbe percursos |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| `to_stop_id` obrigatório | A linha não tem `to_stop_id` | Preencher o `to_stop_id` em `pathways.txt` com o `stop_id` de um local de `stops.txt` |
-| `to_stop_id` não encontrado | O valor tem um erro de escrita ou o local não está em `stops.txt` | Corrigir o `to_stop_id` em `pathways.txt`, ou adicionar o local em `stops.txt` |
-| Estações são proibidas | O `to_stop_id` refere uma estação (`location_type` `1`) | Em `pathways.txt`, usar o `stop_id` de uma plataforma, entrada ou saída, nó ou área de embarque da estação |
-| Tipo de local inválido | O `location_type` do local não é `0`, `2`, `3` ou `4` | Em `pathways.txt`, usar um local com `location_type` permitido |
-| Paragem com `stop_access` `1` | A paragem tem `stop_access` igual a `1` | Em `pathways.txt`, usar outro local, ou corrigir o `stop_access` em `stops.txt` |
+| Local não encontrado | `to_stop_id` não existe em `stops.txt` | Corrigir `to_stop_id` em `pathways.txt` ou adicionar o local a `stops.txt` |
+| Estação não permitida | O local referenciado tem `location_type` igual a `1` | Referenciar em `to_stop_id` uma plataforma, entrada ou saída, nó genérico ou área de embarque |
+| Tipo de local não permitido | `location_type` não é `0`, `2`, `3` nem `4` | Corrigir `location_type` em `stops.txt` ou escolher outro `to_stop_id` em `pathways.txt` |
+| Plataforma não permitida | A plataforma tem `stop_access` igual a `1` | Escolher outro `to_stop_id` em `pathways.txt` ou corrigir `stop_access` em `stops.txt` |
+| Campo em falta | A configuração exige ou recomenda `to_stop_id` | Preencher `to_stop_id` em `pathways.txt` com um local existente |
+| Campo preenchido quando não devia | A configuração proíbe `to_stop_id` | Remover `to_stop_id` de `pathways.txt` ou rever a configuração da regra |
