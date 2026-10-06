@@ -1,0 +1,56 @@
+---
+title: Desembarque contínuo
+description: Verifica se `continuous_drop_off` usa um valor GTFS permitido e respeita as janelas de serviço a pedido.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_times_continuous_drop_off_valid_gtfs_enum` |
+| Ficheiro | `stop_times.txt` |
+| Campo | `continuous_drop_off` |
+| Tipo | Enumeração |
+| Severidade | Condicional (valores diferentes de `1` são proibidos quando existe uma janela de serviço a pedido) |
+
+**Descrição do campo:** indica se o passageiro pode desembarcar em qualquer ponto do percurso entre esta linha e a seguinte: `0` serviço contínuo, `1` indisponível, `2` mediante contacto telefónico e `3` mediante acordo com o motorista.
+
+Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times).
+
+## Como funciona
+
+Quando existe, o valor tem de ser `0`, `1`, `2` ou `3`. Com uma janela de serviço a pedido, apenas `1` é aceite. Uma lista configurada pode restringir ainda mais os valores.
+
+A regra avalia cada linha do `stop_times.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração exige ou recomenda o campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração proíbe o campo? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor é `0`, `1`, `2` ou `3`? | Segue para o passo 4 | ❌ Reporta o problema: valor inválido |
+| 4 | Existe uma janela de serviço a pedido e o valor é diferente de `1`? | ❌ Reporta o problema: valor incompatível com a janela | Segue para o passo 5 |
+| 5 | Existe uma lista configurada de valores permitidos? | Segue para o passo 6 | ✅ Passa |
+| 6 | O valor consta da lista, ou a lista aceita qualquer valor? | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+## Como se relacionam
+
+`start_pickup_drop_off_window` e `end_pickup_drop_off_window` tornam qualquer valor de `continuous_drop_off` diferente de `1` incompatível com a linha.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `1` | ✅ Passa | Valor previsto |
+| `4` | ❌ Problema | Fora da enumeração |
+| `2` com uma janela preenchida | ❌ Problema | Incompatível com serviço a pedido |
+| `1` (lista permitida = `0`) | ❌ Problema | Fora da lista configurada |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | A configuração exige ou recomenda `continuous_drop_off` | Preencher `continuous_drop_off` em `stop_times.txt` |
+| Campo preenchido quando não devia | A configuração proíbe `continuous_drop_off` | Remover `continuous_drop_off` de `stop_times.txt` |
+| Valor inválido | O valor não é `0`, `1`, `2` ou `3` | Corrigir `continuous_drop_off` em `stop_times.txt` |
+| Valor incompatível com a janela | O valor de `continuous_drop_off` é diferente de `1` e existe uma janela de serviço a pedido | Alterar `continuous_drop_off` em `stop_times.txt`, ou remover as janelas incompatíveis |
+| Valor não permitido | O valor não consta da lista configurada | Usar um valor permitido em `continuous_drop_off` de `stop_times.txt`, ou ajustar a configuração |

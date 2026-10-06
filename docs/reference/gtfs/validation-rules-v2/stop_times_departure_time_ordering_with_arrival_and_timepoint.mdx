@@ -1,0 +1,47 @@
+---
+title: Hora de partida
+description: Verifica se `departure_time` está preenchido e tem a estrutura numérica HH:MM:SS.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_times_departure_time_ordering_with_arrival_and_timepoint` |
+| Ficheiro | `stop_times.txt` |
+| Campo | `departure_time` |
+| Tipo | Hora |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** hora de partida da paragem para a viagem, no fuso horário de `agency_timezone`. Pode ultrapassar `24:00:00` após a meia-noite do dia de serviço
+
+Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times).
+
+## Como funciona
+
+O valor tem de ter oito carateres, três partes separadas por dois pontos e apenas algarismos em cada parte. A implementação atual não limita horas, minutos nem segundos e não compara a partida com `arrival_time` nem com `timepoint`.
+
+A regra avalia cada linha do `stop_times.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração exige ou recomenda o campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração proíbe o campo? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor tem oito carateres e três partes numéricas separadas por dois pontos? | ✅ Passa | ❌ Reporta o problema: hora inválida |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `08:15:00` | ✅ Passa | Estrutura numérica correta |
+| `99:99:99` | ✅ Passa | A implementação não limita cada parte |
+| Vazio | ❌ Problema | Campo obrigatório |
+| `8:15:00` | ❌ Problema | Tem apenas sete carateres |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | A configuração exige ou recomenda `departure_time` | Preencher `departure_time` em `stop_times.txt` |
+| Campo preenchido quando não devia | A configuração proíbe `departure_time` | Remover `departure_time` de `stop_times.txt` |
+| Hora inválida | O valor não tem a estrutura numérica esperada | Corrigir `departure_time` em `stop_times.txt` para oito carateres no formato `HH:MM:SS` |

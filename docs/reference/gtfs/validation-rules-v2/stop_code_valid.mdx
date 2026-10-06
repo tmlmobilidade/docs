@@ -1,0 +1,50 @@
+---
+title: Código público da paragem
+description: Verifica a presença, a unicidade e a lista configurada de códigos públicos das paragens.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_code_valid` |
+| Ficheiro | `stops.txt` |
+| Campo | `stop_code` |
+| Tipo | Texto |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** texto curto que identifica a paragem perante os passageiros.
+
+Mais informação em [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+O código público tem de estar preenchido e não se pode repetir. Uma lista configurada pode limitar os códigos aceites. A regra não avalia o formato nem a legibilidade do código.
+
+A regra avalia cada linha do `stops.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração exige ou recomenda o campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração proíbe o campo? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O mesmo `stop_code` aparece em mais de uma linha? | ❌ Reporta o problema: código duplicado | Segue para o passo 4 |
+| 4 | Existe uma lista configurada de valores permitidos? | Segue para o passo 5 | ✅ Passa |
+| 5 | O código consta da lista, ou a lista aceita qualquer valor? | ✅ Passa | ❌ Reporta o problema: código não permitido |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `10234` numa única linha | ✅ Passa | Código preenchido e único |
+| Vazio | ❌ Problema | Campo obrigatório |
+| `10234` em duas linhas | ❌ Problema | Código duplicado |
+| `99999` (lista permitida = `10234`) | ❌ Problema | Fora da lista configurada |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | `stop_code` está vazio e a configuração exige ou recomenda o campo | Preencher `stop_code` em `stops.txt` |
+| Campo preenchido quando não devia | A configuração proíbe `stop_code` | Remover o valor de `stop_code` em `stops.txt` |
+| Código duplicado | Mais de uma linha usa o mesmo `stop_code` | Corrigir `stop_code` nas linhas duplicadas de `stops.txt` |
+| Código não permitido | O código não consta da lista configurada | Usar em `stop_code` de `stops.txt` um valor permitido, ou ajustar a configuração da regra |

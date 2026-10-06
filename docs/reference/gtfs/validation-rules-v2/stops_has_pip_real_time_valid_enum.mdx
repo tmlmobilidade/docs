@@ -1,0 +1,51 @@
+---
+title: Informação em tempo real
+description: Verifica se `has_pip_real_time` usa um valor previsto e, quando configurado, um valor permitido.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stops_has_pip_real_time_valid_enum` |
+| Ficheiro | `stops.txt` |
+| Campo | `has_pip_real_time` |
+| Tipo | Enumeração |
+| Severidade | Opcional |
+
+**Descrição do campo:** indica o estado do painel de informação em tempo real: `0` não aplicável, `1` em mau estado e `2` em bom estado.
+
+Mais informação em [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+Quando o campo está preenchido, o valor tem de ser 0, 1 ou 2. Uma lista configurada pode restringir ainda mais estes valores. A regra não confirma no terreno a existência nem o estado do equipamento descrito.
+
+A regra avalia cada linha do `stops.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda o campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que o campo não deve ser preenchido? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor é 0, 1 ou 2? | Segue para o passo 4 | ❌ Reporta o problema: valor inválido |
+| 4 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 5 | ✅ Passa |
+| 5 | O valor consta da lista, ou a lista aceita qualquer valor? | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `2` | ✅ Passa | Valor previsto |
+| `3` | ❌ Problema | Valor fora da enumeração |
+| `2` (lista permitida = `0`) | ❌ Problema | Valor fora da lista configurada |
+| `2` (campo proibido) | ❌ Problema | A configuração proíbe o campo |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor inválido | `has_pip_real_time` não é 0, 1 ou 2 | Substituir `has_pip_real_time` em `stops.txt` por um valor previsto |
+| Valor não permitido | O valor é válido, mas não consta da lista configurada | Usar em `has_pip_real_time` de `stops.txt` um valor permitido, ou ajustar a configuração da regra |
+| Campo em falta | A configuração da regra exige ou recomenda `has_pip_real_time` | Preencher `has_pip_real_time` em `stops.txt` |
+| Campo preenchido quando não devia | A configuração da regra proíbe `has_pip_real_time` | Remover o valor de `has_pip_real_time` em `stops.txt` |
+

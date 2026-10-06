@@ -1,0 +1,47 @@
+---
+title: Destino apresentado na paragem
+description: Verifica a presença de `stop_headsign` e a lista configurada de destinos permitidos.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_times_stop_headsign_present` |
+| Ficheiro | `stop_times.txt` |
+| Campo | `stop_headsign` |
+| Tipo | Texto |
+| Severidade | Opcional |
+
+**Descrição do campo:** texto apresentado na sinalética quando o destino muda nesta paragem. Substitui `trips.trip_headsign` apenas nessa linha.
+
+Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times).
+
+## Como funciona
+
+Quando o campo está preenchido, a regra aplica a lista de valores permitidos definida na configuração. A regra não verifica se o destino difere de `trip_headsign` nem se é repetido nas linhas seguintes.
+
+A regra avalia cada linha do `stop_times.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração exige ou recomenda o campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração proíbe o campo? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | Existe uma lista configurada de valores permitidos? | Segue para o passo 4 | ✅ Passa |
+| 4 | O texto consta da lista, ou a lista aceita qualquer valor? | ✅ Passa | ❌ Reporta o problema: destino não permitido |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `Terminal` | ✅ Passa | Valor aceite |
+| `Centro` (lista permitida = `Terminal`) | ❌ Problema | Fora da lista configurada |
+| `Terminal` (campo proibido) | ❌ Problema | A configuração proíbe o campo |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Destino não permitido | O texto não consta da lista configurada | Usar em `stop_headsign` de `stop_times.txt` um valor permitido, ou ajustar a configuração |
+| Campo em falta | A configuração exige ou recomenda `stop_headsign` | Preencher `stop_headsign` em `stop_times.txt` |
+| Campo preenchido quando não devia | A configuração proíbe `stop_headsign` | Remover `stop_headsign` de `stop_times.txt` |

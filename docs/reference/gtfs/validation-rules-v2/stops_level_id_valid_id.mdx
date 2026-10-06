@@ -1,0 +1,53 @@
+---
+title: Piso da paragem
+description: Verifica se `level_id` referencia um piso de levels.txt e pertence à lista configurada de valores permitidos.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stops_level_id_valid_id` |
+| Ficheiros | `stops.txt`, `levels.txt` |
+| Campo | `level_id` |
+| Tipo | Identificador externo |
+| Severidade | Opcional |
+
+**Descrição do campo:** identifica o piso onde se encontra a localização.
+
+Mais informação em [stops.txt](/reference/gtfs/schedule/stops) e [levels.txt](/reference/gtfs/schedule/levels).
+
+## Como funciona
+
+Quando existe, `level_id` tem de corresponder a um piso de `levels.txt`. Uma lista configurada pode limitar os pisos aceites. A regra não verifica a altura relativa nem a ordem dos pisos.
+
+A regra avalia cada linha do `stops.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração exige ou recomenda o campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração proíbe o campo? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O `level_id` existe em `levels.txt`? | Segue para o passo 4 | ❌ Reporta o problema: piso inexistente |
+| 4 | Existe uma lista configurada de valores permitidos? | Segue para o passo 5 | ✅ Passa |
+| 5 | O identificador consta da lista, ou a lista aceita qualquer valor? | ✅ Passa | ❌ Reporta o problema: piso não permitido |
+
+## Como se relacionam
+
+Cada `level_id` preenchido em `stops.txt` tem de corresponder exatamente a um `level_id` existente em `levels.txt`.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `P0` e existe em `levels.txt` | ✅ Passa | Referência encontrada |
+| `P9` e não existe em `levels.txt` | ❌ Problema | Referência inexistente |
+| `P1` (lista permitida = `P0`) | ❌ Problema | Fora da lista configurada |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Piso inexistente | `level_id` não corresponde a qualquer linha de `levels.txt` | Corrigir `level_id` em `stops.txt` ou adicionar o piso a `levels.txt` |
+| Piso não permitido | O identificador não consta da lista configurada | Usar um `level_id` permitido em `stops.txt`, ou ajustar a configuração |
+| Campo em falta | A configuração exige ou recomenda `level_id` | Preencher `level_id` em `stops.txt` |
+| Campo preenchido quando não devia | A configuração proíbe `level_id` | Remover `level_id` de `stops.txt` |

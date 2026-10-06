@@ -1,0 +1,50 @@
+---
+title: Município da paragem
+description: Verifica o identificador do município e a lista configurada de valores permitidos.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stops_municipality_id_valid` |
+| Ficheiro | `stops.txt` |
+| Campo | `municipality_id` |
+| Tipo | Texto |
+| Severidade | Opcional |
+
+**Descrição do campo:** identifica o município onde se encontra a paragem.
+
+Mais informação em [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+Quando o campo está preenchido, a regra aplica as restrições definidas na configuração. A regra não avalia o significado nem o formato do texto fora dessa configuração.
+
+A regra avalia cada linha do `stops.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda o campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que o campo não deve ser preenchido? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 4 | ✅ Passa |
+| 4 | O valor consta da lista, ou a lista aceita qualquer valor? | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+O texto é comparado exatamente como foi lido. A regra não remove espaços nem altera maiúsculas e minúsculas.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `1106` | ✅ Passa | Valor aceite pela configuração |
+| `9999` (lista permitida = `1106`) | ❌ Problema | Valor fora da lista |
+| `1106` (campo proibido) | ❌ Problema | A configuração proíbe o campo |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor não permitido | O valor de `municipality_id` não consta da lista configurada | Usar em `municipality_id` de `stops.txt` um valor permitido, ou ajustar a configuração da regra |
+| Campo em falta | A configuração da regra exige ou recomenda `municipality_id` | Preencher `municipality_id` em `stops.txt` |
+| Campo preenchido quando não devia | A configuração da regra proíbe `municipality_id` | Remover o valor de `municipality_id` em `stops.txt` |
+

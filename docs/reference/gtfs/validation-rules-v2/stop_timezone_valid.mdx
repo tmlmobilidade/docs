@@ -1,0 +1,49 @@
+---
+title: Fuso horário da paragem
+description: Verifica se `stop_timezone` identifica um fuso horário reconhecido e pertence à lista configurada.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_timezone_valid` |
+| Ficheiro | `stops.txt` |
+| Campo | `stop_timezone` |
+| Tipo | Fuso horário |
+| Severidade | Opcional |
+
+**Descrição do campo:** fuso horário da localização. Quando uma estação tem paragens filhas, estas herdam o fuso da estação.
+
+Mais informação em [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+Quando existe, o valor tem de identificar um fuso horário reconhecido pelo sistema, como `Europe/Lisbon`. Uma lista configurada pode limitar os valores aceites. A regra não verifica a herança entre estações e paragens filhas.
+
+A regra avalia cada linha do `stops.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração exige ou recomenda o campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração proíbe o campo? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O fuso horário é reconhecido? | Segue para o passo 4 | ❌ Reporta o problema: fuso horário inválido |
+| 4 | Existe uma lista configurada de valores permitidos? | Segue para o passo 5 | ✅ Passa |
+| 5 | O valor consta da lista, ou a lista aceita qualquer valor? | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `Europe/Lisbon` | ✅ Passa | Fuso reconhecido |
+| `Lisbon` | ❌ Problema | Identificador desconhecido |
+| `Europe/Madrid` (lista permitida = `Europe/Lisbon`) | ❌ Problema | Fora da lista configurada |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Fuso horário inválido | O identificador não é reconhecido | Corrigir `stop_timezone` em `stops.txt`, por exemplo para `Europe/Lisbon` |
+| Valor não permitido | O fuso não consta da lista configurada | Usar em `stop_timezone` de `stops.txt` um valor permitido, ou ajustar a configuração da regra |
+| Campo em falta | A configuração da regra exige ou recomenda `stop_timezone` | Preencher `stop_timezone` em `stops.txt` |
+| Campo preenchido quando não devia | A configuração da regra proíbe `stop_timezone` | Remover o valor de `stop_timezone` em `stops.txt` |

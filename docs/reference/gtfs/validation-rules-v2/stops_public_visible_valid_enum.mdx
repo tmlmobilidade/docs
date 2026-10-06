@@ -1,0 +1,51 @@
+---
+title: Visibilidade pública da paragem
+description: Verifica se `public_visible` usa um valor previsto e, quando configurado, um valor permitido.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stops_public_visible_valid_enum` |
+| Ficheiro | `stops.txt` |
+| Campo | `public_visible` |
+| Tipo | Enumeração |
+| Severidade | Opcional |
+
+**Descrição do campo:** indica se a paragem deve ser apresentada ao público: `0` para não e `1` para sim.
+
+Mais informação em [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+Quando o campo está preenchido, o valor tem de ser 0, 1. Uma lista configurada pode restringir ainda mais estes valores. A regra não confirma no terreno a existência nem o estado do equipamento descrito.
+
+A regra avalia cada linha do `stops.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda o campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que o campo não deve ser preenchido? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor é 0, 1? | Segue para o passo 4 | ❌ Reporta o problema: valor inválido |
+| 4 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 5 | ✅ Passa |
+| 5 | O valor consta da lista, ou a lista aceita qualquer valor? | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `1` | ✅ Passa | Valor previsto |
+| `2` | ❌ Problema | Valor fora da enumeração |
+| `1` (lista permitida = `0`) | ❌ Problema | Valor fora da lista configurada |
+| `1` (campo proibido) | ❌ Problema | A configuração proíbe o campo |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor inválido | `public_visible` não é 0, 1 | Substituir `public_visible` em `stops.txt` por um valor previsto |
+| Valor não permitido | O valor é válido, mas não consta da lista configurada | Usar em `public_visible` de `stops.txt` um valor permitido, ou ajustar a configuração da regra |
+| Campo em falta | A configuração da regra exige ou recomenda `public_visible` | Preencher `public_visible` em `stops.txt` |
+| Campo preenchido quando não devia | A configuração da regra proíbe `public_visible` | Remover o valor de `public_visible` em `stops.txt` |
+

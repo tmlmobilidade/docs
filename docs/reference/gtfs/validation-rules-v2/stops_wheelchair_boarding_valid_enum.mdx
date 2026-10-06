@@ -1,0 +1,50 @@
+---
+title: Acessibilidade da paragem
+description: Verifica se `wheelchair_boarding` usa um valor GTFS entre 0 e 2 e, quando configurado, um valor permitido.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stops_wheelchair_boarding_valid_enum` |
+| Ficheiro | `stops.txt` |
+| Campo | `wheelchair_boarding` |
+| Tipo | Enumeração |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** indica a possibilidade de embarque em cadeira de rodas: `0` sem informação, `1` possível e `2` impossível. Numa estação, descreve as paragens filhas.
+
+Mais informação em [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+O campo tem de estar preenchido com `0`, `1` ou `2`, salvo quando a configuração desativa a regra. Uma lista configurada pode restringir os valores. A regra não confirma as condições de acessibilidade no terreno.
+
+A regra avalia cada linha do `stops.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração exige ou recomenda o campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração proíbe o campo? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor é `0`, `1` ou `2`? | Segue para o passo 4 | ❌ Reporta o problema: valor inválido |
+| 4 | Existe uma lista configurada de valores permitidos? | Segue para o passo 5 | ✅ Passa |
+| 5 | O valor consta da lista, ou a lista aceita qualquer valor? | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `1` | ✅ Passa | Embarque possível |
+| Vazio | ❌ Problema | Campo obrigatório |
+| `3` | ❌ Problema | Fora da enumeração |
+| `2` (lista permitida = `0, 1`) | ❌ Problema | Fora da lista configurada |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | A configuração exige ou recomenda `wheelchair_boarding` | Preencher `wheelchair_boarding` em `stops.txt` |
+| Campo preenchido quando não devia | A configuração proíbe o campo | Remover `wheelchair_boarding` de `stops.txt` |
+| Valor inválido | O valor não é `0`, `1` ou `2` | Corrigir `wheelchair_boarding` em `stops.txt` |
+| Valor não permitido | O valor não consta da lista configurada | Usar um valor permitido em `wheelchair_boarding` de `stops.txt`, ou ajustar a configuração |

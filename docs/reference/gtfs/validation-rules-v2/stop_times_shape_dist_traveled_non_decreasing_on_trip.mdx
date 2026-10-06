@@ -1,0 +1,47 @@
+---
+title: Distância percorrida até à paragem
+description: Verifica se `shape_dist_traveled` está preenchido e não é negativo.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_times_shape_dist_traveled_non_decreasing_on_trip` |
+| Ficheiro | `stop_times.txt` |
+| Campo | `shape_dist_traveled` |
+| Tipo | Número decimal não negativo |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** distância efetivamente percorrida sobre a forma da viagem desde o início até à paragem, nas mesmas unidades de `shapes.shape_dist_traveled`.
+
+Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times).
+
+## Como funciona
+
+O valor tem de estar preenchido e ser maior ou igual a zero, salvo quando a configuração desativa a regra. Apesar do nome da regra, a implementação atual não compara valores entre paragens e não confirma que usem as mesmas unidades de `shapes.txt`.
+
+A regra avalia cada linha do `stop_times.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração exige ou recomenda o campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração proíbe o campo? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor é maior ou igual a zero? | ✅ Passa | ❌ Reporta o problema: distância negativa |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `5.25` | ✅ Passa | Valor não negativo |
+| Vazio | ❌ Problema | Campo obrigatório |
+| `-0.1` | ❌ Problema | Valor negativo |
+| `10` seguido de `5` na mesma viagem | ✅ Passa | A ordem não é comparada atualmente |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | A configuração exige ou recomenda `shape_dist_traveled` | Preencher `shape_dist_traveled` em `stop_times.txt` |
+| Campo preenchido quando não devia | A configuração proíbe o campo | Remover `shape_dist_traveled` de `stop_times.txt` |
+| Distância negativa | O valor é inferior a zero | Corrigir `shape_dist_traveled` em `stop_times.txt` para um valor não negativo |

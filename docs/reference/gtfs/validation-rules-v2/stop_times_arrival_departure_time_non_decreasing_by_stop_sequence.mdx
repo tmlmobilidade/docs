@@ -1,0 +1,58 @@
+---
+title: Ordem cronológica das paragens
+description: Verifica se as horas não recuam entre paragens consecutivas da mesma viagem.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_times_arrival_departure_time_non_decreasing_by_stop_sequence` |
+| Ficheiro | `stop_times.txt` |
+| Campos | `arrival_time`, `departure_time`, `stop_sequence` |
+| Tipo | Hora |
+| Severidade | Condicional |
+
+**Descrição dos campos:**
+
+- `arrival_time`: hora de chegada à paragem.
+- `departure_time`: hora de partida da paragem.
+- `stop_sequence`: ordem em que as paragens são servidas na viagem.
+
+Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times).
+
+## Como funciona
+
+Dentro de cada `trip_id`, a primeira hora da paragem atual não pode ser anterior à última hora da paragem precedente. A regra ignora pares sem horas utilizáveis. Não verifica a ordem entre chegada e partida na mesma linha.
+
+A regra avalia cada grupo de linhas com o mesmo `trip_id`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | Existem pelo menos duas linhas na viagem? | Segue para o passo 2 | ✅ Passa |
+| 2 | As linhas estão ordenadas por `stop_sequence`? | Segue para o passo 3 | Ordena-as; em caso de empate, conserva a ordem do ficheiro |
+| 3 | A configuração desativa a regra para o par? | ✅ Aceita o par | Segue para o passo 4 |
+| 4 | A linha anterior tem `departure_time`, ou em alternativa `arrival_time`, utilizável? | Segue para o passo 5 | ✅ Ignora o par |
+| 5 | A linha atual tem `arrival_time`, ou em alternativa `departure_time`, utilizável? | Segue para o passo 6 | ✅ Ignora o par |
+| 6 | A primeira hora atual é anterior à última hora precedente? | ❌ Reporta o problema na linha atual | ✅ Passa |
+
+As horas são convertidas em segundos a partir das três partes numéricas. A implementação não limita os valores das horas, minutos ou segundos.
+
+## Como se relacionam
+
+Para a linha precedente, `departure_time` tem prioridade sobre `arrival_time`. Para a linha atual, `arrival_time` tem prioridade sobre `departure_time`. `stop_sequence` determina quais linhas são consecutivas.
+
+## Exemplos
+
+| Última hora precedente | Primeira hora atual | Resultado | Porquê |
+|---|---|---|---|
+| `08:00:00` | `08:05:00` | ✅ Passa | O tempo avança |
+| `08:05:00` | `08:05:00` | ✅ Passa | Valores iguais são aceites |
+| `08:10:00` | `08:05:00` | ❌ Problema | O tempo recua |
+| Vazio | `08:05:00` | ✅ Passa | O par é ignorado |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Hora decrescente | A primeira hora da linha atual é anterior à última hora da linha precedente | Corrigir `arrival_time`, `departure_time` ou `stop_sequence` nas linhas da viagem em `stop_times.txt` |

@@ -1,0 +1,41 @@
+---
+title: Presença de stop_times.txt
+description: Verifica se o feed GTFS contém o ficheiro obrigatório stop_times.txt.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_times_file_missing` |
+| Ficheiro | `stop_times.txt` |
+| Campo | Se aplica em todo o ficheiro |
+| Tipo | Ficheiro |
+| Severidade | Obrigatório |
+
+
+## Como funciona
+
+O feed tem de incluir `stop_times.txt`, salvo quando a configuração altera a presença do ficheiro. A regra verifica apenas a existência do ficheiro, não o seu conteúdo.
+
+A regra avalia a presença de `stop_times.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | `stop_times.txt` está ausente e é obrigatório na configuração, ou não existe configuração? | ❌ Reporta o problema: ficheiro obrigatório em falta | Segue para o passo 2 |
+| 2 | `stop_times.txt` está ausente e é recomendado na configuração? | ❌ Reporta o problema: ficheiro recomendado em falta | ✅ Passa |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `stop_times.txt` presente | ✅ Passa | Ficheiro encontrado |
+| `stop_times.txt` ausente | ❌ Problema | Ficheiro obrigatório |
+| Ausente e recomendado na configuração | ❌ Problema | Ficheiro recomendado em falta |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Ficheiro obrigatório em falta | `stop_times.txt` não foi incluído no feed | Adicionar `stop_times.txt` ao feed GTFS |
+| Ficheiro recomendado em falta | A configuração recomenda o ficheiro, mas este não existe | Adicionar `stop_times.txt` ao feed GTFS, ou ajustar a configuração da regra |

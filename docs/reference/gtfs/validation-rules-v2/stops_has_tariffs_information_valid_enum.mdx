@@ -1,0 +1,51 @@
+---
+title: Informação tarifária na paragem
+description: Verifica se `has_tariffs_information` usa um valor previsto e, quando configurado, um valor permitido.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stops_has_tariffs_information_valid_enum` |
+| Ficheiro | `stops.txt` |
+| Campo | `has_tariffs_information` |
+| Tipo | Enumeração |
+| Severidade | Opcional |
+
+**Descrição do campo:** indica o estado da informação tarifária: `0` não aplicável, `1` inexistente, `2` em mau estado e `3` em bom estado.
+
+Mais informação em [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+Quando o campo está preenchido, o valor tem de ser 0, 1, 2 ou 3. Uma lista configurada pode restringir ainda mais estes valores. A regra não confirma no terreno a existência nem o estado do equipamento descrito.
+
+A regra avalia cada linha do `stops.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda o campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que o campo não deve ser preenchido? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor é 0, 1, 2 ou 3? | Segue para o passo 4 | ❌ Reporta o problema: valor inválido |
+| 4 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 5 | ✅ Passa |
+| 5 | O valor consta da lista, ou a lista aceita qualquer valor? | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `3` | ✅ Passa | Valor previsto |
+| `4` | ❌ Problema | Valor fora da enumeração |
+| `3` (lista permitida = `0`) | ❌ Problema | Valor fora da lista configurada |
+| `3` (campo proibido) | ❌ Problema | A configuração proíbe o campo |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor inválido | `has_tariffs_information` não é 0, 1, 2 ou 3 | Substituir `has_tariffs_information` em `stops.txt` por um valor previsto |
+| Valor não permitido | O valor é válido, mas não consta da lista configurada | Usar em `has_tariffs_information` de `stops.txt` um valor permitido, ou ajustar a configuração da regra |
+| Campo em falta | A configuração da regra exige ou recomenda `has_tariffs_information` | Preencher `has_tariffs_information` em `stops.txt` |
+| Campo preenchido quando não devia | A configuração da regra proíbe `has_tariffs_information` | Remover o valor de `has_tariffs_information` em `stops.txt` |
+

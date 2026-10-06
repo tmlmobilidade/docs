@@ -1,0 +1,46 @@
+---
+title: Latitude da paragem
+description: Verifica se a latitude da paragem está entre -90 e 90.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_lat_valid_latitude_range` |
+| Ficheiro | `stops.txt` |
+| Campo | `stop_lat` |
+| Tipo | Latitude |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** latitude da localização em graus decimais, no sistema WGS84.
+
+Mais informação em [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+A latitude tem de estar preenchida e ficar entre `-90` e `90`, incluindo os limites. A regra não confirma se a coordenada corresponde à paragem real.
+
+A regra avalia cada linha do `stops.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração exige ou recomenda o campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração proíbe o campo? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor está entre `-90` e `90`? | ✅ Passa | ❌ Reporta o problema: latitude inválida |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `38.7078` | ✅ Passa | Dentro do intervalo |
+| Vazio | ❌ Problema | Campo obrigatório |
+| `91` | ❌ Problema | Superior a 90 |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Latitude inválida | O valor está fora do intervalo de `-90` a `90` | Corrigir `stop_lat` em `stops.txt` com uma latitude WGS84 válida |
+| Campo em falta | A configuração da regra exige ou recomenda `stop_lat` | Preencher `stop_lat` em `stops.txt` |
+| Campo preenchido quando não devia | A configuração da regra proíbe `stop_lat` | Remover o valor de `stop_lat` em `stops.txt` |

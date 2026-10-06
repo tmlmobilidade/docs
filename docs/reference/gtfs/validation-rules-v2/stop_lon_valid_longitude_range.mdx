@@ -1,0 +1,46 @@
+---
+title: Longitude da paragem
+description: Verifica se a longitude da paragem está entre -180 e 180.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_lon_valid_longitude_range` |
+| Ficheiro | `stops.txt` |
+| Campo | `stop_lon` |
+| Tipo | Longitude |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** longitude da localização em graus decimais, no sistema WGS84.
+
+Mais informação em [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+A longitude tem de estar preenchida e ficar entre `-180` e `180`, incluindo os limites. A regra não confirma se a coordenada corresponde à paragem real.
+
+A regra avalia cada linha do `stops.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração exige ou recomenda o campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração proíbe o campo? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor está entre `-180` e `180`? | ✅ Passa | ❌ Reporta o problema: longitude inválida |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `-9.1366` | ✅ Passa | Dentro do intervalo |
+| Vazio | ❌ Problema | Campo obrigatório |
+| `181` | ❌ Problema | Superior a 180 |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Longitude inválida | O valor está fora do intervalo de `-180` a `180` | Corrigir `stop_lon` em `stops.txt` com uma longitude WGS84 válida |
+| Campo em falta | A configuração da regra exige ou recomenda `stop_lon` | Preencher `stop_lon` em `stops.txt` |
+| Campo preenchido quando não devia | A configuração da regra proíbe `stop_lon` | Remover o valor de `stop_lon` em `stops.txt` |

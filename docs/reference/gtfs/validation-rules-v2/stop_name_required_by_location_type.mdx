@@ -1,0 +1,47 @@
+---
+title: Nome da paragem
+description: Verifica a presença do nome da paragem e a lista configurada de nomes permitidos.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_name_required_by_location_type` |
+| Ficheiro | `stops.txt` |
+| Campo | `stop_name` |
+| Tipo | Texto |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** nome da localização apresentado aos passageiros. Deve corresponder ao nome usado localmente.
+
+Mais informação em [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+O nome tem de estar preenchido, salvo quando a configuração desativa a regra. Uma lista configurada pode limitar os nomes aceites. Apesar do nome da regra, a implementação atual não consulta `location_type`.
+
+A regra avalia cada linha do `stops.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração exige ou recomenda o campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração proíbe o campo? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | Existe uma lista configurada de valores permitidos? | Segue para o passo 4 | ✅ Passa |
+| 4 | O nome consta da lista, ou a lista aceita qualquer valor? | ✅ Passa | ❌ Reporta o problema: nome não permitido |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `Praça do Comércio` | ✅ Passa | Nome preenchido |
+| Vazio | ❌ Problema | Campo obrigatório |
+| `Outro nome` (lista permitida = `Praça do Comércio`) | ❌ Problema | Fora da lista configurada |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | `stop_name` está vazio e a configuração exige ou recomenda o campo | Preencher `stop_name` em `stops.txt` |
+| Campo preenchido quando não devia | A configuração proíbe `stop_name` | Remover o valor de `stop_name` em `stops.txt` |
+| Nome não permitido | O nome não consta da lista configurada | Usar em `stop_name` de `stops.txt` um valor permitido, ou ajustar a configuração da regra |

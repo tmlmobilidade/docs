@@ -1,0 +1,52 @@
+---
+title: Grupo de localizações servido
+description: Verifica se `location_group_id` referencia um grupo existente e não é combinado com outra localização.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_times_location_group_id_consistent_with_trip_id_and_stops` |
+| Ficheiros | `stop_times.txt`, `location_groups.txt` |
+| Campo | `location_group_id` |
+| Tipo | Identificador externo |
+| Severidade | Condicional (proibido quando `stop_id` ou `location_id` está preenchido) |
+
+**Descrição do campo:** identifica o grupo de localizações servido numa operação a pedido.
+
+Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times) e [location_groups.txt](/reference/gtfs/schedule/location_groups).
+
+## Como funciona
+
+Quando existe, `location_group_id` tem de corresponder a um grupo de `location_groups.txt`. A linha não o pode combinar com `stop_id` nem `location_id`. Apesar do nome da regra, a implementação não compara o grupo com `trip_id`.
+
+A regra avalia cada linha do `stop_times.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | `stop_id` ou `location_id` está preenchido? | Se `location_group_id` também estiver preenchido, reporta o problema; depois termina | Segue para o passo 2 |
+| 2 | `location_group_id` está vazio? | ✅ Passa | Segue para o passo 3 |
+| 3 | A configuração proíbe `location_group_id`? | ❌ Reporta o problema | Segue para o passo 4 |
+| 4 | O identificador existe em `location_groups.txt`? | ✅ Passa | ❌ Reporta o problema: grupo inexistente |
+
+## Como se relacionam
+
+`location_group_id`, `stop_id` e `location_id` são alternativas. Quando se usa o grupo, o identificador tem de existir em `location_groups.txt`.
+
+## Exemplos
+
+| `location_group_id` | Outros identificadores | Resultado | Porquê |
+|---|---|---|---|
+| `G1`, existente | Vazios | ✅ Passa | Referência encontrada |
+| Vazio | Vazios | ✅ Passa | Campo opcional nesta regra |
+| `G9`, inexistente | Vazios | ❌ Problema | Referência inexistente |
+| `G1` | `stop_id=STP_1` | ❌ Problema | Identificadores combinados |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Grupo proibido pela configuração | A configuração proíbe `location_group_id` | Remover `location_group_id` de `stop_times.txt` |
+| Identificadores combinados | A linha contém `location_group_id` e também `stop_id` ou `location_id` | Manter apenas um tipo de localização na linha de `stop_times.txt` |
+| Grupo inexistente | O identificador não existe em `location_groups.txt` | Corrigir `location_group_id` em `stop_times.txt` ou adicionar o grupo a `location_groups.txt` |

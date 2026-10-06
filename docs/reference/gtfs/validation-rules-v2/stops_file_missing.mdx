@@ -1,0 +1,48 @@
+---
+title: Presença de stops.txt
+description: Verifica se stops.txt está presente quando o feed não contém locations.geojson.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stops_file_missing` |
+| Ficheiros | `stops.txt`, `locations.geojson` |
+| Campo | Se aplica em todo o ficheiro |
+| Tipo | Ficheiro |
+| Severidade | Condicional (obrigatório quando `locations.geojson` não existe) |
+
+
+## Como funciona
+
+Quando `locations.geojson` não existe, o feed tem de incluir `stops.txt`. A configuração da regra também pode tornar `stops.txt` obrigatório ou recomendado. A regra não verifica o conteúdo do ficheiro.
+
+A regra avalia a presença de `stops.txt` e `locations.geojson`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração exige `stops.txt` e o ficheiro está ausente? | ❌ Reporta o problema: ficheiro obrigatório em falta | Segue para o passo 2 |
+| 2 | A configuração recomenda `stops.txt` e o ficheiro está ausente? | ❌ Reporta o problema: ficheiro recomendado em falta | Segue para o passo 3 |
+| 3 | `locations.geojson` está ausente? | Segue para o passo 4 | ✅ Passa |
+| 4 | `stops.txt` também está ausente? | ❌ Reporta o problema: `stops.txt` é obrigatório | ✅ Passa |
+
+## Como se relacionam
+
+`locations.geojson` pode fornecer localizações sem `stops.txt`. Se ambos estiverem ausentes, o feed fica sem a fonte de localizações exigida por esta regra.
+
+## Exemplos
+
+| `stops.txt` | `locations.geojson` | Resultado | Porquê |
+|---|---|---|---|
+| Presente | Ausente | ✅ Passa | Existe `stops.txt` |
+| Ausente | Presente | ✅ Passa | Existe `locations.geojson` |
+| Ausente | Ausente | ❌ Problema | Falta a fonte de localizações |
+| Ausente | Presente, mas `stops.txt` é obrigatório na configuração | ❌ Problema | A configuração exige o ficheiro |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Ficheiro obrigatório em falta | `stops.txt` não está no feed e é exigido pela condição ou configuração | Adicionar `stops.txt` ao feed GTFS, ou incluir `locations.geojson` quando a condição o permitir |
+| Ficheiro recomendado em falta | A configuração recomenda `stops.txt`, mas o ficheiro não existe | Adicionar `stops.txt` ao feed GTFS, ou ajustar a configuração da regra |

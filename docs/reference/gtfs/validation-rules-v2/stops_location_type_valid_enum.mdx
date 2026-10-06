@@ -1,0 +1,48 @@
+---
+title: Tipo de localização
+description: Verifica se `location_type` está preenchido e usa um valor GTFS entre 0 e 4.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stops_location_type_valid_enum` |
+| Ficheiro | `stops.txt` |
+| Campo | `location_type` |
+| Tipo | Enumeração |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** tipo da localização: `0` paragem ou plataforma, `1` estação, `2` entrada ou saída, `3` nó genérico e `4` área de embarque.
+
+Mais informação em [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+O campo tem de estar preenchido com `0`, `1`, `2`, `3` ou `4`. Uma lista configurada pode restringir estes valores. A implementação atual reporta sempre um campo vazio, mesmo quando a regra está configurada para ser ignorada.
+
+A regra avalia cada linha do `stops.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | ❌ Reporta o problema: campo obrigatório | Segue para o passo 2 |
+| 2 | O valor é `0`, `1`, `2`, `3` ou `4`? | Segue para o passo 3 | ❌ Reporta o problema: valor inválido |
+| 3 | Existe uma lista configurada de valores permitidos? | Segue para o passo 4 | ✅ Passa |
+| 4 | O valor consta da lista, ou a lista aceita qualquer valor? | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `0` | ✅ Passa | Paragem ou plataforma |
+| Vazio | ❌ Problema | Campo obrigatório |
+| `5` | ❌ Problema | Fora da enumeração |
+| `2` (lista permitida = `0, 1`) | ❌ Problema | Fora da lista configurada |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | `location_type` está vazio | Preencher `location_type` em `stops.txt` com um valor entre `0` e `4` |
+| Valor inválido | O valor não está entre `0` e `4` | Corrigir `location_type` em `stops.txt` |
+| Valor não permitido | O valor é válido, mas não consta da lista configurada | Usar em `location_type` de `stops.txt` um valor permitido, ou ajustar a configuração da regra |

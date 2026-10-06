@@ -1,0 +1,56 @@
+---
+title: Fim da janela de serviço a pedido
+description: Verifica a presença, o formato e as condições de uso de `end_pickup_drop_off_window`.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_times_end_pickup_drop_off_window_valid` |
+| Ficheiro | `stop_times.txt` |
+| Campo | `end_pickup_drop_off_window` |
+| Tipo | Hora |
+| Severidade | Condicional (obrigatório com uma localização a pedido ou com `start_pickup_drop_off_window`; proibido com `arrival_time` ou `departure_time`) |
+
+**Descrição do campo:** hora em que o serviço a pedido termina numa localização GeoJSON, grupo de localizações ou paragem.
+
+Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times).
+
+## Como funciona
+
+A janela é obrigatória quando existe `location_group_id`, `location_id` ou `start_pickup_drop_off_window`. É proibida quando existe uma hora de chegada ou partida. Quando preenchida, tem de ter oito carateres e três partes numéricas; a implementação não limita horas, minutos nem segundos.
+
+A regra avalia cada linha do `stop_times.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | `arrival_time` ou `departure_time` está preenchido? | Se `end_pickup_drop_off_window` também estiver preenchido, reporta o problema; depois termina | Segue para o passo 2 |
+| 2 | `end_pickup_drop_off_window` está preenchido e a configuração proíbe o campo? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | Existe `location_group_id`, `location_id` ou `start_pickup_drop_off_window`? | Se `end_pickup_drop_off_window` estiver vazio, reporta o problema; caso contrário, segue | Segue para o passo 4 |
+| 4 | `end_pickup_drop_off_window` está preenchido? | Verifica se tem oito carateres e três partes numéricas. Se não tiver, reporta o problema | Segue para o passo 5 |
+| 5 | A configuração exige ou recomenda o campo? | ❌ Reporta o problema: campo em falta | ✅ Passa |
+
+## Como se relacionam
+
+`end_pickup_drop_off_window` e `start_pickup_drop_off_window` formam a janela de serviço a pedido. Ambas são exigidas quando se usa `location_group_id` ou `location_id`. A regra não compara qual das duas horas é anterior.
+
+## Exemplos
+
+| `end_pickup_drop_off_window` | Outros campos | Resultado | Porquê |
+|---|---|---|---|
+| `08:00:00` | `start_pickup_drop_off_window` preenchido, sem chegada nem partida | ✅ Passa | Janela completa |
+| Vazio | `start_pickup_drop_off_window` preenchido | ❌ Problema | Campo condicional em falta |
+| `08:00:00` | `arrival_time=08:10:00` | ❌ Problema | Janela combinada com hora fixa |
+| `8:00:00` | Sem horas fixas | ❌ Problema | Estrutura inválida |
+| `99:99:99` | Sem horas fixas | ✅ Passa | As partes numéricas não têm limites |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo proibido com chegada ou partida | A linha contém `end_pickup_drop_off_window` e também `arrival_time` ou `departure_time` | Remover `end_pickup_drop_off_window` ou as horas fixas da linha de `stop_times.txt` |
+| Campo proibido pela configuração | A configuração proíbe `end_pickup_drop_off_window` | Remover `end_pickup_drop_off_window` de `stop_times.txt` |
+| Campo condicional em falta | Existe uma localização a pedido ou `start_pickup_drop_off_window`, mas falta `end_pickup_drop_off_window` | Preencher `end_pickup_drop_off_window` em `stop_times.txt` |
+| Hora inválida | O valor não tem oito carateres e três partes numéricas | Corrigir `end_pickup_drop_off_window` em `stop_times.txt` para a estrutura `HH:MM:SS` |
+| Campo em falta | A configuração exige ou recomenda `end_pickup_drop_off_window` | Preencher `end_pickup_drop_off_window` em `stop_times.txt` |

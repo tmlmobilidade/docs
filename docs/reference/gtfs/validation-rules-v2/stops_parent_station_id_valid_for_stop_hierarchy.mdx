@@ -1,0 +1,55 @@
+---
+title: Estação principal da localização
+description: Verifica a referência de `parent_station` e as condições de hierarquia associadas a `location_type`.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stops_parent_station_id_valid_for_stop_hierarchy` |
+| Ficheiro | `stops.txt` |
+| Campo | `parent_station` |
+| Tipo | Identificador externo |
+| Severidade | Opcional |
+
+**Descrição do campo:** identifica a estação principal da localização. É obrigatório para entradas, saídas, nós genéricos e áreas de embarque, opcional para paragens e proibido para estações.
+
+Mais informação em [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+Quando existe, `parent_station` tem de referenciar outro `stop_id` de `stops.txt`. Uma estação, com `location_type=1`, não pode ter estação principal. A regra não confirma se a localização referenciada tem `location_type=1`.
+
+A regra avalia cada linha do `stops.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | `parent_station` está vazio? | Aplica a configuração da regra. Se esta estiver desativada, aceita tipos `0` e `1`, mas reporta a ausência nos tipos `2`, `3` e `4` | Segue para o passo 2 |
+| 2 | A configuração proíbe `parent_station`? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | `location_type` é `1`? | ❌ Reporta o problema: estação principal proibida | Segue para o passo 4 |
+| 4 | O identificador existe como `stop_id` em `stops.txt`? | Segue para o passo 5 | ❌ Reporta o problema: estação inexistente |
+| 5 | Existe uma lista configurada de valores permitidos? | Segue para o passo 6 | ✅ Passa |
+| 6 | O identificador consta da lista, ou a lista aceita qualquer valor? | ✅ Passa | ❌ Reporta o problema: estação não permitida |
+
+## Como se relacionam
+
+`location_type` define se `parent_station` é necessário ou proibido. O valor de `parent_station` referencia um `stop_id` do mesmo ficheiro.
+
+## Exemplos
+
+| `location_type` | `parent_station` | Resultado | Porquê |
+|---|---|---|---|
+| `0` | `EST_1`, existente | ✅ Passa | Referência encontrada |
+| `1` | `EST_1` | ❌ Problema | Uma estação não pode ter estação principal |
+| `2` | Vazio | ❌ Problema | Entrada sem estação principal |
+| `0` | `EST_9`, inexistente | ❌ Problema | Referência inexistente |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | A configuração exige o campo, ou `location_type` é `2`, `3` ou `4` | Preencher `parent_station` em `stops.txt` com um `stop_id` existente |
+| Campo preenchido quando não devia | A configuração proíbe o campo, ou `location_type` é `1` | Remover `parent_station` da linha de `stops.txt` |
+| Estação inexistente | O identificador não existe como `stop_id` | Corrigir `parent_station` em `stops.txt` ou adicionar a localização referenciada |
+| Estação não permitida | O identificador não consta da lista configurada | Usar um `parent_station` permitido em `stops.txt`, ou ajustar a configuração |

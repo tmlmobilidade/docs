@@ -1,0 +1,50 @@
+---
+title: Viagem do horário de paragem
+description: Verifica se cada `trip_id` de stop_times.txt referencia uma viagem existente em trips.txt.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_times_trip_id_references_trips_table` |
+| Ficheiros | `stop_times.txt`, `trips.txt` |
+| Campo | `trip_id` |
+| Tipo | Identificador externo |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** identifica a viagem a que pertence o horário de paragem.
+
+Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times) e [trips.txt](/reference/gtfs/schedule/trips).
+
+## Como funciona
+
+O campo tem de estar preenchido e corresponder a um `trip_id` de `trips.txt`, salvo quando a configuração desativa a regra. A regra não avalia os restantes dados da viagem.
+
+A regra avalia cada linha do `stop_times.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração exige ou recomenda o campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração proíbe o campo? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O `trip_id` existe em `trips.txt`? | ✅ Passa | ❌ Reporta o problema: viagem inexistente |
+
+## Como se relacionam
+
+Cada linha de `stop_times.txt` pertence à viagem cujo `trip_id` está definido em `trips.txt`.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `V100`, existente em `trips.txt` | ✅ Passa | Referência encontrada |
+| Vazio | ❌ Problema | Campo obrigatório |
+| `V999`, inexistente | ❌ Problema | Referência inexistente |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | A configuração exige ou recomenda `trip_id` | Preencher `trip_id` em `stop_times.txt` |
+| Campo preenchido quando não devia | A configuração proíbe `trip_id` | Remover `trip_id` de `stop_times.txt` |
+| Viagem inexistente | O identificador não existe em `trips.txt` | Corrigir `trip_id` em `stop_times.txt` ou adicionar a viagem a `trips.txt` |

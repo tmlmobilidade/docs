@@ -1,0 +1,56 @@
+---
+title: Tipo de embarque
+description: Verifica se `pickup_type` usa um valor GTFS permitido e respeita as janelas de serviço a pedido.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_times_pickup_type_valid_gtfs_enum` |
+| Ficheiro | `stop_times.txt` |
+| Campo | `pickup_type` |
+| Tipo | Enumeração |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** indica o método de embarque: `0` regular, `1` indisponível, `2` mediante contacto telefónico e `3` mediante acordo com o motorista.
+
+Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times).
+
+## Como funciona
+
+Quando existe, o valor tem de ser `0`, `1`, `2` ou `3`. Com uma janela de serviço a pedido, `0` e `3` são proibidos. Uma lista configurada pode restringir ainda mais os valores.
+
+A regra avalia cada linha do `stop_times.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração exige ou recomenda o campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração proíbe o campo? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor é `0`, `1`, `2` ou `3`? | Segue para o passo 4 | ❌ Reporta o problema: valor inválido |
+| 4 | Existe uma janela de serviço a pedido e o valor é `0` ou `3`? | ❌ Reporta o problema: valor incompatível com a janela | Segue para o passo 5 |
+| 5 | Existe uma lista configurada de valores permitidos? | Segue para o passo 6 | ✅ Passa |
+| 6 | O valor consta da lista, ou a lista aceita qualquer valor? | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+## Como se relacionam
+
+`start_pickup_drop_off_window` e `end_pickup_drop_off_window` tornam os valores `0` e `3` incompatíveis com esta linha.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `2` | ✅ Passa | Valor previsto |
+| `4` | ❌ Problema | Fora da enumeração |
+| `0` com uma janela preenchida | ❌ Problema | Incompatível com serviço a pedido |
+| `2` (lista permitida = `1`) | ❌ Problema | Fora da lista configurada |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | A configuração exige ou recomenda `pickup_type` | Preencher `pickup_type` em `stop_times.txt` |
+| Campo preenchido quando não devia | A configuração proíbe `pickup_type` | Remover `pickup_type` de `stop_times.txt` |
+| Valor inválido | O valor não é `0`, `1`, `2` ou `3` | Corrigir `pickup_type` em `stop_times.txt` |
+| Valor incompatível com a janela | O valor é `0` ou `3` e existe `start_pickup_drop_off_window` ou `end_pickup_drop_off_window` | Alterar `pickup_type` em `stop_times.txt`, ou remover as janelas incompatíveis |
+| Valor não permitido | O valor não consta da lista configurada | Usar um valor permitido em `pickup_type` de `stop_times.txt`, ou ajustar a configuração |

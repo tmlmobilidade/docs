@@ -1,0 +1,53 @@
+---
+title: Descrição da paragem
+description: Verifica se a descrição difere do nome da paragem e pertence à lista configurada de valores permitidos.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_desc_valid` |
+| Ficheiro | `stops.txt` |
+| Campo | `stop_desc` |
+| Tipo | Texto |
+| Severidade | Opcional |
+
+**Descrição do campo:** descrição útil da localização. Não deve repetir o nome da paragem.
+
+Mais informação em [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+Quando existe, a descrição tem de diferir exatamente de `stop_name`. Uma lista configurada pode limitar as descrições aceites. A regra não avalia a qualidade ou utilidade do texto.
+
+A regra avalia cada linha do `stops.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração exige ou recomenda o campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração proíbe o campo? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | `stop_desc` é exatamente igual a `stop_name`? | ❌ Reporta o problema: descrição repetida | Segue para o passo 4 |
+| 4 | Existe uma lista configurada de valores permitidos? | Segue para o passo 5 | ✅ Passa |
+| 5 | A descrição consta da lista, ou a lista aceita qualquer valor? | ✅ Passa | ❌ Reporta o problema: descrição não permitida |
+
+## Como se relacionam
+
+`stop_desc` complementa `stop_name`. A comparação é exata e não ignora diferenças de espaços ou maiúsculas.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `Junto ao mercado municipal` | ✅ Passa | Difere do nome |
+| `Praça do Comércio` (`stop_name` = `Praça do Comércio`) | ❌ Problema | Repete o nome |
+| `Outra descrição` (lista permitida = `Junto ao mercado municipal`) | ❌ Problema | Fora da lista configurada |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Descrição repetida | `stop_desc` é igual a `stop_name` | Alterar `stop_desc` em `stops.txt` para acrescentar informação útil, ou deixá-lo vazio |
+| Descrição não permitida | A descrição não consta da lista configurada | Usar em `stop_desc` de `stops.txt` um valor permitido, ou ajustar a configuração da regra |
+| Campo em falta | A configuração exige ou recomenda `stop_desc` | Preencher `stop_desc` em `stops.txt` |
+| Campo preenchido quando não devia | A configuração proíbe `stop_desc` | Remover o valor de `stop_desc` em `stops.txt` |

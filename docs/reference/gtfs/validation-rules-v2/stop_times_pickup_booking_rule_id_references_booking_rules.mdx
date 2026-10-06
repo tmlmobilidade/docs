@@ -1,0 +1,53 @@
+---
+title: Regra de reserva para embarque
+description: Verifica se `pickup_booking_rule_id` referencia uma regra existente em booking_rules.txt, e uma regra permitida pela configuração.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_times_pickup_booking_rule_id_references_booking_rules` |
+| Ficheiros | `stop_times.txt`, `booking_rules.txt` |
+| Campo | `pickup_booking_rule_id` |
+| Tipo | Identificador externo |
+| Severidade | Opcional |
+
+**Descrição do campo:** identifica a regra de reserva aplicável ao embarque nesta paragem. É recomendada quando `pickup_type=2`.
+
+Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times) e [booking_rules.txt](/reference/gtfs/schedule/booking_rules).
+
+## Como funciona
+
+Quando existe, o identificador tem de corresponder a um `booking_rule_id` de `booking_rules.txt`. Uma lista configurada pode limitar as regras aceites.
+
+A regra avalia cada linha do `stop_times.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração exige ou recomenda o campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração proíbe o campo? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O identificador existe em `booking_rules.txt`? | Segue para o passo 4 | ❌ Reporta o problema: regra inexistente |
+| 4 | Existe uma lista configurada de valores permitidos? | Segue para o passo 5 | ✅ Passa |
+| 5 | O identificador consta da lista, ou a lista aceita qualquer valor? | ✅ Passa | ❌ Reporta o problema: regra não permitida |
+
+## Como se relacionam
+
+`pickup_booking_rule_id` de `stop_times.txt` referencia `booking_rule_id` de `booking_rules.txt`. A recomendação associada a `pickup_type=2` não é imposta pela implementação.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `RES_1`, existente em `booking_rules.txt` | ✅ Passa | Referência encontrada |
+| `RES_9`, inexistente | ❌ Problema | Referência inexistente |
+| `RES_2` (lista permitida = `RES_1`) | ❌ Problema | Fora da lista configurada |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | A configuração exige ou recomenda `pickup_booking_rule_id` | Preencher `pickup_booking_rule_id` em `stop_times.txt` |
+| Campo preenchido quando não devia | A configuração proíbe `pickup_booking_rule_id` | Remover `pickup_booking_rule_id` de `stop_times.txt` |
+| Regra inexistente | O identificador não existe em `booking_rules.txt` | Corrigir `pickup_booking_rule_id` em `stop_times.txt` ou adicionar a regra a `booking_rules.txt` |
+| Regra não permitida | O identificador não consta da lista configurada | Usar uma regra permitida em `pickup_booking_rule_id` de `stop_times.txt`, ou ajustar a configuração |

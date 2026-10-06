@@ -1,0 +1,56 @@
+---
+title: Acesso à paragem
+description: Verifica se `stop_access` usa 0 ou 1 e se respeita a existência de `parent_station`.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_access_validation` |
+| Ficheiro | `stops.txt` |
+| Campo | `stop_access` |
+| Tipo | Enumeração |
+| Severidade | Condicional (proibido sem `parent_station`) |
+
+**Descrição do campo:** indica como se acede à paragem dentro de uma estação: `0` para acesso livre e `1` para acesso condicionado.
+
+Mais informação em [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+Quando existe, `stop_access` tem de ser `0` ou `1` e exige `parent_station`. Uma lista configurada pode restringir os valores. A implementação atual não aplica corretamente a proibição prevista para valores de `location_type` diferentes de `0`.
+
+A regra avalia cada linha do `stops.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | `stop_access` está vazio? | Verifica se a configuração exige ou recomenda o campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração proíbe `stop_access`? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | `parent_station` está vazio? | ❌ Reporta o problema: acesso proibido sem estação principal | Segue para o passo 4 |
+| 4 | O valor é `0` ou `1`? | Segue para o passo 5 | ❌ Reporta o problema: valor inválido |
+| 5 | Existe uma lista configurada de valores permitidos? | Segue para o passo 6 | ✅ Passa |
+| 6 | O valor consta da lista, ou a lista aceita qualquer valor? | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+## Como se relacionam
+
+`stop_access` só é aceite pela implementação quando `parent_station` está preenchido. A condição declarada para `location_type` não é aplicada corretamente.
+
+## Exemplos
+
+| `stop_access` | `parent_station` | Resultado | Porquê |
+|---|---|---|---|
+| `0` | `EST_1` | ✅ Passa | Valor válido e estação indicada |
+| `1` | Vazio | ❌ Problema | Falta a estação principal |
+| `2` | `EST_1` | ❌ Problema | Valor fora da enumeração |
+| `1` (lista permitida = `0`) | `EST_1` | ❌ Problema | Fora da lista configurada |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | A configuração exige ou recomenda `stop_access` | Preencher `stop_access` em `stops.txt` |
+| Campo preenchido quando não devia | A configuração proíbe `stop_access` | Remover `stop_access` de `stops.txt` |
+| Acesso sem estação principal | `stop_access` está preenchido e `parent_station` está vazio | Preencher `parent_station` em `stops.txt` ou remover `stop_access` |
+| Valor inválido | `stop_access` não é `0` nem `1` | Corrigir `stop_access` em `stops.txt` |
+| Valor não permitido | O valor não consta da lista configurada | Usar um valor permitido em `stop_access` de `stops.txt`, ou ajustar a configuração |
