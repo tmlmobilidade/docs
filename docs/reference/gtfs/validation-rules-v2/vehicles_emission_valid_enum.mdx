@@ -1,0 +1,53 @@
+---
+title: Norma de emissões do veículo
+description: Verifica se emission usa uma categoria válida e, quando configurado, permitida.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `vehicles_emission_valid_enum` |
+| Ficheiro | `vehicles.txt` |
+| Campo | `emission` |
+| Tipo | Enumeração |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** categoria de emissões do veículo. Os valores válidos são `Euro I`, `Euro II`, `Euro III`, `Euro IV`, `Euro V`, `Euro VI`, `Euro VII` e `N/A` para não aplicável.
+
+Mais informação em [vehicles.txt](/reference/gtfs/schedule/vehicles).
+
+## Como funciona
+
+O texto tem de coincidir exatamente com uma das categorias de emissões aceites. Se a configuração da regra restringir essa lista, o valor também tem de ser permitido. A regra não mede nem confirma as emissões reais do veículo.
+
+A regra avalia cada linha do `vehicles.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor é uma das categorias de emissões aceites? | Segue para o passo 4 | ❌ Reporta o problema: categoria inválida |
+| 4 | A configuração da regra define uma lista de valores permitidos? | Segue para o passo 5 | ✅ Passa |
+| 5 | O valor consta da lista, ou a lista aceita qualquer opção? | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+Não são ignoradas diferenças entre maiúsculas e minúsculas.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `Euro VI` | ✅ Passa | Categoria válida |
+| `N/A` | ✅ Passa | Não aplicável |
+| `Euro 6` | ❌ Problema | Texto fora da lista base |
+| `euro vi` | ❌ Problema | Maiúsculas incorretas |
+| `Euro I` (lista permitida = `Euro VI`, `Euro VII`) | ❌ Problema | Valor válido, mas não permitido |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | A configuração da regra exige ou recomenda `emission` | Preencher `emission` em `vehicles.txt` com a categoria de emissões |
+| Campo preenchido quando não devia | A configuração da regra proíbe `emission` | Remover o valor de `emission` em `vehicles.txt` |
+| Categoria inválida | O texto não coincide com uma categoria da lista base | Corrigir `emission` em `vehicles.txt`, respeitando a grafia e as maiúsculas |
+| Valor não permitido | A categoria é válida, mas não consta da lista configurada | Usar em `emission` de `vehicles.txt` um valor permitido ou ajustar a configuração da regra |

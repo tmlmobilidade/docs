@@ -1,6 +1,6 @@
 ---
-title: Transporte de bicicletas
-description: Verifica se o bicycles de vehicles.txt está preenchido com um valor válido (0, 1) e, quando configurado, se consta da lista de valores permitidos.
+title: Capacidade para bicicletas
+description: Verifica se bicycles_capacity contém um número inteiro não negativo.
 ---
 
 ## Propriedades da regra
@@ -9,40 +9,38 @@ description: Verifica se o bicycles de vehicles.txt está preenchido com um valo
 |---|---|
 | Rule ID | `vehicles_bicycles_rack_count_non_negative` |
 | Ficheiro | `vehicles.txt` |
-| Campo | `bicycles` |
-| Tipo | Enumeração |
+| Campo | `bicycles_capacity` |
+| Tipo | Número inteiro não negativo |
 | Severidade | Obrigatório |
 
-**Descrição do campo:** indica se é permitido transportar bicicletas não dobráveis. As dobráveis são sempre permitidas. Valores válidos: `0` (não), `1` (sim).
+**Descrição do campo:** número de lugares disponíveis para bicicletas não dobráveis. O valor `0` indica que o veículo não permite o transporte dessas bicicletas.
 
 Mais informação em [vehicles.txt](/reference/gtfs/schedule/vehicles).
 
 ## Como funciona
 
-Cada veículo tem de ter o `bicycles` preenchido com um valor válido e que respeite a configuração da regra. A regra **não confirma** que a informação corresponde à realidade do veículo. Apesar do nome, a regra valida uma enumeração e não um número de suportes.
+O valor tem de ser um número inteiro igual ou superior a zero. A regra não confirma a existência, o estado ou a utilização dos suportes para bicicletas.
 
 A regra avalia cada linha do `vehicles.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O campo está vazio? | ❌ Reporta o problema: campo em falta | Segue para o passo 2 |
-| 2 | O valor está fora de `0`, `1`? | ❌ Reporta o problema: valor inválido | Segue para o passo 3 |
-| 3 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 4 | ✅ Passa |
-| 4 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor é igual ou superior a `0`? | ✅ Passa | ❌ Reporta o problema: capacidade negativa |
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `0` | ✅ Passa | Valor válido |
-| (vazio) | ❌ Problema | Campo em falta |
-| `2` | ❌ Problema | Fora de `0`, `1` |
-| `0` (lista permitida = `1`) | ❌ Problema | Válido, mas fora da lista |
+| `0` | ✅ Passa | Sem lugares disponíveis |
+| `4` | ✅ Passa | Capacidade não negativa |
+| `-1` | ❌ Problema | Capacidade negativa |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Campo em falta | A célula de `bicycles` está vazia | Preencher `bicycles` no `vehicles.txt` |
-| Valor inválido | Foi escrito um valor fora de `0`, `1` | Usar um dos valores `0`, `1` em `bicycles` no `vehicles.txt` |
-| Valor não permitido | O valor é válido mas não consta da lista da configuração da regra | Usar um valor da lista, ou pedir ao administrador que o acrescente |
+| Campo em falta | A configuração da regra exige ou recomenda `bicycles_capacity` | Preencher `bicycles_capacity` em `vehicles.txt` com a capacidade para bicicletas |
+| Campo preenchido quando não devia | A configuração da regra proíbe `bicycles_capacity` | Remover o valor de `bicycles_capacity` em `vehicles.txt` |
+| Capacidade negativa | Foi introduzido um número inferior a zero | Corrigir `bicycles_capacity` em `vehicles.txt` para `0` ou um número inteiro positivo |

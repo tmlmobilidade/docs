@@ -1,0 +1,47 @@
+---
+title: Capacidade para automóveis
+description: Verifica se car_capacity contém um número inteiro não negativo quando está preenchido.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `vehicles_car_capacity_non_negative` |
+| Ficheiro | `vehicles.txt` |
+| Campo | `car_capacity` |
+| Tipo | Número inteiro não negativo |
+| Severidade | Opcional |
+
+**Descrição do campo:** número de veículos ligeiros de dimensão normal que a unidade pode transportar, sobretudo em barcos. O valor `0` indica que o embarque de veículos ligeiros não é permitido. O campo é necessário para operadores que prestam este serviço.
+
+Mais informação em [vehicles.txt](/reference/gtfs/schedule/vehicles).
+
+## Como funciona
+
+Quando preenchido, o valor tem de ser um número inteiro igual ou superior a zero. A regra não confirma a capacidade homologada nem determina se o operador presta transporte de veículos ligeiros.
+
+A regra avalia cada linha do `vehicles.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor é igual ou superior a `0`? | ✅ Passa | ❌ Reporta o problema: capacidade negativa |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| campo vazio | ✅ Passa | Campo opcional |
+| `0` | ✅ Passa | Sem transporte de automóveis |
+| `30` | ✅ Passa | Capacidade não negativa |
+| `-1` | ❌ Problema | Capacidade negativa |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | A configuração da regra exige ou recomenda `car_capacity` | Preencher `car_capacity` em `vehicles.txt` com a capacidade para automóveis |
+| Campo preenchido quando não devia | A configuração da regra proíbe `car_capacity` | Remover o valor de `car_capacity` em `vehicles.txt` |
+| Capacidade negativa | Foi introduzido um número inferior a zero | Corrigir `car_capacity` em `vehicles.txt` para `0` ou um número inteiro positivo |

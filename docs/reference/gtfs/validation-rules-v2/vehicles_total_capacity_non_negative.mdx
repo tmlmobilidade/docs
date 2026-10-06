@@ -1,0 +1,46 @@
+---
+title: Capacidade total de passageiros
+description: Verifica se total_capacity contém um número inteiro não negativo.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `vehicles_total_capacity_non_negative` |
+| Ficheiro | `vehicles.txt` |
+| Campo | `total_capacity` |
+| Tipo | Número inteiro não negativo |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** capacidade total de passageiros do veículo. O valor `0` indica que o veículo não permite o embarque de passageiros.
+
+Mais informação em [vehicles.txt](/reference/gtfs/schedule/vehicles).
+
+## Como funciona
+
+O valor tem de ser um número inteiro igual ou superior a zero. A regra não confirma a lotação homologada nem compara a capacidade com outros dados do veículo.
+
+A regra avalia cada linha do `vehicles.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor é igual ou superior a `0`? | ✅ Passa | ❌ Reporta o problema: capacidade negativa |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `0` | ✅ Passa | Sem embarque de passageiros |
+| `80` | ✅ Passa | Capacidade não negativa |
+| `-5` | ❌ Problema | Capacidade negativa |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | A configuração da regra exige ou recomenda `total_capacity` | Preencher `total_capacity` em `vehicles.txt` com a capacidade total de passageiros |
+| Campo preenchido quando não devia | A configuração da regra proíbe `total_capacity` | Remover o valor de `total_capacity` em `vehicles.txt` |
+| Capacidade negativa | Foi introduzido um número inferior a zero | Corrigir `total_capacity` em `vehicles.txt` para `0` ou um número inteiro positivo |

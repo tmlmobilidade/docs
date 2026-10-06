@@ -1,6 +1,6 @@
 ---
 title: Modelo do veículo
-description: Verifica se o model de cada veículo em vehicles.txt está preenchido.
+description: Verifica se model está preenchido de acordo com a configuração da regra.
 ---
 
 ## Propriedades da regra
@@ -19,23 +19,26 @@ Mais informação em [vehicles.txt](/reference/gtfs/schedule/vehicles).
 
 ## Como funciona
 
-Cada veículo tem de ter o `model` preenchido. A regra **não verifica** o conteúdo do texto.
+O campo `model` tem de estar preenchido quando a configuração da regra o exige ou recomenda. A regra não verifica a grafia, a relação com a marca nem uma lista de modelos permitidos.
 
 A regra avalia cada linha do `vehicles.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O campo está vazio? | ❌ Reporta o problema: campo em falta | ✅ Passa |
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | ✅ Passa |
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
 | `Citaro` | ✅ Passa | Campo preenchido |
-| (vazio) | ❌ Problema | Campo em falta |
+| campo vazio | ❌ Problema | Campo obrigatório |
+| `7900 Electric` quando o campo é proibido | ❌ Problema | Campo preenchido indevidamente |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Campo em falta | A célula de `model` está vazia | Preencher `model` no `vehicles.txt` |
+| Campo em falta | A configuração da regra exige ou recomenda `model` | Preencher `model` em `vehicles.txt` com o modelo do veículo |
+| Campo preenchido quando não devia | A configuração da regra proíbe `model` | Remover o valor de `model` em `vehicles.txt` |

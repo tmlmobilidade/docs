@@ -1,0 +1,50 @@
+---
+title: Acessibilidade do veículo
+description: Verifica se wheelchair_accessible usa um valor GTFS válido e, quando configurado, permitido.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `vehicles_wheelchair_accessible_valid_gtfs_enum` |
+| Ficheiro | `vehicles.txt` |
+| Campo | `wheelchair_accessible` |
+| Tipo | Enumeração |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** estado de acessibilidade do veículo para pessoas em cadeira de rodas. `0` indica ausência de informação, `1` indica capacidade para pelo menos uma pessoa em cadeira de rodas e `2` indica que essa utilização não é possível.
+
+Mais informação em [vehicles.txt](/reference/gtfs/schedule/vehicles).
+
+## Como funciona
+
+O valor tem de ser `0`, `1` ou `2`. Se a configuração da regra restringir essa lista, o valor também tem de ser permitido. A regra não verifica as características físicas nem o estado atual do equipamento do veículo.
+
+A regra avalia cada linha do `vehicles.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor é `0`, `1` ou `2`? | Segue para o passo 4 | ❌ Reporta o problema: valor inválido |
+| 4 | A configuração da regra define uma lista de valores permitidos? | Segue para o passo 5 | ✅ Passa |
+| 5 | O valor consta da lista, ou a lista aceita qualquer opção? | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `1` | ✅ Passa | Veículo acessível |
+| `3` | ❌ Problema | Fora da lista base |
+| `0` (lista permitida = `1`, `2`) | ❌ Problema | Valor válido, mas não permitido |
+| `2` (lista permitida = `1`, `2`) | ✅ Passa | Valor permitido |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | A configuração da regra exige ou recomenda `wheelchair_accessible` | Preencher `wheelchair_accessible` em `vehicles.txt` com `0`, `1` ou `2` |
+| Campo preenchido quando não devia | A configuração da regra proíbe `wheelchair_accessible` | Remover o valor de `wheelchair_accessible` em `vehicles.txt` |
+| Valor inválido | O valor não é `0`, `1` nem `2` | Corrigir `wheelchair_accessible` em `vehicles.txt` para um valor GTFS válido |
+| Valor não permitido | O valor é válido, mas não consta da lista configurada | Usar em `wheelchair_accessible` de `vehicles.txt` um valor permitido ou ajustar a configuração da regra |

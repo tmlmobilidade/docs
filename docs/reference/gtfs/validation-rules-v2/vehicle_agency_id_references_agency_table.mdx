@@ -1,6 +1,6 @@
 ---
-title: Operador do veículo existe
-description: Verifica se cada veículo tem um agency_id preenchido e se esse operador existe em agency.txt.
+title: Operador do veículo
+description: Verifica se agency_id está preenchido quando exigido e corresponde a uma agência de agency.txt.
 ---
 
 ## Propriedades da regra
@@ -10,39 +10,42 @@ description: Verifica se cada veículo tem um agency_id preenchido e se esse ope
 | Rule ID | `vehicle_agency_id_references_agency_table` |
 | Ficheiros | `vehicles.txt`, `agency.txt` |
 | Campo | `agency_id` |
-| Tipo | Chave estrangeira (agency.agency_id) |
+| Tipo | Identificador externo |
 | Severidade | Obrigatório |
 
-**Descrição do campo:** operador a que o veículo pertence.
+**Descrição do campo:** identifica a agência responsável pelo veículo indicado.
 
-Mais informação em [vehicles.txt](/reference/gtfs/schedule/vehicles), [agency.txt](/reference/gtfs/schedule/agency).
+Mais informação em [vehicles.txt](/reference/gtfs/schedule/vehicles) e [agency.txt](/reference/gtfs/schedule/agency).
 
 ## Como funciona
 
-Cada veículo tem de indicar um operador que exista em `agency.txt`. O campo é sempre exigido, mesmo que o feed só tenha um operador.
+Cada `agency_id` preenchido em `vehicles.txt` tem de existir em `agency.txt`. A regra não verifica outros dados da agência nem se esta opera serviços associados ao veículo.
 
 A regra avalia cada linha do `vehicles.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O `agency_id` está vazio? | ❌ Reporta o problema: campo em falta | Segue para o passo 2 |
-| 2 | O `agency_id` existe em `agency.txt`? | ✅ Passa | ❌ Reporta o problema: operador não encontrado |
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | Existe uma linha com o mesmo `agency_id` em `agency.txt`? | ✅ Passa | ❌ Reporta o problema: agência inexistente |
 
 ## Como se relacionam
 
-Cada `agency_id` de `vehicles.txt` tem de existir em `agency.txt`.
+O valor de `agency_id` em `vehicles.txt` identifica uma linha de `agency.txt`. O texto tem de coincidir exatamente nos dois ficheiros.
 
 ## Exemplos
 
-| `agency_id` em `vehicles.txt` | Resultado | Porquê |
-|---|---|---|
-| `PV`, existe em `agency.txt` | ✅ Passa | Operador existe |
-| (vazio) | ❌ Problema | Campo em falta |
-| `XX`, não existe | ❌ Problema | Operador não encontrado |
+| `agency_id` em `vehicles.txt` | `agency_id` em `agency.txt` | Resultado | Porquê |
+|---|---|---|---|
+| `A1` | `A1` | ✅ Passa | Agência encontrada |
+| vazio | `A1` | ❌ Problema | Campo obrigatório |
+| `A2` | `A1` | ❌ Problema | Agência inexistente |
+| `A1` quando o campo é proibido | `A1` | ❌ Problema | Campo preenchido indevidamente |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Campo em falta | A célula de `agency_id` está vazia | Preencher `agency_id` no `vehicles.txt` |
-| Operador não encontrado | Erro de digitação, ou operador em falta em `agency.txt` | Corrigir `agency_id` no `vehicles.txt`, ou acrescentar o operador ao `agency.txt` |
+| Campo em falta | A configuração da regra exige ou recomenda `agency_id` | Preencher `agency_id` em `vehicles.txt` com o identificador da agência |
+| Campo preenchido quando não devia | A configuração da regra proíbe `agency_id` | Remover o valor de `agency_id` em `vehicles.txt` |
+| Agência inexistente | O `agency_id` de `vehicles.txt` não existe em `agency.txt` | Corrigir `agency_id` em `vehicles.txt` ou adicionar a agência correspondente a `agency.txt` |

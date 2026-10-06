@@ -1,6 +1,6 @@
 ---
-title: Matrícula do veículo
-description: Verifica se a matrícula tem um formato válido e se não se repete no ficheiro.
+title: Matrícula ou MMSI do veículo
+description: Verifica o formato e a unicidade de license_plate em vehicles.txt, incluindo identificadores MMSI para embarcações.
 ---
 
 ## Propriedades da regra
@@ -13,37 +13,40 @@ description: Verifica se a matrícula tem um formato válido e se não se repete
 | Tipo | Texto |
 | Severidade | Obrigatório |
 
-**Descrição do campo:** matrícula do veículo.
+**Descrição do campo:** matrícula da unidade de transporte. Aceita uma matrícula portuguesa com seis carateres ou, no transporte fluvial, um MMSI com nove algarismos iniciado por um valor entre `2` e `7`.
 
 Mais informação em [vehicles.txt](/reference/gtfs/schedule/vehicles).
 
 ## Como funciona
 
-A matrícula tem de ter seis carateres num dos formatos portugueses e não pode repetir-se. Os hífenes, espaços, pontos e sublinhados são ignorados, e as letras minúsculas contam como maiúsculas. A regra **não confirma** que a matrícula existe.
+O valor tem de ser uma matrícula portuguesa aceite ou um MMSI válido. Também tem de ser único em `vehicles.txt`. A regra não confirma que a matrícula ou o MMSI pertencem ao veículo indicado.
 
 A regra avalia cada linha do `vehicles.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O campo está vazio? | ❌ Reporta o problema: campo em falta | Segue para o passo 2 |
-| 2 | Sem separadores, a matrícula tem seis carateres num destes formatos: duas letras, dois números, duas letras / dois números, duas letras, dois números / quatro números, duas letras / duas letras, quatro números? | Segue para o passo 3 | ❌ Reporta o problema: formato inválido |
-| 3 | Outra linha do `vehicles.txt` tem a mesma matrícula? | ❌ Reporta o problema: matrícula duplicada | ✅ Passa |
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor corresponde a uma matrícula aceite ou a um MMSI válido? | Segue para o passo 4 | ❌ Reporta o problema: formato inválido |
+| 4 | O valor aparece em mais do que uma linha de `vehicles.txt`? | ❌ Reporta o problema: valor duplicado | ✅ Passa |
 
-Os quatro formatos aceites são `LLNNLL`, `NNLLNN`, `NNNNLL` e `LLNNNN`, em que L é uma letra e N um número. Apesar do nome (regras por mercado), só existe este conjunto de formatos.
+Nas matrículas, a regra ignora maiúsculas e minúsculas, espaços e os separadores `-`, `.`, `_`. No MMSI, só são ignorados espaços no início e no fim.
 
 ## Exemplos
 
-| `license_plate` | Resultado | Porquê |
+| Valor | Resultado | Porquê |
 |---|---|---|
-| `AA-12-BB` | ✅ Passa | Formato aceite |
-| `12-34-AB` | ✅ Passa | Formato aceite |
-| `ABC-123` | ❌ Problema | Formato inválido |
-| `AA-12-BB` em duas linhas | ❌ Problema | Matrícula duplicada |
+| `AA-00-BB` | ✅ Passa | Matrícula aceite |
+| `263123456` | ✅ Passa | MMSI válido |
+| `AAAAAA` | ❌ Problema | Formato inválido |
+| `123456789` | ❌ Problema | MMSI começa por `1` |
+| `AA-00-BB` em duas linhas | ❌ Problema | Matrícula duplicada |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Campo em falta | A célula de `license_plate` está vazia | Preencher `license_plate` no `vehicles.txt` |
-| Formato inválido | Erro de digitação, ou formato não aceite | Corrigir `license_plate` no `vehicles.txt` para um formato aceite, por exemplo `AA-12-BB` |
-| Matrícula duplicada | O mesmo veículo aparece duas vezes, ou matrícula copiada | Remover a linha repetida ou corrigir `license_plate` no `vehicles.txt` |
+| Campo em falta | A configuração da regra exige ou recomenda `license_plate` | Preencher `license_plate` em `vehicles.txt` com a matrícula ou o MMSI |
+| Campo preenchido quando não devia | A configuração da regra proíbe `license_plate` | Remover o valor de `license_plate` em `vehicles.txt` |
+| Formato inválido | O valor não corresponde a uma matrícula aceite nem a um MMSI válido | Corrigir `license_plate` em `vehicles.txt`, por exemplo para `AA-00-BB` ou `263123456` |
+| Valor duplicado | A mesma matrícula ou o mesmo MMSI aparece em várias linhas | Alterar `license_plate` em `vehicles.txt` para que cada valor seja único |

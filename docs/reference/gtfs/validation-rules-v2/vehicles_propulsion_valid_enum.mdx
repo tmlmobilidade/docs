@@ -1,0 +1,50 @@
+---
+title: Propulsão do veículo
+description: Verifica se propulsion usa um código válido e, quando configurado, permitido.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `vehicles_propulsion_valid_enum` |
+| Ficheiro | `vehicles.txt` |
+| Campo | `propulsion` |
+| Tipo | Enumeração |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** tipo de propulsão do veículo. Os códigos abrangem não aplicável, gasolina, gasóleo, GPL, mistura, eletricidade, bateria elétrica, híbrido, hidrogénio, biocombustíveis, gás natural, combustível de aviação, combustível marítimo e outros.
+
+Mais informação em [vehicles.txt](/reference/gtfs/schedule/vehicles).
+
+## Como funciona
+
+O código tem de pertencer à lista base de tipos de propulsão. Se a configuração da regra restringir essa lista, o valor também tem de ser permitido. A regra não confirma o sistema de propulsão real do veículo.
+
+A regra avalia cada linha do `vehicles.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor é `0` a `10` ou `101` a `106`? | Segue para o passo 4 | ❌ Reporta o problema: código inválido |
+| 4 | A configuração da regra define uma lista de valores permitidos? | Segue para o passo 5 | ✅ Passa |
+| 5 | O valor consta da lista, ou a lista aceita qualquer opção? | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `6` | ✅ Passa | Bateria elétrica |
+| `106` | ✅ Passa | Outra propulsão |
+| `11` | ❌ Problema | Fora da lista base |
+| `2` (lista permitida = `5`, `6`) | ❌ Problema | Valor válido, mas não permitido |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | A configuração da regra exige ou recomenda `propulsion` | Preencher `propulsion` em `vehicles.txt` com o código da propulsão |
+| Campo preenchido quando não devia | A configuração da regra proíbe `propulsion` | Remover o valor de `propulsion` em `vehicles.txt` |
+| Código inválido | O valor não pertence à lista base | Corrigir `propulsion` em `vehicles.txt` para um dos códigos válidos |
+| Valor não permitido | O código é válido, mas não consta da lista configurada | Usar em `propulsion` de `vehicles.txt` um valor permitido ou ajustar a configuração da regra |

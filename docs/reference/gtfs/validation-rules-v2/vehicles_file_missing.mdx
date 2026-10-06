@@ -1,6 +1,6 @@
 ---
-title: Ficheiro de veículos
-description: Verifica se o ficheiro vehicles.txt existe no feed, quando a configuração da regra o exige ou recomenda.
+title: Presença de vehicles.txt
+description: Verifica se o feed GTFS contém vehicles.txt quando a configuração da regra exige ou recomenda este ficheiro.
 ---
 
 ## Propriedades da regra
@@ -11,28 +11,31 @@ description: Verifica se o ficheiro vehicles.txt existe no feed, quando a config
 | Ficheiro | `vehicles.txt` |
 | Campo | Se aplica em todo o ficheiro |
 | Tipo | Ficheiro |
-| Severidade | Obrigatório |
+| Severidade | Opcional |
 
 ## Como funciona
 
-O `vehicles.txt` tem de existir no feed quando a configuração da regra o exige ou recomenda. A regra **não verifica** o conteúdo do ficheiro. Isso é feito pelas outras regras.
+O feed pode omitir `vehicles.txt` quando não existe uma exigência na configuração da regra. Quando o ficheiro é obrigatório ou recomendado, a regra verifica apenas a sua presença, não o conteúdo.
 
-A regra avalia o feed, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+A regra avalia a presença de `vehicles.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O ficheiro `vehicles.txt` existe no feed? | ✅ Passa | Verifica a configuração da regra: se o exige, reporta um problema. Se o recomenda, reporta um aviso. Caso contrário, aceita |
+| 1 | `vehicles.txt` está ausente e é obrigatório na configuração da regra? | ❌ Reporta o problema: ficheiro obrigatório em falta | Segue para o passo 2 |
+| 2 | `vehicles.txt` está ausente e é recomendado na configuração da regra? | ❌ Reporta o problema: ficheiro recomendado em falta | ✅ Passa |
 
 ## Exemplos
 
-| Situação | Resultado | Porquê |
+| Valor | Resultado | Porquê |
 |---|---|---|
-| Feed com `vehicles.txt` | ✅ Passa | O ficheiro existe |
-| Feed sem `vehicles.txt`, ficheiro exigido | ❌ Problema | Ficheiro em falta |
-| Feed sem `vehicles.txt`, ficheiro recomendado | ❌ Problema | Ficheiro em falta (com gravidade de aviso) |
+| `vehicles.txt` presente | ✅ Passa | Ficheiro encontrado |
+| Ausente e sem exigência na configuração | ✅ Passa | Ficheiro opcional |
+| Ausente e obrigatório na configuração | ❌ Problema | Ficheiro obrigatório em falta |
+| Ausente e recomendado na configuração | ❌ Problema | Ficheiro recomendado em falta |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Ficheiro em falta | O `vehicles.txt` não foi incluído no ficheiro ZIP do feed, ou tem outro nome | Acrescentar o `vehicles.txt` ao feed, com o nome exato em minúsculas |
+| Ficheiro obrigatório em falta | A configuração exige `vehicles.txt`, mas o ficheiro não foi incluído | Adicionar `vehicles.txt` ao feed GTFS |
+| Ficheiro recomendado em falta | A configuração recomenda `vehicles.txt`, mas o ficheiro não foi incluído | Adicionar `vehicles.txt` ao feed GTFS ou ajustar a configuração da regra |
