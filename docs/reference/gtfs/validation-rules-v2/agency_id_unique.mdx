@@ -1,6 +1,6 @@
 ---
-title: Identificador da agência
-description: Verifica se cada linha de agency.txt tem um agency_id preenchido e se esse valor não se repete no ficheiro.
+title: Identificador único do operador
+description: Verifica se o identificador do operador está preenchido, é único em agency.txt e, quando configurado, consta da lista de valores permitidos.
 ---
 
 ## Propriedades da regra
@@ -13,38 +13,41 @@ description: Verifica se cada linha de agency.txt tem um agency_id preenchido e 
 | Tipo | Identificador único |
 | Severidade | Obrigatório |
 
-**Descrição do campo:** identificador único da agência (ou marca) de transporte dentro do conjunto de dados. É usado para associar rotas e outras entidades a esta agência.
+**Descrição do campo:** identifica uma marca de transporte, muitas vezes equivalente ao operador. Um conjunto GTFS pode incluir dados de vários operadores. Nalguns casos, um operador gere vários serviços distintos e a marca não coincide com o operador.
 
 Mais informação em [agency.txt](/reference/gtfs/schedule/agency).
 
 ## Como funciona
 
-Quando esta regra passa, garante-se que todas as linhas de `agency.txt` têm um `agency_id` preenchido e que não há dois `agency_id` iguais no ficheiro. A regra **não confirma** que o valor é depois referenciado corretamente noutras tabelas, como `routes.txt`.
+Quando a regra passa, o valor está presente quando exigido, não se repete em `agency.txt` e respeita a lista configurada. A regra **não verifica o formato do identificador nem as referências noutros ficheiros**.
 
 A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O campo está vazio? | ❌ Reporta o problema | Segue para o passo 2 |
-| 2 | Já existe outra linha com o mesmo `agency_id`? | Reporta o problema (duplicado) e segue para o passo 3 | Segue para o passo 3 |
-| 3 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 4 | ✅ Passa |
-| 4 | O valor está na lista (ou a lista aceita qualquer valor)? | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O mesmo `agency_id` aparece em mais do que uma linha? | ❌ Reporta o problema de duplicação e segue para o passo 4 | Segue para o passo 4 |
+| 4 | A configuração da regra tem uma lista de identificadores permitidos? | Segue para o passo 5 | Termina sem outro problema |
+| 5 | O identificador está na lista? (ou a lista aceita qualquer valor) | Termina sem outro problema | ❌ Reporta o problema: identificador não permitido |
 
-O campo é comparado exatamente como está escrito: não há remoção de espaços nem alteração de maiúsculas/minúsculas.
+O valor é comparado tal como foi escrito. Os espaços e as maiúsculas não são normalizados.
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `METRO` (não repetido no ficheiro) | ✅ Passa | Preenchido e único |
-| (vazio) | ❌ Problema | Campo obrigatório em falta |
-| `METRO` (também usado noutra linha) | ❌ Problema | Valor duplicado |
-| `METRO` (lista permitida = `BUS`, `RAIL`) | ❌ Problema | Valor válido mas fora da lista |
+| `operador-1` numa única linha | ✅ Passa | Identificador único |
+| campo vazio | ❌ Problema | Falta um valor obrigatório |
+| `operador-1` em duas linhas | ❌ Problema | Identificador duplicado |
+| `outro` (lista permitida = `operador-1`) | ❌ Problema | Fora da lista |
+| `operador-1` quando o campo é proibido | ❌ Problema | Campo preenchido indevidamente |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Campo em falta | A linha de `agency.txt` não tem valor em `agency_id` | Preencher `agency_id` com um identificador único para a agência |
-| Valor duplicado | Duas ou mais linhas de `agency.txt` têm o mesmo `agency_id` | Atribuir um `agency_id` diferente a cada agência |
-| Valor não permitido | A configuração da regra tem uma lista de `agency_id` permitidos e este valor não consta dela | Usar um `agency_id` da lista, ou pedir ao administrador que o adicione |
+| Identificador duplicado | Duas ou mais linhas usam o mesmo valor | Alterar `agency_id` em `agency.txt` para que cada operador tenha um identificador único |
+| Identificador não permitido | O valor não consta da lista configurada | Substituir `agency_id` em `agency.txt` por um valor permitido ou rever a lista na configuração da regra |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `agency_id` em `agency.txt` com o identificador do operador |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `agency_id` em `agency.txt` |

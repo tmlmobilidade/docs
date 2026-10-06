@@ -1,6 +1,6 @@
 ---
 title: Correio eletrónico do operador
-description: Verifica se o e-mail de apoio ao cliente indicado em agency.txt está bem escrito e, quando configurado, se consta da lista de endereços permitidos.
+description: Verifica se o e-mail de apoio ao cliente em agency.txt está bem escrito e, quando configurado, se consta da lista de endereços permitidos.
 ---
 
 ## Propriedades da regra
@@ -13,13 +13,13 @@ description: Verifica se o e-mail de apoio ao cliente indicado em agency.txt est
 | Tipo | E-mail |
 | Severidade | Opcional |
 
-**Descrição do campo:** endereço de e-mail monitorizado ativamente pelo departamento de apoio ao cliente do operador. Deve ser um ponto de contacto direto onde os passageiros podem falar com um representante do apoio ao cliente.
+**Descrição do campo:** endereço de e-mail monitorizado ativamente pelo serviço de apoio ao cliente do operador. Deve permitir que os passageiros contactem diretamente um representante desse serviço.
 
 Mais informação em [agency.txt](/reference/gtfs/schedule/agency).
 
 ## Como funciona
 
-Se o operador indicar um e-mail de apoio ao cliente, o valor tem de ser um endereço bem escrito. Se a configuração da regra tiver uma lista de e-mails permitidos, o endereço também tem de constar dessa lista. A regra **não confirma que a caixa de correio existe**, só que o formato está correto.
+Se o operador indicar um e-mail de apoio ao cliente, o valor tem de ser um endereço bem escrito. Quando existe uma lista de endereços permitidos, o e-mail também tem de constar dessa lista. A regra **não confirma que a caixa de correio existe ou recebe mensagens**.
 
 A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
@@ -31,7 +31,7 @@ A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, 
 | 4 | A configuração da regra tem uma lista de e-mails permitidos? | Segue para o passo 5 | ✅ Passa |
 | 5 | O endereço está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: endereço não permitido |
 
-Os espaços no início e no fim são ignorados.
+Os espaços no início e no fim são ignorados ao verificar o formato. A comparação com a lista permitida usa o valor original completo.
 
 ## Exemplos
 
@@ -40,13 +40,13 @@ Os espaços no início e no fim são ignorados.
 | `apoio@operador.pt` | ✅ Passa | Formato correto |
 | `apoio-operador.pt` | ❌ Problema | Falta a `@` |
 | `apoio@` | ❌ Problema | Falta o domínio |
-| `geral@outro.pt` (lista permitida = `apoio@operador.pt`) | ❌ Problema | Formato válido, mas fora da lista |
+| `geral@outro.pt` (lista permitida = `apoio@operador.pt`) | ❌ Problema | Fora da lista |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Formato inválido | Erro de digitação, `@` em falta ou espaço no meio | Escrever o endereço completo, por exemplo `apoio@operador.pt` |
-| Endereço não permitido | O e-mail é válido mas não está na lista de e-mails permitidos | Usar um e-mail da lista, ou pedir ao administrador que o adicione |
-| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher com o e-mail de apoio ao cliente |
-| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `agency_email` |
+| Formato inválido | Erro de escrita, `@` em falta ou espaço no meio | Escrever em `agency_email` de `agency.txt` o endereço completo, por exemplo `apoio@operador.pt` |
+| Endereço não permitido | O e-mail é válido mas não consta da lista configurada | Usar em `agency_email` de `agency.txt` um e-mail permitido ou rever a lista na configuração da regra |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `agency_email` em `agency.txt` com o e-mail de apoio ao cliente |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `agency_email` em `agency.txt` |

@@ -1,6 +1,6 @@
 ---
-title: Presença do ficheiro agency.txt
-description: Verifica se o ficheiro agency.txt está presente no conjunto de dados, sendo obrigatório por pré-definição ou consoante a configuração da regra.
+title: Presença do ficheiro de operadores
+description: Verifica se o ficheiro agency.txt está presente no conjunto GTFS quando a configuração da regra o exige ou recomenda.
 ---
 
 ## Propriedades da regra
@@ -9,36 +9,33 @@ description: Verifica se o ficheiro agency.txt está presente no conjunto de dad
 |---|---|
 | Rule ID | `agency_file_missing` |
 | Ficheiro | `agency.txt` |
-| Campo | Aplica-se a todo o ficheiro |
-| Tipo | Não aplicável (regra ao nível do ficheiro) |
-| Severidade | Condicional (obrigatório por pré-definição sem ficheiro de configuração de regras; caso contrário, segue o que a configuração da regra definir) |
+| Campo | Se aplica em todo o ficheiro |
+| Tipo | Ficheiro |
+| Severidade | Obrigatório |
 
 ## Como funciona
 
-Esta regra verifica se o ficheiro `agency.txt` existe no conjunto de dados. Quando não há nenhum ficheiro de configuração de regras, `agency.txt` é sempre obrigatório. Quando há configuração, o que acontece depende do que essa configuração define para este ficheiro: pode ser obrigatório, recomendado, ou não verificado. A regra **não confirma** que o conteúdo do ficheiro está correto, só que o ficheiro existe.
+Quando a regra passa, o ficheiro `agency.txt` está presente ou a configuração da regra não exige a sua presença. A regra **não verifica o conteúdo nem as colunas do ficheiro**. Essas verificações pertencem a outras regras.
 
-A regra avalia o conjunto de dados uma única vez, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+A regra avalia a presença do ficheiro `agency.txt` no conjunto GTFS, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | Foi fornecido ao validador um ficheiro de configuração de regras? | Segue para o passo 2 | `agency.txt` é tratado como obrigatório (comportamento pré-definido); segue para o passo 4 |
-| 2 | A configuração da regra define `agency.txt` como obrigatório? | `agency.txt` é tratado como obrigatório; segue para o passo 4 | Segue para o passo 3 |
-| 3 | A configuração da regra define `agency.txt` como recomendado? | `agency.txt` é tratado como recomendado; segue para o passo 4 | ✅ Passa (a regra não verifica este ficheiro) |
-| 4 | O ficheiro `agency.txt` existe no conjunto de dados? | ✅ Passa | ❌ Reporta o problema, como obrigatório ou recomendado consoante os passos anteriores |
+| 1 | O ficheiro `agency.txt` está presente? | ✅ Passa | Segue para o passo 2 |
+| 2 | A configuração da regra exige o ficheiro? | ❌ Reporta o problema: ficheiro obrigatório em falta | Segue para o passo 3 |
+| 3 | A configuração da regra recomenda o ficheiro? | ❌ Reporta o problema: ficheiro recomendado em falta | ✅ Passa |
 
 ## Exemplos
 
-| Situação | Resultado | Porquê |
+| Valor | Resultado | Porquê |
 |---|---|---|
-| Sem ficheiro de configuração de regras; `agency.txt` presente | ✅ Passa | Comportamento pré-definido, ficheiro presente |
-| Sem ficheiro de configuração de regras; `agency.txt` ausente | ❌ Problema | `agency.txt` é sempre obrigatório por pré-definição |
-| Com configuração; `agency.txt` marcado como obrigatório; ficheiro ausente | ❌ Problema | A configuração da regra marca o ficheiro como obrigatório |
-| Com configuração; `agency.txt` marcado como recomendado; ficheiro ausente | ❌ Problema (aviso) | A configuração da regra recomenda o ficheiro |
-| Com configuração; `agency.txt` sem indicação; ficheiro ausente | ✅ Passa | A regra não verifica ficheiros sem indicação explícita na configuração |
+| `agency.txt` presente | ✅ Passa | O ficheiro existe |
+| `agency.txt` ausente e obrigatório | ❌ Problema | Falta um ficheiro obrigatório |
+| `agency.txt` ausente e recomendado | ❌ Problema | Falta um ficheiro recomendado |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Ficheiro em falta (obrigatório) | `agency.txt` não está no conjunto de dados, e é obrigatório por pré-definição ou porque a configuração da regra o marca como obrigatório | Adicionar o ficheiro `agency.txt` ao conjunto de dados |
-| Ficheiro em falta (recomendado) | `agency.txt` não está no conjunto de dados e a configuração da regra recomenda a sua presença | Adicionar o ficheiro `agency.txt`, ou aceitar o aviso se a ausência for intencional |
+| Ficheiro obrigatório em falta | O conjunto GTFS não inclui `agency.txt` e a configuração da regra exige-o | Adicionar o ficheiro `agency.txt` ao conjunto GTFS |
+| Ficheiro recomendado em falta | O conjunto GTFS não inclui `agency.txt` e a configuração da regra recomenda-o | Adicionar o ficheiro `agency.txt` ao conjunto GTFS ou rever a configuração da regra |
