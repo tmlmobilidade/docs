@@ -1,6 +1,6 @@
 ---
-title: E-mail de contacto técnico
-description: Verifica se o e-mail de contacto técnico indicado em feed_info.txt está bem escrito.
+title: Correio eletrónico técnico do conjunto
+description: Verifica se o endereço de correio eletrónico para questões técnicas do conjunto está bem escrito.
 ---
 
 ## Propriedades da regra
@@ -13,35 +13,36 @@ description: Verifica se o e-mail de contacto técnico indicado em feed_info.txt
 | Tipo | E-mail |
 | Severidade | Opcional |
 
-**Descrição do campo:** endereço de e-mail para comunicar sobre o conjunto de dados GTFS e as práticas de publicação. É um contacto técnico para as aplicações que usam os dados. O contacto de apoio ao cliente deve ficar em `agency.txt`. Recomenda-se preencher pelo menos um dos campos `feed_contact_email` ou `feed_contact_url`.
+**Descrição do campo:** endereço de correio eletrónico para questões sobre o conjunto GTFS e as práticas de publicação. É um contacto técnico para aplicações que consomem GTFS. O contacto de apoio ao cliente deve ser indicado em `agency.txt`. Recomenda-se o preenchimento de `feed_contact_email` ou `feed_contact_url`.
 
 Mais informação em [feed_info.txt](/reference/gtfs/schedule/feed_info).
 
 ## Como funciona
 
-Se o conjunto de dados indicar um e-mail de contacto técnico, o valor tem de ser um endereço bem escrito. A regra **não confirma que a caixa de correio existe**, só que o formato está correto. A regra também não verifica se o `feed_contact_url` está preenchido.
+Quando a regra passa, `feed_contact_email` respeita a configuração e tem a estrutura de um endereço de correio eletrónico. A regra **não confirma que a caixa de correio existe nem exige que pelo menos um dos dois contactos técnicos esteja preenchido**.
 
 A regra avalia cada linha do `feed_info.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
 | 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
-| 2 | O texto é um endereço de e-mail válido? | ✅ Passa | ❌ Reporta o problema: formato inválido |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O texto pode ser interpretado como um endereço de correio eletrónico? | ✅ Passa | ❌ Reporta o problema: endereço inválido |
 
-Os espaços no início e no fim são ignorados.
+Os espaços no início e no fim são ignorados durante a verificação. Uma linha com todos os campos vazios é ignorada antes desta regra.
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `dados@operador.pt` | ✅ Passa | Formato correto |
-| `dados-operador.pt` | ❌ Problema | Falta a `@` |
-| `@operador.pt` | ❌ Problema | Falta a parte antes da `@` |
+| `dados@operador.pt` | ✅ Passa | Formato reconhecido |
 | `dados@` | ❌ Problema | Falta o domínio |
+| `dados@operador.pt` quando o campo é proibido | ❌ Problema | Campo preenchido indevidamente |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Formato inválido | Erro de digitação, `@` em falta ou espaço no meio | Escrever no `feed_contact_email` do `feed_info.txt` o endereço completo, por exemplo `dados@operador.pt` |
-| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `feed_contact_email` do `feed_info.txt` com o e-mail da equipa responsável pelos dados |
+| Endereço inválido | Erro de escrita ou domínio em falta | Corrigir `feed_contact_email` em `feed_info.txt` para um endereço completo, por exemplo `dados@operador.pt` |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `feed_contact_email` em `feed_info.txt` com o contacto técnico do conjunto |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `feed_contact_email` em `feed_info.txt` |

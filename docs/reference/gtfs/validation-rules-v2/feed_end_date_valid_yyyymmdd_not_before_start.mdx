@@ -1,6 +1,6 @@
 ---
-title: Data de fim do conjunto de dados
-description: Verifica se a data de fim do período coberto pelo conjunto de dados está preenchida em feed_info.txt e é uma data real no formato AAAAMMDD.
+title: Data final do período
+description: Verifica se a data final do período de informação fiável usa o formato AAAAMMDD e representa uma data real.
 ---
 
 ## Propriedades da regra
@@ -13,33 +13,42 @@ description: Verifica se a data de fim do período coberto pelo conjunto de dado
 | Tipo | Data |
 | Severidade | Obrigatório |
 
-**Descrição do campo:** último dia do período em que o conjunto de dados tem horários completos e fiáveis. O período vai do início do dia `feed_start_date` até ao fim do dia `feed_end_date`. O `feed_end_date` não pode ser anterior ao `feed_start_date`. Se o período se estender para lá das datas ativas de `calendar.txt` e `calendar_dates.txt`, o conjunto de dados afirma que não há serviço nesses dias.
+**Descrição do campo:** fim do período em que o conjunto fornece horários completos e fiáveis. Esta data não deve ser anterior a `feed_start_date`. As datas fora do período podem conter informação futura não definitiva.
 
 Mais informação em [feed_info.txt](/reference/gtfs/schedule/feed_info).
 
 ## Como funciona
 
-Quando a regra passa, o `feed_end_date` tem uma data real escrita com 8 algarismos, no formato AAAAMMDD. A regra só é avaliada quando o `feed_start_date` passa na respetiva regra. A regra **não compara esta data com o `feed_start_date`**: uma data de fim anterior à de início não é reportada.
+Quando a regra passa, `feed_end_date` respeita a configuração, tem oito algarismos e representa uma data real. A validação de `feed_start_date` tem de passar primeiro. A regra **não compara a ordem das duas datas, apesar do nome da regra e da descrição do campo**.
 
 A regra avalia cada linha do `feed_info.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O campo está vazio? | ❌ Reporta o problema: campo em falta | Segue para o passo 2 |
-| 2 | O valor tem 8 carateres e é uma data real no formato AAAAMMDD? | ✅ Passa | ❌ Reporta o problema: data inválida |
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor tem o formato `AAAAMMDD` e representa uma data real? | ✅ Passa | ❌ Reporta o problema: data inválida |
+
+Os espaços não são removidos. Uma linha com todos os campos vazios é ignorada antes desta regra.
+
+## Como se relacionam
+
+`feed_end_date` só é avaliado depois de `feed_start_date` passar a respetiva validação. A implementação atual não confirma que a data final é igual ou posterior à data inicial.
 
 ## Exemplos
 
-| Valor | Resultado | Porquê |
-|---|---|---|
-| `20261231` | ✅ Passa | Data real no formato AAAAMMDD |
-| vazio | ❌ Problema | Campo obrigatório |
-| `31/12/2026` | ❌ Problema | Formato errado |
-| `20261301` | ❌ Problema | O mês 13 não existe |
+| `feed_end_date` | `feed_start_date` | Resultado | Porquê |
+|---|---|---|---|
+| `20241231` | `20240101` | ✅ Passa | Data final válida |
+| `20240101` | `20241231` | ✅ Passa | A ordem não é comparada |
+| `20240230` | `20240101` | ❌ Problema | Dia inexistente |
+| campo vazio | `20240101` | ❌ Problema | Falta uma data obrigatória |
+| `20241231` quando o campo é proibido | `20240101` | ❌ Problema | Campo preenchido indevidamente |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Data inválida | Data com separadores, dia ou mês trocados ou dia que não existe | Escrever no `feed_end_date` do `feed_info.txt` a data com 8 algarismos, ano, mês e dia, por exemplo `20261231` |
-| Campo em falta | O campo está vazio | Preencher o `feed_end_date` do `feed_info.txt` com o último dia coberto pelo conjunto de dados |
+| Data inválida | O valor não tem oito algarismos ou não representa uma data real | Corrigir `feed_end_date` em `feed_info.txt` para uma data válida no formato `AAAAMMDD` |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `feed_end_date` em `feed_info.txt` com a data final no formato `AAAAMMDD` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `feed_end_date` em `feed_info.txt` |

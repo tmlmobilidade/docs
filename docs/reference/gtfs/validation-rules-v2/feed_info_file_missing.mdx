@@ -1,6 +1,6 @@
 ---
-title: Ficheiro feed_info.txt em falta
-description: Verifica se o ficheiro feed_info.txt existe quando a configuração da regra o exige ou recomenda, ou quando o conjunto de dados tem traduções.
+title: Presença das informações do conjunto
+description: Verifica se feed_info.txt está presente quando é exigido por translations.txt ou pela configuração da regra.
 ---
 
 ## Propriedades da regra
@@ -11,40 +11,40 @@ description: Verifica se o ficheiro feed_info.txt existe quando a configuração
 | Ficheiros | `feed_info.txt`, `translations.txt` |
 | Campo | Se aplica em todo o ficheiro |
 | Tipo | Ficheiro |
-| Severidade | Condicional (obrigatório quando existe `translations.txt`) |
+| Severidade | Condicional (obrigatório quando `translations.txt` contém dados; recomendado nos restantes casos) |
 
 ## Como funciona
 
-Quando a regra passa, o `feed_info.txt` existe, ou a configuração da regra não o exige nem recomenda. A regra **não verifica o conteúdo do ficheiro**: os campos são avaliados pelas outras regras do `feed_info.txt`. Um `feed_info.txt` proibido pela configuração da regra é reportado por outra regra.
+Quando a regra passa, `feed_info.txt` está presente ou a sua ausência é permitida. O ficheiro torna-se obrigatório quando `translations.txt` contém pelo menos uma linha, salvo se a configuração ignorar a regra. A regra **não verifica o conteúdo nem as colunas de `feed_info.txt`**.
 
-A regra avalia o conjunto de dados uma vez, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+A regra avalia a presença do ficheiro `feed_info.txt` no conjunto GTFS, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O `feed_info.txt` existe? | Segue para o passo 3 | Segue para o passo 2 |
-| 2 | A configuração da regra define o ficheiro como obrigatório ou recomendado? | ❌ Reporta o problema: ficheiro em falta | ✅ Passa |
-| 3 | O `translations.txt` tem linhas e o `feed_info.txt` não tem nenhuma? | Segue para o passo 4 | ✅ Passa |
-| 4 | A configuração da regra define o ficheiro como obrigatório ou recomendado? | ❌ Reporta o problema: ficheiro obrigatório com traduções | ✅ Passa |
-
-O problema é reportado no máximo uma vez por conjunto de dados.
+| 1 | O ficheiro `feed_info.txt` está presente? | ✅ Passa | Segue para o passo 2 |
+| 2 | A configuração da regra recomenda o ficheiro? | ❌ Reporta o problema: ficheiro recomendado em falta | Segue para o passo 3 |
+| 3 | A configuração da regra exige o ficheiro? | ❌ Reporta o problema: ficheiro obrigatório em falta | Segue para o passo 4 |
+| 4 | `translations.txt` contém pelo menos uma linha? | Segue para o passo 5 | ✅ Passa |
+| 5 | A configuração da regra ignora a ausência? | ✅ Passa | ❌ Reporta o problema: ficheiro obrigatório com traduções |
 
 ## Como se relacionam
 
-O `feed_info.txt` indica o idioma predefinido dos textos. O `translations.txt` traduz esses textos para outros idiomas. Por isso, quando o `translations.txt` tem linhas, o `feed_info.txt` também tem de ter pelo menos uma linha.
+Quando `translations.txt` contém dados, `feed_info.txt` identifica o editor do conjunto e os idiomas aplicáveis. A ausência de `feed_info.txt` é então tratada como um problema, exceto quando a configuração ignora a regra.
 
 ## Exemplos
 
 | `feed_info.txt` | `translations.txt` | Resultado | Porquê |
 |---|---|---|---|
-| Existe, com uma linha | Qualquer | ✅ Passa | Ficheiro presente |
-| Não existe (configuração da regra não o exige) | Não existe | ✅ Passa | Ficheiro opcional |
-| Não existe (configuração da regra exige o ficheiro) | Não existe | ❌ Problema | Ficheiro obrigatório em falta |
-| Existe, sem linhas (configuração da regra recomenda o ficheiro) | Com linhas | ❌ Problema | Há traduções sem `feed_info.txt` preenchido |
+| presente | presente com dados | ✅ Passa | O ficheiro existe |
+| ausente e opcional | ausente | ✅ Passa | A ausência é permitida |
+| ausente | presente com dados | ❌ Problema | Ficheiro obrigatório com traduções |
+| ausente e obrigatório | ausente | ❌ Problema | Exigido pela configuração |
+| ausente e recomendado | ausente | ❌ Problema | Recomendado pela configuração |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Ficheiro obrigatório em falta | A configuração da regra exige o `feed_info.txt` e o ficheiro não foi incluído | Adicionar o `feed_info.txt` ao conjunto de dados, com pelo menos `feed_publisher_name`, `feed_publisher_url` e `feed_lang` |
-| Ficheiro recomendado em falta | A configuração da regra recomenda o `feed_info.txt` e o ficheiro não foi incluído | Adicionar o `feed_info.txt` ao conjunto de dados |
-| Ficheiro obrigatório com traduções | O `translations.txt` tem linhas, mas o `feed_info.txt` falta ou está vazio | Adicionar ao `feed_info.txt` uma linha com o `feed_lang` preenchido, ou remover o `translations.txt` |
+| Ficheiro obrigatório com traduções | `translations.txt` contém dados, mas falta `feed_info.txt` | Adicionar `feed_info.txt` ao conjunto GTFS ou remover as traduções que tornam o ficheiro obrigatório |
+| Ficheiro obrigatório em falta | A configuração da regra exige `feed_info.txt` | Adicionar `feed_info.txt` ao conjunto GTFS ou rever a configuração da regra |
+| Ficheiro recomendado em falta | A configuração da regra recomenda `feed_info.txt` | Adicionar `feed_info.txt` ao conjunto GTFS ou rever a configuração da regra |

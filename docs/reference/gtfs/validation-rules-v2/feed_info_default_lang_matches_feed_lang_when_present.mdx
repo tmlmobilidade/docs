@@ -1,6 +1,6 @@
 ---
-title: Idioma predefinido para o passageiro
-description: Verifica se o idioma predefinido indicado em feed_info.txt é um código de idioma válido.
+title: Idioma para destinatário desconhecido
+description: Verifica se o idioma usado quando a preferência do passageiro é desconhecida tem um código reconhecido.
 ---
 
 ## Propriedades da regra
@@ -13,35 +13,41 @@ description: Verifica se o idioma predefinido indicado em feed_info.txt é um c�
 | Tipo | Código de idioma |
 | Severidade | Opcional |
 
-**Descrição do campo:** idioma a usar quando a aplicação não conhece o idioma do passageiro. Muitas vezes é `en` (inglês).
+**Descrição do campo:** define o idioma usado quando a aplicação não conhece a preferência linguística do passageiro. É frequente usar `en`, correspondente a inglês.
 
 Mais informação em [feed_info.txt](/reference/gtfs/schedule/feed_info).
 
 ## Como funciona
 
-Quando a regra passa, o `default_lang` tem um código de idioma de duas letras reconhecido. A regra só é avaliada quando o `feed_lang` passa na respetiva regra. A regra **não compara o `default_lang` com o `feed_lang`** e não aceita o valor `mul` nem códigos com região, como `pt-PT`.
+Quando a regra passa, `default_lang` respeita a configuração e coincide com um código ISO 639-1 de duas letras. A comparação não distingue maiúsculas de minúsculas. A regra **não exige que `default_lang` seja igual a `feed_lang`, apesar do nome da regra**.
 
 A regra avalia cada linha do `feed_info.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
 | 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
-| 2 | O valor é um código de idioma de duas letras reconhecido? | ✅ Passa | ❌ Reporta o problema: código de idioma inválido |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor, convertido para minúsculas, consta da lista ISO 639-1 de duas letras? | ✅ Passa | ❌ Reporta o problema: idioma inválido |
 
-Maiúsculas e minúsculas são equivalentes: `EN` e `en` são aceites da mesma forma.
+A regra só é avaliada depois de `feed_lang` passar a respetiva validação. Os espaços não são removidos. Uma linha com todos os campos vazios é ignorada antes desta regra.
+
+## Como se relacionam
+
+`default_lang` pode ser diferente de `feed_lang` e ainda passar. A validação de `feed_lang` apenas tem de passar antes de esta regra ser avaliada.
 
 ## Exemplos
 
-| Valor | Resultado | Porquê |
-|---|---|---|
-| `en` | ✅ Passa | Código de duas letras válido |
-| `en-GB` | ❌ Problema | Código com região não aceite |
-| `mul` | ❌ Problema | `mul` não é aceite neste campo |
-| `inglês` | ❌ Problema | Nome do idioma em vez do código |
+| `default_lang` | `feed_lang` | Resultado | Porquê |
+|---|---|---|---|
+| `en` | `pt` | ✅ Passa | Ambos são códigos reconhecidos |
+| campo vazio | `pt` | ✅ Passa | Campo opcional |
+| `mul` | `pt` | ❌ Problema | Código de três letras não aceite |
+| `en` quando o campo é proibido | `pt` | ❌ Problema | Campo preenchido indevidamente |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Código de idioma inválido | Nome do idioma por extenso, código com região ou `mul` | Escrever no `default_lang` do `feed_info.txt` um código de duas letras, por exemplo `en` |
-| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `default_lang` do `feed_info.txt` com o código do idioma a mostrar por omissão |
+| Código de idioma inválido | O valor não é um código ISO 639-1 de duas letras | Corrigir `default_lang` em `feed_info.txt` para um código reconhecido, por exemplo `en` |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `default_lang` em `feed_info.txt` com um código de idioma reconhecido |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `default_lang` em `feed_info.txt` |

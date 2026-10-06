@@ -1,6 +1,6 @@
 ---
-title: Versão do conjunto de dados
-description: Verifica se a versão do conjunto de dados está preenchida em feed_info.txt, quando a configuração da regra a exige ou recomenda.
+title: Versão do conjunto
+description: Verifica se a versão do conjunto está preenchida quando a configuração da regra a exige.
 ---
 
 ## Propriedades da regra
@@ -13,30 +13,35 @@ description: Verifica se a versão do conjunto de dados está preenchida em feed
 | Tipo | Texto |
 | Severidade | Opcional |
 
-**Descrição do campo:** texto que indica a versão atual do conjunto de dados GTFS. As aplicações que usam os dados podem mostrar este valor. Assim, quem publica os dados consegue confirmar se a versão mais recente já foi carregada.
+**Descrição do campo:** texto que identifica a versão atual do conjunto GTFS. As aplicações podem apresentá-lo para ajudar a confirmar se incorporaram a versão mais recente.
 
 Mais informação em [feed_info.txt](/reference/gtfs/schedule/feed_info).
 
 ## Como funciona
 
-Quando a regra passa, o `feed_version` tem texto, ou a configuração da regra não o exige. A regra **não verifica o formato da versão**: qualquer texto é aceite. Também não compara a versão com a de um envio anterior.
+Quando a regra passa, `feed_version` respeita a configuração e contém algum texto quando é exigido. A regra **não impõe um formato, não compara versões e não verifica se o identificador é único**.
 
 A regra avalia cada linha do `feed_info.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | ✅ Passa |
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | ✅ Passa |
+
+Os espaços não são removidos. Um valor composto apenas por espaços conta como preenchido. Uma linha com todos os campos vazios é ignorada antes desta regra.
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `2026.09.25` | ✅ Passa | Versão preenchida |
-| `v3` | ✅ Passa | Qualquer texto é aceite |
-| vazio (configuração da regra exige o campo) | ❌ Problema | Campo em falta |
+| `2024.10.1` | ✅ Passa | Identificador preenchido |
+| três espaços | ✅ Passa | Os espaços contam como texto |
+| campo vazio quando é obrigatório | ❌ Problema | Falta a versão exigida |
+| `2024.10.1` quando o campo é proibido | ❌ Problema | Campo preenchido indevidamente |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `feed_version` do `feed_info.txt` com a versão do conjunto de dados, por exemplo a data de publicação `2026.09.25` |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `feed_version` em `feed_info.txt` com o identificador da versão do conjunto |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `feed_version` em `feed_info.txt` |
