@@ -1,0 +1,42 @@
+---
+title: Presença do ficheiro de tarifas
+description: Verifica se fare_attributes.txt está presente quando a configuração da regra o exige ou recomenda.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `fare_attributes_file_missing` |
+| Ficheiro | `fare_attributes.txt` |
+| Campo | Se aplica em todo o ficheiro |
+| Tipo | Ficheiro |
+| Severidade | Opcional |
+
+## Como funciona
+
+Quando a regra passa, `fare_attributes.txt` está presente ou a configuração da regra permite a sua ausência. A regra **não verifica o conteúdo nem as colunas do ficheiro**. Essas verificações pertencem a outras regras.
+
+A regra avalia a presença do ficheiro `fare_attributes.txt` no conjunto GTFS, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O ficheiro `fare_attributes.txt` está presente? | ✅ Passa | Segue para o passo 2 |
+| 2 | A configuração da regra recomenda o ficheiro? | ❌ Reporta o problema: ficheiro recomendado em falta | Segue para o passo 3 |
+| 3 | A configuração da regra exige o ficheiro? | ❌ Reporta o problema: ficheiro obrigatório em falta | ✅ Passa |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `fare_attributes.txt` presente | ✅ Passa | O ficheiro existe |
+| `fare_attributes.txt` ausente e opcional | ✅ Passa | A ausência é permitida |
+| `fare_attributes.txt` ausente e obrigatório | ❌ Problema | Falta um ficheiro obrigatório |
+| `fare_attributes.txt` ausente e recomendado | ❌ Problema | Falta um ficheiro recomendado |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Ficheiro obrigatório em falta | A configuração da regra exige `fare_attributes.txt` | Adicionar `fare_attributes.txt` ao conjunto GTFS ou rever a configuração da regra |
+| Ficheiro recomendado em falta | A configuração da regra recomenda `fare_attributes.txt` | Adicionar `fare_attributes.txt` ao conjunto GTFS ou rever a configuração da regra |

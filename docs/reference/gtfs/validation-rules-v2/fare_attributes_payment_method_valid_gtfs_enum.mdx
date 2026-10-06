@@ -1,6 +1,6 @@
 ---
 title: Momento de pagamento da tarifa
-description: Verifica se o payment_method de fare_attributes.txt está preenchido com 0 ou 1.
+description: Verifica se o método de pagamento indica pagamento a bordo ou antes do embarque.
 ---
 
 ## Propriedades da regra
@@ -10,36 +10,41 @@ description: Verifica se o payment_method de fare_attributes.txt está preenchid
 | Rule ID | `fare_attributes_payment_method_valid_gtfs_enum` |
 | Ficheiro | `fare_attributes.txt` |
 | Campo | `payment_method` |
-| Tipo | Enumeração (`0` ou `1`) |
+| Tipo | Enumeração |
 | Severidade | Obrigatório |
 
-**Descrição do campo:** indica quando a tarifa tem de ser paga. O valor `0` significa que a tarifa é paga a bordo. O valor `1` significa que a tarifa tem de ser paga antes de embarcar.
+**Descrição do campo:** indica quando a tarifa tem de ser paga. O valor `0` indica pagamento a bordo. O valor `1` indica pagamento antes do embarque.
 
 Mais informação em [fare_attributes.txt](/reference/gtfs/schedule/fare_attributes).
 
 ## Como funciona
 
-Cada linha do `fare_attributes.txt` tem de ter um `payment_method` preenchido com `0` ou `1`. A regra **não verifica se o momento de pagamento corresponde ao que acontece na prática**. Só verifica se o valor é um dos dois aceites.
+Quando a regra passa, `payment_method` está presente quando exigido e tem o valor `0` ou `1`. A regra **não verifica o meio de pagamento nem a forma de validação do título**.
 
 A regra avalia cada linha do `fare_attributes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O `payment_method` está vazio? | ❌ Reporta o problema: `payment_method` obrigatório | Segue para o passo 2 |
-| 2 | O `payment_method` é `0` ou `1`? | ✅ Passa | ❌ Reporta o problema: valor inválido |
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor é `0` ou `1`? | ✅ Passa | ❌ Reporta o problema: método de pagamento inválido |
+
+O valor é interpretado como número inteiro antes desta regra. Os espaços não são removidos antes dessa interpretação.
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `0` | ✅ Passa | Pago a bordo |
-| `1` | ✅ Passa | Pago antes de embarcar |
-| `2` | ❌ Problema | Só são aceites `0` e `1` |
-| *(vazio)* | ❌ Problema | Falta o valor |
+| `0` | ✅ Passa | Pagamento a bordo |
+| `1` | ✅ Passa | Pagamento antes do embarque |
+| `2` | ❌ Problema | Valor não previsto |
+| campo vazio | ❌ Problema | Falta um valor obrigatório |
+| `0` quando o campo é proibido | ❌ Problema | Campo preenchido indevidamente |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| `payment_method` obrigatório | A linha não tem `payment_method` | Preencher o `payment_method` em `fare_attributes.txt` com `0` (pago a bordo) ou `1` (pago antes de embarcar) |
-| Valor inválido | O valor é um número diferente de `0` e `1` | Corrigir o `payment_method` em `fare_attributes.txt` para `0` ou `1` |
+| Método de pagamento inválido | O valor é diferente de `0` e `1` | Alterar `payment_method` em `fare_attributes.txt` para `0` ou `1` |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `payment_method` em `fare_attributes.txt` com `0` ou `1` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `payment_method` em `fare_attributes.txt` |

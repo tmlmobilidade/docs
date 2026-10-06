@@ -1,6 +1,6 @@
 ---
-title: Duração da transferência
-description: Verifica se o transfer_duration de fare_attributes.txt, quando preenchido, é um número de segundos não negativo.
+title: Duração de validade do transbordo
+description: Verifica se a duração indicada em fare_attributes.txt está expressa em segundos e não é negativa.
 ---
 
 ## Propriedades da regra
@@ -13,37 +13,37 @@ description: Verifica se o transfer_duration de fare_attributes.txt, quando pree
 | Tipo | Número inteiro não negativo |
 | Severidade | Opcional |
 
-**Descrição do campo:** tempo, em segundos, até a transferência expirar. Quando `transfers` é `0`, o campo pode indicar durante quanto tempo o bilhete é válido, ou ficar vazio.
+**Descrição do campo:** duração, em segundos, até um transbordo expirar. Quando `transfers` é `0`, pode indicar a validade do título ou ficar vazio.
 
 Mais informação em [fare_attributes.txt](/reference/gtfs/schedule/fare_attributes).
 
 ## Como funciona
 
-Se o `transfer_duration` estiver preenchido, o valor não pode ser negativo. A regra **não compara o valor com o campo `transfers`** nem verifica se a duração é realista. Só verifica se o número é zero ou positivo.
+Se existir uma duração, o valor tem de ser um número inteiro igual ou superior a zero. A configuração da regra pode exigir, recomendar ou proibir o campo. A regra **não verifica o valor de `transfers` nem impõe um limite máximo**.
 
 A regra avalia cada linha do `fare_attributes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O `transfer_duration` está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
 | 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
-| 3 | O `transfer_duration` é um número negativo? | ❌ Reporta o problema: valor inválido | ✅ Passa |
+| 3 | O valor é inferior a zero? | ❌ Reporta o problema: duração negativa | ✅ Passa |
 
-Sem configuração, um campo vazio é aceite.
+O valor é interpretado como número inteiro antes desta regra. Os espaços não são removidos antes dessa interpretação.
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `3600` | ✅ Passa | Uma hora, em segundos |
-| `0` | ✅ Passa | Zero não é negativo |
-| *(vazio)* | ✅ Passa | Campo opcional |
-| `-60` | ❌ Problema | Valor negativo |
+| `3600` | ✅ Passa | Uma hora em segundos |
+| `0` | ✅ Passa | Zero é aceite |
+| `-1` | ❌ Problema | Valor negativo |
+| `3600` quando o campo é proibido | ❌ Problema | Campo preenchido indevidamente |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Valor inválido | O `transfer_duration` é um número negativo | Em `fare_attributes.txt`, escrever no `transfer_duration` um número de segundos igual ou superior a `0`, por exemplo `3600` |
-| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `transfer_duration` em `fare_attributes.txt` com a duração em segundos |
+| Duração negativa | O valor é inferior a zero | Corrigir `transfer_duration` em `fare_attributes.txt` para zero ou um número positivo de segundos |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `transfer_duration` em `fare_attributes.txt` com a duração em segundos |
 | Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `transfer_duration` em `fare_attributes.txt` |
