@@ -1,6 +1,6 @@
 ---
 title: Zona de destino da tarifa
-description: Verifica se o destination_id de fare_rules.txt, quando preenchido, existe em stops.txt.
+description: Verifica se a zona de destino indicada em fare_rules.txt corresponde a um identificador de stops.txt.
 ---
 
 ## Propriedades da regra
@@ -10,44 +10,45 @@ description: Verifica se o destination_id de fare_rules.txt, quando preenchido, 
 | Rule ID | `fare_rule_destination_id_references_zones_stops` |
 | Ficheiros | `fare_rules.txt`, `stops.txt` |
 | Campo | `destination_id` |
-| Tipo | ID externo (refere uma zona de `stops.txt`) |
+| Tipo | Identificador externo |
 | Severidade | Opcional |
 
-**Descrição do campo:** identifica uma zona de destino. Se uma tarifa tiver várias zonas de destino, cria-se uma linha em `fare_rules.txt` para cada `destination_id`.
+**Descrição do campo:** identifica uma zona de destino. Quando uma classe tarifária aceita vários destinos, deve existir uma linha em `fare_rules.txt` para cada `destination_id`.
 
 Mais informação em [fare_rules.txt](/reference/gtfs/schedule/fare_rules) e [stops.txt](/reference/gtfs/schedule/stops).
 
 ## Como funciona
 
-Se o `destination_id` estiver preenchido, o valor tem de existir em `stops.txt`. Um campo vazio é aceite, salvo se a configuração da regra o exigir ou recomendar. A regra **não verifica se a zona faz sentido para a tarifa**. Só verifica se o valor existe em `stops.txt`.
+Quando a regra passa, `destination_id` está vazio quando permitido ou coincide com um identificador indexado de `stops.txt`. A referência prevista é `zone_id`, mas a pesquisa atual também aceita valores presentes apenas em `stop_id` ou `stop_code`. A regra **não verifica se a zona contém paragens usadas pelo itinerário**.
 
 A regra avalia cada linha do `fare_rules.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O `destination_id` está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
 | 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
-| 3 | O `destination_id` existe em `stops.txt`? | ✅ Passa | ❌ Reporta o problema: valor não encontrado |
+| 3 | O valor coincide com um identificador indexado de `stops.txt`? | ✅ Passa | ❌ Reporta o problema: zona inexistente |
 
-Sem configuração, um campo vazio é aceite.
+O valor é comparado tal como foi escrito. Os espaços e as maiúsculas não são normalizados. Uma linha com todos os campos vazios é ignorada antes desta regra.
 
 ## Como se relacionam
 
-O `destination_id` de cada linha do `fare_rules.txt` tem de existir em `stops.txt`.
+No modelo GTFS, `destination_id` deve coincidir com um `zone_id` de `stops.txt`. A validação atual pesquisa em conjunto os valores de `stop_id`, `zone_id` e `stop_code`.
 
 ## Exemplos
 
-| Valor | Resultado | Porquê |
-|---|---|---|
-| `PV01` (existe em `stops.txt`) | ✅ Passa | Existe em `stops.txt` |
-| `XPTO` (não existe em `stops.txt`) | ❌ Problema | Não existe em `stops.txt` |
-| *(vazio)* | ✅ Passa | Campo opcional |
-| *(vazio)* com campo exigido na configuração | ❌ Problema | A configuração da regra exige o campo |
+| `destination_id` em `fare_rules.txt` | Identificadores em `stops.txt` | Resultado | Porquê |
+|---|---|---|---|
+| `Z2` | `zone_id` = `Z2` | ✅ Passa | Zona existente |
+| campo vazio | `zone_id` = `Z2` | ✅ Passa | Campo opcional |
+| `Z9` | `zone_id` = `Z2` | ❌ Problema | Identificador inexistente |
+| `S2` | apenas `stop_id` = `S2` | ✅ Passa | A pesquisa atual junta os identificadores |
+| `Z2` quando o campo é proibido | `zone_id` = `Z2` | ❌ Problema | Campo preenchido indevidamente |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Valor não encontrado | O valor tem um erro de escrita ou não existe em `stops.txt` | Corrigir o `destination_id` em `fare_rules.txt`, ou adicionar o valor em `stops.txt` |
-| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher o `destination_id` em `fare_rules.txt` |
+| Zona inexistente | O valor não corresponde a nenhum identificador indexado de `stops.txt` | Corrigir `destination_id` em `fare_rules.txt` para um `zone_id` existente em `stops.txt` |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `destination_id` em `fare_rules.txt` com um `zone_id` existente em `stops.txt` |
 | Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `destination_id` em `fare_rules.txt` |

@@ -1,6 +1,6 @@
 ---
-title: Tipo de meio de pagamento
-description: Verifica se o fare_media_type de fare_media.txt está preenchido com um valor entre 0 e 4 e, quando configurado, se é um dos valores permitidos.
+title: Tipo de suporte tarifário
+description: Verifica se o tipo de suporte tarifário usa um valor previsto pelo GTFS e permitido pela configuração da regra.
 ---
 
 ## Propriedades da regra
@@ -10,45 +10,44 @@ description: Verifica se o fare_media_type de fare_media.txt está preenchido co
 | Rule ID | `fare_media_type_valid` |
 | Ficheiro | `fare_media.txt` |
 | Campo | `fare_media_type` |
-| Tipo | Enumeração (`0` a `4`) |
+| Tipo | Enumeração |
 | Severidade | Obrigatório |
 
-**Descrição do campo:** tipo de meio de pagamento.
-
-- `0`: nenhum. Não há meio de pagamento envolvido, por exemplo pagar em dinheiro ao motorista sem bilhete físico.
-- `1`: bilhete de papel que permite um número de viagens pré-compradas ou viagens ilimitadas num período fixo.
-- `2`: cartão de transporte com bilhetes, passes ou dinheiro guardados.
-- `3`: cEMV (pagamento sem contacto Europay, Mastercard e Visa) usado como suporte de bilhética baseada em conta.
-- `4`: aplicação móvel com cartões, bilhetes, passes ou dinheiro virtuais guardados.
+**Descrição do campo:** indica o tipo de suporte tarifário. O valor `0` representa a ausência de suporte, como um pagamento em numerário sem título físico. O valor `1` representa um título físico em papel. O valor `2` representa um cartão de transporte físico. O valor `3` representa um cartão bancário sem contacto cEMV usado na bilhética baseada em conta. O valor `4` representa uma aplicação móvel.
 
 Mais informação em [fare_media.txt](/reference/gtfs/schedule/fare_media).
 
 ## Como funciona
 
-Cada linha do `fare_media.txt` tem de ter um `fare_media_type` entre `0` e `4`. Se a configuração da regra tiver uma lista de valores permitidos, o valor também tem de constar dessa lista. A regra **não verifica se o tipo corresponde ao meio de pagamento real**.
+Quando a regra passa, `fare_media_type` está presente quando exigido e tem um valor entre `0` e `4`. Se a configuração da regra limitar os tipos permitidos, o valor também pertence a essa lista. A regra **não verifica se o nome ou os produtos associados são adequados ao tipo**.
 
 A regra avalia cada linha do `fare_media.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O `fare_media_type` está vazio? | ❌ Reporta o problema: `fare_media_type` obrigatório | Segue para o passo 2 |
-| 2 | O `fare_media_type` é `0`, `1`, `2`, `3` ou `4`? | Segue para o passo 3 | ❌ Reporta o problema: valor inválido |
-| 3 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 4 | ✅ Passa |
-| 4 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor é `0`, `1`, `2`, `3` ou `4`? | Segue para o passo 4 | ❌ Reporta o problema: tipo inválido |
+| 4 | A configuração da regra tem uma lista de tipos permitidos? | Segue para o passo 5 | ✅ Passa |
+| 5 | O valor está na lista, ou a lista aceita todos os valores? | ✅ Passa | ❌ Reporta o problema: tipo não permitido |
+
+O valor é interpretado como número inteiro antes desta regra. Os espaços não são removidos antes dessa interpretação. Se o texto não puder ser interpretado como inteiro, a leitura reporta outro problema antes desta regra.
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `2` | ✅ Passa | Cartão de transporte |
-| `5` | ❌ Problema | Só são aceites valores de `0` a `4` |
-| *(vazio)* | ❌ Problema | Falta o valor |
-| `3` (lista permitida = `2`, `4`) | ❌ Problema | Valor válido, mas fora da lista |
+| `2` | ✅ Passa | Cartão de transporte físico |
+| `5` | ❌ Problema | Valor não previsto pelo GTFS |
+| `4` com lista permitida `0`, `2` | ❌ Problema | Valor fora da lista |
+| campo vazio | ❌ Problema | Falta um valor obrigatório |
+| `2` quando o campo é proibido | ❌ Problema | Campo preenchido indevidamente |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| `fare_media_type` obrigatório | A linha não tem `fare_media_type` | Preencher o `fare_media_type` em `fare_media.txt` com um valor de `0` a `4` |
-| Valor inválido | O valor é um número fora do intervalo `0` a `4` | Corrigir o `fare_media_type` em `fare_media.txt` para `0`, `1`, `2`, `3` ou `4` |
-| Valor não permitido | O valor é válido, mas a configuração da regra não o permite | Usar um valor da lista permitida, ou pedir ao administrador que o adicione |
+| Tipo inválido | O valor é diferente de `0`, `1`, `2`, `3` e `4` | Alterar `fare_media_type` em `fare_media.txt` para um valor entre `0` e `4` |
+| Tipo não permitido | O valor é válido no GTFS, mas não consta da lista definida na configuração da regra | Alterar `fare_media_type` em `fare_media.txt` para um valor permitido ou rever a lista da configuração |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `fare_media_type` em `fare_media.txt` com um valor entre `0` e `4` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `fare_media_type` em `fare_media.txt` |
