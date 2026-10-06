@@ -1,6 +1,6 @@
 ---
 title: Hora de fim da frequência
-description: Verifica se o end_time de frequencies.txt está preenchido e no formato HH:MM:SS.
+description: Verifica se end_time de frequencies.txt tem oito caracteres e três partes numéricas separadas por dois pontos.
 ---
 
 ## Propriedades da regra
@@ -13,34 +13,37 @@ description: Verifica se o end_time de frequencies.txt está preenchido e no for
 | Tipo | Hora |
 | Severidade | Obrigatório |
 
-**Descrição do campo:** hora a que o serviço passa a ter um intervalo diferente, ou termina, na primeira paragem da viagem.
+**Descrição do campo:** hora a que o serviço muda para outro intervalo, ou termina, na primeira paragem da viagem.
 
 Mais informação em [frequencies.txt](/reference/gtfs/schedule/frequencies).
 
 ## Como funciona
 
-Cada linha do `frequencies.txt` tem de ter um `end_time` preenchido, escrito como `HH:MM:SS` com exatamente 8 carateres, por exemplo `08:00:00`. A regra **não verifica se as horas, minutos e segundos são possíveis** nem compara o `start_time` com o `end_time`. Só verifica o formato.
+Quando a regra passa, `end_time` tem oito caracteres e três partes numéricas separadas por `:`. A regra **não limita os valores das partes nem confirma que `end_time` é posterior a `start_time`**. A regra só é avaliada depois de `start_time` passar a respetiva validação.
 
 A regra avalia cada linha do `frequencies.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O `end_time` está vazio? | ❌ Reporta o problema: `end_time` obrigatório | Segue para o passo 2 |
-| 2 | O `end_time` tem 8 carateres, com três números separados por `:`? | ✅ Passa | ❌ Reporta o problema: hora inválida |
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor tem oito caracteres, três partes numéricas e dois separadores `:`? | ✅ Passa | ❌ Reporta o problema: formato inválido |
+
+O valor é verificado exatamente como está escrito. Os espaços no início e no fim não são ignorados.
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `08:00:00` | ✅ Passa | Formato correto |
-| `25:30:00` | ✅ Passa | O formato é aceite, mesmo depois das 24 horas |
-| `8:00:00` | ❌ Problema | Tem 7 carateres, falta o zero à esquerda |
-| `08:00` | ❌ Problema | Faltam os segundos |
-| *(vazio)* | ❌ Problema | Falta a hora |
+| `08:00:00` com `start_time` igual a `09:00:00` | ✅ Passa | A regra não compara as duas horas |
+| `10:00` | ❌ Problema | Faltam os segundos |
+| vazio | ❌ Problema | Falta um campo obrigatório |
+| `10:00:00` com o campo proibido | ❌ Problema | A configuração proíbe o campo |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| `end_time` obrigatório | A linha não tem `end_time` | Preencher o `end_time` em `frequencies.txt` no formato `HH:MM:SS` |
-| Hora inválida | Falta o zero à esquerda, os segundos ou os dois pontos | Escrever o `end_time` em `frequencies.txt` como `HH:MM:SS`, por exemplo `08:00:00` |
+| Formato inválido | `end_time` não tem oito caracteres, três partes numéricas ou dois separadores `:` | Corrigir `end_time` em `frequencies.txt` para o formato `HH:MM:SS` |
+| Campo em falta | A configuração da regra exige ou recomenda `end_time` | Preencher `end_time` em `frequencies.txt` no formato `HH:MM:SS` |
+| Campo preenchido quando não devia | A configuração da regra proíbe `end_time` | Remover o valor de `end_time` em `frequencies.txt` ou rever a configuração da regra |

@@ -1,6 +1,6 @@
 ---
-title: Viagem da frequência
-description: Verifica se o trip_id de frequencies.txt está preenchido e existe em trips.txt.
+title: Referência da viagem nas frequências
+description: Verifica se cada trip_id de frequencies.txt identifica uma viagem existente em trips.txt.
 ---
 
 ## Propriedades da regra
@@ -10,39 +10,44 @@ description: Verifica se o trip_id de frequencies.txt está preenchido e existe 
 | Rule ID | `frequencies_trip_id_references_trips_table` |
 | Ficheiros | `frequencies.txt`, `trips.txt` |
 | Campo | `trip_id` |
-| Tipo | ID externo (refere `trip_id` de `trips.txt`) |
+| Tipo | Identificador externo |
 | Severidade | Obrigatório |
 
-**Descrição do campo:** identifica a viagem a que se aplica o intervalo de serviço.
+**Descrição do campo:** identifica a viagem à qual se aplica o intervalo de serviço indicado.
 
 Mais informação em [frequencies.txt](/reference/gtfs/schedule/frequencies) e [trips.txt](/reference/gtfs/schedule/trips).
 
 ## Como funciona
 
-Cada linha do `frequencies.txt` tem de ter um `trip_id` preenchido que exista em `trips.txt`. A regra **não verifica se a viagem tem paragens** em `stop_times.txt` nem se os intervalos da mesma viagem se sobrepõem. Só verifica se o `trip_id` existe.
+Quando a regra passa, o `trip_id` está preenchido e existe em `trips.txt`. A regra **não verifica os horários nem o percurso da viagem**.
 
 A regra avalia cada linha do `frequencies.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O `trip_id` está vazio? | ❌ Reporta o problema: `trip_id` obrigatório | Segue para o passo 2 |
-| 2 | O `trip_id` existe em `trips.txt`? | ✅ Passa | ❌ Reporta o problema: `trip_id` não encontrado |
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | Existe em `trips.txt` uma linha com o mesmo `trip_id`? | ✅ Passa | ❌ Reporta o problema: viagem não encontrada |
+
+O valor é comparado exatamente como está escrito. Os espaços no início e no fim e as diferenças entre maiúsculas e minúsculas não são ignorados.
 
 ## Como se relacionam
 
-Cada `trip_id` de `frequencies.txt` tem de existir como `trip_id` em `trips.txt`.
+Cada `trip_id` de `frequencies.txt` tem de corresponder ao `trip_id` de uma linha de `trips.txt`. Essa correspondência associa os intervalos de serviço à viagem certa.
 
 ## Exemplos
 
-| `trip_id` em `frequencies.txt` | Resultado | Porquê |
-|---|---|---|
-| `VIAGEM_1` (existe em `trips.txt`) | ✅ Passa | Existe em `trips.txt` |
-| `XPTO` (não existe em `trips.txt`) | ❌ Problema | Não existe em `trips.txt` |
-| *(vazio)* | ❌ Problema | Falta o `trip_id` |
+| `trip_id` em `frequencies.txt` | `trip_id` em `trips.txt` | Resultado | Porquê |
+|---|---|---|---|
+| `T1` | `T1` | ✅ Passa | A viagem existe |
+| `T3` | `T1`, `T2` | ❌ Problema | A viagem `T3` não existe |
+| vazio | `T1`, `T2` | ❌ Problema | Falta um campo obrigatório |
+| `T1` com o campo proibido | `T1` | ❌ Problema | A configuração proíbe o campo |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| `trip_id` obrigatório | A linha não tem `trip_id` | Preencher o `trip_id` em `frequencies.txt` com um `trip_id` de `trips.txt` |
-| `trip_id` não encontrado | O valor tem um erro de escrita ou a viagem não está em `trips.txt` | Corrigir o `trip_id` em `frequencies.txt`, ou adicionar a viagem em `trips.txt` |
+| Viagem não encontrada | O `trip_id` de `frequencies.txt` não existe em `trips.txt` | Corrigir `trip_id` em `frequencies.txt` ou adicionar a viagem correspondente a `trips.txt` |
+| Campo em falta | A configuração da regra exige ou recomenda `trip_id` | Preencher `trip_id` em `frequencies.txt` com uma viagem existente em `trips.txt` |
+| Campo preenchido quando não devia | A configuração da regra proíbe `trip_id` | Remover o valor de `trip_id` em `frequencies.txt` ou rever a configuração da regra |

@@ -1,6 +1,6 @@
 ---
 title: Hora de início da frequência
-description: Verifica se o start_time de frequencies.txt está preenchido e no formato HH:MM:SS.
+description: Verifica se start_time de frequencies.txt tem oito caracteres e três partes numéricas separadas por dois pontos.
 ---
 
 ## Propriedades da regra
@@ -13,34 +13,37 @@ description: Verifica se o start_time de frequencies.txt está preenchido e no f
 | Tipo | Hora |
 | Severidade | Obrigatório |
 
-**Descrição do campo:** hora a que o primeiro veículo parte da primeira paragem da viagem, com o intervalo indicado.
+**Descrição do campo:** hora a que o primeiro veículo parte da primeira paragem da viagem com o intervalo de serviço indicado.
 
 Mais informação em [frequencies.txt](/reference/gtfs/schedule/frequencies).
 
 ## Como funciona
 
-Cada linha do `frequencies.txt` tem de ter um `start_time` preenchido, escrito como `HH:MM:SS` com exatamente 8 carateres, por exemplo `08:00:00`. A regra **não verifica se as horas, minutos e segundos são possíveis** nem compara o `start_time` com o `end_time`. Só verifica o formato.
+Quando a regra passa, `start_time` tem oito caracteres e três partes numéricas separadas por `:`. A regra **não limita os valores das horas, dos minutos ou dos segundos**. Por exemplo, aceita `25:00:00` e `00:60:00`.
 
 A regra avalia cada linha do `frequencies.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O `start_time` está vazio? | ❌ Reporta o problema: `start_time` obrigatório | Segue para o passo 2 |
-| 2 | O `start_time` tem 8 carateres, com três números separados por `:`? | ✅ Passa | ❌ Reporta o problema: hora inválida |
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor tem oito caracteres, três partes numéricas e dois separadores `:`? | ✅ Passa | ❌ Reporta o problema: formato inválido |
+
+O valor é verificado exatamente como está escrito. Os espaços no início e no fim não são ignorados.
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `08:00:00` | ✅ Passa | Formato correto |
-| `25:30:00` | ✅ Passa | O formato é aceite, mesmo depois das 24 horas |
-| `8:00:00` | ❌ Problema | Tem 7 carateres, falta o zero à esquerda |
-| `08:00` | ❌ Problema | Faltam os segundos |
-| *(vazio)* | ❌ Problema | Falta a hora |
+| `25:00:00` | ✅ Passa | A regra não limita o valor das horas |
+| `6:30:00` | ❌ Problema | O valor tem apenas sete caracteres |
+| vazio | ❌ Problema | Falta um campo obrigatório |
+| `06:30:00` com o campo proibido | ❌ Problema | A configuração proíbe o campo |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| `start_time` obrigatório | A linha não tem `start_time` | Preencher o `start_time` em `frequencies.txt` no formato `HH:MM:SS` |
-| Hora inválida | Falta o zero à esquerda, os segundos ou os dois pontos | Escrever o `start_time` em `frequencies.txt` como `HH:MM:SS`, por exemplo `08:00:00` |
+| Formato inválido | `start_time` não tem oito caracteres, três partes numéricas ou dois separadores `:` | Corrigir `start_time` em `frequencies.txt` para o formato `HH:MM:SS` |
+| Campo em falta | A configuração da regra exige ou recomenda `start_time` | Preencher `start_time` em `frequencies.txt` no formato `HH:MM:SS` |
+| Campo preenchido quando não devia | A configuração da regra proíbe `start_time` | Remover o valor de `start_time` em `frequencies.txt` ou rever a configuração da regra |

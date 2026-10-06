@@ -1,6 +1,6 @@
 ---
-title: Intervalo entre veículos
-description: Verifica se o headway_secs de frequencies.txt está preenchido e é um número de segundos positivo.
+title: Intervalo positivo entre partidas
+description: Verifica se headway_secs de frequencies.txt é um número inteiro superior a zero.
 ---
 
 ## Propriedades da regra
@@ -13,35 +13,37 @@ description: Verifica se o headway_secs de frequencies.txt está preenchido e é
 | Tipo | Número inteiro positivo |
 | Severidade | Obrigatório |
 
-**Descrição do campo:** intervalo entre veículos, em segundos.
+**Descrição do campo:** intervalo de serviço, em segundos, entre partidas consecutivas.
 
 Mais informação em [frequencies.txt](/reference/gtfs/schedule/frequencies).
 
 ## Como funciona
 
-Cada linha do `frequencies.txt` tem de ter um `headway_secs` preenchido com um número inteiro maior que zero. Apesar do nome da regra, ela **não verifica se o intervalo se alinha com a viagem**. Só verifica se está preenchido e é positivo.
+Quando a regra passa, `headway_secs` é um número inteiro superior a zero. Apesar do nome da regra, esta **não compara o intervalo com a duração da viagem**. A regra só é avaliada depois de `trip_id`, `start_time` e `end_time` passarem as respetivas validações.
 
 A regra avalia cada linha do `frequencies.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O `headway_secs` está vazio? | ❌ Reporta o problema: `headway_secs` obrigatório | Segue para o passo 2 |
-| 2 | O `headway_secs` é zero ou negativo? | ❌ Reporta o problema: valor inválido | ✅ Passa |
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor é superior a zero? | ✅ Passa | ❌ Reporta o problema: valor inválido |
 
-Um valor que não seja um número inteiro, como `abc` ou `600.5`, é tratado pela regra `frequencies_values_parse`.
+O valor não é arredondado. Um valor que não possa ser lido como número inteiro é reportado pela validação de leitura de `frequencies.txt`, antes desta regra.
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `600` | ✅ Passa | Dez minutos, em segundos |
-| `0` | ❌ Problema | Tem de ser maior que zero |
-| `-300` | ❌ Problema | Valor negativo |
-| *(vazio)* | ❌ Problema | Falta o intervalo |
+| `600` | ✅ Passa | É um número inteiro positivo |
+| `0` | ❌ Problema | O valor não é superior a zero |
+| vazio | ❌ Problema | Falta um campo obrigatório |
+| `600` com o campo proibido | ❌ Problema | A configuração proíbe o campo |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| `headway_secs` obrigatório | A linha não tem `headway_secs` | Preencher o `headway_secs` em `frequencies.txt` com o intervalo em segundos, por exemplo `600` |
-| Valor inválido | O `headway_secs` é `0` ou negativo | Escrever o `headway_secs` em `frequencies.txt` com um número inteiro maior que `0` |
+| Valor inválido | `headway_secs` é igual ou inferior a zero | Corrigir `headway_secs` em `frequencies.txt` para um número inteiro superior a zero |
+| Campo em falta | A configuração da regra exige ou recomenda `headway_secs` | Preencher `headway_secs` em `frequencies.txt` com um número inteiro superior a zero |
+| Campo preenchido quando não devia | A configuração da regra proíbe `headway_secs` | Remover o valor de `headway_secs` em `frequencies.txt` ou rever a configuração da regra |
