@@ -1,0 +1,48 @@
+---
+title: Presença das exceções de calendário
+description: Verifica se calendar_dates.txt está presente quando calendar.txt não define o serviço.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `calendar_dates_file_missing` |
+| Ficheiros | `calendar_dates.txt`, `calendar.txt` |
+| Campo | Se aplica em todo o ficheiro |
+| Tipo | Ficheiro |
+| Severidade | Condicional (obrigatório quando `calendar.txt` está ausente) |
+
+## Como funciona
+
+Quando a regra passa, `calendar_dates.txt` está presente, `calendar.txt` está presente sem uma exigência específica, ou a configuração ignora a ausência. Sem configuração, outra regra trata a ausência dos dois ficheiros. Esta regra **não verifica se todas as datas de serviço estão representadas**.
+
+A regra avalia a presença dos ficheiros de calendário no conjunto GTFS, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O ficheiro `calendar_dates.txt` está presente? | ✅ Passa | Segue para o passo 2 |
+| 2 | A configuração da regra recomenda `calendar_dates.txt`? | ❌ Reporta o problema: ficheiro recomendado em falta | Segue para o passo 3 |
+| 3 | A configuração da regra exige `calendar_dates.txt`? | ❌ Reporta o problema: ficheiro obrigatório em falta | Segue para o passo 4 |
+| 4 | O ficheiro `calendar.txt` está presente? | ✅ Passa | Termina sem reportar outro problema nesta regra. Outra regra trata a ausência dos dois ficheiros quando não existe configuração |
+
+## Como se relacionam
+
+`calendar_dates.txt` altera serviços definidos em `calendar.txt` ou, na ausência desse ficheiro, enumera diretamente as datas de serviço. Sem configuração de regras, a regra de presença de `calendar.txt` reporta a ausência dos dois ficheiros.
+
+## Exemplos
+
+| `calendar_dates.txt` | `calendar.txt` | Resultado | Porquê |
+|---|---|---|---|
+| `presente` | `presente` | ✅ Passa | Existem exceções ao calendário semanal |
+| `presente` | `ausente` | ✅ Passa | As datas podem ser definidas diretamente |
+| `ausente` | `presente` | ✅ Passa | Existe calendário semanal |
+| `ausente` | `ausente`, sem configuração de regras | ✅ Passa | Outra regra reporta a ausência dos dois ficheiros |
+| `ausente` | `presente`, mas `calendar_dates.txt` é obrigatório | ❌ Problema | A configuração exige o ficheiro |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Ficheiro obrigatório em falta | A configuração da regra exige `calendar_dates.txt` | Adicionar `calendar_dates.txt` ao conjunto GTFS ou rever a configuração da regra |
+| Ficheiro recomendado em falta | A configuração da regra recomenda `calendar_dates.txt` | Adicionar `calendar_dates.txt` ao conjunto GTFS ou rever a configuração da regra |

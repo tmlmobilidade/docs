@@ -1,6 +1,6 @@
 ---
-title: Ficheiro do calendário semanal em falta
-description: Verifica se o ficheiro calendar.txt existe no feed GTFS.
+title: Presença do calendário semanal
+description: Verifica se calendar.txt está presente quando não existe outro ficheiro que defina as datas de serviço.
 ---
 
 ## Propriedades da regra
@@ -8,39 +8,42 @@ description: Verifica se o ficheiro calendar.txt existe no feed GTFS.
 | Propriedade | Valor |
 |---|---|
 | Rule ID | `calendar_file_missing` |
-| Ficheiro | `calendar.txt` |
+| Ficheiros | `calendar.txt`, `calendar_dates.txt` |
 | Campo | Se aplica em todo o ficheiro |
 | Tipo | Ficheiro |
-| Severidade | Condicional (obrigatório se as datas de serviço não estiverem todas no `calendar_dates.txt`; opcional nos outros casos) |
+| Severidade | Condicional (obrigatório quando `calendar_dates.txt` está ausente) |
 
 ## Como funciona
 
-O feed tem de incluir o `calendar.txt` quando a configuração da regra o exige ou recomenda, ou quando também não tem o `calendar_dates.txt`. A regra **não verifica o conteúdo do ficheiro**, só se ele existe.
+Quando a regra passa, `calendar.txt` está presente, `calendar_dates.txt` está presente sem uma exigência específica, ou a configuração ignora a ausência. Sem configuração, a ausência dos dois ficheiros é um problema. A regra **não verifica o conteúdo nem a cobertura temporal dos ficheiros**.
 
-A regra avalia o feed uma só vez, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+A regra avalia a presença dos ficheiros de calendário no conjunto GTFS, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O feed inclui o `calendar.txt`? | ✅ Passa | Segue para o passo 2 |
-| 2 | A configuração da regra exige ou recomenda o `calendar.txt`? | ❌ Reporta o problema: ficheiro obrigatório ou recomendado em falta | Segue para o passo 3 |
-| 3 | O feed também não tem `calendar_dates.txt`, e a configuração da regra não manda ignorar este problema? | ❌ Reporta o problema: falta `calendar.txt` ou `calendar_dates.txt` | ✅ Passa |
+| 1 | O ficheiro `calendar.txt` está presente? | ✅ Passa | Segue para o passo 2 |
+| 2 | A configuração da regra recomenda `calendar.txt`? | ❌ Reporta o problema: ficheiro recomendado em falta | Segue para o passo 3 |
+| 3 | A configuração da regra exige `calendar.txt`? | ❌ Reporta o problema: ficheiro obrigatório em falta | Segue para o passo 4 |
+| 4 | O ficheiro `calendar_dates.txt` está presente? | ✅ Passa | Segue para o passo 5 |
+| 5 | A validação está a decorrer sem uma configuração de regras? | ❌ Reporta o problema: falta um ficheiro de calendário | Termina sem reportar outro problema nesta regra |
 
-Sem configuração da regra, o passo 3 reporta sempre o problema.
+## Como se relacionam
 
-O problema é reportado uma só vez por ficheiro.
+O conjunto GTFS pode definir o serviço regular em `calendar.txt` ou listar todas as datas em `calendar_dates.txt`. Pelo menos um destes ficheiros tem de estar presente quando não existe uma configuração diferente.
 
 ## Exemplos
 
-| Situação | Resultado | Porquê |
-|---|---|---|
-| Feed com `calendar.txt` | ✅ Passa | O ficheiro existe |
-| Feed sem `calendar.txt`, mas com `calendar_dates.txt` | ✅ Passa | O ficheiro é opcional se houver `calendar_dates.txt` |
-| Feed sem `calendar.txt` e sem `calendar_dates.txt` | ❌ Problema | Falta um dos dois |
-| Feed sem `calendar.txt`, ficheiro exigido | ❌ Problema | Ficheiro obrigatório em falta |
+| `calendar.txt` | `calendar_dates.txt` | Resultado | Porquê |
+|---|---|---|---|
+| `presente` | `ausente` | ✅ Passa | Existe calendário semanal |
+| `ausente` | `presente` | ✅ Passa | As datas podem ser definidas como exceções |
+| `ausente` | `ausente`, sem configuração de regras | ❌ Problema | Falta um ficheiro de calendário |
+| `ausente` | `presente`, mas `calendar.txt` é obrigatório | ❌ Problema | A configuração exige o ficheiro |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Ficheiro obrigatório ou recomendado em falta | O feed não inclui o `calendar.txt` e a configuração da regra exige-o ou recomenda-o | Adicionar ao feed o ficheiro `calendar.txt`, com este nome, e uma linha por serviço com o horário semanal |
-| Falta `calendar.txt` ou `calendar_dates.txt` | O feed não tem nenhum dos dois ficheiros | Adicionar ao feed o `calendar.txt`, ou o `calendar_dates.txt` com todas as datas de serviço |
+| Ficheiro obrigatório em falta | A configuração da regra exige `calendar.txt` | Adicionar `calendar.txt` ao conjunto GTFS ou rever a configuração da regra |
+| Ficheiro recomendado em falta | A configuração da regra recomenda `calendar.txt` | Adicionar `calendar.txt` ao conjunto GTFS ou rever a configuração da regra |
+| Falta um ficheiro de calendário | Nem `calendar.txt` nem `calendar_dates.txt` está presente | Adicionar `calendar.txt` ou `calendar_dates.txt` ao conjunto GTFS |

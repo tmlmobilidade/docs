@@ -1,0 +1,54 @@
+---
+title: Tipo de exceção de serviço
+description: Verifica se cada exceção em calendar_dates.txt adiciona ou remove serviço com um valor aceite.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `calendar_dates_exception_type_add_or_remove_service` |
+| Ficheiro | `calendar_dates.txt` |
+| Campo | `exception_type` |
+| Tipo | Enumeração |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** indica se existe serviço na data do campo `date`. O valor `1` adiciona serviço nessa data. O valor `2` remove serviço nessa data.
+
+Mais informação em [calendar_dates.txt](/reference/gtfs/schedule/calendar_dates).
+
+## Como funciona
+
+Quando a regra passa, `exception_type` está presente quando exigido e tem o valor `1` ou `2`. Sem uma lista específica de valores permitidos, ambos são aceites. A implementação atual **reporta um problema para qualquer lista específica**, mesmo quando o valor consta dessa lista.
+
+A regra avalia cada linha do `calendar_dates.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor é `1` ou `2`? | Segue para o passo 4 | ❌ Reporta o problema: tipo de exceção inválido |
+| 4 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 5 | ✅ Passa |
+| 5 | A lista aceita qualquer valor através de `all_options`? | ✅ Passa | Segue para o passo 6 |
+| 6 | O valor consta da lista específica? | ❌ Reporta uma vez o problema: valor não permitido | ❌ Reporta duas vezes o problema: valor não permitido |
+
+Para comparar com a lista, os valores são representados como `1` e `2`.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `1` sem lista específica | ✅ Passa | Adiciona serviço |
+| campo vazio | ❌ Problema | Falta um valor obrigatório |
+| `3` | ❌ Problema | Valor fora de `1` e `2` |
+| `1` (lista permitida = `1`, `2`) | ❌ Problema | A lista específica é rejeitada pela implementação atual |
+| `2` quando o campo é proibido | ❌ Problema | Campo preenchido indevidamente |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Tipo de exceção inválido | O valor é diferente de `1` e `2` | Alterar `exception_type` em `calendar_dates.txt` para `1` ou `2` |
+| Valor não permitido | A configuração usa uma lista específica, que a implementação atual rejeita | Retirar a lista específica de `exception_type` ou usar `all_options` na configuração da regra |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `exception_type` em `calendar_dates.txt` com `1` ou `2` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `exception_type` em `calendar_dates.txt` |
