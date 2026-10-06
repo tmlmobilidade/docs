@@ -1,6 +1,6 @@
 ---
-title: Página de elegibilidade da categoria
-description: Verifica se o eligibility_url de rider_categories.txt, quando preenchido, é um endereço web http ou https bem escrito.
+title: Ligação de elegibilidade da categoria de passageiro
+description: Verifica se o endereço web de elegibilidade indicado em rider_categories.txt é um URL http ou https bem escrito.
 ---
 
 ## Propriedades da regra
@@ -13,20 +13,21 @@ description: Verifica se o eligibility_url de rider_categories.txt, quando preen
 | Tipo | URL |
 | Severidade | Opcional |
 
-**Descrição do campo:** endereço de uma página web, normalmente do operador, com informação detalhada sobre a categoria de passageiro ou os critérios para a ela pertencer.
+**Descrição do campo:** endereço de uma página web, normalmente do operador, com informação detalhada sobre uma categoria de passageiro e ou com os critérios de elegibilidade.
 
 Mais informação em [rider_categories.txt](/reference/gtfs/schedule/rider_categories).
 
 ## Como funciona
 
-Se o `eligibility_url` estiver preenchido, tem de ser um endereço web bem escrito, a começar por `http://` ou `https://`. Um campo vazio é sempre aceite. A regra **não verifica se a página existe**, só o formato.
+Se o operador indicar um endereço de elegibilidade, o valor tem de ser um URL bem escrito, que começa por `http://` ou `https://` e tem um domínio. A regra **não confirma que a página existe**, só que o formato está correto.
 
 A regra avalia cada linha do `rider_categories.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O `eligibility_url` está vazio? | ✅ Passa | Segue para o passo 2 |
-| 2 | O texto é um endereço web válido, com `http` ou `https`, sem espaços nem carateres proibidos, e com nome de site? | ✅ Passa | ❌ Reporta o problema: URL inválido |
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O texto é um URL `http` ou `https` válido, com domínio e sem espaços nem carateres proibidos? | ✅ Passa | ❌ Reporta o problema: URL inválido |
 
 Os espaços no início e no fim são ignorados.
 
@@ -34,13 +35,15 @@ Os espaços no início e no fim são ignorados.
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `https://www.operador.pt/jovem` | ✅ Passa | Formato correto |
-| *(vazio)* | ✅ Passa | Campo opcional |
-| `www.operador.pt/jovem` | ❌ Problema | Falta `http://` ou `https://` |
-| `https://operador .pt` | ❌ Problema | Tem um espaço |
+| `https://operador.pt/tarifas/jovem` | ✅ Passa | URL completo e correto |
+| `operador.pt` | ❌ Problema | Falta `http://` ou `https://` |
+| `https://` | ❌ Problema | Falta o domínio |
+| `https://operador.pt/pagina com espaço` | ❌ Problema | Tem um espaço |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| URL inválido | Falta `http://` ou `https://`, há espaços ou carateres proibidos | Escrever o `eligibility_url` em `rider_categories.txt` como endereço completo, por exemplo `https://www.operador.pt/jovem` |
+| URL inválido | Falta `http://` ou `https://`, falta o domínio ou existem espaços e carateres como `<` ou `>` | Escrever o endereço completo em `eligibility_url` em `rider_categories.txt`, por exemplo `https://operador.pt/tarifas/jovem` |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `eligibility_url` em `rider_categories.txt` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `eligibility_url` em `rider_categories.txt` |
