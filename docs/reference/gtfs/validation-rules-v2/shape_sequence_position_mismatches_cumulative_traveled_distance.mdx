@@ -1,6 +1,6 @@
 ---
-title: Distância entre pontos consecutivos
-description: Verifica se a distância geográfica entre pontos consecutivos não excede o limite configurado.
+title: Distância entre pontos consecutivos do traçado
+description: Verifica se a distância geográfica entre pontos consecutivos do mesmo traçado respeita o limite configurado.
 ---
 
 ## Propriedades da regra
@@ -9,48 +9,52 @@ description: Verifica se a distância geográfica entre pontos consecutivos não
 |---|---|
 | Rule ID | `shape_sequence_position_mismatches_cumulative_traveled_distance` |
 | Ficheiro | `shapes.txt` |
-| Campos | `shape_id`, `shape_pt_sequence`, `shape_pt_lat`, `shape_pt_lon` |
-| Tipo | Identificador, Número inteiro, Latitude, Longitude |
-| Severidade | Condicional |
+| Campo | `shape_pt_sequence` |
+| Tipo | Número inteiro não negativo |
+| Severidade | Obrigatório |
 
-**Descrição dos campos:**
-
-- `shape_id`: agrupa os pontos da mesma forma.
-- `shape_pt_sequence`: define a ordem dos pontos.
-- `shape_pt_lat`: indica a latitude do ponto.
-- `shape_pt_lon`: indica a longitude do ponto.
+**Descrição do campo:** ordem pela qual os pontos se ligam para formar o traçado. Os valores devem aumentar ao longo do percurso, mas não precisam de ser consecutivos.
 
 Mais informação em [shapes.txt](/reference/gtfs/schedule/shapes).
 
 ## Como funciona
 
-Quando a regra passa, cada intervalo entre coordenadas consecutivas respeita o limite configurado. O limite predefinido é `1000` metros. Apesar do nome, a regra **não usa `shape_dist_traveled`**.
+Nos pares avaliados, a distância geográfica entre pontos consecutivos deve respeitar o limite configurado. A regra usa as coordenadas e a ordem dos pontos; não compara essa distância com `shape_dist_traveled` nem exige o preenchimento desse campo. Também não confirma o percurso real do veículo pelas ruas.
 
-A regra avalia cada grupo de pontos com o mesmo `shape_id`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+**O limite  depende do valor configurado no GO..** Os valores numéricos apresentados nos exemplos são ilustrativos e não constituem limites fixos. Embora exista um valor predefinido, a validação utiliza o limite válido indicado na configuração.
+
+A primeira opção define a distância máxima em metros e tem de ser um número finito superior a zero. Se esta opção faltar ou for inválida, o validador utiliza o limite predefinido.
+
+A regra avalia cada grupo de pontos com o mesmo `shape_id` em `shapes.txt`, seguindo os passos abaixo por ordem.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | A sequência e as duas coordenadas permitem formar o par? | Segue para o passo 2 | Ignora o par ou a forma |
-| 2 | A distância de Haversine excede o limite? | ❌ Reporta o problema | ✅ Passa |
-| 3 | Existem mais de 100 ocorrências? | Resume os problemas por linha | Mantém o detalhe de cada par |
+| 1 | A regra está desativada na configuração? | Termina sem avaliar | Segue para o passo 2 |
+| 2 | O ponto tem `shape_id` preenchido? | Segue para o passo 3 | Exclui o ponto desta avaliação |
+| 3 | O grupo tem sequências em falta, negativas ou repetidas? | Não avalia o grupo; estas situações pertencem a outras regras | Ordena os pontos por `shape_pt_sequence` e segue para o passo 4 |
+| 4 | Existem dois pontos consecutivos para comparar? | Segue para o passo 5 | Termina a avaliação do grupo |
+| 5 | Ambos os pontos têm latitude e longitude válidas? | Calcula a distância geográfica entre eles e segue para o passo 6 | Ignora este par e passa ao seguinte |
+| 6 | A distância é igual ou inferior ao limite configurado? | ✅ Aceita o par e passa ao seguinte | ❌ Regista o problema no segundo ponto e passa ao seguinte |
 
-Uma opção positiva define o limite em metros. Uma opção inválida usa `1000` metros.
+A ordem das linhas no ficheiro não determina os pares: a regra ordena os pontos por `shape_pt_sequence`. Um ponto com coordenadas inválidas mantém a sua posição e impede a comparação dos pares que o incluem. A regra não liga os seus vizinhos para criar um segmento alternativo.
 
-## Como se relacionam
-
-Os pontos de cada `shape_id` são ordenados por `shape_pt_sequence`; as coordenadas de cada par determinam a distância geográfica.
+Quando existem muitos pares com problemas, o resultado apresenta uma mensagem resumida por linha afetada, em vez do detalhe de cada par.
 
 ## Exemplos
 
-| Distância do par | Limite | Resultado | Porquê |
-|---|---|---|---|
-| `800 m` | `1000 m` | ✅ Passa | Não excede o limite |
-| `1200 m` | `1000 m` | ❌ Problema | Excede o limite |
-| `1200 m` | `1500 m` | ✅ Passa | Respeita o limite configurado |
+**Apenas para estes exemplos**, considere um limite configurado de `1000 m`, pontos do mesmo traçado, coordenadas válidas e sequências sem repetições. A configuração em `rules.json` pode definir outro limite.
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| Sequências `1` e `2`, separadas por `800 m` | ✅ Passa | Distância inferior ao limite do exemplo |
+| Sequências `1` e `7`, sem pontos intermédios, separadas por `1000 m` | ✅ Passa | O limite é aceite e a numeração não precisa de ser consecutiva |
+| Sequências `1` e `2`, separadas por `1200 m` | ❌ Problema | Distância superior ao limite do exemplo |
+
+Se o limite configurado fosse, por exemplo, `1500 m`, o par separado por `1200 m` também passaria. Preencher ou alterar `shape_dist_traveled` não muda o resultado desta regra.
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Pontos demasiado afastados | Coordenadas ou sequência incorretas, ou limite demasiado baixo | Corrigir `shape_pt_lat`, `shape_pt_lon` ou `shape_pt_sequence` em `shapes.txt`, ou rever o limite configurado |
-| Muitos pontos demasiado afastados | A forma tem mais de 100 ocorrências | Rever em conjunto as coordenadas e sequências da forma em `shapes.txt` |
+| Dois pontos consecutivos excedem o limite de distância configurado | Coordenadas incorretas, pontos fora de ordem ou ausência de pontos intermédios | Verificar `shape_pt_lat`, `shape_pt_lon` e `shape_pt_sequence` nas linhas indicadas de `shapes.txt`. Corrigir as coordenadas ou a ordem e acrescentar pontos intermédios quando faltarem. Confirmar o limite na configuração da regra em `rules.json`. |
+| Muitos pontos consecutivos excedem o limite configurado | Problema repetido nas coordenadas, na sequência ou na associação dos pontos ao traçado | Rever `shape_id`, `shape_pt_sequence`, `shape_pt_lat` e `shape_pt_lon` nas linhas indicadas de `shapes.txt`. Separar pontos de traçados diferentes e corrigir a ordem e as coordenadas. Confirmar o limite na configuração da regra em `rules.json`. |
