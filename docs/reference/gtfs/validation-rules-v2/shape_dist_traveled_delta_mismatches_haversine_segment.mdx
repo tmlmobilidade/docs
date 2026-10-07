@@ -1,6 +1,6 @@
 ---
-title: Distância declarada por segmento
-description: Compara o incremento de shape_dist_traveled com a distância geográfica de cada segmento.
+title: Distância entre pontos consecutivos do traçado
+description: Verifica se o aumento da distância acumulada corresponde à distância geográfica entre pontos consecutivos, dentro da tolerância configurada.
 ---
 
 ## Propriedades da regra
@@ -9,50 +9,54 @@ description: Compara o incremento de shape_dist_traveled com a distância geogr�
 |---|---|
 | Rule ID | `shape_dist_traveled_delta_mismatches_haversine_segment` |
 | Ficheiro | `shapes.txt` |
-| Campos | `shape_id`, `shape_pt_sequence`, `shape_pt_lat`, `shape_pt_lon`, `shape_dist_traveled` |
-| Tipo | Identificador, Número inteiro, Latitude, Longitude, Número decimal |
-| Severidade | Condicional |
+| Campo | `shape_dist_traveled` |
+| Tipo | Número não negativo |
+| Severidade | Obrigatório |
 
-**Descrição dos campos:**
-
-- `shape_id`: agrupa os pontos da forma.
-- `shape_pt_sequence`: define a ordem dos pontos.
-- `shape_pt_lat`: indica a latitude.
-- `shape_pt_lon`: indica a longitude.
-- `shape_dist_traveled`: indica a distância acumulada.
+**Descrição do campo:** distância percorrida ao longo do traçado, desde o primeiro ponto até ao ponto desta linha. Permite aos planeadores de viagens apresentar a parte correta do traçado no mapa. Os valores devem aumentar com `shape_pt_sequence` e usar a mesma unidade que as distâncias de `stop_times.txt`. O campo ajuda a distinguir passagens por locais onde o percurso se cruza ou repete.
 
 Mais informação em [shapes.txt](/reference/gtfs/schedule/shapes).
 
 ## Como funciona
 
-Quando a regra passa, a diferença entre o incremento declarado e a distância de Haversine não excede a tolerância. A tolerância predefinida é `20` metros. A regra **ignora pares com dados inválidos, em falta ou com distância decrescente**.
+Nos segmentos avaliados, o aumento de `shape_dist_traveled` deve corresponder à distância geográfica entre os dois pontos, dentro da tolerância configurada. A regra compara as coordenadas dos pontos; não confirma o percurso real do veículo pelas ruas. Campos em falta, coordenadas inválidas e distâncias decrescentes são tratados por outras regras.
 
-A regra avalia cada grupo de pontos com o mesmo `shape_id`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+**A tolerância depende da configuração da regra em `rules.json`.** Os valores numéricos apresentados nos exemplos são ilustrativos e não constituem limites fixos. Embora exista um valor predefinido, a validação utiliza a tolerância válida indicada na configuração.
+
+A primeira opção da regra define a tolerância em metros e aceita zero. Quando esta opção falta ou é inválida, o validador utiliza a tolerância predefinida. A segunda opção permite indicar a unidade de `shape_dist_traveled`: `m` ou `km`. Sem uma unidade reconhecida, o validador procura inferi-la a partir da maior distância acumulada do traçado.
+
+A regra avalia cada grupo de pontos com o mesmo `shape_id` em `shapes.txt`, seguindo os passos abaixo por ordem.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O par tem sequência, coordenadas e distâncias válidas? | Segue para o passo 2 | Ignora o par |
-| 2 | A distância declarada diminui? | Ignora o par | Segue para o passo 3 |
-| 3 | A diferença absoluta excede a tolerância? | ❌ Reporta o problema | ✅ Passa |
-| 4 | Existem mais de 100 ocorrências? | Resume os problemas por linha | Mantém o detalhe de cada segmento |
+| 1 | A regra está desativada na configuração? | Termina sem avaliar | Segue para o passo 2 |
+| 2 | O ponto tem `shape_id` preenchido? | Segue para o passo 3 | Exclui o ponto desta avaliação |
+| 3 | O grupo tem sequências em falta, negativas ou repetidas? | Não avalia o grupo | Ordena os pontos por `shape_pt_sequence` e segue para o passo 4 |
+| 4 | Existem dois pontos consecutivos para comparar? | Segue para o passo 5 | Termina a avaliação do grupo |
+| 5 | Ambos os pontos têm coordenadas válidas e distâncias acumuladas válidas e não negativas? | Segue para o passo 6 | Ignora este par e passa ao seguinte |
+| 6 | A distância acumulada diminui entre os dois pontos? | Deixa esta situação para outra regra e passa ao par seguinte | Segue para o passo 7 |
+| 7 | A diferença absoluta entre o aumento registado e a distância geográfica fica dentro da tolerância configurada? | ✅ Aceita o segmento e passa ao seguinte | ❌ Regista o problema no segundo ponto e passa ao seguinte |
 
-A primeira opção define a tolerância em metros. A segunda pode fixar a unidade declarada como `m` ou `km`; sem ela, valores máximos abaixo de `800` são tratados como quilómetros.
+A comparação converte as distâncias para metros. Inclui o primeiro segmento quando a distância acumulada começa em zero e os segmentos sem aumento da distância acumulada. Uma margem mínima de cálculo evita problemas causados apenas por arredondamentos numéricos.
 
-## Como se relacionam
-
-O incremento de `shape_dist_traveled` entre dois pontos deve aproximar-se da distância calculada pelas respetivas coordenadas.
+Quando existem muitos segmentos com problemas, o resultado apresenta uma mensagem resumida por linha afetada, em vez do detalhe de cada segmento.
 
 ## Exemplos
 
-| Incremento declarado | Distância geográfica | Resultado | Porquê |
-|---|---|---|---|
-| `100 m` | `110 m` | ✅ Passa | Diferença dentro de 20 metros |
-| `100 m` | `140 m` | ❌ Problema | Diferença superior a 20 metros |
-| valor em falta | `140 m` | ✅ Passa | O par é ignorado |
+**Apenas para estes exemplos**, considere uma tolerância de `20 m`, a unidade `m` e dois pontos cuja distância geográfica é `100 m`. A configuração em `rules.json` pode definir outra tolerância ou unidade.
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `shape_dist_traveled` passa de `0` para `100` | ✅ Passa | Aumento igual à distância geográfica |
+| `shape_dist_traveled` passa de `0` para `115` | ✅ Passa | Diferença de `15 m`, dentro da tolerância do exemplo |
+| `shape_dist_traveled` passa de `0` para `150` | ❌ Problema | Diferença de `50 m`, acima da tolerância do exemplo |
+| `shape_dist_traveled` permanece em `0` | ❌ Problema | Diferença de `100 m`, acima da tolerância do exemplo |
+
+Se a tolerância configurada fosse, por exemplo, `60 m`, o aumento de `150 m` também passaria para estes mesmos pontos.
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Incremento diferente do segmento | Distância, coordenadas, unidade ou sequência incorreta | Corrigir `shape_dist_traveled`, as coordenadas ou `shape_pt_sequence` em `shapes.txt`, ou configurar a unidade correta |
-| Muitos incrementos diferentes | A forma tem mais de 100 ocorrências | Rever em conjunto as distâncias, unidades, coordenadas e sequências em `shapes.txt` |
+| O aumento da distância acumulada difere da distância geográfica além da tolerância configurada | Distância acumulada incorreta, coordenadas incorretas ou unidade mal interpretada | Verificar `shape_dist_traveled`, `shape_pt_lat` e `shape_pt_lon` nos dois pontos de `shapes.txt`. Corrigir os valores incorretos e confirmar a unidade e a tolerância na configuração da regra em `rules.json`. |
+| Muitos aumentos de distância diferem dos comprimentos dos segmentos | Unidade inconsistente ou cálculo incorreto das distâncias ao longo do traçado | Rever os valores de `shape_dist_traveled` nas linhas indicadas de `shapes.txt`. Confirmar a unidade configurada em `rules.json` e recalcular as distâncias acumuladas quando necessário. |

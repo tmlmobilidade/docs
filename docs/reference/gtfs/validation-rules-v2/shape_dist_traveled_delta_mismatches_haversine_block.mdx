@@ -1,6 +1,6 @@
 ---
-title: Distância total por troço
-description: Compara a distância acumulada de cada troço com a soma das distâncias geográficas dos seus segmentos.
+title: Distância acumulada ao longo de um troço
+description: Verifica se a distância acumulada de um troço corresponde à soma das distâncias geográficas dos seus segmentos, dentro da tolerância configurada.
 ---
 
 ## Propriedades da regra
@@ -9,49 +9,53 @@ description: Compara a distância acumulada de cada troço com a soma das distâ
 |---|---|
 | Rule ID | `shape_dist_traveled_delta_mismatches_haversine_block` |
 | Ficheiro | `shapes.txt` |
-| Campos | `shape_id`, `shape_pt_sequence`, `shape_pt_lat`, `shape_pt_lon`, `shape_dist_traveled` |
-| Tipo | Identificador, Número inteiro, Latitude, Longitude, Número decimal |
-| Severidade | Condicional |
+| Campo | `shape_dist_traveled` |
+| Tipo | Número não negativo |
+| Severidade | Obrigatório |
 
-**Descrição dos campos:**
-
-- `shape_id`: agrupa os pontos da forma.
-- `shape_pt_sequence`: define a ordem dos pontos.
-- `shape_pt_lat`: indica a latitude.
-- `shape_pt_lon`: indica a longitude.
-- `shape_dist_traveled`: indica a distância acumulada e inicia um troço quando vale `0`.
+**Descrição do campo:** distância percorrida ao longo do traçado, desde o primeiro ponto até ao ponto desta linha. Permite aos planeadores de viagens apresentar a parte correta do traçado no mapa. Os valores devem aumentar com `shape_pt_sequence` e usar a mesma unidade que as distâncias de `stop_times.txt`. O campo ajuda a distinguir passagens por locais onde o percurso se cruza ou repete.
 
 Mais informação em [shapes.txt](/reference/gtfs/schedule/shapes).
 
 ## Como funciona
 
-Quando a regra passa, a distância final de cada troço iniciado em `0` aproxima-se da soma geométrica dos segmentos. A tolerância predefinida é `20` metros. A regra **ignora troços com segmentos já incompatíveis ou sem distância comparável**.
+Nos troços avaliados, a distância acumulada final deve corresponder à soma das distâncias geográficas dos segmentos, dentro da tolerância configurada. Esta regra deteta pequenos desvios que se acumulam ao longo do troço. Não confirma o percurso real do veículo pelas ruas nem substitui as verificações dos campos e dos segmentos individuais.
 
-A regra avalia cada grupo de pontos com o mesmo `shape_id`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+**A tolerância depende da configuração desta regra em `rules.json`.** Os valores numéricos apresentados nos exemplos são ilustrativos e não constituem limites fixos. Embora exista um valor predefinido, a validação utiliza a tolerância válida indicada na configuração.
+
+A primeira opção define a tolerância em metros e aceita zero. Se a opção faltar, não representar um número ou for negativa, o validador utiliza a tolerância predefinida. Esta regra infere a unidade de `shape_dist_traveled` a partir da maior distância acumulada do traçado e converte as distâncias para metros.
+
+Um troço começa num ponto com `shape_dist_traveled` igual a zero. Termina no ponto anterior ao próximo zero ou no último ponto do traçado. Esta divisão serve apenas para esta verificação; não garante que reiniciar a distância seja aceite pelas restantes regras.
+
+A regra avalia cada grupo de pontos com o mesmo `shape_id` em `shapes.txt`, seguindo os passos abaixo por ordem.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O ponto tem `shape_dist_traveled` igual a `0`? | Inicia um troço | Procura o ponto seguinte |
-| 2 | O troço tem pelo menos um segmento comparável? | Segue para o passo 3 | Ignora o troço |
-| 3 | Todos os segmentos respeitam individualmente a tolerância? | Segue para o passo 4 | Ignora o troço para evitar duplicar problemas |
-| 4 | A diferença total excede a tolerância? | ❌ Reporta o problema na última linha do troço | ✅ Passa |
+| 1 | O ponto tem `shape_id` preenchido, sequência e ambas as coordenadas? | Inclui o ponto no grupo e segue para o passo 2 | Exclui o ponto desta avaliação |
+| 2 | Depois de ordenar por `shape_pt_sequence`, existe um ponto com distância acumulada igual a zero? | Inicia um troço nesse ponto e segue para o passo 3 | Não inicia um troço |
+| 3 | O troço tem mais de um ponto? | Segue para o passo 4 | Ignora o troço |
+| 4 | Falta a distância acumulada num dos pontos do segmento? | Ignora o segmento e passa ao seguinte | Segue para o passo 5 |
+| 5 | A distância do ponto atual é zero ou o aumento convertido para metros é inferior a um milímetro? | Ignora o segmento e passa ao seguinte | Segue para o passo 6 |
+| 6 | O desvio do segmento ultrapassa a tolerância configurada nesta regra? | Não verifica o total deste troço | Soma a distância geográfica e repete a avaliação para o segmento seguinte |
+| 7 | A soma das distâncias geográficas dos segmentos avaliados é zero? | Ignora o troço | Segue para o passo 8 |
+| 8 | A diferença absoluta entre a soma geográfica e a distância acumulada final fica dentro da tolerância configurada? | ✅ Aceita o troço | ❌ Regista o problema na última linha do troço |
 
-A primeira opção define a tolerância em metros. A unidade é inferida: um máximo inferior a `800` é tratado como quilómetros; esta regra não aceita uma unidade explícita.
-
-## Como se relacionam
-
-Os pontos são ordenados por `shape_pt_sequence`. Cada `0` em `shape_dist_traveled` inicia um troço cuja distância final é comparada com as coordenadas.
+A tolerância desta regra aplica-se tanto à comparação de cada segmento como à comparação do total. É independente da tolerância configurada na regra específica de segmentos. A configuração da regra também determina se os problemas são apresentados ou ignorados.
 
 ## Exemplos
 
-| Distância final | Soma geométrica | Resultado | Porquê |
-|---|---|---|---|
-| `1000 m` | `1010 m` | ✅ Passa | Diferença dentro de 20 metros |
-| `1000 m` | `1050 m` | ❌ Problema | Diferença superior a 20 metros |
-| sem ponto inicial `0` | `1050 m` | ✅ Passa | Não existe um troço comparável |
+**Apenas para estes exemplos**, considere um troço com três segmentos e uma tolerância de `20 m`. Os desvios indicados estão convertidos para metros e têm todos o mesmo sentido. A configuração em `rules.json` pode definir outra tolerância.
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| Distância acumulada igual à soma geográfica | ✅ Passa | Sem desvio acumulado |
+| Mais `5 m` registados em cada segmento | ✅ Passa | Desvio total de `15 m`, dentro da tolerância do exemplo |
+| Mais `15 m` registados em cada segmento | ❌ Problema | Cada segmento fica dentro da tolerância, mas o total acumula `45 m` |
+
+Se a tolerância configurada fosse, por exemplo, `100 m`, o desvio acumulado de `45 m` também passaria.
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Distância total diferente da geometria | Distância acumulada, coordenadas, unidade ou sequência incorreta | Corrigir `shape_dist_traveled`, as coordenadas ou `shape_pt_sequence` no troço de `shapes.txt`, ou rever a tolerância |
+| A distância acumulada do troço difere da soma geográfica além da tolerância configurada | Pequenos desvios acumulados, distâncias calculadas com outra geometria ou unidade mal interpretada | Rever `shape_dist_traveled`, `shape_pt_lat` e `shape_pt_lon` ao longo do troço em `shapes.txt`. Corrigir os valores incorretos e confirmar a tolerância desta regra em `rules.json`. |
