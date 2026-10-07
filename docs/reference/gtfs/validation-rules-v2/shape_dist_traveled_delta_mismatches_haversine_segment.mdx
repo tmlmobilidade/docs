@@ -21,7 +21,7 @@ Mais informação em [shapes.txt](/reference/gtfs/schedule/shapes).
 
 Nos segmentos avaliados, o aumento de `shape_dist_traveled` deve corresponder à distância geográfica entre os dois pontos, dentro da tolerância configurada. A regra compara as coordenadas dos pontos; não confirma o percurso real do veículo pelas ruas. Campos em falta, coordenadas inválidas e distâncias decrescentes são tratados por outras regras.
 
-**A tolerância depende da configuração da regra em `rules.json`.** Os valores numéricos apresentados nos exemplos são ilustrativos e não constituem limites fixos. Embora exista um valor predefinido, a validação utiliza a tolerância válida indicada na configuração.
+**A tolerância depende da configuração da regra .** Os valores numéricos apresentados nos exemplos são ilustrativos e não constituem limites fixos. Embora exista um valor predefinido, a validação utiliza a tolerância válida indicada na configuração.
 
 A primeira opção da regra define a tolerância em metros e aceita zero. Quando esta opção falta ou é inválida, o validador utiliza a tolerância predefinida. A segunda opção permite indicar a unidade de `shape_dist_traveled`: `m` ou `km`. Sem uma unidade reconhecida, o validador procura inferi-la a partir da maior distância acumulada do traçado.
 

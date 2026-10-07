@@ -21,7 +21,7 @@ Mais informação em [shapes.txt](/reference/gtfs/schedule/shapes).
 
 Nos troços avaliados, a distância acumulada final deve corresponder à soma das distâncias geográficas dos segmentos, dentro da tolerância configurada. Esta regra deteta pequenos desvios que se acumulam ao longo do troço. Não confirma o percurso real do veículo pelas ruas nem substitui as verificações dos campos e dos segmentos individuais.
 
-**A tolerância depende da configuração desta regra em `rules.json`.** Os valores numéricos apresentados nos exemplos são ilustrativos e não constituem limites fixos. Embora exista um valor predefinido, a validação utiliza a tolerância válida indicada na configuração.
+**A tolerância depende do valor configurado no GO.** Os valores numéricos apresentados nos exemplos são ilustrativos e não constituem limites fixos. Embora exista um valor predefinido, a validação utiliza a tolerância válida indicada na configuração.
 
 A primeira opção define a tolerância em metros e aceita zero. Se a opção faltar, não representar um número ou for negativa, o validador utiliza a tolerância predefinida. Esta regra infere a unidade de `shape_dist_traveled` a partir da maior distância acumulada do traçado e converte as distâncias para metros.
 
