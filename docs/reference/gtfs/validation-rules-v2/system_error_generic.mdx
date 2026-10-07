@@ -1,0 +1,43 @@
+---
+title: Problema técnico na validação
+description: Identifica um problema técnico inesperado no processamento da validação que deve ser comunicado à equipa técnica.
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `system_error_generic` |
+| Ficheiro | Não se aplica a um ficheiro GTFS específico |
+| Campo | Não se aplica a um campo específico |
+| Tipo | Problema técnico no processamento |
+| Severidade | Não se aplica uma obrigatoriedade de preenchimento |
+
+## Como funciona
+
+Esta mensagem indica um problema técnico inesperado durante o processamento da validação. Por si só, não significa que o utilizador tenha preenchido incorretamente o ficheiro GTFS. A ausência desta mensagem também não garante que os dados estejam corretos: essa avaliação depende das restantes regras.
+
+O sistema acompanha o processamento da validação, sem avaliar um campo ou uma linha específica para esta regra.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O processamento encontrou um problema inesperado abrangido por esta mensagem? | ❌ Regista o problema técnico e apresenta o detalhe disponível | Não apresenta esta mensagem; o resultado depende das restantes verificações |
+
+O problema pode surgir ao preparar os ficheiros, executar a validação ou tratar os resultados. O detalhe apresentado ajuda a equipa técnica a identificar a causa.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| Processamento sem problemas técnicos | ✅ Passa | Esta mensagem não é apresentada; os dados podem ter outros problemas |
+| Ficheiro submetido não encontrado no armazenamento | ❌ Problema | O sistema não consegue obter o ficheiro para validação |
+| Dados do operador não encontrados no sistema | ❌ Problema | O sistema não consegue preparar a configuração da validação |
+| Dados do utilizador não encontrados ao tratar os resultados | ❌ Problema | O processamento encontra um problema após executar a validação |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Problema técnico inesperado no processamento | Problema no acesso aos dados, na execução da validação ou no tratamento dos resultados; a causa concreta exige análise técnica | Comunicar o problema à equipa técnica, indicando o identificador ou a ligação da validação, a data e hora e a mensagem apresentada, incluindo o detalhe. Não alterar campos do ficheiro GTFS apenas com base nesta mensagem. |
+
+Pode tentar validar novamente. Mesmo que a nova tentativa termine sem este problema, comunique a ocorrência para permitir a sua análise.
