@@ -1,0 +1,118 @@
+---
+title: "Estudo de Adequação da Latência e Frequência do Posicionamento de Veículos de Transporte Público Rodoviário na AML para Prioridade Semafórica Inteligente"
+description: "Detalhes do projeto e ligações úteis"
+---
+
+# Para quê?
+
+Melhorar a fiabilidade dos horários do transporte público é uma prioridade da **TML – Transportes Metropolitanos de Lisboa**. Essa fiabilidade não depende apenas do planeamento e da operação do serviço. Depende também da infraestrutura e de fatores externos, sobretudo do congestionamento rodoviário que afeta os autocarros.
+
+A **Prioridade Semafórica Inteligente ao Transporte Público** (*Intelligent Transit Signal Priority*, iTSP) permite que os semáforos deem prioridade aos veículos de transporte público em condições definidas. Pode assim reduzir os atrasos devidos ao tráfego e melhorar a fiabilidade do serviço dos vários operadores.
+
+Para avaliar a viabilidade da iTSP em larga escala na **Área Metropolitana de Lisboa (AML)**, é preciso conhecer a qualidade dos *feeds* de posição GPS dos vários operadores rodoviários, uma potencial fonte de dados para futuras implementações. Foram avaliadas a **latência** e a **frequência de atualização** das posições, a qualidade dos dados na sua **distribuição geográfica e por operador**. Das análises resultaram as conclusões e recomendações apresentadas abaixo.
+
+# Como?
+
+Foi realizada uma **análise de dados de telemetria em tempo real das frotas de autocarros** de vários operadores de transporte público na AML. Foram processados **mais de 53 milhões de eventos de posição** da semana de amostra de **14 a 20 de setembro de 2026**.
+
+Cada posição GPS foi associada a uma **grelha espacial H3** de resolução 8 (hexágonos com cerca de 0,7 km² de área e 460 m de lado). Em cada célula e para cada operador, foram calculados dois indicadores de qualidade de serviço:
+
+- **Latência da telemetria**: o atraso de transmissão entre a criação da posição no veículo e a sua receção no servidor, em segundos:
+
+  $$\Delta t = t_{\text{received}} - t_{\text{created}}$$
+
+- **Frequência de amostragem**: a cadência de envio, medida em cada percurso de um veículo (viagem) dentro de cada célula, em posições por segundo:
+
+  $$f = \frac{N_{\text{eventos}} - 1}{\Delta t_{\text{intervalo}}}$$
+
+As agregações cobrem cada operador individualmente e dois conjuntos:
+
+- **CM Global**: Carris Metropolitana, Áreas 1 a 4;
+- **Global**: todos os operadores rodoviários analisados.
+
+Para um sistema semafórico inteligente, a precisão espacial sem atualidade temporal tem pouca utilidade:
+
+- se a posição chega com **latência elevada**, o autocarro já passou o cruzamento, ou já está parado na fila, quando a prioridade é calculada;
+- se o autocarro reporta com **baixa frequência**, a estimativa de velocidade e a previsão da hora de chegada degradam-se, provocando extensões de verde indevidas ou janelas de atuação perdidas.
+
+Para determinar onde a prioridade semafórica inteligente é hoje tecnologicamente viável, e se os dados de cada operador a permitem, cada área (célula H3) e cada operador foram avaliados contra dois limiares:
+
+| Critério | Requisito | Significado operacional |
+|:---|:---:|:---|
+| **Latência** | $\le 10\text{ s}$ | Garante posições atuais dos veículos para os ciclos de controlo semafórico |
+| **Frequência** | $\ge 0{,}1\text{ /s}$ | Garante pelo menos uma posição GPS a cada $10\text{ s}$ |
+| **Adequação** (*suitability*) | Latência **e** frequência dentro dos limiares | A célula H3 é considerada **adequada** para iTSP |
+
+A adequação foi calculada de duas formas:
+
+- **Adequação por medianas**: usa a latência mediana e a frequência mediana da célula;
+- **Adequação por médias**: usa a latência média e a frequência média da célula.
+
+Células sem dados de frequência são classificadas como **não adequadas**.
+
+# Dashboard
+
+Para apoiar a análise, foi desenvolvido um dashboard espacial interativo dos operadores de transporte rodoviário da AML, disponível clicando na imagem abaixo.
+
+![[Pasted image 20261009191609.png](docs/files/latency_dashboard.html)]
+
+O dashboard permite explorar a latência, a frequência e a adequação no território metropolitano e por operador:
+
+- **Mapa 2D**: filtros por operador, por métrica e por adequação Global.
+- **Mapa 3D**: visualização volumétrica em que a altura de cada coluna representa o volume de eventos ($N_{\text{eventos}}$) e a cor representa a métrica selecionada.
+- **Análise estatística**: cartões-resumo (média, desvio-padrão, mediana, IQR, mínimo e máximo) e um gráfico de distribuição (linha e caixa de bigodes) por operador.
+
+# Resultados
+
+## A mediana é a métrica mais representativa
+
+Em sistemas telemáticos, os fluxos de posições GPS têm **distribuições fortemente assimétricas, com caudas longas à direita**.
+
+Quando o equipamento de bordo atravessa zonas sem cobertura celular, túneis ou zonas mortas nos parques de recolha, guarda as posições localmente. Quando recupera a ligação, envia de uma só vez as posições acumuladas (*burst replay*). Nesses eventos, a latência pode chegar a minutos ou mesmo horas. Estes valores extremos inflacionam muito a média aritmética: por exemplo, a latência média das células no conjunto Global sobe para cerca de $193\text{ s}$.
+
+A **mediana ($p_{50}$)** é robusta a estes envios em lote e picos de transmissão, e representa a **experiência operacional típica** de um veículo ativo na via. Por isso, os resultados seguintes usam a **adequação por medianas**.
+
+## Diferenças entre operadores e prontidão da rede
+
+A análise revela diferenças marcadas de infraestrutura tecnológica e de integração de dados entre operadores:
+
+| Operador | Latência mediana | Frequência mediana | % de células adequadas |
+|:---|:---:|:---:|:---:|
+| **Carris** | $35{,}7\text{ s}$ | $0{,}11\text{ /s}$ | $0{,}0\%$ |
+| **Carris Metropolitana Área 1** | $1{,}8\text{ s}$ | $0{,}11\text{ /s}$ | $66{,}4\%$ |
+| **Carris Metropolitana Área 2** | $2{,}1\text{ s}$ | $0{,}10\text{ /s}$ | $52{,}8\%$ |
+| **Carris Metropolitana Área 3** | $1{,}9\text{ s}$ | $0{,}11\text{ /s}$ | $65{,}9\%$ |
+| **Carris Metropolitana Área 4** | $0{,}5\text{ s}$ | $0{,}09\text{ /s}$ | $43{,}8\%$ |
+| **Carris Metropolitana (Global – todas as Áreas)** | $1{,}8\text{ s}$ | $0{,}10\text{ /s}$ | $55{,}7\%$ |
+| **Mobicascais** | $14{,}9\text{ s}$ | $0{,}03\text{ /s}$ | $0{,}0\%$ |
+| **Transportes Coletivos do Barreiro** | $24{,}7\text{ s}$ | $< 0{,}01\text{ /s}$ | $0{,}0\%$ |
+| **Global (todos os operadores)** | $1{,}8\text{ s}$ | $0{,}10\text{ /s}$ | $50{,}4\%$ |
+
+*Os valores de latência e de frequência são as medianas, entre as células H3 de cada operador, das medianas de cada célula. A percentagem de células adequadas usa a adequação por medianas. Semana de 14 a 20 de setembro de 2026.*
+
+## Principais conclusões
+
+1. **A adequação varia sobretudo entre operadores.** À escala metropolitana, as diferenças na adequação para iTSP parecem estar mais associadas às características dos sistemas de bordo e de transmissão de dados de cada operador do que à localização geográfica.
+
+2. **A Carris Metropolitana apresenta, em grande parte do território servido, condições favoráveis à prioridade semafórica inteligente.** Nas Áreas 1, 2 e 3, a latência mediana é inferior a 3 s e a cadência de reporte ronda os 9 a 10 s. No conjunto das quatro Áreas, **55,7% das células H3** cumprem os critérios de adequação, concentrando **cerca de 63% das passagens de viagens** registadas por célula.
+
+3. **A Área 4 da Carris Metropolitana regista a latência mediana mais baixa (0,46 s).** A frequência mediana observada ($0{,}09\text{ /s}$, equivalente a uma posição a cada ~11 s) situa-se ligeiramente abaixo do limiar considerado. Um ajuste do intervalo de reporte para valores inferiores a 10 s poderá aumentar a proporção de células adequadas.
+
+4. **Na Carris, a cadência de reporte cumpre o limiar, mas a latência mediana é superior.** A frequência mediana é de $0{,}11\text{ /s}$ (uma posição a cada ~9 s) e a latência mediana é de **35,7 s**, acima do limiar de 10 s. Seria útil analisar, os fatores que contribuem para este valor, como o encaminhamento das mensagens, a integração entre sistemas ou a atualização dos equipamentos.
+
+5. **Na Mobicascais e nos Transportes Coletivos do Barreiro, os indicadores encontram-se, para já, fora dos limiares considerados.** Na Mobicascais, a frequência mediana corresponde a uma posição a cada ~33 s ($0{,}03\text{ /s}$) e a latência mediana é de 14,9 s. Nos Transportes Coletivos do Barreiro, a combinação de uma frequência mediana muito baixa com uma frequência média elevada é compatível com o envio de posições em lote. Uma eventual aplicação de iTSP nestas redes beneficiaria de uma avaliação prévia da configuração da telemetria.
+
+6. **Os limiares utilizados são critérios de triagem e não requisitos normativos.** A adequação foi avaliada com limiares de 10 s de latência e 0,1 /s de frequência, adotados como critérios de triagem tecnicamente fundamentados (California PATH, 2008; Sustainable Silicon Valley et al., 2022). Estes limiares não cobrem toda a cadeia de dados e de controlo até ao controlador semafórico. Não devem, por isso, ser interpretados como requisitos mínimos para iTSP sem validação empírica nas condições específicas de cada implementação.
+
+
+
+## Referências
+
+- California PATH. (2008). *Toward deployment of adaptive transit signal priority systems* (Report No. RRR-2008-24). California Department of Transportation. https://dot.ca.gov/-/media/dot-media/programs/research-innovation-system-information/documents/f0017129-id703-to5404-final-report-rrr-2008-24.pdf
+
+- Sustainable Silicon Valley, City/County Association of Governments of San Mateo County, & San Mateo County Transit District. (2022). *Intelligent Transit Signal Priority (iTSP) final report*. https://ccag.ca.gov/wp-content/uploads/2022/08/Final-Report.pdf
+
+- Uber Technologies. (2018). *H3: A hexagonal hierarchical geospatial indexing system*. https://h3geo.org
+
+
+
