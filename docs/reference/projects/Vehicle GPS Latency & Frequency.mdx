@@ -52,9 +52,14 @@ Células sem dados de frequência são classificadas como **não adequadas**.
 
 # Dashboard
 
-Para apoiar a análise, foi desenvolvido um dashboard espacial interativo dos operadores de transporte rodoviário da AML, disponível clicando na imagem abaixo.
+Para apoiar a análise, foi desenvolvido um dashboard espacial interativo dos operadores de transporte rodoviário da AML, disponível clicando no link na legenda da imagem abaixo.
 
-![[Pasted image 20261009191609.png](docs/files/latency_dashboard.html)]
+![[Pasted image 20261009191609.png]]
+
+*Figura 1 - [Dashboard](docs/files/latency_dashboard.html) relativo ao estudo da latência, frequência e adequação dos dados GPS dos veículos dos operadores rodoviários na AML.*
+
+
+
 
 O dashboard permite explorar a latência, a frequência e a adequação no território metropolitano e por operador:
 
@@ -76,7 +81,7 @@ A **mediana ($p_{50}$)** é robusta a estes envios em lote e picos de transmiss�
 
 A análise revela diferenças marcadas de infraestrutura tecnológica e de integração de dados entre operadores:
 
-| Operador | Latência mediana | Frequência mediana | % de células adequadas |
+| Operador | Latência mediana | Frequência mediana | % de células onde o serviço ocorre adequadas |
 |:---|:---:|:---:|:---:|
 | **Carris** | $35{,}7\text{ s}$ | $0{,}11\text{ /s}$ | $0{,}0\%$ |
 | **Carris Metropolitana Área 1** | $1{,}8\text{ s}$ | $0{,}11\text{ /s}$ | $66{,}4\%$ |
@@ -100,7 +105,7 @@ A análise revela diferenças marcadas de infraestrutura tecnológica e de integ
 
 4. **Na Carris, a cadência de reporte cumpre o limiar, mas a latência mediana é superior.** A frequência mediana é de $0{,}11\text{ /s}$ (uma posição a cada ~9 s) e a latência mediana é de **35,7 s**, acima do limiar de 10 s. Seria útil analisar, os fatores que contribuem para este valor, como o encaminhamento das mensagens, a integração entre sistemas ou a atualização dos equipamentos.
 
-5. **Na Mobicascais e nos Transportes Coletivos do Barreiro, os indicadores encontram-se, para já, fora dos limiares considerados.** Na Mobicascais, a frequência mediana corresponde a uma posição a cada ~33 s ($0{,}03\text{ /s}$) e a latência mediana é de 14,9 s. Nos Transportes Coletivos do Barreiro, a combinação de uma frequência mediana muito baixa com uma frequência média elevada é compatível com o envio de posições em lote. Uma eventual aplicação de iTSP nestas redes beneficiaria de uma avaliação prévia da configuração da telemetria.
+5. **Na Mobicascais e nos Transportes Coletivos do Barreiro, os indicadores encontram-se, para já, fora dos limiares considerados.** Na Mobicascais, a frequência mediana corresponde a uma posição a cada ~33 s ($0{,}03\text{ /s}$) e a latência mediana é de 14,9 s. Nos Transportes Coletivos do Barreiro, a combinação de uma frequência mediana muito baixa com uma frequência média elevada é compatível com o envio de posições em lote. Uma eventual aplicação de iTSP nestas redes beneficiaria de uma avaliação prévia da configuração dos equipamentos.
 
 6. **Os limiares utilizados são critérios de triagem e não requisitos normativos.** A adequação foi avaliada com limiares de 10 s de latência e 0,1 /s de frequência, adotados como critérios de triagem tecnicamente fundamentados (California PATH, 2008; Sustainable Silicon Valley et al., 2022). Estes limiares não cobrem toda a cadeia de dados e de controlo até ao controlador semafórico. Não devem, por isso, ser interpretados como requisitos mínimos para iTSP sem validação empírica nas condições específicas de cada implementação.
 
