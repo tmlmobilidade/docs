@@ -1,0 +1,24 @@
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+import { compile } from '@mdx-js/mdx';
+import { remarkImage } from 'fumadocs-core/mdx-plugins/remark-image';
+import { remarkObsidianImages } from '../src/lib/remark-obsidian-images.ts';
+
+const file = path.resolve('docs/reference/projects/Vehicle_GPS_Latency_and_Frequency.mdx');
+const plugins = [remarkObsidianImages, remarkImage];
+const compileText = async value => String(await compile({ path: file, value }, { remarkPlugins: plugins }));
+const page = readFileSync(file, 'utf8');
+assert.ok(page.includes('![[Preview_latency_frequency_dashboard.png]]'));
+const output = await compileText(page.split('\n').slice(56, 60).join('\n'));
+assert.match(output, /import .*Preview_latency_frequency_dashboard\.png/);
+assert.doesNotMatch(output, /!\[\[Preview_latency/);
+const inline = await compileText('Before ![[go-intro.png]] between ![[go-controller-overview.png]] after');
+assert.match(inline, /Before /);
+assert.match(inline, / between /);
+assert.match(inline, / after/);
+assert.match(inline, /import .*go-intro\.png/);
+assert.match(inline, /import .*go-controller-overview\.png/);
+const code = await compileText('`![[go-intro.png]]`\n\n```text\n![[go-intro.png]]\n```');
+assert.doesNotMatch(code, /import .*go-intro\.png/);
+console.log('PASS: Obsidian image embeds render; surrounding text and code examples are preserved.');
