@@ -10,6 +10,8 @@ import { type ShikiTransformer } from 'shiki';
 import { visit } from 'unist-util-visit';
 import { z } from 'zod';
 
+import { remarkObsidianImages } from './src/lib/remark-obsidian-images';
+
 // You can customise Zod schemas for frontmatter and `meta.json` here
 // see https://fumadocs.dev/docs/mdx/collections
 
@@ -55,7 +57,6 @@ function remarkRewriteWikilinkUrls() {
 
 export default defineConfig({
 	mdxOptions: async () => {
-		// const files = await readVaultFiles({ dir: 'docs' });
 		return {
 			addLanguageClass: true,
 			rehypeCodeOptions: {
@@ -68,7 +69,7 @@ export default defineConfig({
 			rehypePlugins: plugins => [rehypeKatex, ...plugins],
 			remarkPlugins: plugins => [
 				remarkMath,
-				// [remarkObsidian, { files } satisfies RemarkObsidianOptions],
+				remarkObsidianImages,
 				remarkRewriteWikilinkUrls,
 				...plugins,
 			],

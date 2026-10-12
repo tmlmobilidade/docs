@@ -22,7 +22,9 @@ ARG APP
 WORKDIR /app
 
 # First install the dependencies (as they change less often)
+# source.config.ts is loaded by fumadocs-mdx during postinstall, so its local imports must be present
 COPY package.json package-lock.json source.config.ts next.config.mjs ./
+COPY src/lib/remark-obsidian-images.ts ./src/lib/
 RUN npm ci
 
 # Build the app
