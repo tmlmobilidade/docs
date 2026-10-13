@@ -3,12 +3,12 @@ title: MOTIS
 description: O serviço de MOTIS disponibiliza informação de transportes em tempo real, permitindo visualizar mapas e utilizar informação geográfica para apoiar a consulta e a exploração da rede de transportes.
 ---
 
-1. O que é
+### 1. O que é
 O MOTIS é um motor de planeamento de viagens que permite calcular percursos entre diferentes localizações, utilizando dados de transportes públicos e outras fontes de informação geográfica e de mobilidade.
 O serviço é utilizado pelo planeador para calcular itinerários e disponibilizar opções de viagem, tendo em conta a informação e os modos de transporte suportados pela configuração em utilização.
 O MOTIS processa dados de horários e redes de transporte para determinar percursos possíveis entre uma origem e um destino. Os resultados dependem dos dados carregados, da sua atualidade e das funcionalidades disponibilizadas pelo serviço.
 
-2. Como utilizar
+### 2. Como utilizar
 O MOTIS é utilizado pelo planeador através de pedidos à sua API, que permite consultar percursos e aceder às funcionalidades de planeamento disponibilizadas pelo serviço.
 A utilização habitual é feita sem necessidade de interação direta com o MOTIS por parte dos utilizadores finais.
 Nas integrações técnicas, a API permite enviar pedidos para consultar informação de mobilidade, nomeadamente:
@@ -17,15 +17,15 @@ Nas integrações técnicas, a API permite enviar pedidos para consultar informa
 - Consulta de itinerários: obter opções de viagem com base nos dados de transporte carregados no serviço.
 Os resultados dependem dos parâmetros enviados, dos dados disponíveis e das funcionalidades suportadas pela versão instalada.
 
-3. Frequência de atualização
+### 3. Frequência de atualização
 O MOTIS utiliza informação de transportes públicos que é disponibilizada pelo GO através de duas componentes: dados em tempo real e dados planeados.
 Dados em tempo real: a informação é atualizada à medida que são recebidas novas atualizações das fontes de dados, permitindo refletir as condições mais recentes da operação, de acordo com a informação disponibilizada.
 Dados planeados: a informação dos horários e dos serviços planeados é atualizada de hora a hora, garantindo a incorporação periódica das versões mais recentes dos dados disponíveis.
 
-4. Como contribuir
+### 4. Como contribuir
 O MOTIS é um projeto de código aberto, pelo que é possível contribuir para o seu desenvolvimento e para a melhoria dos dados que utiliza.
 
-5. Limites de utilização responsável
+### 5. Limites de utilização responsável
 O custo de cada pedido pode variar significativamente consoante os parâmetros utilizados, a complexidade da consulta e os dados disponíveis.
 Uma utilização responsável contribui para preservar a estabilidade e a disponibilidade do serviço para todas as aplicações que dele dependem.
 Poderão existir limites técnicos ou operacionais definidos pela infraestrutura onde o MOTIS está instalado.

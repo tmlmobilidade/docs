@@ -3,26 +3,26 @@ title: Valhalla
 description: O Valhalla é um motor de encaminhamento de código aberto que permite calcular rotas entre diferentes localizações, utilizando dados geográficos do OpenStreetMap.
 ---
 
-1. O que é
+### 1. O que é
 O Valhalla é um motor de encaminhamento de código aberto que permite calcular rotas entre diferentes localizações, utilizando dados geográficos do OpenStreetMap.
 O serviço é utilizado pelo GO para calcular percursos na rede viária, determinar caminhos entre pontos e disponibilizar informação de encaminhamento às aplicações que dependem destas funcionalidades.
 O Valhalla processa os dados cartográficos para construir uma representação navegável da rede viária, permitindo calcular rotas de acordo com os parâmetros e os perfis de encaminhamento suportados.
 
-2. Como utilizar
+### 2. Como utilizar
 O Valhalla é utilizado através da sua API, que permite enviar pedidos de cálculo de rotas e obter os respetivos resultados.
 A utilização habitual é feita através das aplicações e dos serviços do GO que integram esta funcionalidade, sem necessidade de interação direta com o Valhalla por parte dos utilizadores finais.
 
-3. Frequência de atualização
+### 3. Frequência de atualização
 O Valhalla utiliza dados geográficos processados a partir do OpenStreetMap para construir a rede utilizada no cálculo de rotas.
 Embora os dados do OpenStreetMap sejam atualizados continuamente pela comunidade, essas alterações não ficam imediatamente disponíveis no Valhalla. É necessário recolher os dados atualizados e voltar a processá-los para que possam ser utilizados no cálculo de percursos.
 Existe uma atualização diaria das alterações disponiveis no Valhalla.
 
-4. Como contribuir
+### 4. Como contribuir
 A qualidade das rotas calculadas depende, em grande medida, da qualidade dos dados cartográficos utilizados pelo serviço.
 Se identificares estradas em falta, sentidos de circulação incorretos, restrições de acesso desatualizadas ou outros problemas na rede viária, podes contribuir para a sua correção
 Para contribuir diretamente para o desenvolvimento do motor de encaminhamento, consulta o repositório oficial do Valhalla no GitHub.
 
-5. Limites de utilização responsável
+### 5. Limites de utilização responsável
 O Valhalla executa operações de cálculo de rotas que consomem recursos computacionais. O custo de cada pedido pode variar consoante a distância, a complexidade do percurso, os parâmetros utilizados e o tipo de operação solicitado.
 Uma utilização responsável ajuda a garantir a disponibilidade e o desempenho do serviço para todas as aplicações que dele dependem.
 Poderão existir limites técnicos ou operacionais específicos, de acordo com a configuração da infraestrutura onde o Valhalla está instalado.
