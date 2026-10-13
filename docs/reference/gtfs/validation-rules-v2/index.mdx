@@ -35,27 +35,3 @@ Com a nova versão do GTFS tiverem sua severidade alterada,
 | -------------------------------------------------------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------- |
 | `agency_id_unique`                                       | **Erro**   | Passa a aceitar identificadores marítimos MMSI com nove algarismos, começando por um algarismo entre `2` e `7`.                         |
 | `shape_dist_traveled_delta_mismatches_haversine_segment` | **Aviso**  | Passa também a verificar segmentos cuja distância acumulada começa em zero ou não aumenta apesar de existir deslocação entre os pontos. |
-
-
-import { getPageTreePeers } from 'fumadocs-core/page-tree';
-import { sourceReference } from '@/lib/source';
-
-<table>
-	<thead>
-		<tr>
-			<th>Regras</th>
-		</tr>
-	</thead>
-	<tbody>
-		{getPageTreePeers(
-			sourceReference.getPageTree(),
-			'/reference/gtfs/validation-rules-v2',
-		).map(peer => (
-			<tr key={peer.url}>
-				<td>
-					<a href={peer.url}>{peer.name}</a>
-				</td>
-			</tr>
-		))}
-	</tbody>
-</table>
