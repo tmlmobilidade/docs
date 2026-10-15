@@ -1,5 +1,6 @@
 /* * */
 
+import { withBasePath } from '@/lib/base-path';
 import { type MetadataRoute } from 'next';
 
 /**
@@ -15,19 +16,19 @@ export default function manifest(): MetadataRoute.Manifest {
 		icons: [
 			{
 				sizes: '192x192',
-				src: '/assets/pwa/192x192.png',
+				src: withBasePath('/assets/pwa/192x192.png'),
 				type: 'image/png',
 			},
 			{
 				sizes: '512x512',
-				src: '/assets/pwa/512x512.png',
+				src: withBasePath('/assets/pwa/512x512.png'),
 				type: 'image/png',
 			},
 		],
 		name: 'GO',
 		orientation: 'landscape',
 		short_name: 'GO',
-		start_url: '/',
+		start_url: withBasePath('/'),
 		theme_color: '#000000',
 	};
 };

@@ -1,3 +1,4 @@
+import { withBasePath } from '@/lib/base-path';
 import Image from 'next/image';
 
 type BlogCoverImageVariant = 'card' | 'hero';
@@ -37,7 +38,7 @@ export function BlogCoverImage({
 				className="object-cover"
 				priority={priority}
 				sizes={sizes}
-				src={src}
+				src={src.startsWith('/') ? withBasePath(src) : src}
 				fill
 			/>
 			{variant === 'hero' && (

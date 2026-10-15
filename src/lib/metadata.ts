@@ -1,5 +1,6 @@
 import type { Metadata } from 'next/types';
 
+import { withBasePath } from './base-path';
 import { Page } from './source';
 
 export function createMetadata(override: Metadata): Metadata {
@@ -19,7 +20,7 @@ export function createMetadata(override: Metadata): Metadata {
 		description: override.description ?? 'Documentação sobre veículos e rede de autocarros da AML',
 		openGraph: {
 			description: override.description ?? 'Documentação sobre veículos e rede de autocarros da AML',
-			images: '/banner.png',
+			images: withBasePath('/banner.png'),
 			siteName: 'TML MOBILIDADE',
 			title: override.title ?? 'TML MOBILIDADE',
 			url: '',
@@ -30,7 +31,7 @@ export function createMetadata(override: Metadata): Metadata {
 			card: 'summary_large_image',
 			creator: '@fuma_nama',
 			description: override.description ?? 'Documentação sobre veículos e rede de autocarros da AML',
-			images: '/banner.png',
+			images: withBasePath('/banner.png'),
 			title: override.title ?? 'TML MOBILIDADE',
 			...override.twitter,
 		},
@@ -41,7 +42,7 @@ export function getPageImage(page: Page) {
 	const segments = [...page.slugs, 'image.webp'];
 	return {
 		segments,
-		url: `/og/${segments.join('/')}`,
+		url: withBasePath(`/og/${segments.join('/')}`),
 	};
 }
 
