@@ -26,16 +26,12 @@ const config = {
 	async rewrites() {
 		return [
 			{
-				source: '/index.md',           // under basePath → /hub/reference/index.md
+				source: '/index.md', // under basePath → /hub/reference/index.md
 				destination: '/llms.mdx/reference',
 			},
 			{
 				source: '/:path*.md',
 				destination: '/llms.mdx/reference/:path*',
-			},
-			{
-				source: '.md',                 // or drop if unused
-				destination: '/llms.mdx/reference',
 			},
 		];
 	},
