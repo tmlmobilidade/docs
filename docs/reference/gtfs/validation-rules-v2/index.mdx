@@ -101,11 +101,6 @@ Os problemas geométricos passam a indicar a linha original do ficheiro, mesmo q
 | `stop_lat_valid_latitude_range` | Exigia `stop_lat` para os tipos de localização `0`, `1` e `2`. | A presença passa a depender da configuração da regra, sem distinguir o valor de `location_type`. Mantém-se a validação do intervalo da latitude. |
 | `stop_lon_valid_longitude_range` | Exigia `stop_lon` para os tipos de localização `0`, `1` e `2`. | A presença passa a depender da configuração da regra, sem distinguir o valor de `location_type`. Mantém-se a validação do intervalo da longitude. |
 
-### Alterações na severidade e na presença do ficheiro
-
-| Regra | Comportamento anterior | Comportamento atual |
-| --- | --- | --- |
-| `stops_file_missing` | A exigência condicional deste ficheiro era reportada como erros fixos. | As condições mantêm-se, mas a severidade passa a respeitar a configuração de cada ficheiro. As mensagens de ficheiro em falta são deduplicadas. |
 
 ## trips.txt
 
