@@ -1,30 +1,47 @@
 ---
-title: Nome de quem publica o conjunto GTFS
-description: feed_publisher_name_non_empty
----
-## Campos que serão validados nesta regra
-
-| Nome do Campo         | Tipo  | Presença    | Descrição                                                                                                                  |
-| --------------------- | ----- | ----------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `feed_publisher_name` | Texto | Obrigatório | Nome completo da organização que publica o conjunto de dados. Pode ser o mesmo que um dos valores de `agency.agency_name`. |
-
-
-
-
-## O que esta validação faz
-
-No ficheiro `feed_info.txt`,  o campo `feed_publisher_name` exige o nome completo da organização que publica o conjunto de dados (pode coincidir com o nome de uma operador em `agency.txt`, mas o conceito é o editor do feed, não necessariamente a operação de transporte). Esta verificação garante que o campo existe e não está em branco.
-
+title: Nome do editor do conjunto
+description: Verifica se o nome da organização que publica o conjunto está preenchido quando a configuração da regra o exige.
 ---
 
-### Passa
+## Propriedades da regra
 
-- O nome do publicador está preenchido com texto não vazio.
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `feed_publisher_name_non_empty` |
+| Ficheiro | `feed_info.txt` |
+| Campo | `feed_publisher_name` |
+| Tipo | Texto |
+| Severidade | Opcional |
 
----
+**Descrição do campo:** nome completo da organização que publica o conjunto. Pode ser igual a um dos valores de `agency_name` em `agency.txt`.
 
-### Falha
+Mais informação em [feed_info.txt](/reference/gtfs/schedule/feed_info).
 
-- O campo está em falta ou está em branco.
+## Como funciona
 
+Quando a regra passa, `feed_publisher_name` respeita a configuração e contém algum texto quando é exigido. A regra **não compara o nome com `agency.txt` nem avalia se o texto identifica uma organização real**.
 
+A regra avalia cada linha do `feed_info.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | ✅ Passa |
+
+Os espaços não são removidos. Um valor composto apenas por espaços conta como preenchido. Uma linha com todos os campos vazios é ignorada antes desta regra.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `Transportes Exemplo` | ✅ Passa | Nome preenchido |
+| três espaços | ✅ Passa | Os espaços contam como texto |
+| campo vazio quando é obrigatório | ❌ Problema | Falta o nome exigido |
+| `Transportes Exemplo` quando o campo é proibido | ❌ Problema | Campo preenchido indevidamente |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `feed_publisher_name` em `feed_info.txt` com o nome da organização que publica o conjunto |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `feed_publisher_name` em `feed_info.txt` |

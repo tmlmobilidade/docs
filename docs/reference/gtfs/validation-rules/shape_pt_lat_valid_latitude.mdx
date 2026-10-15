@@ -1,32 +1,49 @@
 ---
-title: Latitude do ponto da forma válida
-description: shape_pt_lat_valid_latitude
----
-## Campos que serão validados nesta regra
-
-| Nome do Campo  | Tipo     | Presença    | Descrição                      |
-| -------------- | -------- | ----------- | ------------------------------ |
-| `shape_pt_lat` | Latitude | Obrigatório | Latitude de um ponto da forma. |
-
-
-## O que esta validação faz
-
-No ficheiro `shapes.txt`,  o campo `shape_pt_lat` é a latitude (coordenada norte–sul) do vértice da forma naquele registo. Cada linha descreve um ponto do traçado.
-
-Esta validação exige que `shape_pt_lat` exista e que o valor seja uma latitude valida. Não há severidade configurável nem campo opcional ou o valor é válido, ou a linha incumpre.
-
+title: Latitude do ponto da forma
+description: Verifica se shape_pt_lat está entre -90 e 90 graus.
 ---
 
-### Passa
+## Propriedades da regra
 
-- `shape_pt_lat` preenchido e reconhecido como latitude válida.
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `shape_pt_lat_valid_latitude` |
+| Ficheiro | `shapes.txt` |
+| Campo | `shape_pt_lat` |
+| Tipo | Latitude |
+| Severidade | Obrigatório |
 
----
+**Descrição do campo:** latitude do ponto usado para definir a forma.
 
-### Falha
+Mais informação em [shapes.txt](/reference/gtfs/schedule/shapes).
 
-- `shape_pt_lat` ausente.
-- `shape_pt_lat` não cumprir com os valores dentro de [-90, 90]
+## Como funciona
 
+Quando a regra passa, `shape_pt_lat` está preenchido e situa-se entre `-90` e `90`. A regra **não confirma se o ponto pertence ao percurso esperado**.
 
+A regra avalia cada linha do `shapes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Aplica a configuração da regra | Segue para o passo 2 |
+| 2 | A configuração proíbe o campo? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor está entre `-90` e `90`? | ✅ Passa | ❌ Reporta o problema: latitude inválida |
+
+O valor tem de poder ser lido como número decimal antes desta regra.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `38.7223` | ✅ Passa | Está no intervalo permitido |
+| `91` | ❌ Problema | Excede 90 graus |
+| vazio | ❌ Problema | Falta um campo obrigatório |
+| `38` com o campo proibido | ❌ Problema | A configuração proíbe o campo |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Latitude inválida | `shape_pt_lat` está fora do intervalo permitido | Corrigir `shape_pt_lat` em `shapes.txt` para um valor entre `-90` e `90` |
+| Campo em falta | A configuração exige ou recomenda `shape_pt_lat` | Preencher `shape_pt_lat` em `shapes.txt` |
+| Campo preenchido quando não devia | A configuração proíbe `shape_pt_lat` | Remover `shape_pt_lat` de `shapes.txt` ou rever a configuração da regra |

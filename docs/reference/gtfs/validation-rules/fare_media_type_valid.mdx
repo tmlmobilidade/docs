@@ -1,28 +1,53 @@
 ---
-title: teste
-description: fare_media_type_valid
----
-## Campos que serão validados nesta regra
-
-| Nome do Campo     | Tipo | Presença    | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| ----------------- | ---- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `fare_media_type` | Enum | Obrigatório | Tipo de suporte ou meio tarifário.<br/><br/><strong>Opções válidas:</strong><ul><li><code>0</code> — Nenhum. Sem meio físico ou digital associado (por exemplo numerário ao motorista ou cobrador sem bilhete impresso).</li><li><code>1</code> — Bilhete em papel com viagens pré-pagas ou período fixo.</li><li><code>2</code> — Cartão físico com títulos, passes ou valor armazenado.</li><li><code>3</code> — cEMV (contactless) como suporte em circuito aberto para títulos baseados em conta.</li><li><code>4</code> — Aplicação móvel com cartão virtual, bilhetes, passes ou valor armazenado.</li></ul> |
-
-## O que esta validação faz
-
-No ficheiro `fare_media`, o campo `fare_media_type` indica que tipo de meio se usa para comprar ou validar a tarifa. O valor é obrigatório e tem de ser um dos códigos 0 a 4 previstos no GTFS.
-
+title: Tipo de suporte tarifário
+description: Verifica se o tipo de suporte tarifário usa um valor previsto pelo GTFS e permitido pela configuração da regra.
 ---
 
-### Passa
+## Propriedades da regra
 
-- O tipo está preenchido com 0, 1, 2, 3 ou 4 e, se existir lista restrita na regra, o valor está nessa lista.
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `fare_media_type_valid` |
+| Ficheiro | `fare_media.txt` |
+| Campo | `fare_media_type` |
+| Tipo | Enumeração |
+| Severidade | Obrigatório |
 
----
+**Descrição do campo:** indica o tipo de suporte tarifário. O valor `0` representa a ausência de suporte, como um pagamento em numerário sem título físico. O valor `1` representa um título físico em papel. O valor `2` representa um cartão de transporte físico. O valor `3` representa um cartão bancário sem contacto cEMV usado na bilhética baseada em conta. O valor `4` representa uma aplicação móvel.
 
-### Falha
+Mais informação em [fare_media.txt](/reference/gtfs/schedule/fare_media).
 
-- O campo está em falta.
-- O número não é um dos cinco valores válidos do GTFS.
-- O tipo é válido no GTFS mas não está entre os tipos permitidos pela regra, quando essa lista é fechada.
+## Como funciona
 
+Quando a regra passa, `fare_media_type` está presente quando exigido e tem um valor entre `0` e `4`. Se a configuração da regra limitar os tipos permitidos, o valor também pertence a essa lista. A regra **não verifica se o nome ou os produtos associados são adequados ao tipo**.
+
+A regra avalia cada linha do `fare_media.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor é `0`, `1`, `2`, `3` ou `4`? | Segue para o passo 4 | ❌ Reporta o problema: tipo inválido |
+| 4 | A configuração da regra tem uma lista de tipos permitidos? | Segue para o passo 5 | ✅ Passa |
+| 5 | O valor está na lista, ou a lista aceita todos os valores? | ✅ Passa | ❌ Reporta o problema: tipo não permitido |
+
+O valor é interpretado como número inteiro antes desta regra. Os espaços não são removidos antes dessa interpretação. Se o texto não puder ser interpretado como inteiro, a leitura reporta outro problema antes desta regra.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `2` | ✅ Passa | Cartão de transporte físico |
+| `5` | ❌ Problema | Valor não previsto pelo GTFS |
+| `4` com lista permitida `0`, `2` | ❌ Problema | Valor fora da lista |
+| campo vazio | ❌ Problema | Falta um valor obrigatório |
+| `2` quando o campo é proibido | ❌ Problema | Campo preenchido indevidamente |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Tipo inválido | O valor é diferente de `0`, `1`, `2`, `3` e `4` | Alterar `fare_media_type` em `fare_media.txt` para um valor entre `0` e `4` |
+| Tipo não permitido | O valor é válido no GTFS, mas não consta da lista definida na configuração da regra | Alterar `fare_media_type` em `fare_media.txt` para um valor permitido ou rever a lista da configuração |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `fare_media_type` em `fare_media.txt` com um valor entre `0` e `4` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `fare_media_type` em `fare_media.txt` |

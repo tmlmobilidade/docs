@@ -1,30 +1,44 @@
 ---
-title: Nome curto da viagem sem violar exclusividade prevista
-description: trip_short_name_exclusivity
----
-## Campos que serão validados nesta regra
-
-| Nome do Campo     | Tipo  | Presença | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| ----------------- | ----- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `trip_short_name` | Texto | Opcional | Texto visível ao público utilizado para identificar a viagem para os passageiros, por exemplo, para identificar os números dos comboios nas viagens de comboio suburbano. <br/>Se os passageiros não utilizam frequentemente os nomes das viagens, `trip_short_name` deve estar vazio. <br/><br/>Um valor de `trip_short_name`, se fornecido, deve identificar exclusivamente uma viagem num dia de serviço; não deve ser utilizado para nomes de destino ou designações limitadas/expressas. |
-
-
-
-## O que esta validação faz
-
-No ficheiro `trips.txt`, o campo `trip_short_name` é o nome curto ou código público que identifica a viagem perante o passageiro (por exemplo, número de comboio). No GTFS o campo é opcional, o standard recomenda vazio quando essa chave quase não se usa, e, quando preenchida, o texto não deve servir de destino nem de nota de serviço limitado, mas isso fica fora de desta função. Aqui trata-se apenas de regras sobre o preenchimento obrigatório ou recomendado quando  valor falta, proibição quando o valor vem dado, ou dispensa da verificação. Não se testa, nesta verificação, formato, exclusividade com o `trip_headsign` ou unicidade por dia de serviço.
-
+title: Nome curto da viagem
+description: Verifica a presença de `trip_short_name` segundo a configuração da regra.
 ---
 
-### Passa
+## Propriedades da regra
 
-- O `trip_short_name` vem preenchido e o atributo não está proibido pelas regras.
-- O campo fica vazio e a regra dispensa a verificação (por exemplo, severidade de ignorar), aceitando a omissão sem mensagem nesse passo.
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `trip_short_name_exclusivity` |
+| Ficheiro | `trips.txt` |
+| Campo | `trip_short_name` |
+| Tipo | Texto |
+| Severidade | Opcional |
 
----
+**Descrição do campo:** texto público que identifica a viagem, por exemplo um número de comboio. Não deve ser usado como destino.
 
-### Falha
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
 
-- Texto em falta - o nome curto não vem fornecido, quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado (o standard admite vazio, mas a política de dados exige a indicação).
-- Proibido - as regras definem que o `trip_short_name` não deve constar, mas o valor veio no mesmo fornecido.
+## Como funciona
 
+Quando o campo está vazio ou preenchido, a regra aplica apenas a presença definida na configuração. Apesar do nome da regra, a implementação não verifica unicidade nem exclusividade entre viagens.
+
+A regra avalia cada linha do `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda o campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra proíbe o campo? | ❌ Reporta o problema | ✅ Passa |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `IC 721` | ✅ Passa | Campo preenchido |
+| Vazio (campo exigido pela configuração) | ❌ Problema | A configuração exige o campo |
+| `IC 721` (campo proibido) | ❌ Problema | A configuração proíbe o campo |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | A configuração da regra exige ou recomenda `trip_short_name` | Preencher `trip_short_name` em `trips.txt` |
+| Campo preenchido quando não devia | A configuração da regra proíbe `trip_short_name` | Remover `trip_short_name` de `trips.txt` |

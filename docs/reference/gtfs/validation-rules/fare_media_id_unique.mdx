@@ -1,29 +1,49 @@
 ---
-title: Identificador do suporte tarifário
-description: fare_media_id_unique
----
-## Campos que serão validados nesta regra
-
-| Nome do Campo   | Tipo | Presença    | Descrição                               |
-| --------------- | ---- | ----------- | --------------------------------------- |
-| `fare_media_id` | ID   | Obrigatório | Identifica o suporte ou meio tarifário. |
-
-
-## O que esta validação faz
-
-No ficheiro `fare_media`, o campo `fare_media_id` identifica de forma única cada suporte ou meio tarifário (cartão, título magnético, aplicação, etc., conforme o modelo do operador). O valor é obrigatório e não pode repetir-se em mais do que uma linha do mesmo ficheiro.
-
+title: Identificador único do suporte tarifário
+description: Verifica se o identificador do suporte tarifário está preenchido e não se repete em fare_media.txt.
 ---
 
-### Passa
+## Propriedades da regra
 
-- O identificador está preenchido e só aparece uma vez entre todas as linhas de `fare_media` com esse valor.
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `fare_media_id_unique` |
+| Ficheiro | `fare_media.txt` |
+| Campo | `fare_media_id` |
+| Tipo | Identificador único |
+| Severidade | Obrigatório |
 
----
+**Descrição do campo:** identifica um suporte tarifário.
 
-### Falha
+Mais informação em [fare_media.txt](/reference/gtfs/schedule/fare_media).
 
-- O identificador está em falta.
-- O mesmo identificador surge em mais do que uma linha de `fare_media`.
+## Como funciona
 
+Quando a regra passa, `fare_media_id` está presente quando exigido e aparece numa única linha de `fare_media.txt`. A regra **não verifica se o identificador é usado por um produto tarifário**.
 
+A regra avalia cada linha do `fare_media.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O mesmo `fare_media_id` aparece em mais do que uma linha de `fare_media.txt`? | ❌ Reporta o problema: identificador duplicado | ✅ Passa |
+
+O valor é comparado tal como foi escrito. Os espaços e as maiúsculas não são normalizados.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `CARTAO_1` numa única linha | ✅ Passa | Identificador único |
+| campo vazio | ❌ Problema | Falta um valor obrigatório |
+| `CARTAO_1` em duas linhas | ❌ Problema | Identificador duplicado |
+| `CARTAO_1` quando o campo é proibido | ❌ Problema | Campo preenchido indevidamente |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Identificador duplicado | Duas ou mais linhas de `fare_media.txt` usam o mesmo valor | Alterar `fare_media_id` em `fare_media.txt` para que cada suporte tarifário tenha um identificador único |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `fare_media_id` em `fare_media.txt` com o identificador do suporte tarifário |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `fare_media_id` em `fare_media.txt` |

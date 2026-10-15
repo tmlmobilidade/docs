@@ -1,28 +1,53 @@
 ---
-title: Linha associada à regra de tarifa
-description: fare_rule_route_id_references_routes
----
-## Campos que serão validados nesta regra
-
-| Nome do Campo | Tipo                                            | Presença | Descrição                                                                                                                                                                                                                                                                                                                                                                                   |
-| ------------- | ----------------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `route_id`    | ID estrangeiro que referencia `routes.route_id` | Opcional | Identifica uma rota associada à classe tarifária. Se existirem várias rotas com os mesmos atributos tarifários, crie um registo em `fare_rules.txt` para cada rota. <br/><br/><u>Exemplo</u>: Se a classe tarifária "b" for válida nas rotas "TSW" e "TSE", o ficheiro `fare_rules.txt` conterá estes registos para a classe tarifária:<br/><br/>`fare_id,route_id`<br/>`b,TSW`<br/>`b,TSE` |
-
-## O que esta validação faz
-
-No ficheiro `fare_rules`, o campo `route_id` limita a regra a uma linha concreta (`routes.txt`). No GTFS é opcional. Se a mesma classe tarifária se aplicar a várias linhas, deve haver uma linha em `fare_rules.txt` por cada `route_id` (com o mesmo `fare_id` e demais campos coerentes). Ausência de `route_id` não é alvo de mensagens nesta verificação. Quando o campo está preenchido, com severidade proibido na regra, o preenchimento falha. Caso contrário, o valor tem de existir em `routes.txt`.
-
+title: Linha associada à tarifa
+description: Verifica se cada linha indicada em fare_rules.txt existe em routes.txt.
 ---
 
-### Passa
+## Propriedades da regra
 
-- O campo está vazio (a regra vale para todo o conjunto segundo o resto dos campos, sem restrição explícita a uma linha).
-- O campo está preenchido, não é proibido e corresponde a um `route_id` existente em `routes.txt`.
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `fare_rule_route_id_references_routes` |
+| Ficheiros | `fare_rules.txt`, `routes.txt` |
+| Campo | `route_id` |
+| Tipo | Identificador externo |
+| Severidade | Opcional |
 
----
+**Descrição do campo:** identifica uma linha de transporte associada à classe tarifária. Quando várias linhas usam a mesma tarifa, deve existir uma linha em `fare_rules.txt` para cada `route_id`.
 
-### Falha
+Mais informação em [fare_rules.txt](/reference/gtfs/schedule/fare_rules) e [routes.txt](/reference/gtfs/schedule/routes).
 
-- Valor preenchido quando a regra marca o campo como proibido.
-- Valor preenchido sem correspondência em `routes.txt` (erro).
+## Como funciona
 
+Quando a regra passa, cada `route_id` preenchido em `fare_rules.txt` coincide com uma linha de `routes.txt`. O campo pode ficar vazio quando a configuração da regra o permite. A regra **não verifica se a tarifa é adequada ao serviço dessa linha**.
+
+A regra avalia cada linha do `fare_rules.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O mesmo `route_id` existe em `routes.txt`? | ✅ Passa | ❌ Reporta o problema: linha inexistente |
+
+O valor é comparado tal como foi escrito. Os espaços e as maiúsculas não são normalizados. Uma linha com todos os campos vazios é ignorada antes desta regra.
+
+## Como se relacionam
+
+Cada `route_id` preenchido em `fare_rules.txt` tem de coincidir com um `route_id` existente em `routes.txt`. Esta ligação limita a aplicação da tarifa à linha indicada.
+
+## Exemplos
+
+| `route_id` em `fare_rules.txt` | `route_id` em `routes.txt` | Resultado | Porquê |
+|---|---|---|---|
+| `R1` | `R1`, `R2` | ✅ Passa | Linha existente |
+| campo vazio | `R1`, `R2` | ✅ Passa | Campo opcional |
+| `R3` | `R1`, `R2` | ❌ Problema | Linha inexistente |
+| `R1` quando o campo é proibido | `R1` | ❌ Problema | Campo preenchido indevidamente |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Linha inexistente | O identificador não corresponde a nenhuma linha de `routes.txt` | Corrigir `route_id` em `fare_rules.txt` ou adicionar o `route_id` correspondente a `routes.txt` |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `route_id` em `fare_rules.txt` com um identificador existente em `routes.txt` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `route_id` em `fare_rules.txt` |

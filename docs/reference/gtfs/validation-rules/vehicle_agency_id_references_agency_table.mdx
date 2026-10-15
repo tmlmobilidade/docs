@@ -1,34 +1,51 @@
 ---
-title: Operadora do veículo referenciada em agency
-description: vehicle_agency_id_references_agency_table
----
-## Campos que serão validados nesta regra
-
-| Nome do Campo | Tipo                                         | Presença    | Descrição                                                                                                 |
-| ------------- | -------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------- |
-| `agency_id`   | ID externo que faz referência a `agency.txt` | obrigatório | ID da entidade responsável pelo veículo, usado para associar cada veículo à respetiva agência no sistema. |
-
-
-
-## O que esta validação faz
-
-No ficheiro `vehicles.txt`, Cada registo de veículo tem de identificar, sem ambiguidade, o operador a que pertence, através do identificador (`agency_id`) que liga a tabela do `agency.txt` (GTFS).
-
-A validação verifica duas coisas, por ordem: que o identificador da operadora não está vazio, e que o valor apresentado corresponde a um registo existente nessa tabela de operadores. Assim, evitam-se veículos “órfãos” numa agência inexistente ou com identificador em falta.
-
+title: Operador do veículo
+description: Verifica se agency_id está preenchido quando exigido e corresponde a uma agência de agency.txt.
 ---
 
-### Passa
+## Propriedades da regra
 
-- Quando o identificador da operadora está preenchido e existe na lista de operadoras do feed.
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `vehicle_agency_id_references_agency_table` |
+| Ficheiros | `vehicles.txt`, `agency.txt` |
+| Campo | `agency_id` |
+| Tipo | Identificador externo |
+| Severidade | Obrigatório |
 
----
+**Descrição do campo:** identifica a agência responsável pelo veículo indicado.
 
-### Falha
+Mais informação em [vehicles.txt](/reference/gtfs/schedule/vehicles) e [agency.txt](/reference/gtfs/schedule/agency).
 
-- Campo em falta – quando o identificador não é indicado, impedindo a ligação a uma operadora.
-- Referência inválida – quando o valor indicado não encontra nenhum registo de operadora correspondente; o dado fica desligado de qualquer definição real de agência no conjunto de ficheiros.
+## Como funciona
 
+Cada `agency_id` preenchido em `vehicles.txt` tem de existir em `agency.txt`. A regra não verifica outros dados da agência nem se esta opera serviços associados ao veículo.
 
+A regra avalia cada linha do `vehicles.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | Existe uma linha com o mesmo `agency_id` em `agency.txt`? | ✅ Passa | ❌ Reporta o problema: agência inexistente |
 
+## Como se relacionam
+
+O valor de `agency_id` em `vehicles.txt` identifica uma linha de `agency.txt`. O texto tem de coincidir exatamente nos dois ficheiros.
+
+## Exemplos
+
+| `agency_id` em `vehicles.txt` | `agency_id` em `agency.txt` | Resultado | Porquê |
+|---|---|---|---|
+| `A1` | `A1` | ✅ Passa | Agência encontrada |
+| vazio | `A1` | ❌ Problema | Campo obrigatório |
+| `A2` | `A1` | ❌ Problema | Agência inexistente |
+| `A1` quando o campo é proibido | `A1` | ❌ Problema | Campo preenchido indevidamente |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | A configuração da regra exige ou recomenda `agency_id` | Preencher `agency_id` em `vehicles.txt` com o identificador da agência |
+| Campo preenchido quando não devia | A configuração da regra proíbe `agency_id` | Remover o valor de `agency_id` em `vehicles.txt` |
+| Agência inexistente | O `agency_id` de `vehicles.txt` não existe em `agency.txt` | Corrigir `agency_id` em `vehicles.txt` ou adicionar a agência correspondente a `agency.txt` |

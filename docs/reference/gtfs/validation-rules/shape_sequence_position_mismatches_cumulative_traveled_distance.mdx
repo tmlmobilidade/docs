@@ -1,39 +1,60 @@
 ---
-title: Vértices consecutivos da forma com distância geográfica admitida
-description: shape_sequence_position_mismatches_cumulative_traveled_distance
----
-## Campos que serão validados nesta regra
-
-| Nome do Campo         | Tipo                        | Presença    | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| --------------------- | --------------------------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `shape_id`            | ID                          | Obrigatório | Identifica um formato.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-
-
-### O que esta validação faz
-
-A validação aplica-se a cada percurso geométrico (conjunto de pontos com o mesmo identificador de forma), ordenado pelo número de sequência de cada ponto.
-
-Para cada par de pontos consecutivos nessa ordem, calcula-se a distância aproximada no terreno entre as respetivas latitudes e longitudes. O objetivo é detetar saltos de shapes, trechos em que o percurso “salta” no mapa por pontos muito distantes, o que em geral indica erro ou inconsistência nos dados (e não uma curva contínua que se possa acompanhar a pé ou em veículo a velocidade de circulação normal).
-
-A distância considerada “aceitável” entre dois pontos consecutivos é limitada a um valor máximo. Acima disso, o par é considerado inconsistente.
-
-Há ainda regras que ignoram certos pares (por exemplo, situações em que a sequência se reinicia), para não sinalizar falsos problemas em casos limite de modelação da forma.
-
+title: Distância entre pontos consecutivos do traçado
+description: Verifica se a distância geográfica entre pontos consecutivos do mesmo traçado respeita o limite configurado.
 ---
 
-#### Passa
+## Propriedades da regra
 
-- Quando, para cada par de pontos consecutivos relevante, a distância geográfica entre o ponto anterior e o seguinte não excede o limite permitido, ou o par fica fora do âmbito desta regra (ignorado).
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `shape_sequence_position_mismatches_cumulative_traveled_distance` |
+| Ficheiro | `shapes.txt` |
+| Campo | `shape_pt_sequence` |
+| Tipo | Número inteiro não negativo |
+| Severidade | Obrigatório |
 
----
+**Descrição do campo:** ordem pela qual os pontos se ligam para formar o traçado. Os valores devem aumentar ao longo do percurso, mas não precisam de ser consecutivos.
 
-#### Falha
+Mais informação em [shapes.txt](/reference/gtfs/schedule/shapes).
 
-- Quando a distância entre dois pontos consecutivos na ordem de sequência, ultrapassa esse limite - ou seja, a forma deixa de ser continuada o suficiente entre pontos.
-- Se existir um muito elevado número de falhas, o sistema pode resumir o aviso (mensagem agregada) em vez de listar todas as ocorrências.
+## Como funciona
 
----
+Nos pares avaliados, a distância geográfica entre pontos consecutivos deve respeitar o limite configurado. A regra usa as coordenadas e a ordem dos pontos; não compara essa distância com `shape_dist_traveled` nem exige o preenchimento desse campo. Também não confirma o percurso real do veículo pelas ruas.
 
-#### Nota
+**O limite depende do valor configurado no GO..** Os valores numéricos apresentados nos exemplos são ilustrativos e não constituem limites fixos. Embora exista um valor predefinido, a validação utiliza o limite válido indicado na configuração.
 
-- Diferença em relação à validação de `shape_dist_traveled` aqui não se compara com distância acumulada declarada no ficheiro; só se verifica se cada segmento, entre dois pontos seguidos, não é anormalmente longo. A outra validação cruza coordenadas com a distância percorrida reportada.
+A primeira opção define a distância máxima em metros e tem de ser um número finito superior a zero. Se esta opção faltar ou for inválida, o validador utiliza o limite predefinido.
+
+A regra avalia cada grupo de pontos com o mesmo `shape_id` em `shapes.txt`, seguindo os passos abaixo por ordem.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A regra está desativada na configuração? | Termina sem avaliar | Segue para o passo 2 |
+| 2 | O ponto tem `shape_id` preenchido? | Segue para o passo 3 | Exclui o ponto desta avaliação |
+| 3 | O grupo tem sequências em falta, negativas ou repetidas? | Não avalia o grupo; estas situações pertencem a outras regras | Ordena os pontos por `shape_pt_sequence` e segue para o passo 4 |
+| 4 | Existem dois pontos consecutivos para comparar? | Segue para o passo 5 | Termina a avaliação do grupo |
+| 5 | Ambos os pontos têm latitude e longitude válidas? | Calcula a distância geográfica entre eles e segue para o passo 6 | Ignora este par e passa ao seguinte |
+| 6 | A distância é igual ou inferior ao limite configurado? | ✅ Aceita o par e passa ao seguinte | ❌ Regista o problema no segundo ponto e passa ao seguinte |
+
+A ordem das linhas no ficheiro não determina os pares: a regra ordena os pontos por `shape_pt_sequence`. Um ponto com coordenadas inválidas mantém a sua posição e impede a comparação dos pares que o incluem. A regra não liga os seus vizinhos para criar um segmento alternativo.
+
+Quando existem muitos pares com problemas, o resultado apresenta uma mensagem resumida por linha afetada, em vez do detalhe de cada par.
+
+## Exemplos
+
+**Apenas para estes exemplos**, considere um limite configurado de `1000 m`, pontos do mesmo traçado, coordenadas válidas e sequências sem repetições. A configuração em `rules.json` pode definir outro limite.
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| Sequências `1` e `2`, separadas por `800 m` | ✅ Passa | Distância inferior ao limite do exemplo |
+| Sequências `1` e `7`, sem pontos intermédios, separadas por `1000 m` | ✅ Passa | O limite é aceite e a numeração não precisa de ser consecutiva |
+| Sequências `1` e `2`, separadas por `1200 m` | ❌ Problema | Distância superior ao limite do exemplo |
+
+Se o limite configurado fosse, por exemplo, `1500 m`, o par separado por `1200 m` também passaria. Preencher ou alterar `shape_dist_traveled` não muda o resultado desta regra.
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Dois pontos consecutivos excedem o limite de distância configurado | Coordenadas incorretas, pontos fora de ordem ou ausência de pontos intermédios | Verificar `shape_pt_lat`, `shape_pt_lon` e `shape_pt_sequence` nas linhas indicadas de `shapes.txt`. Corrigir as coordenadas ou a ordem e acrescentar pontos intermédios quando faltarem. Confirmar o limite na configuração da regra em `rules.json`. |
+| Muitos pontos consecutivos excedem o limite configurado | Problema repetido nas coordenadas, na sequência ou na associação dos pontos ao traçado | Rever `shape_id`, `shape_pt_sequence`, `shape_pt_lat` e `shape_pt_lon` nas linhas indicadas de `shapes.txt`. Separar pontos de traçados diferentes e corrigir a ordem e as coordenadas. Confirmar o limite na configuração da regra em `rules.json`. |

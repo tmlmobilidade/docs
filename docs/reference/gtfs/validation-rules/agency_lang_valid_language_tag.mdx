@@ -1,31 +1,52 @@
 ---
-title: Língua principal do operador
-description: agency_lang_valid_language_tag
----
-## Campos que serão validados nesta regra
-
-| Nome do Campo | Tipo             | Presença | Descrição                                                                                                                                                                                                                |
-| ------------- | ---------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `agency_lang` | Código do idioma | Opcional | Idioma principal utilizado por esta agência de transporte. Deve ser fornecido para ajudar os utilizadores do GTFS a escolher regras de capitalização e outras definições específicas de idioma para o conjunto de dados. |
-
-## O que esta validação faz
-
-No ficheiro `agency.txt`,  o campo `agency_lang` indica a língua principal usada pelo operador de transportes no contexto do conjunto GTFS, para consumidores poderem aplicar regras de convenções linguísticas. Quando o valor é introduzido, esta verificação confirma se corresponde a um código de língua admitido pelas regras internas (por exemplo no formato de etiquetas de idioma usadas na Web e em normas internacionais). Conforme a configuração, a ausência do campo pode ser tratada como obrigatória ou recomendada (exceto quando o caso é ignorado pela regra).
-
+title: Idioma principal do operador
+description: Verifica se o idioma indicado em agency.txt é um código de duas letras reconhecido e, quando configurado, se é permitido.
 ---
 
-### Passa
+## Propriedades da regra
 
-- A ausência de valor está alinhada com a regra (incluindo quando a verificação está marcada para ignorar este campo).
-- O código de língua é reconhecido como válido; o campo não está preenchido quando a regra o proíbe; e, se existir lista de valores permitidos, o código está nessa lista (ou a regra admite qualquer valor válido para a língua).
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `agency_lang_valid_language_tag` |
+| Ficheiro | `agency.txt` |
+| Campo | `agency_lang` |
+| Tipo | Código de idioma |
+| Severidade | Opcional |
 
----
+**Descrição do campo:** idioma principal usado pelo operador de transporte. Ajuda os sistemas que consomem GTFS a escolher regras de maiúsculas e outras definições específicas do idioma.
 
-### Falha
+Mais informação em [agency.txt](/reference/gtfs/schedule/agency).
 
-- O texto não corresponde a um código de língua válido.
-- O campo está em falta quando a regra exige ou recomenda preenchimento (e o caso não é ignorado), com a severidade configurada para esse tipo de mensagem.
-- O código não consta da lista admitida pela regra, quando essa lista é fechada.
+## Como funciona
 
+Se o operador indicar um idioma, o valor tem de ser um código ISO 639-1 reconhecido, com duas letras. A verificação do formato não distingue maiúsculas de minúsculas. A regra **não aceita variantes regionais, como `pt-PT`, nem confirma o idioma do restante conteúdo**.
 
+A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor é um código de idioma reconhecido com duas letras? | Segue para o passo 4 | ❌ Reporta o problema: código inválido |
+| 4 | A configuração da regra tem uma lista de códigos permitidos? | Segue para o passo 5 | ✅ Passa |
+| 5 | O valor original está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: código não permitido |
+
+Os espaços não são removidos. A lista permitida distingue maiúsculas de minúsculas, embora a verificação do formato não faça essa distinção.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `pt` | ✅ Passa | Código reconhecido |
+| `pt-PT` | ❌ Problema | Variante regional não aceite |
+| `english` | ❌ Problema | Não é um código de duas letras |
+| `es` (lista permitida = `pt`) | ❌ Problema | Fora da lista |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Código de idioma inválido | O valor não tem duas letras ou não corresponde a um código ISO 639-1 reconhecido | Escrever em `agency_lang` de `agency.txt` um código reconhecido, por exemplo `pt` |
+| Código de idioma não permitido | O código é reconhecido mas não consta da lista configurada | Usar em `agency_lang` de `agency.txt` um código permitido ou rever a lista na configuração da regra |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `agency_lang` em `agency.txt` com o idioma principal do operador |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `agency_lang` em `agency.txt` |

@@ -1,35 +1,56 @@
 ---
-title: Identificador do operador é equivalente ao seu respectivo nome
-description: agency_id_matched_with_agency_name
----
-## Campos que serão validados nesta regra
-
-| Nome do Campo | Tipo     | Presença                     | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| ------------- | -------- | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `agency_id`   | ID Único | Condicionalmente obrigatório | Identifica uma marca de transporte, que é geralmente sinónimo de agência de transporte. Note que, em alguns casos, como quando uma única agência opera vários serviços separados, as agências e as marcas são distintas. Este documento utiliza o termo "agência" em vez de "marca". Um conjunto de dados pode conter dados de várias agências. Condicionalmente obrigatório: - Obrigatório quando o conjunto de dados contém dados para várias agências de transporte. - Recomendado caso contrário. |
-| `agency_name` | Texto    | Obrigatório                  | Nome completo da agência de transporte.                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-
-## O que esta validação faz
-
-No ficheiro `agency.txt`, confirma se o identificador do operador (`agency_id`) e o nome completo do operador (`agency_name`) formam um par reconhecido, quando a regra inclui uma lista de pares autorizados (cada identificador associado ao nome oficial esperado), o valor do conjunto GTFS tem de coincidir exactamente com uma dessas entradas. Se faltar o identificador ou o nome, não é possível fazer a verificação e a regra pode tratar a situação como obrigatória ou recomendada. O campo lógico também pode estar proibido pela configuração. Quando a regra não define essa lista de pares, a parte relativa à correspondência não aplica critério adicional além do restante fluxo (ausência, proibição, etc.).
-
+title: Correspondência entre identificador e nome
+description: Verifica se cada identificador de operador está associado ao nome definido na configuração da regra.
 ---
 
-### Passa
+## Propriedades da regra
 
-- A verificação está desativada ou ignorada.
-- Identificador e o nome estão ambos preenchidos, existe lista de pares na regra, e o par indicado coincide com uma entrada autorizada.
-- Identificador e nome estão preenchidos e não há lista de pares na regra.
-- A regra não exige o par neste contexto ou o caso de ausência não é reportado, conforme configurado.
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `agency_id_matched_with_agency_name` |
+| Ficheiro | `agency.txt` |
+| Campos | `agency_id`, `agency_name` |
+| Tipo | Identificador único, Texto |
+| Severidade | Obrigatório |
 
----
+**Descrição dos campos:**
 
-### Falha
+- `agency_id`: identifica uma marca de transporte, muitas vezes equivalente ao operador.
+- `agency_name`: indica o nome completo do operador de transporte.
 
-- Falta o identificador ou o nome do operador quando a regra exige ou recomenda que ambos existam para esta verificação.
-- A regra proíbe tratar este relacionamento identificador/nome neste registo.
-- Existe lista de pares na regra e o par identificador + nome do ficheiro não coincide com nenhuma entrada - ou o identificador existe na lista mas o nome não corresponde ao nome esperado para esse identificador (mensagem de “sem correspondência” com o nome de referência associado ao identificador, quando a regra o fornece).
+Mais informação em [agency.txt](/reference/gtfs/schedule/agency).
 
+## Como funciona
 
+Quando a regra passa, o par `agency_id` e `agency_name` coincide com uma correspondência configurada, ou não existe uma lista de comparação. A regra **não verifica se os campos estão presentes nem se `agency_id` é único**. Outras regras fazem essas verificações.
 
+A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | Falta `agency_id` ou `agency_name`? | Termina sem reportar um problema nesta regra | Segue para o passo 2 |
+| 2 | A configuração da regra define esta verificação como ignorada ou proibida? | ✅ Passa | Segue para o passo 3 |
+| 3 | A configuração da regra tem uma lista de correspondências? | Segue para o passo 4 | ✅ Passa |
+| 4 | Existe uma correspondência exata entre o identificador e o nome? | ✅ Passa | ❌ Reporta o problema: correspondência inválida |
+
+A comparação é exata. Os espaços e as maiúsculas não são normalizados.
+
+## Como se relacionam
+
+Cada valor de `agency_id` fica associado a um valor esperado de `agency_name` na configuração da regra. A linha só passa quando os dois valores formam um dos pares configurados.
+
+## Exemplos
+
+Nos exemplos, a correspondência configurada é `AGENCY1` com `Metro Transit`.
+
+| `agency_id` | `agency_name` | Resultado | Porquê |
+|---|---|---|---|
+| `AGENCY1` | `Metro Transit` | ✅ Passa | Par configurado |
+| `AGENCY1` | `Wrong Name` | ❌ Problema | Nome diferente do esperado |
+| `AGENCY2` | `City Bus` | ❌ Problema | Identificador sem correspondência configurada |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Correspondência inválida | O nome não é o esperado para o identificador, ou o identificador não consta da lista | Corrigir `agency_id` ou `agency_name` em `agency.txt`, ou rever a correspondência na configuração da regra |

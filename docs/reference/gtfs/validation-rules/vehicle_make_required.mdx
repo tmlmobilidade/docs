@@ -1,28 +1,44 @@
 ---
-title: Fabricante do veículo obrigatório
-description: vehicle_make_required
----
-## Campos que serão validados nesta regra
-
-| Nome do Campo | Tipo  | Presença    | Descrição                       |
-| ------------- | ----- | ----------- | ------------------------------- |
-| `make`        | Texto | obrigatório | Fabricante ou marca do veículo. |
-
-
-
-## O que esta validação faz
-
-No ficheiro `vehicles.txt`, o campo `make` indica a marca do veículo - o fabricante ou designação de marca a divulgar nos sistemas, em texto.
-
+title: Marca do veículo
+description: Verifica se make está preenchido de acordo com a configuração da regra.
 ---
 
-### Passa
+## Propriedades da regra
 
-- A marca do veículo vem indicada no dado fornecido.
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `vehicle_make_required` |
+| Ficheiro | `vehicles.txt` |
+| Campo | `make` |
+| Tipo | Texto |
+| Severidade | Obrigatório |
 
----
+**Descrição do campo:** marca do veículo.
 
-### Falha
+Mais informação em [vehicles.txt](/reference/gtfs/schedule/vehicles).
 
-- Campo em falta – não se fornece a marca do veículo, impedindo a identificação básica do fabricante a partir deste atributo.
+## Como funciona
 
+O campo `make` tem de estar preenchido quando a configuração da regra o exige ou recomenda. A regra não verifica a grafia, o fabricante real nem uma lista de marcas permitidas.
+
+A regra avalia cada linha do `vehicles.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | ✅ Passa |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `Mercedes-Benz` | ✅ Passa | Campo preenchido |
+| campo vazio | ❌ Problema | Campo obrigatório |
+| `Volvo` quando o campo é proibido | ❌ Problema | Campo preenchido indevidamente |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | A configuração da regra exige ou recomenda `make` | Preencher `make` em `vehicles.txt` com a marca do veículo |
+| Campo preenchido quando não devia | A configuração da regra proíbe `make` | Remover o valor de `make` em `vehicles.txt` |

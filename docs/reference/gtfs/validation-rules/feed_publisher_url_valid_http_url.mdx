@@ -1,32 +1,49 @@
 ---
-title: Sítio Web do publicador do conjunto GTFS
-description: feed_publisher_url_valid_http_url
----
-## Campos que serão validados nesta regra
-
-| Nome do Campo        | Tipo | Presença    | Descrição                                                                                                               |
-| -------------------- | ---- | ----------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `feed_publisher_url` | URL  | Obrigatório | URL do site da organização que publica o conjunto de dados. Pode ser o mesmo que um dos valores de `agency.agency_url`. |
-
-
-
-
-## O que esta validação faz
-
-No ficheiro `feed_info.txt`,  o campo `feed_publisher_url` exige o URL do Web site da organização que publica o conjunto de dados. Esta verificação garante que o endereço está preenchido e que tem forma de URL aceite pelas regras da aplicação.
-
+title: Página do editor do conjunto
+description: Verifica se o endereço da página da organização que publica o conjunto é um URL HTTP ou HTTPS válido.
 ---
 
-### Passa
+## Propriedades da regra
 
-- O URL do publicador está definido e passa na validação de formato.
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `feed_publisher_url_valid_http_url` |
+| Ficheiro | `feed_info.txt` |
+| Campo | `feed_publisher_url` |
+| Tipo | URL |
+| Severidade | Opcional |
 
----
+**Descrição do campo:** URL da página da organização que publica o conjunto. Pode ser igual a um dos valores de `agency_url` em `agency.txt`.
 
-### Falha
+Mais informação em [feed_info.txt](/reference/gtfs/schedule/feed_info).
 
-- O campo está em falta ou está em branco.
-- O texto não é um URL aceite pelo formato verificado.
+## Como funciona
 
+Quando a regra passa, `feed_publisher_url` respeita a configuração e usa um URL HTTP ou HTTPS com um domínio. A regra **não confirma que a página existe nem compara o endereço com `agency.txt`**.
 
+A regra avalia cada linha do `feed_info.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O URL usa `http` ou `https`, tem domínio e não contém carateres proibidos? | ✅ Passa | ❌ Reporta o problema: URL inválido |
+
+Os espaços no início e no fim são ignorados durante a verificação. Os espaços no interior não são aceites. Uma linha com todos os campos vazios é ignorada antes desta regra.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `https://dados.exemplo.pt` | ✅ Passa | URL HTTPS com domínio |
+| `dados.exemplo.pt` | ❌ Problema | Falta o protocolo |
+| `https://dados.exemplo.pt/pagina com espaco` | ❌ Problema | Espaço no interior |
+| `https://dados.exemplo.pt` quando o campo é proibido | ❌ Problema | Campo preenchido indevidamente |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| URL inválido | Falta o protocolo ou o domínio, ou existem carateres não permitidos | Corrigir `feed_publisher_url` em `feed_info.txt` para um URL completo, por exemplo `https://dados.exemplo.pt` |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `feed_publisher_url` em `feed_info.txt` com a página da organização que publica o conjunto |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `feed_publisher_url` em `feed_info.txt` |

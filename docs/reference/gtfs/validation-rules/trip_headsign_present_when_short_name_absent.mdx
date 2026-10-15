@@ -1,30 +1,44 @@
 ---
-title: Destino apresentado na viagem quando nome curto em falta
-description: trip_headsign_present_when_short_name_absent
----
-## Campos que serão validados nesta regra
-
-| Nome do Campo   | Tipo  | Presença | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| --------------- | ----- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `trip_headsign` | Texto | Opcional | Texto que aparece na sinalização identificando o destino da viagem para os passageiros. <br/>Este campo é recomendado para todos os serviços com texto de sinalização apresentado no veículo, que pode ser utilizado para distinguir entre viagens numa rota. <br/><br/>Se a sinalização mudar durante uma viagem, os valores de `trip_headsign` podem ser substituídos definindo valores em `stop_times.stop_headsign` para `stop_times` específicos ao longo viagem. |
-
-
-
-## O que esta validação faz
-
-No ficheiro `trips.txt`, o campo `trip_headsign` é o texto de destino apresentado nos painéis da viagem, para o passageiro identificar o percurso ou o sentido. O campo é opcional mas aplica em cima disso, as regras que podem recomendar ou exigir o preenchimento, dispensar a verificação ou tratar o atributo como proibido quando o valor vem fornecido. A alteração do destino ao longo da viagem trata-se com `stop_headsign` em `stop_times.txt`, o que fica fora deste ponto. Nesta verificação não se avalia o conteúdo do texto, apenas presença e a regra _Proibido_.
-
+title: Destino da viagem
+description: Verifica a presença de `trip_headsign` segundo a configuração da regra.
 ---
 
-### Passa
+## Propriedades da regra
 
-- O `trip_headsign` vem preenchido e o atributo não está proibido pelas regras.
-- O campo fica vazio e a regra dispensa a verificação (por exemplo, severidade de ignorar), de modo a não exigir o texto de destino neste passo.
-- Não aplica, aqui, validação de formato, comprimento ou coerência com o nome curto da viagem.
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `trip_headsign_present_when_short_name_absent` |
+| Ficheiro | `trips.txt` |
+| Campo | `trip_headsign` |
+| Tipo | Texto |
+| Severidade | Obrigatório |
 
----
+**Descrição do campo:** texto apresentado na sinalética para identificar o destino da viagem. Pode ser substituído por `stop_times.stop_headsign` em paragens específicas.
 
-### Falha
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
 
-- Texto em falta - o destino não vem indicado, quando, para a severidade e regras, o preenchimento é obrigatório ou recomendado (o standard admite vazio, mas a política de dados  exige a indicação).
-- Proibido - as regras definem que o `trip_headsign` não deve constar, mas o valor veio no mesmo fornecido.
+## Como funciona
+
+O campo tem de estar preenchido, salvo quando a configuração desativa a regra. Apesar do nome da regra, a implementação não consulta `trip_short_name`.
+
+A regra avalia cada linha do `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda o campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra proíbe o campo? | ❌ Reporta o problema | ✅ Passa |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `Terminal` | ✅ Passa | Campo preenchido |
+| Vazio | ❌ Problema | A configuração exige o campo |
+| `Terminal` (campo proibido) | ❌ Problema | A configuração proíbe o campo |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | A configuração da regra exige ou recomenda `trip_headsign` | Preencher `trip_headsign` em `trips.txt` |
+| Campo preenchido quando não devia | A configuração da regra proíbe `trip_headsign` | Remover `trip_headsign` de `trips.txt` |

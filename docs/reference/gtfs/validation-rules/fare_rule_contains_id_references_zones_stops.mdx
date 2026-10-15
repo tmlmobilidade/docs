@@ -1,25 +1,54 @@
 ---
-title: Zonas incluídas na regra de tarifa
-description: fare_rule_contains_id_references_zones_stops
+title: Zona atravessada pela tarifa
+description: Verifica se cada zona atravessada indicada em fare_rules.txt corresponde a um identificador de stops.txt.
 ---
-## Campos que serão validados nesta regra
+/private/tmp/gtfs-levels-rule-docs.y3YjDR
+## Propriedades da regra
 
-| Nome do Campo | Tipo                                          | Presença | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| ------------- | --------------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `contains_id` | ID estrangeiro que referencia `stops.zone_id` | Opcional | Identifica as zonas pelas quais um passageiro passará quando utiliza uma determinada classe tarifária. Utilizado em alguns sistemas para calcular a classe tarifária correcta. <br/><hr/> <u>Exemplo</u>: Se a classe tarifária "c" estiver associada a todas as viagens na rota GRT que passam pelas zonas 5, 6 e 7, o ficheiro `fare_rules.txt` conterá estas registos:<br/><br/>`fare_id,route_id,...,contains_id`<br/>`c,GRT,...,5`<br/>`c,GRT,...,6`<br/>`c,GRT,...,7`<br/> <br/>Como todas as zonas contains_id devem corresponder para que a tarifa seja aplicada, um itinerário que passe pelas zonas 5 e 6, mas não pela zona 7, não terá a classe tarifária "c". Para mais detalhes, consulte https://code.google.com/p/googletransitdatafeed/wiki/FareExamples na wiki do projeto GoogleTransitDataFeed. |
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `fare_rule_contains_id_references_zones_stops` |
+| Ficheiros | `fare_rules.txt`, `stops.txt` |
+| Campo | `contains_id` |
+| Tipo | Identificador externo |
+| Severidade | Opcional |
 
-## O que esta validação faz
+**Descrição do campo:** identifica uma zona que o passageiro atravessa ao usar uma classe tarifária. Alguns sistemas usam estas zonas para determinar a tarifa correta. Todas as zonas indicadas para a classe tarifária têm de fazer parte do itinerário.
 
-No ficheiro `fare_rules`, o campo `contains_id` identifica zonas pela referência usada no conjunto de dados (no GTFS associa-se a `zone_id` em `stops.txt`). Serve para indicar por que zonas o utente pode circular dentro da mesma classe tarifária. Para uma dada combinação `fare_id` / regra, costuma ser necessário cumprir todas as zonas listadas em linhas com o mesmo critério para essa tarifa se aplicar (exemplo clássico três zonas na regra e o percurso só usar duas não aplica essa classe).
+Mais informação em [fare_rules.txt](/reference/gtfs/schedule/fare_rules) e [stops.txt](/reference/gtfs/schedule/stops).
 
----
+## Como funciona
 
-### Passa
+Quando a regra passa, `contains_id` está vazio quando permitido ou coincide com um identificador indexado de `stops.txt`. A referência prevista é `zone_id`, mas a pesquisa atual também aceita valores presentes apenas em `stop_id` ou `stop_code`. A regra **não verifica se o itinerário atravessa realmente a zona**.
 
-- Se o ficheiro não tiver o campo `contains_id`.
+A regra avalia cada linha do `fare_rules.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
----
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor coincide com um identificador indexado de `stops.txt`? | ✅ Passa | ❌ Reporta o problema: zona inexistente |
 
-### Falha
+O valor é comparado tal como foi escrito. Os espaços e as maiúsculas não são normalizados. Uma linha com todos os campos vazios é ignorada antes desta regra.
 
-- Campo preenchido quando a regra marca o campo como proibido.
+## Como se relacionam
+
+No modelo GTFS, `contains_id` deve coincidir com um `zone_id` de `stops.txt`. A validação atual pesquisa em conjunto os valores de `stop_id`, `zone_id` e `stop_code`. Para exigir várias zonas, repete-se a classe tarifária numa linha por zona.
+
+## Exemplos
+
+| `contains_id` em `fare_rules.txt` | Identificadores em `stops.txt` | Resultado | Porquê |
+|---|---|---|---|
+| `Z5` | `zone_id` = `Z5` | ✅ Passa | Zona existente |
+| campo vazio | `zone_id` = `Z5` | ✅ Passa | Campo opcional |
+| `Z9` | `zone_id` = `Z5` | ❌ Problema | Identificador inexistente |
+| `S5` | apenas `stop_id` = `S5` | ✅ Passa | A pesquisa atual junta os identificadores |
+| `Z5` quando o campo é proibido | `zone_id` = `Z5` | ❌ Problema | Campo preenchido indevidamente |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Zona inexistente | O valor não corresponde a nenhum identificador indexado de `stops.txt` | Corrigir `contains_id` em `fare_rules.txt` para um `zone_id` existente em `stops.txt` |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `contains_id` em `fare_rules.txt` com um `zone_id` existente em `stops.txt` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `contains_id` em `fare_rules.txt` |

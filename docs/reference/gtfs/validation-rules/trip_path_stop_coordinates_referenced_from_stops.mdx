@@ -1,45 +1,61 @@
 ---
-title: Coordenadas do percurso da viagem referenciadas nas paragens
-description: trip_path_stop_coordinates_referenced_from_stops
----
-## Campos que serão validados nesta regra
-
-| Nome do Campo | Tipo                                            | Presença                     | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| ------------- | ----------------------------------------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `trip_id`     | ID único                                        | Obrigatório                  | Identifica uma viagem.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| `trip_id`     | ID estrangeiro que referencia `trips.trip_id`   | obrigatório                  | ID estrangeiro que referencia `trips.trip_id` utilizado no `stop_times` para conseguir usar as `stop_id`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| `shape_id`    | ID externo que referencia `shapes.shape_id`     | Condicionalmente obrigatório | Identifica uma forma geoespacial que descreve o trajeto do veículo para uma viagem. <br/><br/>**Condicionalmente obrigatório**:<ul><li>Obrigatório se a viagem tiver um comportamento contínuo de embarque ou desembarque definido em `routes.txt` ou em `stop_times.txt`.</li><li>Opcional caso contrário.</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| `stop_id`     | ID externo que faz referência a `stops.stop_id` | Condicionalmente obrigatório | Identifica a paragem atendida. Todas as paragens atendidas durante uma viagem devem ter um registo em `stop_times.txt`. Os locais referenciados devem ser paragens/plataformas, ou seja, o seu valor `stops.location_type` deve ser `0` ou `empty`. Uma paragem pode ser servida várias vezes na mesma viagem, e várias viagens e rotas podem servir a mesma paragem. <br/><br/>O serviço on-demand que utiliza paragens deve ser referenciado na sequência em que o serviço está disponível nessas paragens. Um consumidor de dados deve assumir que a viagem é possível de uma paragem ou local para qualquer paragem ou local posterior na viagem, desde que o `pickup/drop_off_type` de cada `stop_time` e as restrições de tempo de cada `start/end_pickup_drop_off_window` não o impeçam. <br/><br/>**Condicionalmente Obrigatório**:<ul><li>Obrigatório se `stop_times.location_group_id` E `stop_times.location_id` NÃO estiverem definidos.</li><li>Proibido se `stop_times.location_group_id` ou `stop_times.location_id` estiverem definidos.</li></ul> |
-
-
-## O que esta validação funciona
-
-Partida: cada viagem em `trips.txt` tem um `trip_id`, um `shape_id` (nesta regra só interessa quando a viagem tem shape) e, em `stop_times.txt`, a lista de paragens por onde essa viagem passa.
-
-Passo 1 - Quais paragens?
-Para essa viagem, a validação percorre os `stop_times` e recolhe os `stop_id` que aparecem no percurso (cada paragem só conta uma vez, mesmo que apareça em vários horários).
-
-Passo 2 - Onde estão as coordenadas?
-Cada `stop_id` liga-se a um registo em `stops.txt`, onde estão `stop_lat` e `stop_lon`. É a posição da paragem que se usa como referência.
-
-Passo 3 - Qual geometria?
-O `shape_id` da viagem identifica a polyline (a “linha” do percurso desenhada em `shapes.txt`). A pergunta é: essa linha passa “perto” de cada paragem do percurso?
-
-Passo 4 - Margem de erro (tolerância)
-Não basta “estar na mesma rua”: há uma distância máxima aceitável entre o ponto da paragem e o ponto mais próximo na shape (em metros). Se a distância ultrapassa essa margem, o par paragem + shape é considerado inválido, por isso que recomendamos ter sempre as shapes atualizadas.
-
-
+title: Proximidade das paragens ao percurso
+description: Verifica se cada paragem servida fica a uma distância máxima de 100 metros da forma da viagem.
 ---
 
-### Passa
+## Propriedades da regra
 
-- A viagem não tem geometria associada (sem identificador de shape ou com o campo vazio). Porquê: sem linha de percurso desenhada não faz sentido exigir proximidade entre paragens e essa linha.
-- Para cada paragem do percurso da viagem, a distância entre o ponto da paragem (coordenadas oficiais da paragem no feed) e o troço da linha do percurso mais próximo fica dentro da margem definida para o projeto. Porquê: a paragem está alinhada com a geometria que a viagem declara usar.
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `trip_path_stop_coordinates_referenced_from_stops` |
+| Ficheiros | `trips.txt`, `stop_times.txt`, `stops.txt`, `shapes.txt` |
+| Campos | `trip_id`, `shape_id`, `stop_id`, `stop_lat`, `stop_lon` |
+| Tipo | Identificador, Identificador, Identificador, Coordenada, Coordenada |
+| Severidade | Opcional (recomendado) |
 
----
+**Descrição dos campos:**
 
-### Falha
+- `trip_id`: identifica a viagem e as respetivas linhas de horários.
+- `shape_id`: identifica a forma geográfica da viagem.
+- `stop_id`: identifica cada paragem servida.
+- `stop_lat`: latitude da paragem.
+- `stop_lon`: longitude da paragem.
 
-- Pelo menos uma paragem utilizada nos horários dessa viagem fica demasiado afastada da linha do percurso: a distância ao ponto mais próximo na geometria ultrapassa a tolerância acordada. Porquê: ou a shape não corresponde ao traçado real das paragens, ou há erro de coordenadas, identificadores trocados, ou geometria desatualizada - o feed fica inconsistente entre “por onde o veículo desenha o percurso” e “onde as paragens estão no mapa”. A mensagem de erro costuma indicar quantos metros faltam ou sobram e onde na linha fica o ponto mais próximo, para facilitar a correção.
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips), [stop_times.txt](/reference/gtfs/schedule/stop_times), [stops.txt](/reference/gtfs/schedule/stops) e [shapes.txt](/reference/gtfs/schedule/shapes).
 
+## Como funciona
 
+Cada paragem com coordenadas utilizáveis tem de ficar, no máximo, a 100 metros da linha densificada da forma da viagem. A regra ignora viagens sem forma e paragens sem coordenadas utilizáveis. Não confirma a ordem das paragens sobre o percurso.
+
+A regra avalia cada viagem de `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | Existem linhas de `stop_times.txt` para o `trip_id`? | Segue para o passo 2 | Tenta carregar as linhas diretamente; se não conseguir, termina sem problema |
+| 2 | `shape_id` está vazio? | ✅ Passa | Segue para o passo 3 |
+| 3 | A configuração da regra desativa a validação? | ✅ Passa | Segue para o passo 4 |
+| 4 | A paragem já foi avaliada nesta viagem? | Ignora a repetição | Procura `stop_lat` e `stop_lon` em `stops.txt` |
+| 5 | Existem coordenadas utilizáveis para a paragem e geometria utilizável para a forma? | Segue para o passo 6 | Ignora essa paragem |
+| 6 | A distância mínima entre a paragem e a forma é superior a 100 metros? | ❌ Reporta o problema para a paragem e forma | ✅ Passa |
+
+A distância usa a fórmula de Haversine e pontos interpolados ao longo da forma, não apenas os pontos originais de `shapes.txt`. Uma distância exatamente igual a 100 metros é aceite.
+
+## Como se relacionam
+
+`trip_id` obtém as paragens em `stop_times.txt`. Cada `stop_id` fornece coordenadas em `stops.txt`, e `shape_id` fornece o percurso em `shapes.txt`.
+
+## Exemplos
+
+| Distância mínima | Dados disponíveis | Resultado | Porquê |
+|---|---|---|---|
+| `25 m` | Paragem e forma válidas | ✅ Passa | Dentro da tolerância |
+| `100 m` | Paragem e forma válidas | ✅ Passa | Igual ao limite |
+| `125 m` | Paragem e forma válidas | ❌ Problema | Superior ao limite |
+| — | `shape_id` vazio | ✅ Passa | Não existe percurso para comparar |
+| — | Coordenadas da paragem inválidas | ✅ Passa | A paragem é ignorada |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Paragem demasiado distante da forma | As coordenadas da paragem ou a geometria da forma não representam o mesmo percurso | Corrigir `stop_lat` e `stop_lon` em `stops.txt`, `shape_id` em `trips.txt` ou os pontos em `shapes.txt` |

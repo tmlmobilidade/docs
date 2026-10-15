@@ -1,33 +1,47 @@
 ---
-title: Identificador da paragem único no feed
-description: stop_id_unique
----
-## Campos que serão validados nesta regra
-
-| Nome do Campo | Tipo     | Presença | Descrição                                                                                                                                                                                                                                                   |
-| ------------- | -------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `stop_id`     | ID único | Opcional | Identifica uma localização: paragem/plataforma, estação, entrada/saída, nó genérico ou área de embarque (consulte location_type).<br/><br/>O ID deve ser único em todos os valores de stops.stop_id, locations.geojson_id e location_groups.location_group_id. |
-
-## O que esta validação faz
-
-No ficheiro `stops.txt`, o campo `stop_id` identifica, de forma única no feed, cada local em `stops.txt` (paragem, estação, entrada, nó ou área de embarque, consoante o tipo). No GTFS o campo é obrigatório e a identificação não se pode repetir: o mesmo id não pode servir paragens distintas (o referencial ainda alarga a exigência de unicidade global a outros ficheiros, como `locations` e `location_groups` - a verificação no conjunto de paragens reforça a coerência local). Se existir lista de opções nas regras , o identificador tem de pertencer a esse conjunto (ou a regra aceita todas as opções).
-
+title: Identificador único da paragem
+description: Verifica se cada `stop_id` preenchido é único em stops.txt e pertence à lista configurada de valores permitidos.
 ---
 
-### Passa
+## Propriedades da regra
 
-- O `stop_id` vem preenchido (não vazio).
-- O identificador não se repete noutro registo de `stops.txt` processado.
-- O valor figura entre os identificadores permitidos pelas regras (ou a regra aceita todas as opções), quando aplica.
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_id_unique` |
+| Ficheiro | `stops.txt` |
+| Campo | `stop_id` |
+| Tipo | Identificador único |
+| Severidade | Obrigatório |
 
----
+**Descrição do campo:** identifica uma paragem, estação, entrada ou saída, nó genérico ou área de embarque.
 
-### Falha
+Mais informação em [stops.txt](/reference/gtfs/schedule/stops).
 
-- Identificador em falta - o `stop_id` não vem fornecido ou fica vazio.
-- Duplicado - o mesmo `stop_id` aparece em mais do que um registo, inviabilizando a referência inequívoca ao local.
-- Fora do permitido - o identificador não consta do conjunto de opções definido nas regras (salvo quando a regra abrange todas as opções).
+## Como funciona
 
+Cada `stop_id` preenchido tem de aparecer uma única vez em `stops.txt`. Se existir uma lista configurada, o identificador também tem de constar dessa lista. A implementação atual não compara o valor com os identificadores de `locations.geojson` ou `location_groups.txt`.
 
+A regra avalia cada linha do `stops.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | ✅ Aceita sem reportar, devido ao comportamento atual da regra | Segue para o passo 2 |
+| 2 | O mesmo `stop_id` aparece em mais de uma linha de `stops.txt`? | ❌ Reporta o problema: identificador duplicado | Segue para o passo 3 |
+| 3 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 4 | ✅ Passa |
+| 4 | O identificador consta da lista, ou a lista aceita qualquer valor? | ✅ Passa | ❌ Reporta o problema: identificador não permitido |
 
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `STP_100` numa única linha | ✅ Passa | Identificador único |
+| `STP_100` em duas linhas | ❌ Problema | Identificador duplicado |
+| `STP_999` (lista permitida = `STP_100`) | ❌ Problema | Fora da lista configurada |
+| Vazio | ✅ Passa | A ausência não é reportada pela implementação atual |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Identificador duplicado | Duas ou mais linhas usam o mesmo `stop_id` | Atribuir um `stop_id` distinto a cada localização duplicada em `stops.txt` |
+| Identificador não permitido | O `stop_id` não consta da lista configurada | Usar em `stop_id` de `stops.txt` um identificador permitido, ou ajustar a configuração da regra |

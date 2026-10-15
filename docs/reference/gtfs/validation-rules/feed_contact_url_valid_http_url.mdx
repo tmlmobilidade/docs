@@ -1,32 +1,48 @@
 ---
-title: URL de contacto técnico do conjunto GTFS
-description: feed_contact_url_valid_http_url
----
-## Campos que serão validados nesta regra
-
-| Nome do Campo      | Tipo | Presença | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| ------------------ | ---- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `feed_contact_url` | URL  | Opcional | URL para informações de contacto, formulário web, centro de suporte ou outras ferramentas para comunicação referentes ao conjunto de dados GTFS e às práticas de publicação de dados. `feed_contact_url` é um contacto técnico para aplicações que utilizam o GTFS. Forneça informações de contacto do serviço de apoio ao cliente através do ficheiro `agency.txt`. Recomenda-se que seja fornecido pelo menos um dos campos `feed_contact_url` ou `feed_contact_email`. |
-
-
-
-
-## O que esta validação faz
-
-O campo `feed_contact_url` prevê um URL facultativo em `feed_info.txt` para informação de contacto técnica sobre o conjunto de dados e a sua publicação (formulário Web, portal de suporte, etc.) - destinado a aplicações que consomem GTFS, não ao apoio ao utente do operador em `agency.txt`. Quando o valor existe e não é cadeia vazia, esta verificação confirma que tem forma de URL aceite pelas regras da aplicação. A ausência pode ser tratada como obrigatória ou recomendada (exceto quando a verificação não se aplica à linha), e o campo pode ser proibido pela configuração. Se nenhuma severidade for passada à função, assume-se por omissão nível de aviso para as mensagens do contexto.
-
+title: Página de contacto técnico do conjunto
+description: Verifica se a página de contacto para questões técnicas do conjunto é um URL HTTP ou HTTPS válido.
 ---
 
-### Passa
+## Propriedades da regra
 
-- O campo está vazio e a regra permite isso (incluindo quando a verificação não se aplica).
-- O endereço está preenchido e é um URL válido segundo a validação usada, sem conflito com a regra de proibição.
-- O ponteiro existe mas o texto está vazio: não se chama `ValidateUrl` sobre valor vazio.
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `feed_contact_url_valid_http_url` |
+| Ficheiro | `feed_info.txt` |
+| Campo | `feed_contact_url` |
+| Tipo | URL |
+| Severidade | Opcional |
 
----
+**Descrição do campo:** URL de informações de contacto, formulário, serviço de apoio ou outra ferramenta para questões sobre o conjunto GTFS. É um contacto técnico para aplicações que consomem GTFS. O contacto de apoio ao cliente deve ser indicado em `agency.txt`. Recomenda-se o preenchimento de `feed_contact_url` ou `feed_contact_email`.
 
-### Falha
+Mais informação em [feed_info.txt](/reference/gtfs/schedule/feed_info).
 
-- O texto não é um URL aceite pelo formato verificado (quando há texto não vazio).
-- O campo está em falta quando a regra exige ou recomenda preenchimento (com a severidade configurada).
-- O campo está preenchido quando a regra o proíbe.
+## Como funciona
+
+Quando a regra passa, `feed_contact_url` respeita a configuração e usa um URL HTTP ou HTTPS com um domínio. A regra **não confirma que a página existe nem exige que pelo menos um dos dois contactos técnicos esteja preenchido**.
+
+A regra avalia cada linha do `feed_info.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O URL usa `http` ou `https`, tem domínio e não contém carateres proibidos? | ✅ Passa | ❌ Reporta o problema: URL inválido |
+
+Os espaços no início e no fim são ignorados durante a verificação. Os espaços no interior não são aceites. Uma linha com todos os campos vazios é ignorada antes desta regra.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `https://dados.exemplo.pt/contacto` | ✅ Passa | URL HTTPS com domínio |
+| `dados.exemplo.pt/contacto` | ❌ Problema | Falta o protocolo |
+| `https://dados.exemplo.pt/contacto` quando o campo é proibido | ❌ Problema | Campo preenchido indevidamente |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| URL inválido | Falta o protocolo ou o domínio, ou existem carateres não permitidos | Corrigir `feed_contact_url` em `feed_info.txt` para um URL completo, por exemplo `https://dados.exemplo.pt/contacto` |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `feed_contact_url` em `feed_info.txt` com a página de contacto técnico do conjunto |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `feed_contact_url` em `feed_info.txt` |

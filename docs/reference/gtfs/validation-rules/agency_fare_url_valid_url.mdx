@@ -1,29 +1,52 @@
 ---
-title: Página Web sobre tarifas ou bilhética do operador
-description: agency_fare_url_valid_url
----
-## Campos que serão validados nesta regra
-
-| Nome do Campo     | Tipo | Presença | Descrição                                                                                                                                                                                 |
-| ----------------- | ---- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `agency_fare_url` | URL  | Opcional | URL de uma página web onde um passageiro pode comprar bilhetes ou outros instrumentos de tarifa para essa agência, ou uma página web contendo informações sobre as tarifas dessa agência. |
-
-## O que esta validação faz
-
-No ficheiro `agency.txt`,  o campo `agency_fare_url` aponta para uma página onde o utente pode comprar bilhetes ou outros títulos de transporte do operador, ou obter informação sobre tarifas. Quando há endereço, esta verificação confirma este formato de URL. Conforme a severidade da regra, a ausência de valor pode ser tratada como obrigatória ou recomendada (exceto quando o caso é ignorado pela regra); o campo também pode ser proibido.
-
+title: Página de tarifas do operador
+description: Verifica se o endereço de compra ou informação tarifária em agency.txt é um URL HTTP ou HTTPS válido e, quando configurado, se é permitido.
 ---
 
-### Passa
+## Propriedades da regra
 
-- A ausência de valor está alinhada com a regra (incluindo quando a verificação está marcada para ignorar este campo).
-- O campo contém um URL válido; não está preenchido quando a regra o proíbe; e, se existir lista de endereços permitidos, o valor está nessa lista (ou a regra admite qualquer URL válido).
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `agency_fare_url_valid_url` |
+| Ficheiro | `agency.txt` |
+| Campo | `agency_fare_url` |
+| Tipo | URL |
+| Severidade | Opcional |
 
----
+**Descrição do campo:** URL de uma página onde o passageiro pode comprar títulos de transporte ou consultar informação sobre as tarifas do operador.
 
-### Falha
+Mais informação em [agency.txt](/reference/gtfs/schedule/agency).
 
-- O texto não é um URL aceite pelo formato verificado.
-- O campo está em falta quando a regra exige ou recomenda preenchimento (e o caso não é ignorado), com a severidade configurada para esse tipo de mensagem.
-- O campo está preenchido quando a regra o proíbe.
-- O endereço não consta da lista admitida pela regra, quando essa lista é fechada.
+## Como funciona
+
+Se o operador indicar uma página tarifária, o URL tem de usar `http` ou `https` e incluir um domínio. Quando existe uma lista de valores permitidos, o URL também tem de constar dessa lista. A regra **não confirma que a página existe, está acessível ou permite comprar títulos**.
+
+A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O texto é um URL HTTP ou HTTPS válido, com domínio? | Segue para o passo 4 | ❌ Reporta o problema: formato inválido |
+| 4 | A configuração da regra tem uma lista de URL permitidos? | Segue para o passo 5 | ✅ Passa |
+| 5 | O URL está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: URL não permitido |
+
+Os espaços no início e no fim são ignorados ao verificar o formato. A comparação com a lista permitida usa o valor original completo.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `https://operador.pt/tarifas` | ✅ Passa | URL completo |
+| `operador.pt/tarifas` | ❌ Problema | Falta o protocolo |
+| `https://` | ❌ Problema | Falta o domínio |
+| `https://outro.pt/tarifas` (lista permitida = `https://operador.pt/tarifas`) | ❌ Problema | Fora da lista |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Formato inválido | Falta o protocolo ou o domínio, ou existem espaços ou carateres inválidos | Escrever em `agency_fare_url` de `agency.txt` um URL completo, por exemplo `https://operador.pt/tarifas` |
+| URL não permitido | O URL é válido mas não consta da lista configurada | Usar em `agency_fare_url` de `agency.txt` um URL permitido ou rever a lista na configuração da regra |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `agency_fare_url` em `agency.txt` com o URL da página tarifária |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `agency_fare_url` em `agency.txt` |

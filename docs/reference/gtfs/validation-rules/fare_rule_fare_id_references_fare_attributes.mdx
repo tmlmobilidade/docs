@@ -1,26 +1,53 @@
 ---
-title: Classe tarifária da regra
-description: fare_rule_fare_id_references_fare_attributes
----
-## Campos que serão validados nesta regra
-
-| Nome do Campo | Tipo                                                    | Presença    | Descrição                        |
-| ------------- | ------------------------------------------------------- | ----------- | -------------------------------- |
-| `fare_id`     | ID estrangeiro que referencia `fare_attributes.fare_id` | Obrigatório | Identifica uma classe tarifária. |
-
-## O que esta validação faz
-
-No ficheiro `fare_rules`, o campo `fare_id` identifica a classe tarifária a que a regra se aplica. Tem de existir em todas as linhas e de corresponder a um `fare_id` definido em `fare_attributes.txt`. Incumprimentos são tratados como erro.
-
+title: Tarifa referenciada pela regra
+description: Verifica se cada tarifa indicada em fare_rules.txt existe em fare_attributes.txt.
 ---
 
-### Passa
+## Propriedades da regra
 
-- O `fare_id` está preenchido e coincide com uma entrada de `fare_attributes` no mesmo conjunto de dados.
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `fare_rule_fare_id_references_fare_attributes` |
+| Ficheiros | `fare_rules.txt`, `fare_attributes.txt` |
+| Campo | `fare_id` |
+| Tipo | Identificador externo |
+| Severidade | Obrigatório |
 
----
+**Descrição do campo:** identifica uma classe tarifária.
 
-### Falha
+Mais informação em [fare_rules.txt](/reference/gtfs/schedule/fare_rules) e [fare_attributes.txt](/reference/gtfs/schedule/fare_attributes).
 
-- O campo está em falta.
-- O valor não existe em `fare_attributes.txt` para o feed em causa.
+## Como funciona
+
+Quando a regra passa, cada `fare_id` preenchido em `fare_rules.txt` coincide com uma tarifa de `fare_attributes.txt`. A configuração da regra também pode exigir, recomendar ou proibir o campo. A regra **não verifica as restantes propriedades da tarifa nem a unicidade em `fare_attributes.txt`**.
+
+A regra avalia cada linha do `fare_rules.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O mesmo `fare_id` existe em `fare_attributes.txt`? | ✅ Passa | ❌ Reporta o problema: tarifa inexistente |
+
+O valor é comparado tal como foi escrito. Os espaços e as maiúsculas não são normalizados. Uma linha com todos os campos vazios é ignorada antes desta regra.
+
+## Como se relacionam
+
+Cada `fare_id` de `fare_rules.txt` tem de coincidir com um `fare_id` existente em `fare_attributes.txt`. Esta ligação associa a regra tarifária à tarifa que será aplicada.
+
+## Exemplos
+
+| `fare_id` em `fare_rules.txt` | `fare_id` em `fare_attributes.txt` | Resultado | Porquê |
+|---|---|---|---|
+| `T1` | `T1`, `T2` | ✅ Passa | Tarifa existente |
+| `T3` | `T1`, `T2` | ❌ Problema | Tarifa inexistente |
+| campo vazio numa linha preenchida | `T1` | ❌ Problema | Falta um valor obrigatório |
+| `T1` quando o campo é proibido | `T1` | ❌ Problema | Campo preenchido indevidamente |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Tarifa inexistente | O identificador não corresponde a nenhuma tarifa de `fare_attributes.txt` | Corrigir `fare_id` em `fare_rules.txt` ou adicionar o `fare_id` correspondente a `fare_attributes.txt` |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `fare_id` em `fare_rules.txt` com um identificador existente em `fare_attributes.txt` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `fare_id` em `fare_rules.txt` |

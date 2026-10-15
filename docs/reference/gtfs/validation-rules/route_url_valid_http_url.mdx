@@ -1,33 +1,59 @@
 ---
-title: Página Web da rota
-description: route_url_valid_http_url
----
-## Campos que serão validados nesta regra
-
-| Nome do Campo | Tipo | Presença | Descrição                                                                                          |
-| ------------- | ---- | -------- | -------------------------------------------------------------------------------------------------- |
-| `route_url`   | URL  | Opcional | URL de uma página web sobre a rota específica. Deve ser diferente do valor de agency.`agency_url`. |
-
-
-
-
-## O que esta validação faz
-
-No ficheiro `routes.txt`,  o campo `route_url` aponta para uma página sobre aquela rota (não deve ser apenas a página institucional da operadora). Quando há endereço, este verificação confirma que tem forma de URL aceite pelo conjunto de regras usado na aplicação. Compara ainda com o URL da operadora referenciada, o GTFS recomenda que seja distinto do `agency_url` se for igual, pode registar-se um aviso (recomendação), não necessariamente um bloqueio. Conforme a regra, o campo pode ser obrigatório, recomendado, opcional ou proibido. Se no conjunto de dados existirem várias linhas de operadora com o mesmo identificador, a comparação com o URL da operadora deixa de ser fiável e esse caso é tratado como erro.
-
+title: Página web da rota
+description: Verifica se o route_url de routes.txt é um URL http ou https bem escrito, diferente do agency_url do operador.
 ---
 
-### Passa
+## Propriedades da regra
 
-- O campo está vazio e a regra permite isso (incluindo quando a verificação não se aplica a esta linha).
-- O campo contém um URL válido, não está preenchido quando a regra o proíbe.
-- O URL da rota é diferente do URL da operadora, ou coincide com ele mas apenas origina o aviso de boas práticas (conforme a política de avisos).
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `route_url_valid_http_url` |
+| Ficheiro | `routes.txt` |
+| Campo | `route_url` |
+| Tipo | URL |
+| Severidade | Opcional |
 
----
+**Descrição do campo:** endereço de uma página web sobre a rota. Deve ser diferente do `agency_url` do operador, em `agency.txt`.
 
-### Falha
+Mais informação em [routes.txt](/reference/gtfs/schedule/routes).
 
-- O texto não é um URL aceite pelo formato verificado.
-- O campo está em falta quando a regra exige preenchimento (ou quando a ausência é reportada com a severidade definida para “obrigatório” / “recomendado”).
-- O campo está preenchido quando a regra o proíbe.
-- Existem várias entradas de operadora com o mesmo identificador, pelo que não é possível validar correctamente a relação com o URL da operadora.
+## Como funciona
+
+Se o operador indicar um `route_url`, o valor tem de ser um URL bem escrito, que começa por `http://` ou `https://` e tem um domínio. A rota não pode usar o mesmo endereço que o operador. A regra **não confirma que a página existe**.
+
+A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O texto é um URL `http` ou `https` válido, com domínio e sem espaços nem carateres proibidos? | Segue para o passo 4 | ❌ Reporta o problema: URL inválido |
+| 4 | A rota tem `agency_id` e este aparece em mais de uma linha de `agency.txt`? | ❌ Reporta o problema: não foi possível comparar com o `agency_url` | Segue para o passo 5 |
+| 5 | O `route_url` é igual ao `agency_url` desse operador? | ❌ Reporta o problema: endereço igual ao do operador. Segue para o passo 6 | Segue para o passo 6 |
+| 6 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 7 | ✅ Passa |
+| 7 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+Os espaços no início e no fim são ignorados na validação do formato. A comparação com o `agency_url` só se faz quando a rota tem `agency_id`.
+
+## Como se relacionam
+
+Quando a rota tem `agency_id`, o `route_url` é comparado com o `agency_url` desse operador em `agency.txt`. Os dois endereços têm de ser diferentes.
+
+## Exemplos
+
+| route_url | agency_url do operador | Resultado | Porquê |
+|---|---|---|---|
+| `https://operador.pt/rotas/32` | `https://operador.pt` | ✅ Passa | URL válido e diferente |
+| `operador.pt/rotas/32` | `https://operador.pt` | ❌ Problema | Falta `http://` ou `https://` |
+| `https://operador.pt` | `https://operador.pt` | ❌ Problema | Igual ao `agency_url` |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| URL inválido | Falta `http://` ou `https://`, falta o domínio ou existem espaços e carateres como `<` ou `>` | Escrever o endereço completo em `route_url` em `routes.txt`, por exemplo `https://operador.pt/rotas/32` |
+| Endereço igual ao do operador | O `route_url` repete o `agency_url` | Indicar em `route_url` em `routes.txt` uma página específica da rota |
+| Não foi possível comparar com o `agency_url` | O `agency_id` da rota aparece em mais de uma linha de `agency.txt` | Tornar único o `agency_id` em `agency.txt` |
+| Valor não permitido | O valor está fora da lista de valores permitidos da configuração da regra | Usar um valor da lista em `route_url` em `routes.txt`, ou pedir ao administrador que o adicione |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `route_url` em `routes.txt` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `route_url` em `routes.txt` |

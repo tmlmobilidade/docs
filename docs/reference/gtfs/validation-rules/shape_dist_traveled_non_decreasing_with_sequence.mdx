@@ -1,39 +1,53 @@
 ---
-title: Valida que shape_dist_traveled não diminui quando os pontos da shape são ordenados por shape_pt_sequence.
-description: shape_dist_traveled_non_decreasing_with_sequence
+title: Distância crescente ao longo da forma
+description: Verifica se shape_dist_traveled não diminui quando os pontos são ordenados por shape_pt_sequence.
 ---
 
-## Campos que serão validados nesta regra
+## Propriedades da regra
 
-| Nome do Campo         | Tipo                        | Presença    | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| --------------------- | --------------------------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `shape_dist_traveled` | Número decimal não negativo | Opcional    | Distância real percorrida ao longo da forma, desde o primeiro ponto da forma até ao ponto especificado neste registo. Utilizado pelos planeadores de viagens para mostrar a porção correta da forma num mapa. Os valores devem aumentar juntamente com `shape_pt_sequence`; não devem ser utilizados para mostrar o percurso inverso ao longo de um percurso. As unidades de distância devem ser consistentes com as utilizadas em `stop_times.txt`.<br/><br/>Recomendado para percursos com troços em loop ou em linha (o veículo atravessa ou percorre o mesmo troço do alinhamento numa viagem). Se um veículo refaz ou cruza o alinhamento da rota em pontos ao longo de uma viagem, `shape_dist_traveled` é importante para esclarecer como as porções dos pontos em `shapes.txt` se alinham com os registos em `stop_times.txt`.<br/><br/><u>Exemplo</u>: Se um autocarro percorrer os três pontos definidos acima para `A_shp`, os valores adicionais de `shape_dist_traveled` (mostrados aqui em quilómetros) seriam semelhantes aos isto:<br/><br/>`shape_id`,`shape_pt_lat,shape_pt_lon,shape_pt_sequence,shape_dist_traveled`<br/>`A_shp,37.61 956,-122.48161,0,0`<br/>`A_shp,37.64430,-122.41070,6,6.8310`<br/>`A_shp,37.65863,-122.30839,11,15.8765` |
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `shape_dist_traveled_non_decreasing_with_sequence` |
+| Ficheiro | `shapes.txt` |
+| Campos | `shape_id`, `shape_pt_sequence`, `shape_dist_traveled` |
+| Tipo | Identificador, Número inteiro, Número decimal |
+| Severidade | Condicional |
 
+**Descrição dos campos:**
 
+- `shape_id`: agrupa os pontos da mesma forma.
+- `shape_pt_sequence`: define a ordem dos pontos.
+- `shape_dist_traveled`: indica a distância acumulada até cada ponto.
 
+Mais informação em [shapes.txt](/reference/gtfs/schedule/shapes).
 
+## Como funciona
 
-## O que esta validação faz
+Quando a regra passa, a distância não diminui entre pontos consecutivos na ordem da sequência. Valores iguais são aceites. A regra **ignora comparações em que falta uma das distâncias**.
 
-Esta validação confirma que, dentro de cada `shape_id`, os valores de `shape_dist_traveled` não diminuem quando os pontos são ordenados por `shape_pt_sequence`.
+A regra avalia cada grupo de pontos com o mesmo `shape_id`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
-Se um ponto tiver um `shape_dist_traveled` inferior ao ponto anterior da mesma shape, a regra falha. Isto evita que a distância acumulada recue ao longo da geometria.
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | Os dois pontos consecutivos têm distância? | Segue para o passo 2 | Ignora este par |
+| 2 | A distância atual é inferior à anterior? | ❌ Reporta o problema | ✅ Passa |
 
----
+Os pontos são ordenados por `shape_pt_sequence` antes da comparação.
 
-### Passa
+## Como se relacionam
 
-- Para o mesmo `shape_id`, os registos têm `shape_pt_sequence` em ordem crescente.
-- Para o mesmo `shape_id`, cada `shape_dist_traveled` é maior ou igual ao `shape_dist_traveled` do ponto anterior.
-- Quando `shape_pt_sequence` avança, `shape_dist_traveled` mantém a distância acumulada da shape sem voltar atrás.
-- Se algum dos dois pontos comparados não tiver `shape_dist_traveled`, esta regra não reporta erro porque não existem dois valores preenchidos para comparar.
+Para cada `shape_id`, `shape_pt_sequence` define a ordem em que `shape_dist_traveled` deve manter-se ou aumentar.
 
----
+## Exemplos
 
-### Falha
+| `shape_pt_sequence` | `shape_dist_traveled` | Resultado | Porquê |
+|---|---|---|---|
+| `0`, `6`, `11` | `0`, `6.8`, `15.9` | ✅ Passa | A distância aumenta |
+| `0`, `6`, `11` | `0`, `8`, `7` | ❌ Problema | A distância diminui no último ponto |
+| `0`, `6`, `11` | `0`, vazio, `7` | ✅ Passa | Os pares com valores em falta são ignorados |
 
-- Para o mesmo `shape_id`, um registo com `shape_pt_sequence` posterior tem `shape_dist_traveled` menor do que o registo anterior.
-- `shape_pt_sequence` continua em ordem crescente, mas `shape_dist_traveled` recua e quebra a distância acumulada da shape.
-- O par de pontos tem `shape_dist_traveled` preenchido nos dois registos, permitindo comparar os valores, e o valor atual é inferior ao anterior.
-- A correção deve manter a ordem de `shape_pt_sequence` e recalcular ou corrigir o `shape_dist_traveled` do ponto que ficou abaixo do valor anterior.
+## Como corrigir
 
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Distância decrescente | Os valores não acompanham a ordem dos pontos | Corrigir `shape_dist_traveled` ou `shape_pt_sequence` nas linhas da forma em `shapes.txt` |

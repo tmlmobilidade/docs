@@ -1,25 +1,43 @@
 ---
-title: Nome da categoria de utente
-description: rider_category_name_non_empty
----
-## Campos que serão validados nesta regra
-
-| Nome do Campo         | Tipo  | Presença    | Descrição                                                    |
-| --------------------- | ----- | ----------- | ------------------------------------------------------------ |
-| `rider_category_name` | Texto | Obrigatório | Nome da categoria de utente tal como é apresentado ao utente |
-
-## O que esta validação faz
-
-No ficheiro `rider_categories`, o campo `rider_category_name` é a designação da categoria tal como o utente a vê em interfaces, horários ou comunicação do operador. O valor é obrigatório a nível desta verificação (tem de existir no registo). A severidade das mensagens pode ser afinada pela regra.
-
+title: Nome da categoria de passageiro
+description: Verifica se o nome de cada categoria de passageiro em rider_categories.txt está preenchido.
 ---
 
-### Passa
+## Propriedades da regra
 
-- O nome da categoria está definido no registo.
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `rider_category_name_non_empty` |
+| Ficheiro | `rider_categories.txt` |
+| Campo | `rider_category_name` |
+| Tipo | Texto |
+| Severidade | Obrigatório |
 
----
+**Descrição do campo:** nome da categoria de passageiro, tal como é apresentado ao passageiro.
 
-### Falha
+Mais informação em [rider_categories.txt](/reference/gtfs/schedule/rider_categories).
 
-- O nome está em falta (campo não preenchido no modelo validado).
+## Como funciona
+
+Quando a regra passa, cada categoria de passageiro tem um nome preenchido. A regra **não verifica o conteúdo do texto** nem se o nome se repete.
+
+A regra avalia cada linha do `rider_categories.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | ✅ Passa |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `Adulto` | ✅ Passa | Nome preenchido |
+| (vazio) | ❌ Problema | Campo obrigatório sem valor |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `rider_category_name` em `rider_categories.txt` com o nome mostrado ao passageiro |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `rider_category_name` em `rider_categories.txt` |

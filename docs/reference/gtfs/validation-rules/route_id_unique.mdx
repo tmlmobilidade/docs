@@ -1,32 +1,48 @@
 ---
-title: Identificador obrigatório e sem repetições por rota
-description: route_id_unique
----
-## Campos que serão validados nesta regra
-
-| Nome do Campo | Tipo     | Presença    | Descrição            |
-| ------------- | -------- | ----------- | -------------------- |
-| `route_id`    | ID único | Obrigatório | Identifica uma rota. |
-
-
-
-
-## O que esta validação faz 
-
-No ficheiro `routes.txt`,  o campo `route_id` garante que cada linha de rotas tem uma referência de rota preenchida e que essa referência não coincide com a de nenhuma outra linha no mesmo ficheiro.
-
+title: Identificador único da rota
+description: Verifica se cada route_id de routes.txt está preenchido e não se repete no ficheiro.
 ---
 
-### Passa
+## Propriedades da regra
 
-- A referência está definida e não há duas linhas com a mesma referência.
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `route_id_unique` |
+| Ficheiro | `routes.txt` |
+| Campo | `route_id` |
+| Tipo | ID único |
+| Severidade | Obrigatório |
 
----
+**Descrição do campo:** identifica uma rota.
 
-### Falha
+Mais informação em [routes.txt](/reference/gtfs/schedule/routes).
 
-- A referência está em falta ou aparece mais do que uma vez entre as rotas.
+## Como funciona
 
+Quando a regra passa, cada rota tem um `route_id` próprio, que não aparece noutra linha do ficheiro. A regra **não verifica o formato do identificador**. A composição do identificador é avaliada pela regra `route_id_composed_of_short_name_and_sort_order`.
 
+A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O mesmo `route_id` aparece em mais de uma linha do ficheiro? | ❌ Reporta o problema: identificador duplicado | ✅ Passa |
 
+O problema é reportado em todas as linhas que repetem o identificador.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `1001_0` (só numa linha) | ✅ Passa | Identificador único |
+| `1001_0` (em duas linhas) | ❌ Problema | Identificador repetido |
+| (vazio) | ❌ Problema | Campo obrigatório sem valor |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Identificador duplicado | Duas ou mais rotas têm o mesmo `route_id` | Atribuir um `route_id` diferente a cada rota em `routes.txt` |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `route_id` em `routes.txt` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `route_id` em `routes.txt` |

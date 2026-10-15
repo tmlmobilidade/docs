@@ -1,39 +1,57 @@
 ---
-title: Descrição da rota coerente com o nome curto e com a política do feed
-description: route_desc_per_severity_and_content_rules
----
-## Campos que serão validados nesta regra
-
-| Nome do Campo | Tipo  | Presença | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| ------------- | ----- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `route_desc`  | Texto | Opcional | Descrição de uma rota que fornece informação útil e de qualidade. Não deve ser um duplicado de `route_short_name` ou `route_long_name`. <br/><br/>Exemplo: Os comboios da linha "A" operam entre Inwood-207 St, Manhattan e Far Rockaway-Mott Avenue, Queens, em todos os horários. Além disso, das 6h da manhã até aproximadamente à meia-noite, os comboios adicionais da linha "A" operam entre Inwood-207 St e Lefferts Boulevard (os comboios alternam normalmente entre Lefferts Blvd e Far Rockaway). |
-
-
-
-
-## O que esta validação faz
-
-No `routes.txt`, o campo `route_desc` é um texto descritivo da linha de modo a informar o passageiro com qualidade. Pelo GTFS, não deve repetir à letra o nome curto nem o nome longo da rota, situações destas são tratadas como avisos quando a descrição existe e coincide com um desses campos.
-
-É obrigatório preencher `route_desc` quando `route_short_name` está vazio (ausente ou em branco). Se o nome curto existe, `route_desc` pode ficar vazio sem incumprimento por essa regra.
-
-Se o campo for interdito no perfil de dados mas estiver preenchido, incumpre. Pode ainda existir uma lista de textos admitidos, neste caso o conteúdo de `route_desc` tem de constar dessa lista (ou a política aceitar todas as opções).
-
+title: Descrição da rota
+description: Verifica se a route_desc está preenchida quando não existe route_short_name e se não repete o nome da rota.
 ---
 
-### Passa
+## Propriedades da regra
 
-- `route_short_name` preenchido e `route_desc` vazio (opcional nesse caso).
-- `route_short_name` vazio e `route_desc` preenchido com texto válido face às restrições.
-- `route_desc` preenchido sem incidir em proibição, com texto admisível nas opções, quando existem.
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `route_desc_per_severity_and_content_rules` |
+| Ficheiro | `routes.txt` |
+| Campo | `route_desc` |
+| Tipo | Texto |
+| Severidade | Opcional (obrigatório quando `route_short_name` está vazio) |
 
----
+**Descrição do campo:** descrição da rota com informação útil e de qualidade. Não deve repetir o `route_short_name` nem o `route_long_name`. Exemplo: `Os comboios A circulam entre Inwood-207 St, Manhattan, e Far Rockaway-Mott Avenue, Queens, a toda a hora.`
 
-### Falha
+Mais informação em [routes.txt](/reference/gtfs/schedule/routes).
 
-- `route_short_name` e `route_desc` ambos vazios.
-- Campo proibido com texto.
-- Texto fora da lista permitida.
+## Como funciona
 
+Quando a regra passa, a `route_desc` está preenchida (obrigatório se `route_short_name` estiver vazio) e não repete o nome da rota. A regra **não avalia a qualidade do texto**.
 
+A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Se a rota tem `route_short_name`, ✅ passa. Caso contrário, verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | A `route_desc` é igual ao `route_short_name`? | ❌ Reporta o problema: descrição repete o nome curto. Segue para o passo 4 | Segue para o passo 4 |
+| 4 | A `route_desc` é igual ao `route_long_name`? | ❌ Reporta o problema: descrição repete o nome longo. Segue para o passo 5 | Segue para o passo 5 |
+| 5 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 6 | ✅ Passa |
+| 6 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+Os passos 3 e 4 são independentes. A mesma linha pode ter os dois problemas.
+
+## Como se relacionam
+
+A `route_desc` é comparada com `route_short_name` e `route_long_name`. Se `route_short_name` estiver vazio, a `route_desc` passa a ser necessária.
+
+## Exemplos
+
+| route_desc | route_short_name | route_long_name | Resultado | Porquê |
+|---|---|---|---|---|
+| `Liga o centro ao aeroporto` | `32` | `Centro - Aeroporto` | ✅ Passa | Descrição própria |
+| `32` | `32` | `Centro - Aeroporto` | ❌ Problema | Repete o nome curto |
+| `Centro - Aeroporto` | `32` | `Centro - Aeroporto` | ❌ Problema | Repete o nome longo |
+| (vazio) | (vazio) | `Centro - Aeroporto` | ❌ Problema | Sem `route_short_name`, a descrição é necessária |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Descrição repete o nome da rota | A `route_desc` é igual ao `route_short_name` ou ao `route_long_name` | Reescrever `route_desc` em `routes.txt` com informação nova sobre a rota |
+| Valor não permitido | O valor está fora da lista de valores permitidos da configuração da regra | Usar um valor da lista em `route_desc` em `routes.txt`, ou pedir ao administrador que o adicione |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `route_desc` em `routes.txt` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `route_desc` em `routes.txt` |

@@ -1,31 +1,56 @@
 ---
-title: Paragem servida referenciada em stops com tipo de local admissível
-description: stop_times_stop_id_references_stops_table
----
-## Campos que serão validados nesta regra
-
-| Nome do Campo | Tipo                                            | Presença                     | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| ------------- | ----------------------------------------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `stop_id`     | ID externo que faz referência a `stops.stop_id` | Condicionalmente obrigatório | Identifica a paragem atendida. Todas as paragens atendidas durante uma viagem devem ter um registo em `stop_times.txt`. Os locais referenciados devem ser paragens/plataformas, ou seja, o seu valor `stops.location_type` deve ser `0` ou `empty`. Uma paragem pode ser servida várias vezes na mesma viagem, e várias viagens e rotas podem servir a mesma paragem. <br/><br/>O serviço on-demand que utiliza paragens deve ser referenciado na sequência em que o serviço está disponível nessas paragens. Um consumidor de dados deve assumir que a viagem é possível de uma paragem ou local para qualquer paragem ou local posterior na viagem, desde que o `pickup/drop_off_type` de cada `stop_time` e as restrições de tempo de cada `start/end_pickup_drop_off_window` não o impeçam. <br/><br/>**Condicionalmente Obrigatório**:<ul><li>Obrigatório se `stop_times.location_group_id` E `stop_times.location_id` NÃO estiverem definidos.</li><li>Proibido se `stop_times.location_group_id` ou `stop_times.location_id` estiverem definidos.</li></ul> |
-
-## O que esta validação faz
-
-No ficheiro `stop_times.txt`, o campo `stop_id` identifica a paragem (plataforma / paragem) atendida neste ponto da viagem. Pelo GTFS, todas as paragens servidas ao longo do trip devem aparecer em linhas de `stop_times`, a paragem pode repetir-se no mesmo trip e várias viagens podem partilhar o mesmo `stop_id`.
-
-Esta validação impede usar `stop_id` preenchido quando `location_group_id` ou `location_id` têm valor na mesma linha (só um modelo de localização de cada vez). Exige `stop_id` preenchido quando nem `location_group_id` nem `location_id` estão definidos. Nesse caso, confirma que o valor existe em `stops.txt` e que o `location_type` da paragem referida é 0 ou vazio (paragem/plataforma, não estação nem outro tipo).
-
+title: Paragem servida
+description: Verifica se `stop_id` referencia uma paragem válida e não é combinado com outros tipos de localização.
 ---
 
-### Passa
+## Propriedades da regra
 
-- `stop_id` preenchido, presente em `stops`, `location_type` 0 ou ausente/vazio, com `location_group_id` e `location_id` ambos sem valor.
-- `stop_id` vazio e `location_group_id` ou `location_id` com valor (modelo por grupo ou local GeoJSON, sem misturar paragem clássica na mesma linha).
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_times_stop_id_references_stops_table` |
+| Ficheiros | `stop_times.txt`, `stops.txt` |
+| Campo | `stop_id` |
+| Tipo | Identificador externo |
+| Severidade | Obrigatório (quando `location_group_id` e `location_id` estão vazios; proibido quando um deles existe) |
 
----
+**Descrição do campo:** identifica a paragem servida. A referência tem de apontar para uma paragem ou plataforma, com `location_type` vazio ou igual a `0`.
 
-### Falha
+Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times) e [stops.txt](/reference/gtfs/schedule/stops).
 
-- Proibido em conjunto: `stop_id` com valor e (`location_group_id` ou `location_id`) com valor.
-- Obrigatório em falta: sem `location_group_id` e sem `location_id`, mas `stop_id` vazio.
-- Referência inexistente: `stop_id` não existe em `stops`. _Correção:_ alinhar com um `stop_id` válido ou criar a paragem.
-- Tipo de local inválido: a paragem em `stops` tem `location_type` diferente de 0 e não vazio.
+## Como funciona
+
+A linha usa `stop_id`, `location_group_id` ou `location_id`, sem os combinar. Quando usado, `stop_id` tem de existir em `stops.txt` e referir uma paragem ou plataforma. A regra não verifica a ordem do serviço.
+
+A regra avalia cada linha do `stop_times.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | `location_group_id` ou `location_id` está preenchido? | Se `stop_id` também estiver preenchido, reporta o problema; depois termina | Segue para o passo 2 |
+| 2 | `stop_id` está vazio? | Verifica se a configuração exige ou recomenda o campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 3 |
+| 3 | A configuração proíbe `stop_id`? | ❌ Reporta o problema | Segue para o passo 4 |
+| 4 | O identificador existe em `stops.txt`? | Segue para o passo 5 | ❌ Reporta o problema: paragem inexistente |
+| 5 | A localização referenciada tem `location_type` vazio ou `0`? | ✅ Passa | ❌ Reporta o problema: tipo de localização inválido |
+
+## Como se relacionam
+
+`stop_id`, `location_group_id` e `location_id` são alternativas na mesma linha. O `stop_id` referencia uma linha de `stops.txt`, cujo `location_type` determina se pode ser servida.
+
+## Exemplos
+
+| `stop_id` | Outros identificadores | Resultado | Porquê |
+|---|---|---|---|
+| `STP_1`, existente e tipo `0` | Vazios | ✅ Passa | Paragem válida |
+| Vazio | Vazios | ❌ Problema | Falta a localização |
+| `STP_9`, inexistente | Vazios | ❌ Problema | Referência inexistente |
+| `EST_1`, com tipo `1` | Vazios | ❌ Problema | Referencia uma estação |
+| `STP_1` | `location_group_id=G1` | ❌ Problema | Identificadores combinados |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | Não existe `stop_id`, `location_group_id` nem `location_id` | Preencher `stop_id` em `stop_times.txt`, ou usar uma das alternativas admitidas |
+| Campo preenchido quando não devia | A configuração proíbe `stop_id` | Remover `stop_id` de `stop_times.txt` |
+| Identificadores combinados | `stop_id` aparece com `location_group_id` ou `location_id` | Manter apenas um tipo de localização na linha de `stop_times.txt` |
+| Paragem inexistente | O `stop_id` não existe em `stops.txt` | Corrigir `stop_id` em `stop_times.txt` ou adicionar a paragem a `stops.txt` |
+| Tipo de localização inválido | O identificador aponta para uma localização cujo `location_type` não é vazio nem `0` | Referenciar em `stop_id` uma paragem ou plataforma de `stops.txt` |

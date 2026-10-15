@@ -1,27 +1,176 @@
 ---
-title: Regras de validação GTFS
+title: Regras de validação GTFS v2
 description: Índice das regras de validação
 ---
+# Alterações às validações na versão GTFS v30
 
-import { getPageTreePeers } from 'fumadocs-core/page-tree';
-import { sourceReference } from '@/lib/source';
+Com a nova versão do GTFS será feito novas atualizações as regras que já existiam quanto a criação de novas regras para que seja validado tudo com a estrutura toda.
 
-<table>
-	<thead>
-		<tr>
-			<th>Regra</th>
-		</tr>
-	</thead>
-	<tbody>
-		{getPageTreePeers(
-			sourceReference.getPageTree(),
-			'/reference/gtfs/validation-rules',
-		).map(peer => (
-			<tr key={peer.url}>
-				<td>
-					<a href={peer.url}>{peer.name}</a>
-				</td>
-			</tr>
-		))}
-	</tbody>
-</table>
+Para isso se segue uma lista com todas as regras alteradas quanto com as novas regras adicionadas.
+
+## agency.txt
+
+### Alterações na lógica de validação
+
+| Regra                                | Comportamento anterior                                                           | Comportamento atual                                                                                                                                              |
+| ------------------------------------ | -------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `agency_id_unique`                   | A ausência de `agency_id` era sempre um erro quando existia mais de um operador. | A presença do campo passa a depender da configuração da regra, independentemente do número de operadores. Mantêm-se a unicidade e a lista de valores permitidos. |
+| `agency_id_matched_with_agency_name` | Também reportava a ausência de `agency_id` ou `agency_name`.                     | Passa a comparar os valores apenas quando ambos existem. A falta de cada campo fica a cargo da respetiva regra de presença.                                      |
+
+### Alterações na severidade e na presença do ficheiro
+
+| Regra                                | Comportamento anterior                                                                                                                          | Comportamento atual                                                                                                                                                                     |
+| ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `agency_id_unique`                   | Tinha um aviso de recurso quando não era definida severidade e emitia erro para a ausência do identificador num ficheiro com vários operadores. | A configuração controla a presença e a severidade. A regra continua a verificar identificadores repetidos; não atribui códigos novos nem garante a correspondência entre código e nome. |
+| `agency_id_matched_with_agency_name` | Já comparava o identificador e o nome através de uma correspondência configurável.                                                              | Continua a usar essa correspondência quando ativa. Pode ser desativada na configuração não é esta regra que verifica a unicidade de `agency_id`.                                        |
+
+
+## routes.txt
+
+### Regras novas
+
+| Regra | Descrição |
+| --- | --- |
+| `route_id_composed_of_short_name_and_sort_order` | Verifica se o `route_id` corresponde à junção de `route_short_name` e `route_sort_order`, separados por `_`. |
+
+### Alterações na lógica de validação
+
+| Regra | Comportamento anterior | Comportamento atual |
+| --- | --- | --- |
+| `route_agency_id_references_agency_table` | Exigia `agency_id` quando existia mais de um operador. | A presença passa a depender da configuração da regra, independentemente do número de operadores. Mantém-se a referência a `agency.txt`. |
+| `route_short_name_or_long_name_present` | Aceitava `route_short_name` vazio quando `route_long_name` estava preenchido. | Passa a avaliar a presença de `route_short_name` de acordo com a sua configuração, mesmo quando existe `route_long_name`. |
+| `route_long_name_or_short_name_present` | Aceitava `route_long_name` vazio quando `route_short_name` estava preenchido. | Passa a avaliar a presença de `route_long_name` de acordo com a sua configuração, mesmo quando existe `route_short_name`. |
+
+### Alterações na severidade e na presença do ficheiro
+
+| Regra                                                                                | Comportamento anterior                                                                      | Comportamento atual                                                                                                                                        |
+| ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `route_desc_per_severity_and_content_rules`, `route_short_name_or_long_name_present` | O nome curto demasiado longo e a descrição igual ao nome eram reportados como avisos fixos. | As mensagens passam a respeitar a severidade configurada para a respetiva regra. Os critérios de comprimento e duplicação já existiam.                     |
+
+
+### Alterações a confirmar antes da publicação
+
+Os comportamentos seguintes existem no código atual. Devem ser confirmados como requisitos pretendidos antes de serem apresentados como exigências da versão v30.
+
+| Regra                                        | Alteração identificada                                                                                                                                                                  |
+| -------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `routes_continuous_pickup_valid_gtfs_enum`   | O valor `1`, anteriormente aceite de imediato, passa pelo mesmo ramo de validação de um campo vazio. Com severidade `error` ou `warning`, pode originar uma mensagem de campo em falta. |
+| `routes_continuous_drop_off_valid_gtfs_enum` | O valor `1`, anteriormente aceite de imediato, passa pelo mesmo ramo de validação de um campo vazio. Com severidade `error` ou `warning`, pode originar uma mensagem de campo em falta. |
+
+
+## shapes.txt
+
+### Alterações na lógica de validação
+
+| Regra | Comportamento anterior | Comportamento atual |
+| --- | --- | --- |
+| `shape_dist_traveled_delta_mismatches_haversine_segment` | Ignorava segmentos quando uma das distâncias acumuladas era zero ou o incremento era praticamente nulo. | Passa a verificar segmentos que começam em zero e incrementos nulos com deslocação real. Permite definir explicitamente metros (`m`) ou quilómetros (`km`) na segunda opção da regra; sem essa opção, mantém a deteção automática. |
+| `shape_dist_traveled_delta_mismatches_haversine_block` | Excluía do total geométrico o primeiro segmento do bloco, por começar em distância zero. | Passa a incluir esse segmento, corrigindo a comparação com a distância acumulada final do bloco. |
+| `shape_sequence_position_mismatches_cumulative_traveled_distance` | Podia eliminar pontos sem coordenadas e comparar diretamente os pontos vizinhos restantes. | Passa a interromper a comparação junto de coordenadas ausentes ou inválidas, evitando segmentos artificiais. Também deixa de avaliar shapes com sequências ausentes, negativas ou repetidas. |
+
+### Alterações na severidade e na presença do ficheiro
+
+| Regra | Comportamento anterior | Comportamento atual |
+| --- | --- | --- |
+| `shape_dist_traveled_delta_mismatches_haversine_segment`, `shape_dist_traveled_delta_mismatches_haversine_block`, `shape_sequence_position_mismatches_cumulative_traveled_distance` | As verificações geométricas usavam erro como severidade de recurso. | Deixam de assumir erro quando não têm uma severidade ativa definida. É necessário ativá-las na configuração para obter os respetivos resultados. |
+
+A regra `shape_dist_traveled_delta_mismatches_haversine_segment` também aplica a proteção contra sequências ambíguas e coordenadas inválidas. Ignora distâncias ausentes, negativas ou não finitas e deixa os decréscimos de distância para a regra de monotonia. Estas duas regras geométricas passam ainda a rejeitar tolerâncias não finitas, usando o valor de recurso da implementação.
+
+Os problemas geométricos passam a indicar a linha original do ficheiro, mesmo quando os pontos foram reordenados ou filtrados. Trata-se de uma correção da localização do problema, não de uma validação nova.
+
+
+## stop_times.txt
+
+### Alterações na lógica de validação
+
+| Regra | Comportamento anterior | Comportamento atual |
+| --- | --- | --- |
+| `stop_times_arrival_time_ordering_with_departure_and_frequencies` | Exigia `arrival_time` na primeira e última paragem e quando `timepoint` era `1`. Também verificava a incompatibilidade com janelas de recolha ou largada. | A presença passa a depender da configuração da regra em cada registo, sem distinguir a posição da paragem ou `timepoint`. Mantém-se o formato horário; a incompatibilidade fica nas regras das janelas. |
+| `stop_times_departure_time_ordering_with_arrival_and_timepoint` | Exigia `departure_time` quando `timepoint` era `1` e verificava a incompatibilidade com janelas de recolha ou largada. | A presença passa a depender da configuração da regra em cada registo. Mantém-se o formato horário; a incompatibilidade fica nas regras das janelas. |
+| `stop_times_start_pickup_drop_off_window_valid` | Com uma hora de chegada ou partida e sem janela preenchida, podia continuar a exigir a janela por outra condição. | Quando existe `arrival_time` ou `departure_time`, apenas reporta o conflito se a janela estiver preenchida e termina esta verificação. Mantêm-se as restantes condições quando não existem horas fixas. |
+| `stop_times_end_pickup_drop_off_window_valid` | Com uma hora de chegada ou partida e sem janela preenchida, podia continuar a exigir a janela por outra condição. | Quando existe `arrival_time` ou `departure_time`, apenas reporta o conflito se a janela estiver preenchida e termina esta verificação. Mantêm-se as restantes condições quando não existem horas fixas. |
+
+
+## stops.txt
+
+### Alterações na lógica de validação
+
+| Regra | Comportamento anterior | Comportamento atual |
+| --- | --- | --- |
+| `stop_name_required_by_location_type` | Exigia `stop_name` para os tipos de localização `0`, `1` e `2`. | A presença passa a depender da configuração da regra, sem distinguir o valor de `location_type`. |
+| `stop_lat_valid_latitude_range` | Exigia `stop_lat` para os tipos de localização `0`, `1` e `2`. | A presença passa a depender da configuração da regra, sem distinguir o valor de `location_type`. Mantém-se a validação do intervalo da latitude. |
+| `stop_lon_valid_longitude_range` | Exigia `stop_lon` para os tipos de localização `0`, `1` e `2`. | A presença passa a depender da configuração da regra, sem distinguir o valor de `location_type`. Mantém-se a validação do intervalo da longitude. |
+
+
+## trips.txt
+
+### Regras novas
+
+| Regra | Descrição |
+| --- | --- |
+| `trips_shape_id_matches_route_id_and_direction_id` | Verifica se o `shape_id` corresponde à junção de `route_id` e `direction_id`, separados por `_`. |
+| `trips_shape_id_max_two_per_route` | Verifica se as viagens com o mesmo `route_id` utilizam, no máximo, dois valores distintos e não vazios de `shape_id`. |
+| `trips_shape_id_consistent_per_route_direction` | Verifica se as viagens com o mesmo `route_id` e `direction_id` utilizam o mesmo `shape_id`, mesmo quando pertencem a padrões diferentes. |
+| `trip_headsign_max_two_per_route` | Verifica se existem, no máximo, dois valores distintos e não vazios de `trip_headsign` para o mesmo `route_id`. |
+| `trip_headsign_consistent_per_route_direction` | Verifica se as viagens com o mesmo `route_id` e `direction_id` apresentam o mesmo `trip_headsign`, mesmo quando pertencem a padrões diferentes. |
+
+### Alterações na lógica de validação
+
+| Regra | Comportamento anterior | Comportamento atual |
+| --- | --- | --- |
+| `trips_shape_id_references_shapes_table_when_present` | Consultava informação de recolha contínua para exigir `shape_id` em determinadas viagens. | Deixa de usar essa condição. A presença de `shape_id` passa a depender da configuração da regra; mantém-se a referência a `shapes.txt`. |
+
+### Regras existentes que não são novas
+
+| Regra ou conjunto | Esclarecimento |
+| --- | --- |
+| `trips_pattern_id_needs_to_be_the_same_as_shape_id` | A igualdade entre `pattern_id` e `shape_id` já era verificada. A regra passa a reportar o problema no campo `pattern_id`, com o novo identificador e a mensagem invertida. A condição de igualdade mantém-se. |
+| Consistência de `route_id`, `direction_id`, `shape_id` e `trip_headsign` dentro de cada `pattern_id` | Estas verificações já existiam. As novidades são as verificações adicionais por `route_id` e por combinação de `route_id` com `direction_id`. |
+
+As verificações por sentido aplicam-se aos valores `0` e `1` de `direction_id`. Valores em falta e sentidos inválidos são tratados pelas respetivas regras. As regras de composição comparam apenas os campos disponíveis.
+
+
+## vehicles.txt
+
+### Regras novas
+
+| Regra | Descrição |
+| --- | --- |
+| `vehicles_total_capacity_non_negative` | Verifica se `total_capacity` é um número inteiro igual ou superior a zero. O novo campo substitui a representação separada de lugares sentados e em pé; não é calculada uma soma desses campos antigos. |
+| `vehicles_car_capacity_non_negative` | Verifica se `car_capacity`, a capacidade de transporte de automóveis, é um número inteiro igual ou superior a zero. |
+
+### Alterações na lógica de validação
+
+| Regra | Comportamento anterior | Comportamento atual |
+| --- | --- | --- |
+| `vehicles_vehicle_type_valid_enum` | Validava `typology` através de uma lista configurável; a verificação de uma enumeração fixa estava desativada. | Passa a validar `vehicle_type` com os valores `0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `11` e `12`. Pode ainda restringir esses valores pela configuração. |
+| `vehicles_bicycles_rack_count_non_negative` | Validava `bicycles` como uma indicação de não/sim: `0` ou `1`. | Passa a validar `bicycles_capacity` como uma capacidade inteira igual ou superior a zero. Deixa de usar a lista de opções do antigo campo. |
+| `vehicles_wheelchair_accessible_valid_gtfs_enum` | Validava `wheelchair` com os valores `0` e `1`. | Passa a validar `wheelchair_accessible`: `0` significa informação desconhecida, `1` indica acessibilidade e `2` indica ausência de acessibilidade. |
+| `vehicles_emission_valid_enum` | Aceitava códigos numéricos entre `0` e `7`. | Passa a aceitar `Euro I`, `Euro II`, `Euro III`, `Euro IV`, `Euro V`, `Euro VI`, `Euro VII` e `N/A`. |
+| `vehicles_propulsion_valid_enum` | Aceitava os códigos de `1` a `9`. | Passa também a aceitar `0`, `10`, `101`, `102`, `103`, `104`, `105` e `106`. |
+| `vehicles_license_plate_format_per_market_rules` | Validava o formato de matrícula rodoviária. | Passa também a aceitar MMSI com nove algarismos, começando por um algarismo entre `2` e `7`. A aceitação deste formato não depende do valor de `vehicle_type`. |
+
+### Regras removidas ou substituídas
+
+| Regra anterior | Situação atual |
+| --- | --- |
+| `available_seats_non_negative`, `available_standing_non_negative` | Deixam de validar capacidades separadas. O novo modelo usa `total_capacity`, validado por `vehicles_total_capacity_non_negative`. |
+| `typology_in_allowed_vehicle_types` | Substituída pela validação de `vehicle_type`, com uma enumeração diferente. |
+| `bicycles_rack_count_non_negative` | Substituída pela validação de capacidade em `bicycles_capacity`; o antigo campo era uma indicação de não/sim. |
+| `wheelchair_spots_valid_enum` | Substituída pela validação de `wheelchair_accessible`, com os valores `0`, `1` e `2`. |
+| `vehicle_owner_required` | A verificação do respetivo campo antigo deixa de existir no validador atual de `vehicles.txt`. |
+| `climatization_valid_enum` | A verificação do respetivo campo antigo deixa de existir no validador atual de `vehicles.txt`. |
+| `consumption_meter_valid_format` | A verificação do respetivo campo antigo deixa de existir no validador atual de `vehicles.txt`. |
+| `external_sound_valid_enum` | A verificação do respetivo campo antigo deixa de existir no validador atual de `vehicles.txt`. |
+| `front_display_valid_enum` | A verificação do respetivo campo antigo deixa de existir no validador atual de `vehicles.txt`. |
+| `internal_sound_level_valid_enum` | A verificação do respetivo campo antigo deixa de existir no validador atual de `vehicles.txt`. |
+| `kneeling_valid_enum` | A verificação do respetivo campo antigo deixa de existir no validador atual de `vehicles.txt`. |
+| `lowered_floor_valid_enum` | A verificação do respetivo campo antigo deixa de existir no validador atual de `vehicles.txt`. |
+| `onboard_monitor_valid_enum` | A verificação do respetivo campo antigo deixa de existir no validador atual de `vehicles.txt`. |
+| `passenger_counting_valid_enum` | A verificação do respetivo campo antigo deixa de existir no validador atual de `vehicles.txt`. |
+| `ramp_valid_enum` | A verificação do respetivo campo antigo deixa de existir no validador atual de `vehicles.txt`. |
+| `rear_display_valid_enum` | A verificação do respetivo campo antigo deixa de existir no validador atual de `vehicles.txt`. |
+| `side_display_valid_enum` | A verificação do respetivo campo antigo deixa de existir no validador atual de `vehicles.txt`. |
+| `static_information_valid_enum` | A verificação do respetivo campo antigo deixa de existir no validador atual de `vehicles.txt`. |
+| `video_surveillance_valid_enum` | A verificação do respetivo campo antigo deixa de existir no validador atual de `vehicles.txt`. |
+

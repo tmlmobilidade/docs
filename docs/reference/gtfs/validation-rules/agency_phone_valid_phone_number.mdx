@@ -1,35 +1,52 @@
 ---
-title: Contacto telefónico do operador
-description: agency_phone_valid_phone_number
----
-## Campos que serão validados nesta regra
-
-| Nome do Campo  | Tipo               | Presença | Descrição                                                                                                                                                                                                                                                                                                                                                                  |
-| -------------- | ------------------ | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `agency_phone` | Número de telefone | Opcional | Um número de telefone para a agência especificada. Este campo é um valor de string que apresenta o número de telefone como típico para a área de serviço da agência. Pode conter sinais de pontuação para agrupar os dígitos do número. O texto discável (por exemplo, "503-238-RIDE" da TriMet) é permitido, mas o campo não deve conter qualquer outro texto descritivo. |
-
-
-
-
-## O que esta validação faz
-
-No ficheiro `agency.txt`,  o campo `agency_phone` prevê um número de telefone facultativo para o operador, apresentado como é habitual na área de serviço. Trata-se a ausência conforme a regra (obrigatório, recomendado ou ignorado) e recusa-se o campo quando a regra o proíbe. Quando o valor é introduzido, esta verificação exige que o texto não seja vazio só com espaços, que só contenha caracteres permitidos para telefone (algarismos, letras, espaços e alguns separadores habituais) e que inclua pelo menos sete algarismos.
-
+title: Número de telefone do operador
+description: Verifica se o telefone indicado em agency.txt tem um formato aceite e, quando configurado, se consta da lista de números permitidos.
 ---
 
-### Passa
+## Propriedades da regra
 
-- O campo está vazio a nível de registo e a regra permite isso (incluindo quando a verificação não se aplica a esta linha).
-- O campo está preenchido, passa na validação de telefone, a regra não o proíbe e, se existir lista de valores permitidos, o texto coincide com uma entrada (ou a regra admite qualquer valor passível de aceitação).
-- O campo está vazio a nível de registo quando a regra não admite valores neste campo.
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `agency_phone_valid_phone_number` |
+| Ficheiro | `agency.txt` |
+| Campo | `agency_phone` |
+| Tipo | Número de telefone |
+| Severidade | Opcional |
 
----
+**Descrição do campo:** número de telefone de voz do operador. Pode usar a apresentação habitual da área de serviço e incluir pontuação para agrupar os algarismos. Também pode incluir texto marcável, mas não outra informação descritiva.
 
-### Falha
+Mais informação em [agency.txt](/reference/gtfs/schedule/agency).
 
-- O campo está em falta quando a regra exige preenchimento (ou quando a ausência é reportada com a severidade definida para obrigatório ou recomendado).
-- O campo está preenchido quando a regra o proíbe.
-- O valor não respeita as regras de telefone (vazio após ignorar espaços no fim, caracteres não permitidos ou menos de sete algarismos), com a severidade definida pelo contexto da mensagem.
-- O valor não consta da lista admitida pela regra, quando essa lista é fechada.
+## Como funciona
 
+Se o operador indicar um telefone, o valor só pode conter algarismos, letras, espaços, parênteses, hífen e sinal de adição. Tem de incluir pelo menos sete algarismos. Quando existe uma lista de valores permitidos, o telefone também tem de constar dessa lista. A regra **não confirma que o número existe ou recebe chamadas**.
 
+A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor usa apenas carateres aceites e contém pelo menos sete algarismos? | Segue para o passo 4 | ❌ Reporta o problema: número inválido |
+| 4 | A configuração da regra tem uma lista de números permitidos? | Segue para o passo 5 | ✅ Passa |
+| 5 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: número não permitido |
+
+Os espaços no início e no fim são ignorados ao verificar o formato. A comparação com a lista permitida usa o valor original completo.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `987-654-321` | ✅ Passa | Nove algarismos e pontuação aceite |
+| `503-238-RIDE` | ❌ Problema | Apenas seis algarismos |
+| `Apoio: 210123456` | ❌ Problema | Dois-pontos não aceite |
+| `210123456` (lista permitida = `211234567`) | ❌ Problema | Fora da lista |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Número de telefone inválido | Existem carateres não aceites ou menos de sete algarismos | Corrigir `agency_phone` em `agency.txt` para incluir pelo menos sete algarismos e apenas carateres aceites |
+| Número de telefone não permitido | O número tem formato válido mas não consta da lista configurada | Usar em `agency_phone` de `agency.txt` um número permitido ou rever a lista na configuração da regra |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `agency_phone` em `agency.txt` com o número de telefone do operador |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `agency_phone` em `agency.txt` |

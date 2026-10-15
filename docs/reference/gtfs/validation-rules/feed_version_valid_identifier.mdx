@@ -1,28 +1,47 @@
 ---
-title: Versão do conjunto GTFS
-description: feed_version_valid_identifier
----
-## Campos que serão validados nesta regra
-
-| Nome do Campo | Tipo  | Presença    | Descrição                                                                                                                                                                                                                                         |
-| ------------- | ----- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| feed_version  | Texto | Recomendado | String que indica a versão atual do conjunto de dados GTFS. As aplicações que consomem GTFS podem apresentar este valor para ajudar os editores de conjuntos de dados a determinar se a versão mais recente do conjunto de dados foi incorporada. |
-
-
-
-
-## O que esta validação faz
-
-No ficheiro `feed_info.txt`,  o campo `feed_version` recomenda um texto que identifique a versão actual do conjunto de dados, para aplicações mostrarem essa informação e os publicadores saberem se já foi incorporada a última entrega. Esta verificação trata sobretudo da ausência do valor, pode ser reportada como obrigatória ou recomendada. Quando o campo está preenchido, este ficheiro não aplica nenhuma regra extra de formato ou conteúdo ao texto - só deixa de assinalar falta de valor.
-
+title: Versão do conjunto
+description: Verifica se a versão do conjunto está preenchida quando a configuração da regra a exige.
 ---
 
-### Passa
+## Propriedades da regra
 
-- A versão está indicada com texto não vazio, ou está em falta mas a regra permite isso (incluindo quando a verificação não se aplica).
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `feed_version_valid_identifier` |
+| Ficheiro | `feed_info.txt` |
+| Campo | `feed_version` |
+| Tipo | Texto |
+| Severidade | Opcional |
 
----
+**Descrição do campo:** texto que identifica a versão atual do conjunto GTFS. As aplicações podem apresentá-lo para ajudar a confirmar se incorporaram a versão mais recente.
 
-### Falha
+Mais informação em [feed_info.txt](/reference/gtfs/schedule/feed_info).
 
-- O campo está em falta ou em branco quando a regra exige ou recomenda preenchimento, com a severidade configurada para esse caso.
+## Como funciona
+
+Quando a regra passa, `feed_version` respeita a configuração e contém algum texto quando é exigido. A regra **não impõe um formato, não compara versões e não verifica se o identificador é único**.
+
+A regra avalia cada linha do `feed_info.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | ✅ Passa |
+
+Os espaços não são removidos. Um valor composto apenas por espaços conta como preenchido. Uma linha com todos os campos vazios é ignorada antes desta regra.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `2024.10.1` | ✅ Passa | Identificador preenchido |
+| três espaços | ✅ Passa | Os espaços contam como texto |
+| campo vazio quando é obrigatório | ❌ Problema | Falta a versão exigida |
+| `2024.10.1` quando o campo é proibido | ❌ Problema | Campo preenchido indevidamente |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `feed_version` em `feed_info.txt` com o identificador da versão do conjunto |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `feed_version` em `feed_info.txt` |

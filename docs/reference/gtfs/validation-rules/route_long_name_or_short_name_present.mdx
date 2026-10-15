@@ -1,30 +1,47 @@
 ---
-title: Nome completo da rota
-description: route_long_name_or_short_name_present
----
-## Campos que serão validados nesta regra
-
-| Nome do Campo     | Tipo  | Presença                     | Descrição                                                                                                                                                                                                                                                                                                                                                                          |
-| ----------------- | ----- | ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `route_long_name` | Texto | Condicionalmente Obrigatório | Nome completo de uma rota. Este nome é geralmente mais descritivo do que o `route_short_name` e geralmente inclui o destino ou a paragem da rota. Tanto `route_short_name` como `route_long_name` podem ser definidos. <br/><br/>**Condicionalmente Obrigatório**:<ul><li>**Obrigatório** se routes.`route_short_name` estiver vazio. </li><li>Opcional caso contrário. </li></ul> |
-
-
-
-
-## O que esta validação faz 
-
-No ficheiro `routes.txt`,  o campo `route_long_name` garante que a rota não fica sem qualquer nome utilizável: tem de existir pelo menos o nome abreviado ou o nome completo. Se o nome abreviado estiver em falta, o nome completo deixa de ser opcional e tem de estar preenchido. 
-
+title: Nome longo da rota
+description: Verifica se o route_long_name está preenchido e, quando configurado, se consta da lista de valores permitidos.
 ---
 
-### Passa
+## Propriedades da regra
 
-- O nome abreviado está definido (neste caso o nome completo pode ficar vazio), ou o nome completo está definido enquanto o abreviado está vazio, ou ambos estão definidos.
-- Se o nome completo estiver preenchido e existir lista de valores permitidos, o texto respeita essa lista (ou o critério da regra que admite qualquer valor).
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `route_long_name_or_short_name_present` |
+| Ficheiro | `routes.txt` |
+| Campo | `route_long_name` |
+| Tipo | Texto |
+| Severidade | Obrigatório |
 
----
+**Descrição do campo:** nome completo da rota. É normalmente mais descritivo do que o `route_short_name` e inclui muitas vezes o destino ou uma paragem da rota. Podem existir `route_short_name` e `route_long_name` na mesma rota.
 
-### Falha
+Mais informação em [routes.txt](/reference/gtfs/schedule/routes).
 
-- O nome abreviado e o nome completo estão ambos em branco.
-- O nome completo está preenchido mas não corresponde a nenhum valor admitido pela regra, quando essa regra impõe uma lista fechada.
+## Como funciona
+
+Quando a regra passa, o `route_long_name` está preenchido e, se a configuração da regra tiver uma lista de valores permitidos, consta dessa lista. A regra **não confirma que existe pelo menos um dos dois nomes da rota** nem que o texto descreve bem a rota. Avalia só este campo.
+
+A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 4 | ✅ Passa |
+| 4 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `Lisboa - Porto` | ✅ Passa | Nome longo preenchido |
+| `Lisboa - Porto` (lista permitida = `Faro - Lagos`) | ❌ Problema | Valor fora da lista |
+| (vazio) | ❌ Problema | Campo obrigatório sem valor |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor não permitido | O valor está fora da lista de valores permitidos da configuração da regra | Usar um valor da lista em `route_long_name` em `routes.txt`, ou pedir ao administrador que o adicione |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `route_long_name` em `routes.txt` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `route_long_name` em `routes.txt` |

@@ -1,35 +1,46 @@
 ---
 title: Ordem de apresentação da rota
-description: route_sort_order_non_negative_integer
----
-s## Campos que serão validados nesta regra
-
-| Nome do Campo      | Tipo                        | Presença | Descrição                                                                                                                                                  |
-| ------------------ | --------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `route_sort_order` | Número inteiro não negativo | Opcional | Ordena as rotas de uma forma ideal para apresentação aos clientes. As rotas com valores mais baixos de `route_sort_order` devem ser apresentadas primeiro. |
-
-
-
-
-## O que esta validação faz
-
-No ficheiro `routes.txt`,  o valor de ordenação (`route_sort_order`) é opcional no GTFS e serve para indicar a ordem em que as rotas devem ser mostradas (números mais baixos primeiro). Esta verificação garante que, quando existe valor, é um inteiro não negativo. Conforme a regra aplicada, o campo pode ser tratado como obrigatório, recomendado, simplesmente opcional, ou proibido, nestes casos avalia-se também se o campo deve estar preenchido ou vazio.
-
+description: Verifica se o route_sort_order de routes.txt não é um número negativo.
 ---
 
-### Passa
+## Propriedades da regra
 
-- O campo está vazio e a regra permite isso (incluindo quando a verificação não se aplica a esta linha).
-- O campo contém um número inteiro maior ou igual a zero.
-- O campo está vazio quando a regra não admite valores neste campo.
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `route_sort_order_non_negative_integer` |
+| Ficheiro | `routes.txt` |
+| Campo | `route_sort_order` |
+| Tipo | Número inteiro não negativo |
+| Severidade | Opcional |
 
----
+**Descrição do campo:** ordena as rotas da forma mais adequada para apresentação aos clientes. As rotas originais são mostradas primeiro do que as variantes.
 
-### Falha
+Mais informação em [routes.txt](/reference/gtfs/schedule/routes).
 
-- O número indicado é negativo.
-- O campo está em falta quando a regra exige preenchimento (ou quando a ausência é reportada com a severidade definida para o caso “obrigatório” / “recomendado”).
-- O campo está preenchido quando a regra o proíbe explicitamente.
+## Como funciona
 
+Quando a regra passa, o `route_sort_order` é `0` ou um número positivo. A regra **não verifica se existem valores repetidos** nem se o texto é um número inteiro. A leitura do valor como número é feita antes das regras.
 
+A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor é menor do que `0`? | ❌ Reporta o problema: número negativo | ✅ Passa |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `10` | ✅ Passa | Número positivo |
+| `0` | ✅ Passa | Zero é aceite |
+| `-1` | ❌ Problema | Número negativo |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Número negativo | O `route_sort_order` é menor do que `0` | Corrigir `route_sort_order` em `routes.txt` para `0` ou um número positivo |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `route_sort_order` em `routes.txt` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `route_sort_order` em `routes.txt` |

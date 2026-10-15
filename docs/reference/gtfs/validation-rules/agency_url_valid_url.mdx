@@ -1,33 +1,52 @@
 ---
-title: Página Web do operador
-description: agency_url_valid_url
----
-## Campos que serão validados nesta regra
-
-| Nome do Campo | Tipo | Presença    | Descrição                     |
-| ------------- | ---- | ----------- | ----------------------------- |
-| `agency_url`  | URL  | Obrigatório | URL da agência de transporte. |
-
-
-
-
-## O que esta validação faz
-
-No ficheiro `agency.txt`,  o campo `agency_url` exige o endereço (URL) da página Web do operador de transportes. Esta verificação garante que o valor existe, que tem forma de URL aceite pelas regras.
-
+title: Sítio do operador
+description: Verifica se o endereço do sítio do operador em agency.txt é um URL HTTP ou HTTPS válido e, quando configurado, se é permitido.
 ---
 
-### Passa
+## Propriedades da regra
 
-- O campo está preenchido com um URL válido e, se existir lista de valores permitidos na regra, o endereço está nessa lista.
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `agency_url_valid_url` |
+| Ficheiro | `agency.txt` |
+| Campo | `agency_url` |
+| Tipo | URL |
+| Severidade | Opcional |
 
----
+**Descrição do campo:** URL do operador de transporte.
 
-### Falha
+Mais informação em [agency.txt](/reference/gtfs/schedule/agency).
 
-- O campo está em falta.
-- O texto não é um URL aceite pelo formato verificado.
-- O URL está preenchido mas não consta da lista admitida pela regra, quando essa lista é fechada.
+## Como funciona
 
+Se o operador indicar um URL, este tem de usar `http` ou `https` e incluir um domínio. Quando existe uma lista de valores permitidos, o URL também tem de constar dessa lista. A regra **não confirma que a página existe ou está acessível**.
 
+A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O texto é um URL HTTP ou HTTPS válido, com domínio? | Segue para o passo 4 | ❌ Reporta o problema: formato inválido |
+| 4 | A configuração da regra tem uma lista de URL permitidos? | Segue para o passo 5 | ✅ Passa |
+| 5 | O URL está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: URL não permitido |
+
+Os espaços no início e no fim são ignorados ao verificar o formato. A comparação com a lista permitida usa o valor original completo.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `https://operador.pt` | ✅ Passa | URL completo |
+| `operador.pt` | ❌ Problema | Falta o protocolo |
+| `ftp://operador.pt` | ❌ Problema | Protocolo não permitido |
+| `https://outro.pt` (lista permitida = `https://operador.pt`) | ❌ Problema | Fora da lista |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Formato inválido | Falta o protocolo ou o domínio, ou existem espaços ou carateres inválidos | Escrever em `agency_url` de `agency.txt` um URL completo, por exemplo `https://operador.pt` |
+| URL não permitido | O URL é válido mas não consta da lista configurada | Usar em `agency_url` de `agency.txt` um URL permitido ou rever a lista na configuração da regra |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `agency_url` em `agency.txt` com o URL do operador |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `agency_url` em `agency.txt` |

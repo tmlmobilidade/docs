@@ -1,35 +1,53 @@
 ---
-title: Cor do texto sobre o fundo da rota
-description: route_text_color_valid_hex_contrast
----
-## Campos que serão validados nesta regra
-
-| Nome do Campo      | Tipo | Presença | Descrição                                                                                                                                                                                                                                                                                         |
-| ------------------ | ---- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `route_text_color` | Cor  | Opcional | Cor legível a utilizar para texto desenhado sobre um fundo de `route_color`. O predefinido é preto (000000) quando omitido ou deixado em branco. A diferença de cor entre `route_color` e `route_text_color` deve proporcionar contraste suficiente quando visualizada num ecrã a preto e branco. |
-
-
-
-
-## O que esta validação faz
-
-No ficheiro `routes.txt`,  o campo `route_text_color` prevê um campo opcional para a cor do texto associada à rota (por exemplo em mapas ou interfaces), com contraste legível face à cor de fundo. Esta verificação assegura que, quando o valor existe, tem o formato de cor hexadecimal de seis caracteres (algarismos 0–9 e letras A–F, normalmente interpretada como vermelho–verde–azul, sem prefixo nem separadores). Conforme a regra, o campo pode ser obrigatório, recomendado, opcional ou proibido, e pode ainda existir uma lista fechada de cores admitidas para o texto.
-
+title: Cor do texto da rota
+description: Verifica se o route_text_color de routes.txt é uma cor hexadecimal de 6 dígitos e, quando configurado, se consta da lista de valores permitidos.
 ---
 
-### Passa
+## Propriedades da regra
 
-- O campo está vazio e a regra permite isso (incluindo quando a verificação não se aplica a esta linha).
-- O campo contém exactamente seis caracteres hexadecimais válidos e, se existir lista de valores permitidos, a cor indicada está nessa lista (ou a regra admite qualquer valor permitido pelo formato).
-- O campo está vazio quando a regra não admite valores neste campo.
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `route_text_color_valid_hex_contrast` |
+| Ficheiro | `routes.txt` |
+| Campo | `route_text_color` |
+| Tipo | Cor |
+| Severidade | Obrigatório |
 
----
+**Descrição do campo:** cor a usar para o texto sobre o fundo `route_color`. A diferença entre as duas cores deve garantir contraste suficiente num ecrã a preto e branco.
 
-### Falha
+Mais informação em [routes.txt](/reference/gtfs/schedule/routes).
 
-- O texto do campo não corresponde a uma cor hexadecimal válida de seis posições.
-- O campo está em falta quando a regra exige preenchimento (ou quando a ausência é reportada com a severidade definida para “obrigatório” / “recomendado”).
-- O campo está preenchido quando a regra o proíbe.
-- A cor está preenchida mas não figura na lista admitida pela regra, quando essa lista é fechada.
+## Como funciona
 
+Quando a regra passa, o `route_text_color` é uma cor de 6 dígitos hexadecimais e, se a configuração da regra tiver uma lista de valores permitidos, consta dessa lista. A regra **não compara esta cor com `route_color`**, por isso não verifica o contraste.
 
+A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor tem exatamente 6 dígitos hexadecimais (`0` a `9` e `A` a `F`, maiúsculas ou minúsculas)? | Segue para o passo 4 | ❌ Reporta o problema: cor inválida |
+| 4 | A configuração da regra tem uma lista de valores permitidos? | Segue para o passo 5 | ✅ Passa |
+| 5 | O valor está na lista? (ou a lista aceita qualquer valor) | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+O valor é escrito sem o símbolo `#`.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `FF0000` | ✅ Passa | 6 dígitos hexadecimais |
+| `ff0000` | ✅ Passa | Minúsculas são aceites |
+| `#FF0000` | ❌ Problema | O `#` não é permitido |
+| `F00` | ❌ Problema | Só 3 dígitos |
+| (vazio) | ❌ Problema | Campo obrigatório sem valor |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Cor inválida | O valor tem o símbolo `#`, tem menos ou mais de 6 dígitos ou tem carateres que não são hexadecimais | Escrever `route_text_color` em `routes.txt` com 6 dígitos hexadecimais, por exemplo `FF0000` |
+| Valor não permitido | O valor está fora da lista de valores permitidos da configuração da regra | Usar um valor da lista em `route_text_color` em `routes.txt`, ou pedir ao administrador que o adicione |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `route_text_color` em `routes.txt` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `route_text_color` em `routes.txt` |

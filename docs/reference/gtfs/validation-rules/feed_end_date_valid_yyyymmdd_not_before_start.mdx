@@ -1,33 +1,54 @@
 ---
-title: Data de fim de validade do conjunto
-description: feed_end_date_valid_yyyymmdd_not_before_start
----
-## Campos que serão validados nesta regra
-
-| Nome do Campo   | Tipo | Presença    | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| --------------- | ---- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `feed_end_date` | Data | Recomendado | O conjunto de dados fornece informações completas e fiáveis ​​sobre a programação do serviço no período desde o início do dia `feed_start_date` até ao final do dia `feed_end_date`. Ambos os dias podem ser deixados em branco se não estiverem disponíveis. A data `feed_end_date` não deve ser anterior à data `feed_start_date` se ambas forem fornecidas. Recomenda-se que os fornecedores de conjuntos de dados forneçam dados de programação fora deste período para informar sobre a provável disponibilidade futura, mas os consumidores de conjuntos de dados devem considerar que esta informação não é definitiva. Se `feed_start_date` ou `feed_end_date` ultrapassarem as datas do calendário ativo definidas em `calendar.txt` e `calendar_dates.txt`, o conjunto de dados está a declarar explicitamente que não há disponibilidade para datas dentro do intervalo de `feed_start_date` ou `feed_end_date`, mas não incluídas nas datas do calendário ativo. |
-
-
-
-
-## O que esta validação faz
-
-No ficheiro `feed_info.txt`,  o campo `feed_end_date` recomenda indicar o intervalo em que o conjunto de dados se considera completo e fiável, a data de início à data de fim (este campo é o último dia incluído nesse período). As duas datas podem ficar vazias quando não estão disponíveis. Quando `feed_end_date` tem valor não vazio, esta verificação confirma que corresponde a uma data de serviço válida. A ausência do valor pode ser reportada como obrigatória ou recomendada consoante a configuração.
-
+title: Data final do período
+description: Verifica se a data final do período de informação fiável usa o formato AAAAMMDD e representa uma data real.
 ---
 
-### Passa
+## Propriedades da regra
 
-- A data de fim está omitida ou vazia e a regra permite isso (incluindo quando a verificação não se aplica).
-- A data de fim está preenchida e reconhecida como data de serviço válida.
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `feed_end_date_valid_yyyymmdd_not_before_start` |
+| Ficheiro | `feed_info.txt` |
+| Campo | `feed_end_date` |
+| Tipo | Data |
+| Severidade | Obrigatório |
 
----
+**Descrição do campo:** fim do período em que o conjunto fornece horários completos e fiáveis. Esta data não deve ser anterior a `feed_start_date`. As datas fora do período podem conter informação futura não definitiva.
 
-### Falha
+Mais informação em [feed_info.txt](/reference/gtfs/schedule/feed_info).
 
-- A data de fim está em falta quando a regra exige ou recomenda preenchimento (com a severidade configurada).
-- O valor não representa uma data de serviço válida (quando há texto não vazio a validar).
+## Como funciona
 
+Quando a regra passa, `feed_end_date` respeita a configuração, tem oito algarismos e representa uma data real. A validação de `feed_start_date` tem de passar primeiro. A regra **não compara a ordem das duas datas, apesar do nome da regra e da descrição do campo**.
 
+A regra avalia cada linha do `feed_info.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor tem o formato `AAAAMMDD` e representa uma data real? | ✅ Passa | ❌ Reporta o problema: data inválida |
+
+Os espaços não são removidos. Uma linha com todos os campos vazios é ignorada antes desta regra.
+
+## Como se relacionam
+
+`feed_end_date` só é avaliado depois de `feed_start_date` passar a respetiva validação. A implementação atual não confirma que a data final é igual ou posterior à data inicial.
+
+## Exemplos
+
+| `feed_end_date` | `feed_start_date` | Resultado | Porquê |
+|---|---|---|---|
+| `20241231` | `20240101` | ✅ Passa | Data final válida |
+| `20240101` | `20241231` | ✅ Passa | A ordem não é comparada |
+| `20240230` | `20240101` | ❌ Problema | Dia inexistente |
+| campo vazio | `20240101` | ❌ Problema | Falta uma data obrigatória |
+| `20241231` quando o campo é proibido | `20240101` | ❌ Problema | Campo preenchido indevidamente |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Data inválida | O valor não tem oito algarismos ou não representa uma data real | Corrigir `feed_end_date` em `feed_info.txt` para uma data válida no formato `AAAAMMDD` |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `feed_end_date` em `feed_info.txt` com a data final no formato `AAAAMMDD` |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `feed_end_date` em `feed_info.txt` |

@@ -1,32 +1,47 @@
 ---
-title: Identificador do veículo único no feed
-description: vehicle_id_unique
----
-## Campos que serão validados nesta regra
-
-| Nome do Campo | Tipo     | Presença    | Descrição                       |
-| ------------- | -------- | ----------- | ------------------------------- |
-| `vehicle_id`  | ID único | obrigatório | ID de identificação do veículo. |
-
-
-
-## O que esta validação faz
-
-No ficheiro `vehicles.txt`, o campo `vehicle_id` identifica, de forma única no conjunto de dados, cada veículo no ficheiro `vehicles.txt`. A regra exige valor obrigatório (identificador presente) e unicidade: o mesmo identificador não pode repetir-se em mais do que um registo.
-
+title: Identificador único do veículo
+description: Verifica se vehicle_id está preenchido quando exigido e identifica apenas um veículo em vehicles.txt.
 ---
 
-### Passa
+## Propriedades da regra
 
-- O identificador do veículo vem preenchido no ficheiro (não fica vazio após a leitura).
-- Esse identificador não se rep - existe no máximo uma linha com aquele `vehicle_id` no feed processado.
-- (Se a severidade da regra for só de aviso ou outra, a mensagem mantém o mesmo sentido, mas o impacto muda; o critério de “correto / incorreto” mantém-se.)
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `vehicle_id_unique` |
+| Ficheiro | `vehicles.txt` |
+| Campo | `vehicle_id` |
+| Tipo | Identificador único |
+| Severidade | Obrigatório |
 
----
+**Descrição do campo:** identifica de forma única um veículo da frota do operador. Permite acompanhar o veículo na rede e corresponde ao identificador do veículo nos dados GTFS em tempo real.
 
-### Falha
+Mais informação em [vehicles.txt](/reference/gtfs/schedule/vehicles).
 
-- Identificador em falta - o campo fica vazio; não é possível distinguir o veículo.
-- Duplicado - o mesmo `vehicle_id` aparece em mais do que um registo; o identificador deixa de ser único, o que inviabiliza a referência inequívoca ao veículo.
+## Como funciona
 
+Cada `vehicle_id` preenchido tem de aparecer uma única vez em `vehicles.txt`. A regra não verifica o formato nem a correspondência com dados em tempo real.
 
+A regra avalia cada linha do `vehicles.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O mesmo `vehicle_id` aparece em mais do que uma linha de `vehicles.txt`? | ❌ Reporta o problema: identificador duplicado | ✅ Passa |
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `V123` numa única linha | ✅ Passa | Identificador único |
+| campo vazio | ❌ Problema | Campo obrigatório |
+| `V123` em duas linhas | ❌ Problema | Identificador duplicado |
+| `V123` quando o campo é proibido | ❌ Problema | Campo preenchido indevidamente |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | A configuração da regra exige ou recomenda `vehicle_id` | Preencher `vehicle_id` em `vehicles.txt` com um identificador do veículo |
+| Campo preenchido quando não devia | A configuração da regra proíbe `vehicle_id` | Remover o valor de `vehicle_id` em `vehicles.txt` |
+| Identificador duplicado | Duas ou mais linhas usam o mesmo `vehicle_id` | Alterar `vehicle_id` em `vehicles.txt` para que cada veículo tenha um valor único |

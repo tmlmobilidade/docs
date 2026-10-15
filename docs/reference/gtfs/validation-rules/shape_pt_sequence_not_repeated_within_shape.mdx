@@ -1,34 +1,49 @@
 ---
-title: Sequência do ponto da forma obrigatória e não negativa
-description: shape_pt_sequence_not_repeated_within_shape
----
-## Campos que serão validados nesta regra
-
-| Nome do Campo       | Tipo                        | Presença    | Descrição                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| ------------------- | --------------------------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `shape_pt_sequence` | Número inteiro não negativo | Obrigatório | Sequência em que os pontos da forma se ligam para formar a forma. <br/>Os valores devem aumentar ao longo do percurso, mas não têm de ser consecutivos. <br/><br/><u>Exemplo</u>: Se a forma "`A_shp`" tiver três pontos na sua definição, o ficheiro `shapes.txt` pode conter estes registos para definir a forma:<br/>`shape_id,shape_pt_lat,shape_pt_lon,shape_pt_sequence`<br/>`A_shp,37.6195 6,-122.48161,0`<br/>`A_shp,37.64430,-122.41070,6`<br/>`A_shp,37.65863,-122.30839,11` |
-
-
-## O que esta validação faz
-
-No ficheiro `shapes.txt`,  o campo `shape_pt_sequence` define a ordem em que os pontos da mesma forma se ligam ao longo do percurso. Pelo GTFS, os valores devem aumentar ao longo da viagem mas não precisam de ser consecutivos (ex.: 0, 6, 11).
-
-Esta validação exige que `shape_pt_sequence` exista e que seja um inteiro ≥ 0. Não verifica aqui se o mesmo número se repete noutra linha da mesma `shape_id`, nem se a ordem é estritamente crescente ao longo da forma.
-
+title: Sequência não negativa do ponto
+description: Verifica se shape_pt_sequence está preenchido e não é negativo.
 ---
 
-### Passa
+## Propriedades da regra
 
-- `shape_pt_sequence` preenchido com 0 ou inteiro positivo.
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `shape_pt_sequence_not_repeated_within_shape` |
+| Ficheiro | `shapes.txt` |
+| Campo | `shape_pt_sequence` |
+| Tipo | Número inteiro não negativo |
+| Severidade | Obrigatório |
 
----
+**Descrição do campo:** indica a ordem em que os pontos se ligam para formar a forma. Os valores não precisam de ser consecutivos.
 
-### Falha
+Mais informação em [shapes.txt](/reference/gtfs/schedule/shapes).
 
-- `shape_pt_sequence` ausente.
-- `shape_pt_sequence` negativo.
+## Como funciona
 
+Quando a regra passa, `shape_pt_sequence` está preenchido e não é negativo. Apesar do nome, a regra **não procura valores repetidos dentro da forma**.
 
+A regra avalia cada linha do `shapes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Aplica a configuração da regra | Segue para o passo 2 |
+| 2 | A configuração proíbe o campo? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O valor é negativo? | ❌ Reporta o problema | ✅ Passa |
 
+O valor tem de poder ser lido como número inteiro antes desta regra.
 
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `6` | ✅ Passa | É um inteiro não negativo |
+| `-1` | ❌ Problema | O valor é negativo |
+| vazio | ❌ Problema | Falta um campo obrigatório |
+| `6` com o campo proibido | ❌ Problema | A configuração proíbe o campo |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor negativo | `shape_pt_sequence` é inferior a zero | Corrigir `shape_pt_sequence` em `shapes.txt` para zero ou mais |
+| Campo em falta | A configuração exige ou recomenda `shape_pt_sequence` | Preencher `shape_pt_sequence` em `shapes.txt` |
+| Campo preenchido quando não devia | A configuração proíbe `shape_pt_sequence` | Remover `shape_pt_sequence` de `shapes.txt` ou rever a configuração da regra |

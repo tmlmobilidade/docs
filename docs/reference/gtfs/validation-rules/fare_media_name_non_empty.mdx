@@ -1,28 +1,55 @@
 ---
 title: Nome do suporte tarifário
-description: fare_media_name_non_empty
----
-## Campos que serão validados nesta regra
-
-| Nome do Campo     | Tipo  | Presença | Descrição                                                                                                                                                                                                                                                                                                            |
-| ----------------- | ----- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `fare_media_name` | Texto | Opcional | Nome do suporte ou meio tarifário.<br/><br/>Para meios que são cartões de transporte (`fare_media_type` 2) ou aplicações móveis (`fare_media_type` 4), o `fare_media_name` deve estar preenchido e coincidir com a designação voltada ao utente que as entidades que os emitam ou promovem utilizam nos seus canais. |
-
-## O que esta validação faz
-
-No ficheiro `fare_media`, o campo `fare_media_name` é o nome público do suporte ou meio tarifário. No GTFS o campo é opcional, mas para cartão (`fare_media_type` 2) ou aplicação móvel (`fare_media_type` 4) o nome deve existir e coincidir com a designação que o utente vê nos canais do operador. Quando o suporte é cartão ou aplicação e o nome falta, esta verificação pode emitir aviso (não só erro). Conforme a regra, o campo pode ser obrigatório, recomendado, ignorado na verificação ou proibido quando preenchido.
-
+description: Verifica se o nome do suporte tarifário está preenchido quando é exigido ou recomendado para o tipo indicado.
 ---
 
-### Passa
+## Propriedades da regra
 
-- O nome está definido e a regra não o veda.
-- O nome pode estar em falta quando a regra permite (incluindo ignorar), desde que não se caia em aviso obrigatório pelos tipos cartão ou aplicação, ou o resultado é aceitável para o editor após aviso nesses dois tipos.
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `fare_media_name_non_empty` |
+| Ficheiro | `fare_media.txt` |
+| Campo | `fare_media_name` |
+| Tipo | Texto |
+| Severidade | Opcional |
 
----
+**Descrição do campo:** nome do suporte tarifário. Para cartões de transporte e aplicações móveis, deve corresponder ao nome apresentado aos passageiros pelas organizações que os disponibilizam.
 
-### Falha
+Mais informação em [fare_media.txt](/reference/gtfs/schedule/fare_media).
 
-- Texto presente quando a regra proíbe valores neste campo.
-- Nome em falta em suportes que não são cartão nem aplicação móvel, quando a regra trata a ausência como incumprimento com severidade de falha (e sem ignorar o caso).
+## Como funciona
 
+Quando a regra passa, o nome respeita a configuração e está presente nos suportes dos tipos `2` e `4`. A regra **não verifica o texto do nome, a sua unicidade nem a correspondência com uma marca real**.
+
+A regra avalia cada linha do `fare_media.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | `fare_media_name` está vazio? | Segue para o passo 2 | Segue para o passo 4 |
+| 2 | `fare_media_type` é `2` ou `4`? | ❌ Reporta o problema: nome recomendado em falta | Segue para o passo 3 |
+| 3 | A configuração da regra exige ou recomenda o nome? | ❌ Reporta o problema: campo em falta | ✅ Passa |
+| 4 | A configuração da regra define que o nome **não deve ser preenchido**? | ❌ Reporta o problema | ✅ Passa |
+
+A regra só é avaliada depois de o tipo passar a respetiva validação. Os espaços não são removidos: um valor composto apenas por espaços conta como preenchido.
+
+## Como se relacionam
+
+O valor de `fare_media_type` determina a recomendação aplicada a `fare_media_name`. O nome é recomendado para o tipo `2`, cartão de transporte físico, e para o tipo `4`, aplicação móvel.
+
+## Exemplos
+
+| `fare_media_name` | `fare_media_type` | Resultado | Porquê |
+|---|---|---|---|
+| `Navegante` | `2` | ✅ Passa | Cartão com nome |
+| campo vazio | `2` | ❌ Problema | Nome recomendado em falta |
+| campo vazio, quando a configuração exige um nome | `0` | ❌ Problema | Campo exigido pela configuração |
+| `Dinheiro` quando o nome é proibido | `0` | ❌ Problema | Campo preenchido indevidamente |
+| três espaços | `4` | ✅ Passa | Os espaços contam como texto |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Nome recomendado em falta | O suporte tem o tipo `2` ou `4`, mas `fare_media_name` está vazio | Preencher `fare_media_name` em `fare_media.txt` com o nome apresentado aos passageiros |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `fare_media_name` em `fare_media.txt` com o nome do suporte tarifário |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `fare_media_name` em `fare_media.txt` |

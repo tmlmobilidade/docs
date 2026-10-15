@@ -1,33 +1,48 @@
 ---
-title: Correio electrónico de contacto técnico do conjunto GTFS
-description: feed_contact_email_valid_address
----
-## Campos que serão validados nesta regra
-
-| Nome do Campo        | Tipo  | Presença | Descrição                                                                                                                                                                                                                                                                                                                                                                                           |
-| -------------------- | ----- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `feed_contact_email` | Email | Opcional | Endereço de e-mail para comunicação referente ao conjunto de dados GTFS e às práticas de publicação de dados. `feed_contact_email` é um contacto técnico para aplicações que utilizam o GTFS. Forneça informações de contacto do serviço de apoio ao cliente através do ficheiro `agency.txt`. Recomenda-se que seja fornecido pelo menos um dos campos `feed_contact_email` ou `feed_contact_url`. |
-
-
-
-
-## O que esta validação faz
-
-O campo `feed_contact_email` prevê um endereço de correio electrónico facultativo em `feed_info.txt` para questões técnicas sobre o conjunto de dados e sobre como é publicado (não substitui o contacto de apoio ao utente do operador em `agency.txt`). Quando o valor existe e não é cadeia vazia, esta verificação confirma que tem formato de e-mail válido segundo as regras. A ausência do campo pode ser tratada como obrigatória ou recomendada (exceto quando a verificação não se aplica a esta linha), e o campo pode ser proibido pela configuração.
-
+title: Correio eletrónico técnico do conjunto
+description: Verifica se o endereço de correio eletrónico para questões técnicas do conjunto está bem escrito.
 ---
 
-### Passa
+## Propriedades da regra
 
-- O campo está vazio e a regra permite isso (incluindo quando a verificação não se aplica).
-- O endereço está preenchido, passa na validação de formato, e não viola a regra de proibição.
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `feed_contact_email_valid_address` |
+| Ficheiro | `feed_info.txt` |
+| Campo | `feed_contact_email` |
+| Tipo | E-mail |
+| Severidade | Opcional |
 
----
+**Descrição do campo:** endereço de correio eletrónico para questões sobre o conjunto GTFS e as práticas de publicação. É um contacto técnico para aplicações que consomem GTFS. O contacto de apoio ao cliente deve ser indicado em `agency.txt`. Recomenda-se o preenchimento de `feed_contact_email` ou `feed_contact_url`.
 
-### Falha
+Mais informação em [feed_info.txt](/reference/gtfs/schedule/feed_info).
 
-- O texto não corresponde a um endereço de correio electrónico válido (quando há texto não vazio).
-- O campo está em falta quando a regra exige ou recomenda preenchimento (com a severidade configurada).
-- O campo está preenchido quando a regra o proíbe.
+## Como funciona
 
+Quando a regra passa, `feed_contact_email` respeita a configuração e tem a estrutura de um endereço de correio eletrónico. A regra **não confirma que a caixa de correio existe nem exige que pelo menos um dos dois contactos técnicos esteja preenchido**.
 
+A regra avalia cada linha do `feed_info.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
+| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
+| 3 | O texto pode ser interpretado como um endereço de correio eletrónico? | ✅ Passa | ❌ Reporta o problema: endereço inválido |
+
+Os espaços no início e no fim são ignorados durante a verificação. Uma linha com todos os campos vazios é ignorada antes desta regra.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `dados@operador.pt` | ✅ Passa | Formato reconhecido |
+| `dados@` | ❌ Problema | Falta o domínio |
+| `dados@operador.pt` quando o campo é proibido | ❌ Problema | Campo preenchido indevidamente |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Endereço inválido | Erro de escrita ou domínio em falta | Corrigir `feed_contact_email` em `feed_info.txt` para um endereço completo, por exemplo `dados@operador.pt` |
+| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `feed_contact_email` em `feed_info.txt` com o contacto técnico do conjunto |
+| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `feed_contact_email` em `feed_info.txt` |
