@@ -4,65 +4,25 @@ description: Índice das regras de validação
 ---
 # Alterações às validações na versão GTFS v30
 
-Comparação entre o validador anterior e a implementação atual do GO, limitada a `agency.txt`, `calendar.txt`, `calendar_dates.txt`, `feed_info.txt`, `routes.txt`, `shapes.txt`, `stop_times.txt`, `stops.txt`, `trips.txt` e `vehicles.txt`.
+Com a nova versão do GTFS será feito novas atualizações as regras que já existiam quanto a criação de novas regras para que seja validado tudo com a estrutura toda.
 
-As tabelas distinguem validações novas, alterações de critérios e mudanças na configuração e execução destes ficheiros. A documentação de `apex-network` está excluída; `meta.json` não é um ficheiro GTFS de dados a validar.
-
-Os identificadores apresentados são os atuais, exceto na tabela de regras removidas. Uma mudança de nome, por si só, não é considerada uma validação nova.
-
-## Critérios comuns aos ficheiros selecionados
-
-A severidade efetiva depende da configuração usada na validação. Não existe uma mudança universal de **Erro** para **Aviso**. Obrigatoriedade e severidade são conceitos distintos: a primeira define quando um campo deve estar preenchido; a segunda define como o problema é reportado.
-
-| Âmbito | Comportamento anterior | Comportamento atual |
-| --- | --- | --- |
-| Regras de conteúdo configuráveis | Algumas verificações reportavam sempre erro ou aviso, mesmo quando a configuração da regra indicava outro nível. | A severidade configurada é aplicada também a essas mensagens. `ignore` desativa a regra; `forbidden` indica que o campo não deve ser preenchido e os problemas são reportados como erro. |
-| Presença e proibição de campos | Várias regras exigiam campos diretamente ou não tratavam a proibição de preenchimento. | A configuração passa a controlar estas situações em mais regras, incluindo identificadores, campos do operador, datas, coordenadas, horários e características dos veículos. As condições particulares estão descritas nas tabelas anteriores. |
-| Regras com dependências | As verificações eram chamadas pela ordem definida em cada validador, sem o atual controlo comum de dependências. | Uma regra só é executada quando as suas dependências passam. Um aviso, erro ou dependência não executada pode impedir as verificações seguintes no registo ou grupo afetado. |
-| Mensagens técnicas de leitura e processamento | Reportavam problemas de leitura ou interpretação dos dados. | Continuam separadas das regras de conteúdo configuráveis. Não devem ser descritas como novas regras de negócio nem como problemas convertidos automaticamente em avisos. |
-
-Os identificadores terminados em `_file_missing` identificam resultados de ausência de ficheiros. A configuração correspondente é a configuração de presença do ficheiro (`_file`). A individualização destes identificadores não constitui uma nova verificação do conteúdo.
+Para isso se segue uma lista com todas as regras alteradas quanto com as novas regras adicionadas.
 
 ## agency.txt
 
 ### Alterações na lógica de validação
 
-| Regra | Comportamento anterior | Comportamento atual |
-| --- | --- | --- |
-| `agency_id_unique` | A ausência de `agency_id` era sempre um erro quando existia mais de um operador. | A presença do campo passa a depender da configuração da regra, independentemente do número de operadores. Mantêm-se a unicidade e a lista de valores permitidos. |
-| `agency_id_matched_with_agency_name` | Também reportava a ausência de `agency_id` ou `agency_name`. | Passa a comparar os valores apenas quando ambos existem. A falta de cada campo fica a cargo da respetiva regra de presença. |
+| Regra                                | Comportamento anterior                                                           | Comportamento atual                                                                                                                                              |
+| ------------------------------------ | -------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `agency_id_unique`                   | A ausência de `agency_id` era sempre um erro quando existia mais de um operador. | A presença do campo passa a depender da configuração da regra, independentemente do número de operadores. Mantêm-se a unicidade e a lista de valores permitidos. |
+| `agency_id_matched_with_agency_name` | Também reportava a ausência de `agency_id` ou `agency_name`.                     | Passa a comparar os valores apenas quando ambos existem. A falta de cada campo fica a cargo da respetiva regra de presença.                                      |
 
 ### Alterações na severidade e na presença do ficheiro
 
-| Regra | Comportamento anterior | Comportamento atual |
-| --- | --- | --- |
-| `agency_id_unique` | Tinha um aviso de recurso quando não era definida severidade e emitia erro para a ausência do identificador num ficheiro com vários operadores. | A configuração controla a presença e a severidade. A regra continua a verificar identificadores repetidos; não atribui códigos novos nem garante a correspondência entre código e nome. |
-| `agency_id_matched_with_agency_name` | Já comparava o identificador e o nome através de uma correspondência configurável. | Continua a usar essa correspondência quando ativa. Pode ser desativada na configuração; não é esta regra que verifica a unicidade de `agency_id`. |
-| `agency_file_missing` | O ficheiro era exigido independentemente da configuração fornecida. | Com uma configuração fornecida, a presença depende da configuração de cada ficheiro. Sem configuração, mantém-se a lista mínima de ficheiros obrigatórios. |
-
-## calendar.txt
-
-### Alterações na severidade e na presença do ficheiro
-
-| Regra | Comportamento anterior | Comportamento atual |
-| --- | --- | --- |
-| `calendar_file_missing` | A exigência condicional deste ficheiro era reportada como erros fixos. | As condições mantêm-se, mas a severidade passa a respeitar a configuração de cada ficheiro. As mensagens de ficheiro em falta são deduplicadas. |
-
-## calendar_dates.txt
-
-### Alterações na severidade e na presença do ficheiro
-
-| Regra | Comportamento anterior | Comportamento atual |
-| --- | --- | --- |
-| `calendar_dates_file_missing` | A exigência condicional deste ficheiro era reportada como erros fixos. | As condições mantêm-se, mas a severidade passa a respeitar a configuração de cada ficheiro. As mensagens de ficheiro em falta são deduplicadas. |
-
-## feed_info.txt
-
-### Alterações na severidade e na presença do ficheiro
-
-| Regra | Comportamento anterior | Comportamento atual |
-| --- | --- | --- |
-| `feed_info_file_missing` | A exigência condicional deste ficheiro era reportada como erros fixos. | As condições mantêm-se, mas a severidade passa a respeitar a configuração de cada ficheiro. As mensagens de ficheiro em falta são deduplicadas. |
+| Regra                                | Comportamento anterior                                                                                                                          | Comportamento atual                                                                                                                                                                     |
+| ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `agency_id_unique`                   | Tinha um aviso de recurso quando não era definida severidade e emitia erro para a ausência do identificador num ficheiro com vários operadores. | A configuração controla a presença e a severidade. A regra continua a verificar identificadores repetidos; não atribui códigos novos nem garante a correspondência entre código e nome. |
+| `agency_id_matched_with_agency_name` | Já comparava o identificador e o nome através de uma correspondência configurável.                                                              | Continua a usar essa correspondência quando ativa. Pode ser desativada na configuração não é esta regra que verifica a unicidade de `agency_id`.                                        |
 
 ## routes.txt
 
@@ -82,18 +42,18 @@ Os identificadores terminados em `_file_missing` identificam resultados de ausê
 
 ### Alterações na severidade e na presença do ficheiro
 
-| Regra | Comportamento anterior | Comportamento atual |
-| --- | --- | --- |
-| `route_desc_per_severity_and_content_rules`, `route_short_name_or_long_name_present` | O nome curto demasiado longo e a descrição igual ao nome eram reportados como avisos fixos. | As mensagens passam a respeitar a severidade configurada para a respetiva regra. Os critérios de comprimento e duplicação já existiam. |
-| `routes_file_missing` | O ficheiro era exigido independentemente da configuração fornecida. | Com uma configuração fornecida, a presença depende da configuração de cada ficheiro. Sem configuração, mantém-se a lista mínima de ficheiros obrigatórios. |
+| Regra                                                                                | Comportamento anterior                                                                      | Comportamento atual                                                                                                                                        |
+| ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `route_desc_per_severity_and_content_rules`, `route_short_name_or_long_name_present` | O nome curto demasiado longo e a descrição igual ao nome eram reportados como avisos fixos. | As mensagens passam a respeitar a severidade configurada para a respetiva regra. Os critérios de comprimento e duplicação já existiam.                     |
+
 
 ### Alterações a confirmar antes da publicação
 
 Os comportamentos seguintes existem no código atual. Devem ser confirmados como requisitos pretendidos antes de serem apresentados como exigências da versão v30.
 
-| Regra | Alteração identificada |
-| --- | --- |
-| `routes_continuous_pickup_valid_gtfs_enum` | O valor `1`, anteriormente aceite de imediato, passa pelo mesmo ramo de validação de um campo vazio. Com severidade `error` ou `warning`, pode originar uma mensagem de campo em falta. |
+| Regra                                        | Alteração identificada                                                                                                                                                                  |
+| -------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `routes_continuous_pickup_valid_gtfs_enum`   | O valor `1`, anteriormente aceite de imediato, passa pelo mesmo ramo de validação de um campo vazio. Com severidade `error` ou `warning`, pode originar uma mensagem de campo em falta. |
 | `routes_continuous_drop_off_valid_gtfs_enum` | O valor `1`, anteriormente aceite de imediato, passa pelo mesmo ramo de validação de um campo vazio. Com severidade `error` ou `warning`, pode originar uma mensagem de campo em falta. |
 
 ## shapes.txt
