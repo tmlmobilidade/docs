@@ -120,11 +120,6 @@ Os problemas geométricos passam a indicar a linha original do ficheiro, mesmo q
 | --- | --- | --- |
 | `trips_shape_id_references_shapes_table_when_present` | Consultava informação de recolha contínua para exigir `shape_id` em determinadas viagens. | Deixa de usar essa condição. A presença de `shape_id` passa a depender da configuração da regra; mantém-se a referência a `shapes.txt`. |
 
-### Alterações na severidade e na presença do ficheiro
-
-| Regra | Comportamento anterior | Comportamento atual |
-| --- | --- | --- |
-| `trips_file_missing` | O ficheiro era exigido independentemente da configuração fornecida. | Com uma configuração fornecida, a presença depende da configuração de cada ficheiro. Sem configuração, mantém-se a lista mínima de ficheiros obrigatórios. |
 
 ### Regras existentes que não são novas
 
