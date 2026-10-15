@@ -24,6 +24,7 @@ Para isso se segue uma lista com todas as regras alteradas quanto com as novas r
 | `agency_id_unique`                   | Tinha um aviso de recurso quando não era definida severidade e emitia erro para a ausência do identificador num ficheiro com vários operadores. | A configuração controla a presença e a severidade. A regra continua a verificar identificadores repetidos; não atribui códigos novos nem garante a correspondência entre código e nome. |
 | `agency_id_matched_with_agency_name` | Já comparava o identificador e o nome através de uma correspondência configurável.                                                              | Continua a usar essa correspondência quando ativa. Pode ser desativada na configuração não é esta regra que verifica a unicidade de `agency_id`.                                        |
 
+
 ## routes.txt
 
 ### Regras novas
@@ -77,6 +78,7 @@ A regra `shape_dist_traveled_delta_mismatches_haversine_segment` também aplica 
 
 Os problemas geométricos passam a indicar a linha original do ficheiro, mesmo quando os pontos foram reordenados ou filtrados. Trata-se de uma correção da localização do problema, não de uma validação nova.
 
+
 ## stop_times.txt
 
 ### Alterações na lógica de validação
@@ -88,11 +90,6 @@ Os problemas geométricos passam a indicar a linha original do ficheiro, mesmo q
 | `stop_times_start_pickup_drop_off_window_valid` | Com uma hora de chegada ou partida e sem janela preenchida, podia continuar a exigir a janela por outra condição. | Quando existe `arrival_time` ou `departure_time`, apenas reporta o conflito se a janela estiver preenchida e termina esta verificação. Mantêm-se as restantes condições quando não existem horas fixas. |
 | `stop_times_end_pickup_drop_off_window_valid` | Com uma hora de chegada ou partida e sem janela preenchida, podia continuar a exigir a janela por outra condição. | Quando existe `arrival_time` ou `departure_time`, apenas reporta o conflito se a janela estiver preenchida e termina esta verificação. Mantêm-se as restantes condições quando não existem horas fixas. |
 
-### Alterações na severidade e na presença do ficheiro
-
-| Regra | Comportamento anterior | Comportamento atual |
-| --- | --- | --- |
-| `stop_times_file_missing` | O ficheiro era exigido independentemente da configuração fornecida. | Com uma configuração fornecida, a presença depende da configuração de cada ficheiro. Sem configuração, mantém-se a lista mínima de ficheiros obrigatórios. |
 
 ## stops.txt
 
