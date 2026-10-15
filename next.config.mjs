@@ -4,6 +4,7 @@ import { createMDX } from 'fumadocs-mdx/next';
 
 /** @type {import('next').NextConfig} */
 const config = {
+	basePath: '/hub/reference',
 	devIndicators: false,
 	images: {
 		remotePatterns: [
@@ -25,16 +26,15 @@ const config = {
 	async rewrites() {
 		return [
 			{
-				source: '/reference/index.md',
+				source: '/index.md',           // under basePath → /hub/reference/index.md
 				destination: '/llms.mdx/reference',
 			},
 			{
-				source: '/reference/:path*.md',
+				source: '/:path*.md',
 				destination: '/llms.mdx/reference/:path*',
 			},
-			// local / direct access; prod ingress only exposes /reference/*
 			{
-				source: '/reference.md',
+				source: '.md',                 // or drop if unused
 				destination: '/llms.mdx/reference',
 			},
 		];
