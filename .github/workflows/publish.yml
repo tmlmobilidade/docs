@@ -33,11 +33,15 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Extract branch name
+        id: branch
+        run: echo "name=${GITHUB_REF_NAME//\//-}" >> "$GITHUB_OUTPUT"
+
       - name: Build and Push Docker Image
         uses: docker/build-push-action@master
         with:
           push: true
           file: ./dockerfile
-          tags: ghcr.io/tmlmobilidade/go-docs:production
+          tags: ghcr.io/tmlmobilidade/go-docs:${{ steps.branch.outputs.name }}
           build-args: |
-            ENVIRONMENT=production
+            ENVIRONMENT=${{ steps.branch.outputs.name }}
