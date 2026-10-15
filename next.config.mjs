@@ -2,9 +2,14 @@
 
 import { createMDX } from 'fumadocs-mdx/next';
 
+const basePath = '/hub/reference';
+
 /** @type {import('next').NextConfig} */
 const config = {
-	basePath: '/hub/reference',
+	basePath,
+	env: {
+		NEXT_PUBLIC_BASE_PATH: basePath,
+	},
 	devIndicators: false,
 	images: {
 		remotePatterns: [
@@ -26,7 +31,7 @@ const config = {
 	async rewrites() {
 		return [
 			{
-				source: '/index.md', // under basePath → /hub/reference/index.md
+				source: '/index.md',
 				destination: '/llms.mdx/reference',
 			},
 			{
