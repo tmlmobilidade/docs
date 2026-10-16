@@ -28,6 +28,20 @@ const config = {
 	},
 	output: 'standalone',
 	reactStrictMode: true,
+	async redirects() {
+		return [
+			{
+				source: '/reference',
+				destination: '/',
+				permanent: true,
+			},
+			{
+				source: '/reference/:path*',
+				destination: '/:path*',
+				permanent: true,
+			},
+		];
+	},
 	async rewrites() {
 		return [
 			{

@@ -31,7 +31,7 @@ export function HomeHero() {
 						<IconNews size={20} />
 						Laboratório
 					</Link> */}
-					<Link className={styles.button} href="/reference">
+					<Link className={styles.button} href="/">
 						<IconBook size={20} />
 						Documentação
 					</Link>

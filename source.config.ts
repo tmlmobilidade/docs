@@ -30,7 +30,7 @@ export const reference = defineDocs({
 
 /** Doc roots: [dir under docs, URL path prefix] — wikilinks under each dir become /{urlPrefix}/... */
 const DOC_ROOTS: [string, string][] = [
-	['docs/reference', 'reference'],
+	['docs/reference', ''],
 	['docs/lab', 'lab'],
 ];
 
@@ -47,7 +47,9 @@ function remarkRewriteWikilinkUrls() {
 				const re = new RegExp(`(?:^|/)${dirRoot.replace(/[/\\]/g, '/')}/(.+)$`);
 				const match = slug.match(re);
 				if (match) {
-					(node as import('mdast').Link).url = `/${urlPrefix}/${match[1]}`;
+					(node as import('mdast').Link).url = urlPrefix
+						? `/${urlPrefix}/${match[1]}`
+						: `/${match[1]}`;
 					break;
 				}
 			}

@@ -7,7 +7,7 @@ import { toFumadocsSource } from 'fumadocs-mdx/runtime/server';
 /* * */
 
 export const sourceReference = loader({
-	baseUrl: '/reference',
+	baseUrl: '/',
 	source: reference.toFumadocsSource(),
 });
 

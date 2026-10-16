@@ -5,7 +5,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 
 /* * */
 
-const { rewrite: rewriteLLM } = rewritePath('/reference{/*path}', '/llms.mdx/reference{/*path}');
+const { rewrite: rewriteLLM } = rewritePath('{/*path}', '/llms.mdx/reference{/*path}');
 
 /* * */
 
@@ -23,5 +23,5 @@ export function proxy(request: NextRequest) {
 /* * */
 
 export const config = {
-	matcher: '/reference/:path*',
+	matcher: ['/((?!api|_next|lab|brand|assets|files).*)'],
 };
