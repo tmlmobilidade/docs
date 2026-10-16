@@ -12,7 +12,7 @@ export default function Layout({ children }: PropsWithChildren) {
 		<DocsLayout
 			githubUrl={BASE_OPTIONS.github_url}
 			links={NAVBAR_LINKS}
-			nav={{ title: BASE_OPTIONS.title, url: '/' }}
+			nav={{ title: BASE_OPTIONS.title, url: '/reference' }}
 			sidebar={{ className: 'w-auto' }}
 			themeSwitch={{ mode: 'light-dark-system' }}
 			tree={sourceReference.getPageTree()}
