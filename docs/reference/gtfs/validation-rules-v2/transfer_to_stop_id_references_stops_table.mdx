@@ -18,7 +18,7 @@ description: Verifica se o to_stop_id de transfers.txt existe em stops.txt, é u
 - `to_stop_id`: identifica a paragem (`location_type` `0`) ou estação (`location_type` `1`) onde a ligação termina. Se for uma estação, a regra aplica-se a todas as paragens dessa estação. Tem de ser uma paragem quando o `transfer_type` é `4` ou `5`. É obrigatório quando o `transfer_type` é `1`, `2` ou `3` e opcional quando é `4` ou `5`.
 - `transfer_type`: tipo de ligação. `0` ou vazio é um ponto de transferência recomendado, `1` é uma transferência com horário (o veículo espera), `2` exige um tempo mínimo de transferência, `3` não permite transferência, `4` permite continuar no mesmo veículo (transferência em lugar) e `5` não permite continuar no mesmo veículo.
 
-Mais informação em [transfers.txt](/reference/gtfs/schedule/transfers) e [stops.txt](/reference/gtfs/schedule/stops).
+Mais informação em [transfers.txt](/gtfs/schedule/transfers) e [stops.txt](/gtfs/schedule/stops).
 
 ## Como funciona
 

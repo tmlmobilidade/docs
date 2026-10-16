@@ -9,9 +9,9 @@ GTFS significa General Transit Feed Specification. É um standard internacional 
 
 O standard define dois grupos: o GTFS Schedule, onde estão mapeadas todas as paragens, percursos e horários *planeados* para um determinado operador; e o GTFS Realtime, que funciona como uma camada em cima do GTFS Schedule para ajustar as informações à realidade do momento (ex. horários mudam pois houve um acidente na ponte).
 
-O [GTFS Schedule](/reference/gtfs/schedule) não é mais do que uma série de tabelas (ex. ficheiros Excel) agrupados num arquivo `.zip`. Cada uma destas tabelas é um ficheiro separado por vírgulas (`.csv` que significa comma-separated values) mas a terminação dos ficheiros é sempre `.txt` para evitar conflitos com alguns programas. Cada ficheiro tem um nome específico e um conjunto obrigatório de colunas, formando uma estrutura relacional.
+O [GTFS Schedule](/gtfs/schedule) não é mais do que uma série de tabelas (ex. ficheiros Excel) agrupados num arquivo `.zip`. Cada uma destas tabelas é um ficheiro separado por vírgulas (`.csv` que significa comma-separated values) mas a terminação dos ficheiros é sempre `.txt` para evitar conflitos com alguns programas. Cada ficheiro tem um nome específico e um conjunto obrigatório de colunas, formando uma estrutura relacional.
 
-O [GTFS Realtime](/reference/gtfs/realtime) é um pouco mais complexo pois utiliza o formato [Protobuf](https://protobuf.dev/overview), o que exige necessariamente aplicações adicionais ou scripts de descodificação. Não deixa de ser apenas um "ficheiro" que contém alterações ou informações adicionais ao que estava descrito no GTFS planeado. Protobuf é um formato também desenvolvido pelo Google que pretende ser extremamente eficiente na transmissão de dados entre aplicações.
+O [GTFS Realtime](/gtfs/realtime) é um pouco mais complexo pois utiliza o formato [Protobuf](https://protobuf.dev/overview), o que exige necessariamente aplicações adicionais ou scripts de descodificação. Não deixa de ser apenas um "ficheiro" que contém alterações ou informações adicionais ao que estava descrito no GTFS planeado. Protobuf é um formato também desenvolvido pelo Google que pretende ser extremamente eficiente na transmissão de dados entre aplicações.
 
 Quem produz o GTFS são os operadores de transporte público, e quase todos têm pelo menos a versão planeada.
 
@@ -48,7 +48,7 @@ Para a identificação do **percurso**, num número significativo de operadores,
 Desta forma, a versão 30 implementa uma estrutura comum baseada no **GTFS Standard**, sem necessidade de campos adicionais como `line_id` ou `pattern_id`. A informação necessária à APEX é obtida através dos campos standard e das regras de utilização definidas para o GTFS versão 30.
 
 <Callout type="idea" title="Diferença entre GTFS v30 e GTFS Hub">
-  O GO exporta um GTFS único com a informação de todos os operadores. Neste GTFS, são adicionados prefixos a alguns identificadores para permitir comunicar alterações antecipadas nos suportes de informação ao público. O GTFS Hub também incluí o campo pattern\_id, que é igual ao valor do shape\_id dos planos individuais de cada operador. [Sabe mais sobre o GTFS Hub aqui ›](/reference/hub/v1/plans)
+  O GO exporta um GTFS único com a informação de todos os operadores. Neste GTFS, são adicionados prefixos a alguns identificadores para permitir comunicar alterações antecipadas nos suportes de informação ao público. O GTFS Hub também incluí o campo pattern\_id, que é igual ao valor do shape\_id dos planos individuais de cada operador. [Sabe mais sobre o GTFS Hub aqui ›](/hub/v1/plans)
 </Callout>
 
 ## Ferramentas úteis
