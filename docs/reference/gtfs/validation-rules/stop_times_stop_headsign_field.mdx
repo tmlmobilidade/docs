@@ -1,0 +1,50 @@
+---
+title: "Preenchimento — destino apresentado"
+description: "Verifica stop_headsign em stop_times.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_times_stop_headsign_field` |
+| Ficheiro | `stop_times.txt` |
+| Campo | `stop_headsign` |
+| Tipo | Texto |
+| Severidade | Opcional |
+
+**Descrição do campo:** texto de destino apresentado aos passageiros nesta passagem. Substitui o destino da viagem apenas na linha onde é indicado.
+
+Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times).
+
+## Como funciona
+
+A regra assinala a ausência de texto de acordo com a configuração da regra. Não valida o formato nem aplica todas as condições da referência.
+
+A regra avalia cada linha do `stop_times.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Segue para o passo 2 | ✅ Passa |
+| 2 | A configuração ignora a regra? | ✅ Passa | Obrigatório: ❌ Reprova; recomendado: ✅ Passa com aviso; informativo: ✅ Passa com informação |
+
+Os espaços não são removidos; só espaços contam como preenchimento. Uma coluna ausente conta como vazia. Valores preenchidos não são rejeitados pela configuração de campo proibido.
+
+O resultado depende da configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória, salvo indicação contrária.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `Estação` | ✅ Passa | Campo preenchido |
+| Vazio (obrigatório) | ❌ Reprova | Campo exigido em falta |
+| Vazio (recomendado) | ✅ Passa com aviso | Ausência comunicada |
+| Vazio (informativo) | ✅ Passa com informação | Ausência comunicada |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo obrigatório em falta | A configuração exige o campo | Preencher `stop_headsign` em `stop_times.txt` com o valor correspondente ao serviço. |
+| Campo recomendado em falta | A configuração recomenda o campo | Preencher `stop_headsign` em `stop_times.txt` com o valor correspondente ao serviço. |
+| Campo informativo em falta | A configuração assinala a ausência | Preencher `stop_headsign` em `stop_times.txt` com o valor correspondente ao serviço. |

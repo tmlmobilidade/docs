@@ -1,0 +1,58 @@
+---
+title: "Preenchimento — fim da janela"
+description: "Verifica end_pickup_drop_off_window, arrival_time, departure_time em stop_times.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_times_end_pickup_drop_off_window_field` |
+| Ficheiro | `stop_times.txt` |
+| Campos | `end_pickup_drop_off_window`, `arrival_time`, `departure_time` |
+| Tipo | Hora |
+| Severidade | Condicional (obrigatório para locais ou quando o outro limite está preenchido; proibido com arrival_time ou departure_time), Condicional (obrigatório nos extremos da viagem e quando timepoint é 1), Condicional (obrigatório quando timepoint é 1) |
+
+**Descrição dos campos:**
+
+- `end_pickup_drop_off_window`: hora a que termina a disponibilidade do serviço a pedido no local, grupo de locais ou paragem.
+- `arrival_time`: hora de chegada, no fuso horário do operador. Após a meia-noite do dia de serviço podem ser usadas horas superiores a `24:00:00`.
+- `departure_time`: hora de partida, no fuso horário do operador. Quando não há tempos distintos, deve coincidir com a chegada.
+
+Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times).
+
+## Como funciona
+
+A regra assinala a ausência de texto de acordo com a configuração da regra. Não valida o formato nem aplica todas as condições da referência.
+
+A regra avalia cada linha do `stop_times.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo, arrival_time e departure_time estão todos vazios? | Segue para o passo 2 | ✅ Passa |
+| 2 | A configuração ignora a regra ou define o campo como proibido? | ✅ Passa | Obrigatório: ❌ Reprova; recomendado: ✅ Passa com aviso; informativo: ✅ Passa com informação |
+
+Os espaços não são removidos; só espaços contam como preenchimento. Uma coluna ausente conta como vazia. A presença de chegada ou partida dispensa esta verificação de preenchimento. Valores preenchidos não são rejeitados pela configuração de campo proibido.
+
+O resultado depende da configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória, salvo indicação contrária.
+
+## Como se relacionam
+
+A ausência da janela só é assinalada quando também faltam as horas de chegada e partida.
+
+## Exemplos
+
+| end_pickup_drop_off_window | arrival_time | departure_time | Resultado | Porquê |
+|---|---|---|---|---|
+| `10:00:00` | Vazio | Vazio | ✅ Passa | Campo preenchido |
+| Vazio (obrigatório) | Vazio | Vazio | ❌ Reprova | Campo exigido em falta |
+| Vazio (recomendado) | Vazio | Vazio | ✅ Passa com aviso | Ausência comunicada |
+| Vazio (informativo) | Vazio | Vazio | ✅ Passa com informação | Ausência comunicada |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo obrigatório em falta | A configuração exige o campo | Preencher `end_pickup_drop_off_window` em `stop_times.txt` com o valor correspondente ao serviço. |
+| Campo recomendado em falta | A configuração recomenda o campo | Preencher `end_pickup_drop_off_window` em `stop_times.txt` com o valor correspondente ao serviço. |
+| Campo informativo em falta | A configuração assinala a ausência | Preencher `end_pickup_drop_off_window` em `stop_times.txt` com o valor correspondente ao serviço. |

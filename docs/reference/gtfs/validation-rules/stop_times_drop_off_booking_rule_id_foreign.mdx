@@ -1,0 +1,50 @@
+---
+title: "Reserva de desembarque existente"
+description: "Verifica drop_off_booking_rule_id em stop_times.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_times_drop_off_booking_rule_id_foreign` |
+| Ficheiros | `stop_times.txt`, `booking_rules.txt` |
+| Campo | `drop_off_booking_rule_id` |
+| Tipo | Referência |
+| Severidade | Opcional |
+
+**Descrição do campo:** identifica a regra de reserva aplicável ao desembarque.
+
+Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times), [booking_rules.txt](/reference/gtfs/schedule/booking_rules).
+
+## Como funciona
+
+O valor tem de existir em `booking_rule_id` de `booking_rules.txt`. A regra não verifica a validade dos restantes dados do registo referenciado.
+
+A regra avalia cada linha do `stop_times.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | Existe um valor igual em `booking_rule_id` de `booking_rules.txt`? | ✅ Passa | ❌ Reprova: referência inexistente |
+
+A comparação conserva espaços e maiúsculas. O vazio também é procurado. Uma tabela indisponível pode produzir o mesmo resultado de referência inexistente. Os exemplos pressupõem que existe `found` no ficheiro consultado.
+
+O resultado depende da configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória, salvo indicação contrária.
+
+## Como se relacionam
+
+O campo `drop_off_booking_rule_id` de `stop_times.txt` aponta para `booking_rule_id` de `booking_rules.txt`.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `found` | ✅ Passa | Referência existente |
+| `absent` | ❌ Reprova | Referência inexistente |
+| `FOUND` | ❌ Reprova | Maiúsculas diferentes |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Referência inexistente | O identificador não foi encontrado | Corrigir `drop_off_booking_rule_id` em `stop_times.txt` ou completar o registo correspondente em `booking_rule_id` de `booking_rules.txt`. |

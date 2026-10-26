@@ -1,0 +1,49 @@
+---
+title: "Hora de partida"
+description: "Verifica departure_time em stop_times.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_times_departure_time_valid` |
+| Ficheiro | `stop_times.txt` |
+| Campo | `departure_time` |
+| Tipo | Hora |
+| Severidade | Condicional (obrigatório quando timepoint é 1) |
+
+**Descrição do campo:** hora de partida, no fuso horário do operador. Quando não há tempos distintos, deve coincidir com a chegada.
+
+Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times).
+
+## Como funciona
+
+A regra verifica a estrutura numérica da hora. Não compara chegada e partida nem garante limites válidos para minutos e segundos.
+
+A regra avalia cada linha do `stop_times.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O valor tem oito carateres? | Segue para o passo 2 | ❌ Reprova: hora inválida |
+| 2 | A separação por dois pontos produz três partes? | Segue para o passo 3 | ❌ Reprova: hora inválida |
+| 3 | Cada parte pode ser lida como inteiro? | ✅ Passa | ❌ Reprova: hora inválida |
+
+Os espaços não são removidos. Só são exigidos oito carateres, três partes separadas por `:` e partes legíveis como inteiros. Não há limite dos minutos e segundos nem exigência de dois algarismos por parte; `99:99:99` passa. O vazio é rejeitado quando a regra é executada.
+
+O resultado depende da configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória, salvo indicação contrária.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `25:30:00` | ✅ Passa | Estrutura aceite |
+| `99:99:99` | ✅ Passa | Limites não verificados |
+| `9:00:00` | ❌ Reprova | Só sete carateres |
+| `10:xx:00` | ❌ Reprova | Parte não numérica |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Hora inválida | A estrutura não é aceite | Escrever `departure_time` em `stop_times.txt` no formato `HH:MM:SS`, com minutos e segundos entre `00` e `59`. |

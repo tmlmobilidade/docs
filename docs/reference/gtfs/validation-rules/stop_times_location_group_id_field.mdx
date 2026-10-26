@@ -1,0 +1,55 @@
+---
+title: "Identificadores de locais coincidentes"
+description: "Verifica location_group_id, stop_id, location_id em stop_times.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_times_location_group_id_field` |
+| Ficheiro | `stop_times.txt` |
+| Campos | `location_group_id`, `stop_id`, `location_id` |
+| Tipo | Referência |
+| Severidade | Condicional (proibido quando stop_id ou location_id estão definidos), Condicional (obrigatório sem location_group_id nem location_id), Condicional (proibido quando stop_id ou location_group_id estão definidos) |
+
+**Descrição dos campos:**
+
+- `location_group_id`: identifica o grupo de locais onde pode ser solicitado embarque ou desembarque.
+- `stop_id`: identifica a paragem servida nesta passagem da viagem.
+- `location_id`: identifica a zona de serviço definida em GeoJSON.
+
+Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times).
+
+## Como funciona
+
+A regra procura o valor do grupo nas colunas de paragem e de local de todo o ficheiro. Não verifica apenas o preenchimento simultâneo dos campos na mesma linha.
+
+A regra avalia cada linha do `stop_times.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O valor de location_group_id existe em stop_id, em alguma linha? | ❌ Reprova: identificador coincidente | Segue para o passo 2 |
+| 2 | O mesmo valor existe em location_id, em alguma linha? | ❌ Reprova: identificador coincidente | ✅ Passa |
+
+A comparação conserva espaços e maiúsculas. Uma coincidência noutra viagem também é assinalada. O vazio não é excluído da procura; pode coincidir com outro vazio. Os exemplos pressupõem um ficheiro com apenas a linha apresentada.
+
+O resultado depende da configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória, salvo indicação contrária.
+
+## Como se relacionam
+
+A regra compara o texto de `location_group_id` com os valores de `stop_id` e `location_id` em todo o ficheiro.
+
+## Exemplos
+
+| location_group_id | stop_id | location_id | Resultado | Porquê |
+|---|---|---|---|---|
+| `G1` | `S1` | `L1` | ✅ Passa | Identificadores diferentes |
+| `G1` | `G1` | Vazio | ❌ Reprova | Coincide com a paragem |
+| `G1` | Vazio | `G1` | ❌ Reprova | Coincide com o local |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Identificador coincidente | O valor do grupo também aparece como paragem ou local | Rever `location_group_id`, `stop_id` e `location_id` em `stop_times.txt`; pedir revisão da regra se a coincidência entre linhas for legítima. |

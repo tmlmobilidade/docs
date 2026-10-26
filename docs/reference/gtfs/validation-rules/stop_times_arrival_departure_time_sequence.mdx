@@ -1,0 +1,59 @@
+---
+title: "Progressão dos horários"
+description: "Verifica trip_id, stop_sequence, arrival_time, departure_time em stop_times.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_times_arrival_departure_time_sequence` |
+| Ficheiro | `stop_times.txt` |
+| Campos | `trip_id`, `stop_sequence`, `arrival_time`, `departure_time` |
+| Tipo | Referência, Inteiro não negativo, Hora, Hora |
+| Severidade | Obrigatório, Obrigatório, Condicional (obrigatório nos extremos da viagem e quando timepoint é 1), Condicional (obrigatório quando timepoint é 1) |
+
+**Descrição dos campos:**
+
+- `trip_id`: identifica a viagem.
+- `stop_sequence`: ordem das paragens ou locais na viagem; os valores não precisam de ser consecutivos.
+- `arrival_time`: hora de chegada, no fuso horário do operador. Após a meia-noite do dia de serviço podem ser usadas horas superiores a `24:00:00`.
+- `departure_time`: hora de partida, no fuso horário do operador. Quando não há tempos distintos, deve coincidir com a chegada.
+
+Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times).
+
+## Como funciona
+
+Os horários utilizáveis não podem recuar entre paragens vizinhas da mesma viagem. A regra não compara chegada e partida dentro da mesma paragem.
+
+A regra avalia cada grupo de linhas com o mesmo `trip_id` em `stop_times.txt`, seguindo os passos abaixo por ordem.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração ignora a regra ou a define como proibida? | ✅ Passa sem verificação | Segue para o passo 2 |
+| 2 | A sequência da linha pode ser lida como inteiro? | Inclui a linha e ordena numericamente | Exclui a linha |
+| 3 | A paragem anterior tem partida utilizável ou, em alternativa, chegada utilizável? | Segue para o passo 4 | Ignora este par |
+| 4 | A paragem atual tem chegada utilizável ou, em alternativa, partida utilizável? | Segue para o passo 5 | Ignora este par |
+| 5 | O tempo atual é inferior ao anterior? | ❌ Reprova: horário recua | ✅ Passa este par |
+
+Os espaços não são removidos. Só são exigidos oito carateres, três partes separadas por `:` e partes legíveis como inteiros. Não há limite dos minutos e segundos nem exigência de dois algarismos por parte; `99:99:99` passa. As horas são convertidas em segundos para comparar. Sequências repetidas seguem a ordem das linhas no ficheiro. Uma linha sem horário utilizável interrompe a comparação; uma linha com sequência ilegível é excluída. Os exemplos apresentam dois pontos por viagem.
+
+O resultado depende da configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória, salvo indicação contrária.
+
+## Como se relacionam
+
+O campo `trip_id` agrupa as linhas e `stop_sequence` ordena-as. Compara-se a última hora utilizável da paragem anterior com a primeira da atual.
+
+## Exemplos
+
+| trip_id | stop_sequence | arrival_time | departure_time | Resultado | Porquê |
+|---|---|---|---|---|---|
+| `T1` | `1, 2` | `10:00:00, 11:00:00` | Vazio, vazio | ✅ Passa | Horário crescente |
+| `T1` | `1, 2` | `10:00:00, 09:00:00` | Vazio, vazio | ❌ Reprova | Chegada recua |
+| `T1` | `1, 2` | `09:00:00, 10:00:00` | `11:00:00`, vazio | ❌ Reprova | Partida anterior tem prioridade |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Horário recua | Os horários ou a ordem das paragens estão incorretos | Corrigir `arrival_time`, `departure_time` ou `stop_sequence` em `stop_times.txt` para a viagem indicada por `trip_id`. |

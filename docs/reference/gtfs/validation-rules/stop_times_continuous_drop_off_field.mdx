@@ -1,0 +1,50 @@
+---
+title: "Preenchimento — desembarque contínuo"
+description: "Verifica continuous_drop_off em stop_times.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_times_continuous_drop_off_field` |
+| Ficheiro | `stop_times.txt` |
+| Campo | `continuous_drop_off` |
+| Tipo | Enumeração |
+| Severidade | Condicional (restrito quando existem janelas) |
+
+**Descrição do campo:** indica o modo de desembarque contínuo: `0` permite o serviço, `1` desativa-o, `2` exige contacto telefónico e `3` acordo com o motorista.
+
+Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times).
+
+## Como funciona
+
+A regra assinala a ausência de texto de acordo com a configuração da regra. Não valida o formato nem aplica todas as condições da referência.
+
+A regra avalia cada linha do `stop_times.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Segue para o passo 2 | ✅ Passa |
+| 2 | A configuração ignora a regra ou define o campo como proibido? | ✅ Passa | Obrigatório: ❌ Reprova; recomendado: ✅ Passa com aviso; informativo: ✅ Passa com informação |
+
+Os espaços não são removidos; só espaços contam como preenchimento. Uma coluna ausente conta como vazia. Valores preenchidos não são rejeitados pela configuração de campo proibido.
+
+O resultado depende da configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória, salvo indicação contrária.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `0` | ✅ Passa | Campo preenchido |
+| Vazio (obrigatório) | ❌ Reprova | Campo exigido em falta |
+| Vazio (recomendado) | ✅ Passa com aviso | Ausência comunicada |
+| Vazio (informativo) | ✅ Passa com informação | Ausência comunicada |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo obrigatório em falta | A configuração exige o campo | Preencher `continuous_drop_off` em `stop_times.txt` com o valor correspondente ao serviço. |
+| Campo recomendado em falta | A configuração recomenda o campo | Preencher `continuous_drop_off` em `stop_times.txt` com o valor correspondente ao serviço. |
+| Campo informativo em falta | A configuração assinala a ausência | Preencher `continuous_drop_off` em `stop_times.txt` com o valor correspondente ao serviço. |

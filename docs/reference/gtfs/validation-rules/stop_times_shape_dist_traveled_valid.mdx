@@ -1,0 +1,48 @@
+---
+title: "Valor da distância acumulada"
+description: "Verifica shape_dist_traveled em stop_times.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_times_shape_dist_traveled_valid` |
+| Ficheiro | `stop_times.txt` |
+| Campo | `shape_dist_traveled` |
+| Tipo | Número não negativo |
+| Severidade | Opcional |
+
+**Descrição do campo:** distância percorrida ao longo do traçado até à paragem, na mesma unidade usada em `shapes.txt`.
+
+Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times).
+
+## Como funciona
+
+A regra assinala distâncias negativas que consegue ler como número. Não verifica a progressão, a unidade ou a geometria e não rejeita todos os valores não finitos.
+
+A regra avalia cada linha do `stop_times.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O texto pode ser lido como número? | Segue para o passo 2 | Interrompe a verificação e comunica um problema técnico |
+| 2 | O número é negativo? | ❌ Reprova: distância negativa | ✅ Passa |
+
+Os espaços não são removidos. `NaN` e `+Inf` passam pela comparação atual. O vazio e números fora da capacidade de leitura produzem um problema técnico no executor.
+
+O resultado depende da configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória, salvo indicação contrária.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `123.45` | ✅ Passa | Distância positiva |
+| `-0.1` | ❌ Reprova | Distância negativa |
+| `NaN` | ✅ Passa | Limitação da comparação atual |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Distância negativa | A distância acumulada é inferior a zero | Corrigir `shape_dist_traveled` em `stop_times.txt` para a distância acumulada não negativa. |
+| Valor não legível | O texto não pode ser lido como número | Escrever um número com ponto decimal em `shape_dist_traveled` de `stop_times.txt`, sem espaços. |

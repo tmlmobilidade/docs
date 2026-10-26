@@ -1,0 +1,46 @@
+---
+title: "Precisão do horário"
+description: "Verifica timepoint em stop_times.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_times_timepoint_valid` |
+| Ficheiro | `stop_times.txt` |
+| Campo | `timepoint` |
+| Tipo | Enumeração |
+| Severidade | Opcional |
+
+**Descrição do campo:** indica se o horário é aproximado (`0`) ou exato (`1`).
+
+Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times).
+
+## Como funciona
+
+O texto tem de ser exatamente `0` ou `1`. A regra não confirma a precisão real dos horários.
+
+A regra avalia cada linha do `stop_times.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O valor é exatamente `0` ou `1`? | ✅ Passa | ❌ Reprova: valor inválido |
+
+Não há remoção de espaços nem normalização numérica. O vazio também é rejeitado.
+
+O resultado depende da configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória, salvo indicação contrária.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `1` | ✅ Passa | Valor aceite |
+| `2` | ❌ Reprova | Valor não aceite |
+| `01` | ❌ Reprova | Texto diferente de `1` |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor inválido | O texto difere de 0 e 1 | Indicar `0` ou `1` em `timepoint` de `stop_times.txt`, conforme a precisão do horário. |

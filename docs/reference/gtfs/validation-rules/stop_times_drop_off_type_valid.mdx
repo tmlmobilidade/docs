@@ -1,0 +1,48 @@
+---
+title: "Desembarque"
+description: "Verifica drop_off_type em stop_times.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_times_drop_off_type_valid` |
+| Ficheiro | `stop_times.txt` |
+| Campo | `drop_off_type` |
+| Tipo | Enumeração |
+| Severidade | Condicional (restrito quando existem janelas) |
+
+**Descrição do campo:** indica o modo de desembarque: `0` permite o serviço, `1` desativa-o, `2` exige contacto telefónico e `3` acordo com o motorista.
+
+Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times).
+
+## Como funciona
+
+O número tem de estar entre `0` e `3`. A regra não verifica restrições relacionadas com janelas ou reservas.
+
+A regra avalia cada linha do `stop_times.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O texto pode ser lido como inteiro? | Segue para o passo 2 | Interrompe a verificação e comunica um problema técnico |
+| 2 | O número está entre `0` e `3`? | ✅ Passa | ❌ Reprova: valor fora do intervalo |
+
+Os espaços não são removidos. Zeros à esquerda e sinal positivo são aceites. Vazio, texto e decimais produzem um problema técnico no executor, sem a mensagem traduzida de valor inválido.
+
+O resultado depende da configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória, salvo indicação contrária.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `0` | ✅ Passa | Número aceite |
+| `-1` | ❌ Reprova | Abaixo do intervalo |
+| `4` | ❌ Reprova | Acima do intervalo |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor fora do intervalo | O inteiro não está entre 0 e 3 | Indicar um valor de `0` a `3` em `drop_off_type` de `stop_times.txt`, conforme o serviço. |
+| Valor não legível | O texto não pode ser lido como inteiro | Corrigir `drop_off_type` em `stop_times.txt` para um inteiro de `0` a `3`, sem espaços ou casas decimais. |

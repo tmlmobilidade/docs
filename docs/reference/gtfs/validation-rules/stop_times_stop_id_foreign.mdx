@@ -1,0 +1,50 @@
+---
+title: "Paragem existente"
+description: "Verifica stop_id em stop_times.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_times_stop_id_foreign` |
+| Ficheiros | `stop_times.txt`, `stops.txt` |
+| Campo | `stop_id` |
+| Tipo | Referência |
+| Severidade | Condicional (obrigatório sem location_group_id nem location_id) |
+
+**Descrição do campo:** identifica a paragem servida nesta passagem da viagem.
+
+Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times), [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+O valor tem de existir em `stop_id` de `stops.txt`. A regra não verifica a validade dos restantes dados do registo referenciado.
+
+A regra avalia cada linha do `stop_times.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | Existe um valor igual em `stop_id` de `stops.txt`? | ✅ Passa | ❌ Reprova: referência inexistente |
+
+A comparação conserva espaços e maiúsculas. O vazio também é procurado. Uma tabela indisponível pode produzir o mesmo resultado de referência inexistente. Os exemplos pressupõem que existe `found` no ficheiro consultado.
+
+O resultado depende da configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória, salvo indicação contrária.
+
+## Como se relacionam
+
+O campo `stop_id` de `stop_times.txt` aponta para `stop_id` de `stops.txt`.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `found` | ✅ Passa | Referência existente |
+| `absent` | ❌ Reprova | Referência inexistente |
+| `FOUND` | ❌ Reprova | Maiúsculas diferentes |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Referência inexistente | O identificador não foi encontrado | Corrigir `stop_id` em `stop_times.txt` ou completar o registo correspondente em `stop_id` de `stops.txt`. |

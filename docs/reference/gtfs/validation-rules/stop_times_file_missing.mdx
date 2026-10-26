@@ -1,0 +1,46 @@
+---
+title: "Ficheiro de horários nas paragens em falta"
+description: "Verifica a presença de stop_times.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_times_file_missing` |
+| Ficheiro | `stop_times.txt` |
+| Campo | Se aplica em todo o ficheiro |
+| Tipo | Ficheiro |
+| Severidade | Obrigatório |
+
+## Como funciona
+
+A regra assinala a ausência do ficheiro segundo a configuração da regra. Não verifica o conteúdo nem o número de linhas.
+
+A regra avalia a presença de `stop_times.txt` no conjunto de dados, seguindo os passos abaixo por ordem.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O ficheiro está presente nos dados carregados? | ✅ Passa | Segue para o passo 2 |
+| 2 | A configuração recomenda o ficheiro? | ✅ Passa com aviso de ficheiro em falta | Segue para o passo 3 |
+| 3 | A configuração assinala a ausência como informação? | ✅ Passa com informação de ficheiro em falta | Segue para o passo 4 |
+| 4 | Não existe configuração ou a configuração exige o ficheiro? | ❌ Reprova: ficheiro obrigatório em falta | ✅ Passa |
+
+Uma tabela carregada sem linhas conta como presente. Sem configuração, este ficheiro é obrigatório. O resultado depende da configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória, salvo indicação contrária.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| Presente | ✅ Passa | Ficheiro disponível |
+| Ausente (obrigatório) | ❌ Reprova | Ficheiro exigido em falta |
+| Ausente (recomendado) | ✅ Passa com aviso | Futura exigência comunicada |
+| Ausente (informativo) | ✅ Passa com informação | Ausência comunicada |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Ficheiro obrigatório em falta | A regra exige o ficheiro | Incluir `stop_times.txt` no conjunto de dados ou rever a configuração da regra. |
+| Ficheiro recomendado em falta | A regra recomenda o ficheiro | Incluir `stop_times.txt` no conjunto de dados ou rever a configuração da regra. |
+| Ficheiro informativo em falta | A regra comunica a ausência | Incluir `stop_times.txt` no conjunto de dados ou rever a configuração da regra. |

@@ -1,0 +1,59 @@
+---
+title: "Desembarque contínuo"
+description: "Verifica continuous_drop_off, start_pickup_drop_off_window, end_pickup_drop_off_window em stop_times.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_times_continuous_drop_off_valid_gtfs_enum` |
+| Ficheiro | `stop_times.txt` |
+| Campos | `continuous_drop_off`, `start_pickup_drop_off_window`, `end_pickup_drop_off_window` |
+| Tipo | Enumeração, Hora, Hora |
+| Severidade | Condicional (restrito quando existem janelas), Condicional (obrigatório para locais ou quando o outro limite está preenchido; proibido com arrival_time ou departure_time), Condicional (obrigatório para locais ou quando o outro limite está preenchido; proibido com arrival_time ou departure_time) |
+
+**Descrição dos campos:**
+
+- `continuous_drop_off`: indica o modo de desembarque contínuo: `0` permite o serviço, `1` desativa-o, `2` exige contacto telefónico e `3` acordo com o motorista.
+- `start_pickup_drop_off_window`: hora a que começa a disponibilidade do serviço a pedido no local, grupo de locais ou paragem.
+- `end_pickup_drop_off_window`: hora a que termina a disponibilidade do serviço a pedido no local, grupo de locais ou paragem.
+
+Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times).
+
+## Como funciona
+
+Um valor preenchido tem de representar um inteiro entre `0` e `3`. Com qualquer limite de janela preenchido, só é aceite o número `1` ou o vazio.
+
+A regra avalia cada linha do `stop_times.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração ignora a regra? | ✅ Passa sem verificação | Segue para o passo 2 |
+| 2 | O campo está vazio? | ✅ Passa | Segue para o passo 3 |
+| 3 | O valor representa um inteiro entre `0` e `3`? | Segue para o passo 4 | ❌ Reprova: valor inválido |
+| 4 | O número difere de `1` e existe algum limite de janela preenchido? | ❌ Reprova: incompatível com janela | ✅ Passa |
+
+Os espaços não são removidos. `01` e `+1` representam `1`. Basta uma janela preenchida, mesmo com hora inválida. A regra não verifica o serviço herdado de `routes.txt` nem consulta listas de opções.
+
+O resultado depende da configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória, salvo indicação contrária.
+
+## Como se relacionam
+
+Os limites da janela restringem o serviço contínuo na mesma linha.
+
+## Exemplos
+
+| continuous_drop_off | start_pickup_drop_off_window | end_pickup_drop_off_window | Resultado | Porquê |
+|---|---|---|---|---|
+| `0` | Vazio | Vazio | ✅ Passa | Sem janela |
+| `4` | Vazio | Vazio | ❌ Reprova | Valor fora da enumeração |
+| `2` | `10:00:00` | Vazio | ❌ Reprova | Serviço incompatível com janela |
+| `1` | `10:00:00` | Vazio | ✅ Passa | Valor permitido com janela |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor inválido | O texto não representa um inteiro de 0 a 3 | Corrigir `continuous_drop_off` em `stop_times.txt` para um valor de `0` a `3`. |
+| Incompatível com janela | Existe uma janela e o número difere de 1 | Definir `continuous_drop_off` em `stop_times.txt` como `1` ou vazio; rever os limites da janela se estiverem indevidos. |

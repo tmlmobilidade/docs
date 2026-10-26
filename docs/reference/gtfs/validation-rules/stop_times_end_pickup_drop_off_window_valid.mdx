@@ -1,0 +1,64 @@
+---
+title: "Fim da janela"
+description: "Verifica end_pickup_drop_off_window, start_pickup_drop_off_window, arrival_time, departure_time, location_group_id, location_id em stop_times.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stop_times_end_pickup_drop_off_window_valid` |
+| Ficheiro | `stop_times.txt` |
+| Campos | `end_pickup_drop_off_window`, `start_pickup_drop_off_window`, `arrival_time`, `departure_time`, `location_group_id`, `location_id` |
+| Tipo | Hora, Hora, Hora, Hora, Referência, Referência |
+| Severidade | Condicional (obrigatório para locais ou quando o outro limite está preenchido; proibido com arrival_time ou departure_time), Condicional (obrigatório para locais ou quando o outro limite está preenchido; proibido com arrival_time ou departure_time), Condicional (obrigatório nos extremos da viagem e quando timepoint é 1), Condicional (obrigatório quando timepoint é 1), Condicional (proibido quando stop_id ou location_id estão definidos), Condicional (proibido quando stop_id ou location_group_id estão definidos) |
+
+**Descrição dos campos:**
+
+- `end_pickup_drop_off_window`: hora a que termina a disponibilidade do serviço a pedido no local, grupo de locais ou paragem.
+- `start_pickup_drop_off_window`: hora a que começa a disponibilidade do serviço a pedido no local, grupo de locais ou paragem.
+- `arrival_time`: hora de chegada, no fuso horário do operador. Após a meia-noite do dia de serviço podem ser usadas horas superiores a `24:00:00`.
+- `departure_time`: hora de partida, no fuso horário do operador. Quando não há tempos distintos, deve coincidir com a chegada.
+- `location_group_id`: identifica o grupo de locais onde pode ser solicitado embarque ou desembarque.
+- `location_id`: identifica a zona de serviço definida em GeoJSON.
+
+Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times).
+
+## Como funciona
+
+A regra verifica a presença condicional, a incompatibilidade com horários fixos e a estrutura da hora. Não compara o início com o fim da janela.
+
+A regra avalia cada linha do `stop_times.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração ignora a regra? | ✅ Passa sem verificação | Segue para o passo 2 |
+| 2 | Existe arrival_time ou departure_time preenchido? | Janela preenchida: ❌ Reprova; janela vazia: ✅ Passa | Segue para o passo 3 |
+| 3 | A janela está vazia? | Segue para o passo 4 | Segue para o passo 5 |
+| 4 | Existe location_group_id, location_id ou o outro limite preenchido? | ❌ Reprova: janela em falta | ✅ Passa |
+| 5 | A hora tem oito carateres e três partes inteiras separadas por `:`? | ✅ Passa | ❌ Reprova: hora inválida |
+
+Os espaços não são removidos. Só são exigidos oito carateres, três partes separadas por `:` e partes legíveis como inteiros. Não há limite dos minutos e segundos nem exigência de dois algarismos por parte; `99:99:99` passa. Uma hora fixa preenchida tem prioridade sobre a exigência associada aos locais.
+
+O resultado depende da configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória, salvo indicação contrária.
+
+## Como se relacionam
+
+Os locais e o outro limite exigem a janela; chegada ou partida preenchida impedem que esta janela esteja preenchida.
+
+## Exemplos
+
+| end_pickup_drop_off_window | start_pickup_drop_off_window | arrival_time | departure_time | location_group_id | location_id | Resultado | Porquê |
+|---|---|---|---|---|---|---|---|
+| `10:00:00` | Vazio | Vazio | Vazio | Vazio | Vazio | ✅ Passa | Estrutura aceite |
+| `10:00:00` | Vazio | `10:00:00` | Vazio | Vazio | Vazio | ❌ Reprova | Conflito com hora fixa |
+| Vazio | `11:00:00` | Vazio | Vazio | Vazio | Vazio | ❌ Reprova | Outro limite exige a janela |
+| `10:xx:00` | Vazio | Vazio | Vazio | Vazio | Vazio | ❌ Reprova | Parte não numérica |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Janela incompatível com hora fixa | Chegada ou partida está preenchida | Remover `end_pickup_drop_off_window` ou rever `arrival_time` e `departure_time` em `stop_times.txt`, conforme o serviço. |
+| Janela em falta | Existe local, grupo ou outro limite | Preencher `end_pickup_drop_off_window` em `stop_times.txt` com o limite do serviço a pedido. |
+| Hora inválida | A estrutura não é aceite | Corrigir `end_pickup_drop_off_window` em `stop_times.txt` para `HH:MM:SS`, com minutos e segundos entre `00` e `59`. |
