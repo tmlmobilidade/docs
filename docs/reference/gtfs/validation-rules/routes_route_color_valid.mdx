@@ -1,0 +1,48 @@
+---
+title: "Cor da rota"
+description: "Verifica route_color em routes.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `routes_route_color_valid` |
+| Ficheiro | `routes.txt` |
+| Campo | `route_color` |
+| Tipo | Cor |
+| Severidade | Opcional |
+
+**Descrição do campo:** cor usada para identificar a rota nos materiais destinados aos passageiros. A referência prevê branco quando não é indicada.
+
+Mais informação em [routes.txt](/reference/gtfs/schedule/routes).
+
+## Como funciona
+
+O resultado depende da severidade definida na configuração da regra: obrigatório (`error`) reprova; recomendado (`warning`) passa com aviso; informativo (`info`) passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Nos casos sem severidade explícita abaixo, a indicação de reprovação pressupõe a configuração obrigatória.
+
+O valor tem de conter exatamente seis algarismos hexadecimais, sem `#`. A regra não avalia o contraste nem aplica uma cor predefinida ao campo vazio.
+
+A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O valor tem seis carateres? | Segue para o passo 2 | ❌ Reprova: cor inválida |
+| 2 | Todos os carateres são algarismos de `0` a `9` ou letras de `A` a `F`? | ✅ Passa | ❌ Reprova: cor inválida |
+
+Maiúsculas e minúsculas são aceites. Os espaços não são removidos. Um campo vazio é rejeitado quando a regra é executada. Os exemplos pressupõem que a regra está ativa e que a configuração da regra permite assinalar os problemas descritos.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `AABBCC` | ✅ Passa | Seis algarismos hexadecimais |
+| `ABC` | ❌ Reprova | Comprimento insuficiente |
+| `#AABBCC` | ❌ Reprova | Símbolo adicional |
+| `GG0000` | ❌ Reprova | Letra não hexadecimal |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Cor inválida | O texto não representa seis algarismos hexadecimais | Escrever `route_color` em `routes.txt` com seis algarismos hexadecimais, por exemplo `AABBCC`, sem `#` nem espaços. |

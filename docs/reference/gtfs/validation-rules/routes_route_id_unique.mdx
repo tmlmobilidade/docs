@@ -1,0 +1,46 @@
+---
+title: "Identificador da rota"
+description: "Verifica route_id em routes.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `routes_route_id_unique` |
+| Ficheiro | `routes.txt` |
+| Campo | `route_id` |
+| Tipo | Identificador único |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** identifica uma rota.
+
+Mais informação em [routes.txt](/reference/gtfs/schedule/routes).
+
+## Como funciona
+
+O resultado depende da severidade definida na configuração da regra: obrigatório (`error`) reprova; recomendado (`warning`) passa com aviso; informativo (`info`) passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Nos casos sem severidade explícita abaixo, a indicação de reprovação pressupõe a configuração obrigatória.
+
+Cada identificador tem de aparecer numa única linha. A regra não verifica o formato nem o preenchimento.
+
+A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O valor aparece em mais de uma linha? | ❌ Reprova: identificador repetido | ✅ Passa |
+
+A comparação conserva espaços e maiúsculas. Valores vazios repetidos também são assinalados. Os exemplos pressupõem que a regra está ativa e que a configuração da regra permite assinalar os problemas descritos.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `R1`, `R2` (duas linhas) | ✅ Passa | Identificadores distintos |
+| `R1`, `R1` (duas linhas) | ❌ Reprova | Identificador repetido |
+| Vazio, vazio (duas linhas) | ❌ Reprova | Vazio repetido |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Identificador repetido | Duas ou mais linhas usam o mesmo identificador | Eliminar a duplicação ou atribuir valores distintos a `route_id` em `routes.txt`, atualizando as referências às rotas. |

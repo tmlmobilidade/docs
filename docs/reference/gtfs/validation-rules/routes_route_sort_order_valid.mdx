@@ -1,0 +1,48 @@
+---
+title: "Ordem de apresentação"
+description: "Verifica route_sort_order em routes.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `routes_route_sort_order_valid` |
+| Ficheiro | `routes.txt` |
+| Campo | `route_sort_order` |
+| Tipo | Inteiro não negativo |
+| Severidade | Opcional |
+
+**Descrição do campo:** ordena a apresentação das rotas aos passageiros; os valores mais baixos aparecem primeiro.
+
+Mais informação em [routes.txt](/reference/gtfs/schedule/routes).
+
+## Como funciona
+
+O resultado depende da severidade definida na configuração da regra: obrigatório (`error`) reprova; recomendado (`warning`) passa com aviso; informativo (`info`) passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Nos casos sem severidade explícita abaixo, a indicação de reprovação pressupõe a configuração obrigatória.
+
+O valor tem de representar um inteiro igual ou superior a zero. A regra não exige valores distintos nem uma sequência sem intervalos.
+
+A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O valor pode ser lido como um número inteiro? | Segue para o passo 2 | ❌ Reprova: ordem inválida |
+| 2 | O número é negativo? | ❌ Reprova: ordem inválida | ✅ Passa |
+
+Os espaços não são removidos. Zeros à esquerda e sinal positivo são aceites. O vazio e números demasiado grandes para serem lidos são rejeitados. Os exemplos pressupõem que a regra está ativa e que a configuração da regra permite assinalar os problemas descritos.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `0` | ✅ Passa | Zero aceite |
+| `10` | ✅ Passa | Inteiro positivo |
+| `-1` | ❌ Reprova | Número negativo |
+| `1.5` | ❌ Reprova | Não é inteiro |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Ordem inválida | O valor não é um inteiro não negativo legível | Indicar um inteiro não negativo em `route_sort_order` de `routes.txt`, por exemplo `2`, sem espaços ou casas decimais. |

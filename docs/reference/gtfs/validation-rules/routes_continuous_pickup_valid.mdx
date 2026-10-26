@@ -1,0 +1,61 @@
+---
+title: "Embarque contínuo"
+description: "Verifica continuous_pickup, route_id, trip_id, start_pickup_drop_off_window, end_pickup_drop_off_window em routes.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `routes_continuous_pickup_valid` |
+| Ficheiros | `routes.txt`, `trips.txt`, `stop_times.txt` |
+| Campos | `continuous_pickup`, `route_id`, `trip_id`, `start_pickup_drop_off_window`, `end_pickup_drop_off_window` |
+| Tipo | Enumeração, Identificador único, Identificador, Hora, Hora |
+| Severidade | Opcional, Obrigatório, Obrigatório, Condicional, Condicional |
+
+**Descrição dos campos:**
+
+- `continuous_pickup`: indica se é permitido embarcar ao longo do percurso. `0` permite o serviço, `1` ou vazio desativa-o, `2` exige contacto telefónico e `3` exige acordo com o motorista.
+- `route_id`: identifica uma rota.
+- `trip_id`: liga as viagens às respetivas paragens.
+- `start_pickup_drop_off_window`: limite da janela de embarque ou desembarque em `stop_times.txt`.
+- `end_pickup_drop_off_window`: limite da janela de embarque ou desembarque em `stop_times.txt`.
+
+Mais informação em [routes.txt](/reference/gtfs/schedule/routes), [trips.txt](/reference/gtfs/schedule/trips), [stop_times.txt](/reference/gtfs/schedule/stop_times).
+
+## Como funciona
+
+O resultado depende da severidade definida na configuração da regra: obrigatório (`error`) reprova; recomendado (`warning`) passa com aviso; informativo (`info`) passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Nos casos sem severidade explícita abaixo, a indicação de reprovação pressupõe a configuração obrigatória.
+
+A regra assinala o serviço contínuo desativado quando a configuração da regra o exige ou recomenda. Também rejeita valores diferentes de vazio e `1` quando alguma viagem da rota tem uma janela. Não verifica se o valor pertence à enumeração `0` a `3`.
+
+A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo `continuous_pickup` está vazio ou contém exatamente `1`? | Segue para o passo 2 | Segue para o passo 3 |
+| 2 | A configuração da regra ignora a verificação ou define o campo como proibido? | ✅ Passa | Obrigatório: ❌ Reprova; recomendado: ✅ Passa com aviso; informativo: ✅ Passa com informação |
+| 3 | Alguma viagem da rota tem um dos limites da janela preenchido? | ❌ Reprova: serviço contínuo incompatível com janela | ✅ Passa |
+
+Os espaços não são removidos. Basta um limite preenchido, mesmo sem hora válida. Sem `trips.txt` ou `stop_times.txt`, não são detetadas janelas. As listas de opções não restringem valores. Sem janela, até `9` passa. Com janela, alterar para `1` pode provocar o problema de serviço desativado se a configuração o exigir; essa configuração precisa de revisão. Os exemplos pressupõem que a regra está ativa e que a configuração da regra permite assinalar os problemas descritos.
+
+## Como se relacionam
+
+O campo `route_id` liga `routes.txt` a `trips.txt`. O campo `trip_id` liga essa viagem a `stop_times.txt`, onde são procurados os limites da janela.
+
+## Exemplos
+
+| continuous_pickup | route_id | trip_id | start_pickup_drop_off_window | end_pickup_drop_off_window | Resultado | Porquê |
+|---|---|---|---|---|---|---|
+| `0` | `R1` | `T1` | Vazio | Vazio | ✅ Passa | Sem janela |
+| `1` (configuração exige) | `R1` | `T1` | Vazio | Vazio | ❌ Reprova | Serviço desativado |
+| `2` | `R1` | `T1` | `08:00:00` | Vazio | ❌ Reprova | Janela na mesma rota |
+| `9` | `R1` | `T1` | Vazio | Vazio | ✅ Passa | Enumeração não verificada |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Serviço contínuo exigido | A configuração exige serviço contínuo, mas o valor é vazio ou `1` | Corrigir `continuous_pickup` em `routes.txt` para o serviço real; se houver janelas, pedir a revisão da configuração da regra. |
+| Serviço contínuo recomendado | A configuração recomenda o serviço, mas o valor é vazio ou `1` | Rever `continuous_pickup` em `routes.txt` e preencher de acordo com o serviço; pedir a revisão da configuração quando necessário. |
+| Serviço incompatível com janela | Uma viagem da rota tem pelo menos um limite de janela preenchido | Definir `continuous_pickup` em `routes.txt` como `1` ou vazio; corrigir os limites da janela em `stop_times.txt` se estiverem indevidos. |

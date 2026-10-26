@@ -1,0 +1,53 @@
+---
+title: "Nome curto da linha"
+description: "Verifica line_short_name, route_short_name em routes.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `routes_line_short_name_equal_route_short_name` |
+| Ficheiro | `routes.txt` |
+| Campos | `line_short_name`, `route_short_name` |
+| Tipo | Texto |
+| Severidade | Obrigatório (extensão v29), Condicional (obrigatório quando route_long_name está vazio) |
+
+**Descrição dos campos:**
+
+- `line_short_name`: nome curto da linha na extensão local do ficheiro.
+- `route_short_name`: designação curta pela qual os passageiros reconhecem a rota.
+
+Mais informação em [routes.txt](/reference/gtfs/schedule/routes).
+
+## Como funciona
+
+O resultado depende da severidade definida na configuração da regra: obrigatório (`error`) reprova; recomendado (`warning`) passa com aviso; informativo (`info`) passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Nos casos sem severidade explícita abaixo, a indicação de reprovação pressupõe a configuração obrigatória.
+
+Os dois campos têm de conter exatamente o mesmo texto. A regra não confirma o preenchimento nem a existência real da linha.
+
+A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | Os dois valores são iguais? | ✅ Passa | ❌ Reprova: valores diferentes |
+
+Os espaços, as maiúsculas e os zeros à esquerda contam. Dois campos vazios passam. Uma coluna ausente é tratada como vazia. Os exemplos pressupõem que a regra está ativa e que a configuração da regra permite assinalar os problemas descritos.
+
+## Como se relacionam
+
+Nesta regra local, `line_short_name` tem de coincidir com `route_short_name`.
+
+## Exemplos
+
+| line_short_name | route_short_name | Resultado | Porquê |
+|---|---|---|---|
+| `100` | `100` | ✅ Passa | Textos iguais |
+| `100` | `200` | ❌ Reprova | Textos diferentes |
+| `0100` | `100` | ❌ Reprova | Zero adicional |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valores diferentes | A designação ou o identificador não coincide com o nome curto | Corrigir `line_short_name` ou `route_short_name` em `routes.txt` para que ambos contenham o mesmo valor. |

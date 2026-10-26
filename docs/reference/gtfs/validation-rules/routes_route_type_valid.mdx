@@ -1,0 +1,47 @@
+---
+title: "Modo de transporte"
+description: "Verifica route_type em routes.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `routes_route_type_valid` |
+| Ficheiro | `routes.txt` |
+| Campo | `route_type` |
+| Tipo | Enumeração |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** indica o modo de transporte usado na rota.
+
+Mais informação em [routes.txt](/reference/gtfs/schedule/routes).
+
+## Como funciona
+
+O resultado depende da severidade definida na configuração da regra: obrigatório (`error`) reprova; recomendado (`warning`) passa com aviso; informativo (`info`) passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Nos casos sem severidade explícita abaixo, a indicação de reprovação pressupõe a configuração obrigatória.
+
+O valor tem de ser exatamente um dos seguintes: `1`, `2`, `3`, `4`, `5`, `6`, `7`, `11`, `12`. A regra não confirma se a classificação corresponde ao serviço realizado.
+
+A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O texto coincide com um dos valores aceites? | ✅ Passa | ❌ Reprova: valor inválido |
+
+Não há remoção de espaços nem normalização numérica. Um campo vazio é rejeitado. Uma lista de opções na configuração da regra não altera os valores aceites. O valor `0` é rejeitado pela implementação, apesar de constar da referência GTFS. Os exemplos pressupõem que a regra está ativa e que a configuração da regra permite assinalar os problemas descritos.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `1` | ✅ Passa | Valor aceite |
+| `0` | ❌ Reprova | Valor não aceite |
+| `1.0` | ❌ Reprova | Texto diferente de `1` |
+| ` 1` | ❌ Reprova | Espaço conservado |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor inválido | O texto não coincide com um valor aceite | Corrigir `route_type` em `routes.txt` para a classificação adequada entre `1`, `2`, `3`, `4`, `5`, `6`, `7`, `11`, `12`. Se o serviço não tiver correspondência, pedir a revisão da regra. |

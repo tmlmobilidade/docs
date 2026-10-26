@@ -1,0 +1,50 @@
+---
+title: "Identificador da rede"
+description: "Verifica network_id em routes.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `routes_network_id_foreign` |
+| Ficheiros | `routes.txt`, `route_networks.txt` |
+| Campo | `network_id` |
+| Tipo | Identificador |
+| Severidade | Opcional (proibido pela referência quando existe route_networks.txt) |
+
+**Descrição do campo:** identifica um conjunto de rotas; várias rotas podem partilhar o identificador.
+
+Mais informação em [routes.txt](/reference/gtfs/schedule/routes), [route_networks.txt](/reference/gtfs/schedule/route_networks).
+
+## Como funciona
+
+O resultado depende da severidade definida na configuração da regra: obrigatório (`error`) reprova; recomendado (`warning`) passa com aviso; informativo (`info`) passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Nos casos sem severidade explícita abaixo, a indicação de reprovação pressupõe a configuração obrigatória.
+
+O valor tem de existir no campo `network_id` de `route_networks.txt`. A regra não verifica a unicidade nem ignora automaticamente um campo vazio.
+
+A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | Existe um valor exatamente igual em `route_networks.txt`? | ✅ Passa | ❌ Reprova: referência inexistente |
+
+A comparação conserva espaços, maiúsculas e minúsculas. Um vazio só passa se existir um valor vazio correspondente. Os exemplos pressupõem a existência de `N1` no ficheiro consultado. A consulta não confirma a associação entre a rede e o route_id desta linha. Os exemplos pressupõem que a regra está ativa e que a configuração da regra permite assinalar os problemas descritos.
+
+## Como se relacionam
+
+A regra procura `network_id` de `routes.txt` em `network_id` de `route_networks.txt`.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `N1` | ✅ Passa | Referência existente |
+| `missing` | ❌ Reprova | Referência ausente |
+| `n1` | ❌ Reprova | Maiúsculas e minúsculas diferentes |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Referência inexistente | O identificador não foi encontrado no ficheiro consultado | Corrigir `network_id` em `routes.txt` e conferir os valores de `network_id` em `route_networks.txt`. |

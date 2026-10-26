@@ -1,0 +1,50 @@
+---
+title: "Operador da rota"
+description: "Verifica agency_id em routes.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `routes_agency_id_foreign` |
+| Ficheiros | `routes.txt`, `agency.txt` |
+| Campo | `agency_id` |
+| Tipo | Referência |
+| Severidade | Condicional (obrigatório quando existem vários operadores) |
+
+**Descrição do campo:** identifica o operador responsável pela rota.
+
+Mais informação em [routes.txt](/reference/gtfs/schedule/routes), [agency.txt](/reference/gtfs/schedule/agency).
+
+## Como funciona
+
+O resultado depende da severidade definida na configuração da regra: obrigatório (`error`) reprova; recomendado (`warning`) passa com aviso; informativo (`info`) passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Nos casos sem severidade explícita abaixo, a indicação de reprovação pressupõe a configuração obrigatória.
+
+O valor tem de existir no campo `agency_id` de `agency.txt`. A regra não verifica a unicidade nem ignora automaticamente um campo vazio.
+
+A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | Existe um valor exatamente igual em `agency.txt`? | ✅ Passa | ❌ Reprova: referência inexistente |
+
+A comparação conserva espaços, maiúsculas e minúsculas. Um vazio só passa se existir um valor vazio correspondente. Os exemplos pressupõem a existência de `A1` no ficheiro consultado. Os exemplos pressupõem que a regra está ativa e que a configuração da regra permite assinalar os problemas descritos.
+
+## Como se relacionam
+
+A regra procura `agency_id` de `routes.txt` em `agency_id` de `agency.txt`.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `A1` | ✅ Passa | Referência existente |
+| `missing` | ❌ Reprova | Referência ausente |
+| `a1` | ❌ Reprova | Maiúsculas e minúsculas diferentes |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Referência inexistente | O identificador não foi encontrado no ficheiro consultado | Corrigir `agency_id` em `routes.txt` e conferir os valores de `agency_id` em `agency.txt`. |

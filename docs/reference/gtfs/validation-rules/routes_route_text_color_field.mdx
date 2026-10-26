@@ -1,0 +1,50 @@
+---
+title: "Preenchimento — cor do texto da rota"
+description: "Verifica route_text_color em routes.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `routes_route_text_color_field` |
+| Ficheiro | `routes.txt` |
+| Campo | `route_text_color` |
+| Tipo | Cor |
+| Severidade | Opcional |
+
+**Descrição do campo:** cor do texto sobre a cor da rota. A referência prevê preto quando não é indicada e recomenda contraste suficiente.
+
+Mais informação em [routes.txt](/reference/gtfs/schedule/routes).
+
+## Como funciona
+
+O resultado depende da severidade definida na configuração da regra: obrigatório (`error`) reprova; recomendado (`warning`) passa com aviso; informativo (`info`) passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Nos casos sem severidade explícita abaixo, a indicação de reprovação pressupõe a configuração obrigatória.
+
+A regra verifica se o campo contém texto quando a configuração da regra assinala a sua ausência. Não verifica o formato nem aplica automaticamente as condições de obrigatoriedade da referência.
+
+A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Segue para o passo 2 | ✅ Passa |
+| 2 | A configuração da regra ignora esta verificação? | ✅ Passa | Obrigatório: ❌ Reprova; recomendado: ✅ Passa com aviso; informativo: ✅ Passa com informação |
+
+Uma coluna ausente conta como vazia. Os espaços não são removidos: só espaços contam como preenchimento. A configuração de campo proibido assinala o vazio com a mensagem informativa, mas aceita valores preenchidos. Os exemplos pressupõem que a regra está ativa e que a configuração da regra permite assinalar os problemas descritos.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `000000` | ✅ Passa | Campo preenchido |
+| Vazio (configuração exige) | ❌ Reprova | Campo obrigatório em falta |
+| Vazio (configuração recomenda) | ✅ Passa com aviso  | Campo recomendado em falta |
+| Vazio (configuração informativa) | ✅ Passa com informação  | Ausência assinalada |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo obrigatório em falta | A configuração da regra exige o campo | Preencher `route_text_color` em `routes.txt` com o valor correspondente à rota. |
+| Campo recomendado em falta | A configuração da regra recomenda o campo | Preencher `route_text_color` em `routes.txt` com o valor correspondente à rota. |
+| Campo informativo em falta | A configuração da regra assinala a ausência como informação ou define o campo como proibido | Preencher `route_text_color` em `routes.txt` com o valor correspondente à rota. |

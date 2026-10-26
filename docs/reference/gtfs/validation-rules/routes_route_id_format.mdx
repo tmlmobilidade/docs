@@ -1,0 +1,54 @@
+---
+title: "Identificador da rota"
+description: "Verifica route_id, route_short_name, route_sort_order em routes.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `routes_route_id_format` |
+| Ficheiro | `routes.txt` |
+| Campos | `route_id`, `route_short_name`, `route_sort_order` |
+| Tipo | Identificador único, Texto, Inteiro não negativo |
+| Severidade | Obrigatório, Condicional (obrigatório quando route_long_name está vazio), Opcional |
+
+**Descrição dos campos:**
+
+- `route_id`: identifica uma rota.
+- `route_short_name`: designação curta pela qual os passageiros reconhecem a rota.
+- `route_sort_order`: ordena a apresentação das rotas aos passageiros; os valores mais baixos aparecem primeiro.
+
+Mais informação em [routes.txt](/reference/gtfs/schedule/routes).
+
+## Como funciona
+
+O resultado depende da severidade definida na configuração da regra: obrigatório (`error`) reprova; recomendado (`warning`) passa com aviso; informativo (`info`) passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Nos casos sem severidade explícita abaixo, a indicação de reprovação pressupõe a configuração obrigatória.
+
+O identificador tem de juntar o nome curto e a ordem, separados por um sublinhado. A regra não verifica se a ordem é numérica nem se o identificador é único.
+
+A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O identificador coincide com o nome curto, seguido de `_` e da ordem? | ✅ Passa | ❌ Reprova: identificador diferente do esperado |
+
+A composição usa os textos sem normalização. Zeros à esquerda e espaços são conservados. Com nome curto e ordem vazios, o texto esperado é `_`. Os exemplos pressupõem que a regra está ativa e que a configuração da regra permite assinalar os problemas descritos.
+
+## Como se relacionam
+
+A composição local é `route_short_name` + `_` + `route_sort_order`.
+
+## Exemplos
+
+| route_id | route_short_name | route_sort_order | Resultado | Porquê |
+|---|---|---|---|---|
+| `100_2` | `100` | `2` | ✅ Passa | Composição correta |
+| `other` | `100` | `2` | ❌ Reprova | Esperado `100_2` |
+| `100_2` | `100` | `02` | ❌ Reprova | Esperado `100_02` |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Identificador diferente do esperado | O identificador não resulta da composição dos outros campos | Corrigir `route_id` em `routes.txt` para juntar `route_short_name`, `_` e `route_sort_order`; rever também as referências à rota. |

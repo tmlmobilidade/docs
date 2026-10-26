@@ -1,0 +1,54 @@
+---
+title: "Página da rota"
+description: "Verifica route_url, agency_id, agency_url em routes.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `routes_route_url_different_from_agency_url` |
+| Ficheiros | `routes.txt`, `agency.txt` |
+| Campos | `route_url`, `agency_id`, `agency_url` |
+| Tipo | URL, Referência, URL |
+| Severidade | Opcional, Condicional (obrigatório quando existem vários operadores), Obrigatório |
+
+**Descrição dos campos:**
+
+- `route_url`: endereço de uma página sobre a rota, distinto da página do operador.
+- `agency_id`: identifica o operador responsável pela rota.
+- `agency_url`: endereço da página do operador.
+
+Mais informação em [routes.txt](/reference/gtfs/schedule/routes), [agency.txt](/reference/gtfs/schedule/agency).
+
+## Como funciona
+
+O resultado depende da severidade definida na configuração da regra: obrigatório (`error`) reprova; recomendado (`warning`) passa com aviso; informativo (`info`) passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Nos casos sem severidade explícita abaixo, a indicação de reprovação pressupõe a configuração obrigatória.
+
+A página da rota não pode coincidir com a página de um operador com o mesmo identificador. A regra não valida os endereços nem confirma que o operador existe.
+
+A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | Existe em `agency.txt` uma linha com o mesmo `agency_id` e `agency_url` igual a `route_url`? | ❌ Reprova: páginas iguais | ✅ Passa |
+
+A comparação é literal, sem remover espaços nem normalizar endereços. Se não houver operador correspondente, passa. Valores vazios também podem coincidir. Os exemplos pressupõem que a regra está ativa e que a configuração da regra permite assinalar os problemas descritos.
+
+## Como se relacionam
+
+O campo `agency_id` liga a rota ao operador. A comparação usa `route_url` de `routes.txt` e `agency_url` desse operador em `agency.txt`.
+
+## Exemplos
+
+| route_url | agency_id | agency_url | Resultado | Porquê |
+|---|---|---|---|---|
+| `https://routes.example` | `A1` | `https://agency.example` | ✅ Passa | Endereços diferentes |
+| `https://agency.example` | `A1` | `https://agency.example` | ❌ Reprova | Endereços iguais |
+| `https://agency.example/` | `A1` | `https://agency.example` | ✅ Passa | Barra final distingue os textos |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Páginas iguais | A rota repete a página do respetivo operador | Indicar em `route_url` de `routes.txt` uma página própria da rota, diferente de `agency_url` em `agency.txt`. |
