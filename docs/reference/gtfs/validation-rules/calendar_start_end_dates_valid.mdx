@@ -1,0 +1,51 @@
+---
+title: "Ordem das datas do serviço"
+description: "Verifica se start_date é estritamente anterior a end_date."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `calendar_start_end_dates_valid` |
+| Ficheiro | `calendar.txt` |
+| Campos | `start_date`, `end_date` |
+| Tipo | Data |
+| Severidade | Obrigatório |
+
+**Descrição dos campos:**
+
+- `start_date`: primeiro dia de serviço do intervalo.
+- `end_date`: último dia de serviço do intervalo. Este dia está incluído no intervalo.
+
+Mais informação em [calendar.txt](/reference/gtfs/schedule/calendar).
+
+## Como funciona
+
+Com datas válidas no formato `AAAAMMDD`, a data inicial tem de ser anterior à data final. A regra rejeita datas iguais e não verifica se os valores representam datas existentes.
+
+A regra avalia cada linha do `calendar.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O texto de `start_date` é igual ou posterior ao texto de `end_date`? | ❌ Reporta o problema: início não anterior ao fim | ✅ Passa |
+
+A comparação usa os textos sem remover espaços. Para datas válidas no formato `AAAAMMDD`, a ordem dos textos coincide com a ordem das datas. Os exemplos pressupõem que a regra é executada e que a configuração da regra permite reportar problemas.
+
+## Como se relacionam
+
+`start_date` e `end_date` delimitam o mesmo intervalo de serviço. Esta regra exige um início estritamente anterior ao fim, mesmo que o serviço pretendido dure apenas um dia.
+
+## Exemplos
+
+| `start_date` | `end_date` | Resultado | Porquê |
+|---|---|---|---|
+| `20260101` | `20261231` | ✅ Passa | Início anterior ao fim |
+| `20261231` | `20260101` | ❌ Problema | Início posterior ao fim |
+| `20260101` | `20260101` | ❌ Problema | Datas iguais |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Início não anterior ao fim | As datas estão invertidas ou são iguais | Corrigir `start_date` e `end_date` em `calendar.txt` para que a data inicial seja anterior à data final. Se o intervalo de um só dia for intencional, pedir a revisão da aplicação desta regra. |
