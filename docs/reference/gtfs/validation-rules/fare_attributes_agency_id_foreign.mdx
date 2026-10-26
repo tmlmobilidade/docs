@@ -1,0 +1,50 @@
+---
+title: "Referência ao operador da tarifa"
+description: "Verifica se agency_id de fare_attributes.txt existe em agency.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `fare_attributes_agency_id_foreign` |
+| Ficheiros | `fare_attributes.txt`, `agency.txt` |
+| Campo | `agency_id` |
+| Tipo | Referência a `agency.agency_id` |
+| Severidade | Condicional (obrigatório quando existem vários operadores; recomendado nos restantes casos) |
+
+**Descrição do campo:** identifica o operador a que a tarifa se aplica. O preenchimento é obrigatório quando o conjunto de dados inclui vários operadores e recomendado nos restantes casos.
+
+Mais informação em [fare_attributes.txt](/reference/gtfs/schedule/fare_attributes) e [agency.txt](/reference/gtfs/schedule/agency).
+
+## Como funciona
+
+O resultado depende da severidade definida na configuração da regra: obrigatório (`error`) reprova; recomendado (`warning`) passa com aviso; informativo (`info`) passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Nos casos sem severidade explícita abaixo, a indicação de reprovação pressupõe a configuração obrigatória.
+
+O identificador tem de corresponder a um operador de `agency.txt` quando esta regra é executada. A regra não conta os operadores nem confirma se a tarifa pertence efetivamente ao operador indicado.
+
+A regra avalia cada linha do `fare_attributes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | Existe uma linha de `agency.txt` com o mesmo `agency_id`? | ✅ Passa | ❌ Reprova: operador não encontrado |
+
+A comparação é exata: espaços, maiúsculas e minúsculas contam. Um valor vazio também é procurado; não é automaticamente aceite. Os exemplos pressupõem que a regra é executada e que a configuração da regra permite reportar problemas.
+
+## Como se relacionam
+
+O campo `agency_id` de `fare_attributes.txt` associa a tarifa ao operador com o mesmo identificador em `agency.txt`.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `A1` (existe em `agency.txt`) | ✅ Passa | Referência encontrada |
+| `missing` (não existe em `agency.txt`) | ❌ Reprova | Referência inexistente |
+| `a1` (só existe `A1`) | ❌ Reprova | Maiúsculas e minúsculas diferentes |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Operador não encontrado | O identificador não corresponde a um operador definido | Corrigir `agency_id` em `fare_attributes.txt` para um identificador existente em `agency.txt` ou acrescentar a definição do operador em falta. |

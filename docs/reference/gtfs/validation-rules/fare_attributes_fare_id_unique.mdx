@@ -1,0 +1,46 @@
+---
+title: "Identificador único da tarifa"
+description: "Verifica se cada fare_id aparece apenas uma vez em fare_attributes.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `fare_attributes_fare_id_unique` |
+| Ficheiro | `fare_attributes.txt` |
+| Campo | `fare_id` |
+| Tipo | Identificador único |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** identifica uma categoria tarifária.
+
+Mais informação em [fare_attributes.txt](/reference/gtfs/schedule/fare_attributes).
+
+## Como funciona
+
+O resultado depende da severidade definida na configuração da regra: obrigatório (`error`) reprova; recomendado (`warning`) passa com aviso; informativo (`info`) passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Nos casos sem severidade explícita abaixo, a indicação de reprovação pressupõe a configuração obrigatória.
+
+Cada identificador tem de aparecer numa única linha de `fare_attributes.txt`. A regra não verifica o preenchimento nem considera referências repetidas em `fare_rules.txt` como duplicados.
+
+A regra avalia cada linha do `fare_attributes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O identificador aparece em mais de uma linha de `fare_attributes.txt`? | ❌ Reprova: identificador repetido | ✅ Passa |
+
+A comparação conserva espaços, maiúsculas e minúsculas. Valores vazios também entram na contagem quando esta regra é executada. Os exemplos pressupõem que a regra é executada e que a configuração da regra permite reportar problemas.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `F1`, `F2` (duas linhas) | ✅ Passa | Identificadores distintos |
+| `F1`, `F1` (duas linhas) | ❌ Reprova | Identificador repetido |
+| Vazio, vazio (duas linhas) | ❌ Reprova | Valor vazio repetido |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Identificador repetido | Várias tarifas usam o mesmo identificador | Atribuir um `fare_id` distinto a cada tarifa em `fare_attributes.txt` ou eliminar linhas repetidas. Atualizar as referências aos identificadores alterados. |

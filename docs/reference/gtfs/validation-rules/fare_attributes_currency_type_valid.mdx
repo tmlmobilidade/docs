@@ -1,0 +1,47 @@
+---
+title: "Moeda da tarifa"
+description: "Verifica o valor de currency_type em fare_attributes.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `fare_attributes_currency_type_valid` |
+| Ficheiro | `fare_attributes.txt` |
+| Campo | `currency_type` |
+| Tipo | Código de moeda |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** moeda usada para pagar a tarifa.
+
+Mais informação em [fare_attributes.txt](/reference/gtfs/schedule/fare_attributes).
+
+## Como funciona
+
+O resultado depende da severidade definida na configuração da regra: obrigatório (`error`) reprova; recomendado (`warning`) passa com aviso; informativo (`info`) passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Nos casos sem severidade explícita abaixo, a indicação de reprovação pressupõe a configuração obrigatória.
+
+O código tem de constar da lista interna de moedas reconhecidas. A regra não confirma se a moeda corresponde à tarifa nem consulta uma lista atualizada durante a validação.
+
+A regra avalia cada linha do `fare_attributes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O código, convertido para maiúsculas, consta da lista interna de moedas? | ✅ Passa | ❌ Reprova: código de moeda inválido |
+
+Maiúsculas e minúsculas são equivalentes. Os espaços não são removidos. Um campo vazio é rejeitado quando esta regra é executada. Os exemplos pressupõem que a regra é executada e que a configuração da regra permite reportar problemas.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `EUR` | ✅ Passa | Código reconhecido |
+| `INVALID` | ❌ Reprova | Código fora da lista |
+| ` EUR ` | ❌ Reprova | Espaços adicionais |
+| Vazio | ❌ Reprova | Falta um código reconhecido |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor inválido | O valor não cumpre o formato ou os limites aceites | Indicar um código de moeda reconhecido, como `EUR`, sem espaços no campo `currency_type` de `fare_attributes.txt`. |

@@ -1,0 +1,50 @@
+---
+title: "Preço da tarifa"
+description: "Verifica o valor de price em fare_attributes.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `fare_attributes_price_valid` |
+| Ficheiro | `fare_attributes.txt` |
+| Campo | `price` |
+| Tipo | Número não negativo |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** preço da tarifa, na unidade indicada por `currency_type`.
+
+Mais informação em [fare_attributes.txt](/reference/gtfs/schedule/fare_attributes).
+
+## Como funciona
+
+O resultado depende da severidade definida na configuração da regra: obrigatório (`error`) reprova; recomendado (`warning`) passa com aviso; informativo (`info`) passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Nos casos sem severidade explícita abaixo, a indicação de reprovação pressupõe a configuração obrigatória.
+
+O preço tem de ser um número finito, igual ou superior a zero. A regra não confirma se o montante está correto nem limita o número de casas decimais para a moeda.
+
+A regra avalia cada linha do `fare_attributes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O texto pode ser interpretado como um número dentro dos limites aceites? | Segue para o passo 2 | ❌ Reprova: preço inválido |
+| 2 | O valor é `NaN` ou infinito? | ❌ Reprova: preço inválido | Segue para o passo 3 |
+| 3 | O número é negativo? | ❌ Reprova: preço inválido | ✅ Passa |
+
+Os espaços não são removidos. Usar ponto como separador decimal. Zero é aceite. Também são aceites formas numéricas como `2.5e0`. Os exemplos pressupõem que a regra é executada e que a configuração da regra permite reportar problemas.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `2.50` | ✅ Passa | Preço não negativo |
+| `-1` | ❌ Reprova | Preço negativo |
+| `2,50` | ❌ Reprova | Separador decimal não aceite |
+| `NaN` | ❌ Reprova | Não representa um número |
+| `+Inf` | ❌ Reprova | Valor infinito |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor inválido | O valor não cumpre o formato ou os limites aceites | Escrever um preço finito e não negativo, com ponto como separador decimal, por exemplo `2.50` no campo `price` de `fare_attributes.txt`. |

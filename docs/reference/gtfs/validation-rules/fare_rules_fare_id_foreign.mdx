@@ -1,0 +1,51 @@
+---
+title: "Tarifa associada"
+description: "Verifica se fare_id de fare_rules.txt referencia fare_id em fare_attributes.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `fare_rules_fare_id_foreign` |
+| Ficheiros | `fare_rules.txt`, `fare_attributes.txt` |
+| Campo | `fare_id` |
+| Tipo | Referência a `fare_attributes.fare_id` |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** identifica uma categoria tarifária.
+
+Mais informação em [fare_rules.txt](/reference/gtfs/schedule/fare_rules) e [fare_attributes.txt](/reference/gtfs/schedule/fare_attributes).
+
+## Como funciona
+
+O resultado depende da severidade definida na configuração da regra: obrigatório (`error`) reprova; recomendado (`warning`) passa com aviso; informativo (`info`) passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Nos casos sem severidade explícita abaixo, a indicação de reprovação pressupõe a configuração obrigatória.
+
+Quando preenchido, o identificador tem de existir no campo `fare_id` de `fare_attributes.txt`. A regra não verifica o preenchimento, a unicidade ou se a tarifa se aplica efetivamente à viagem.
+
+A regra avalia cada linha do `fare_rules.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo de `fare_rules.txt` está vazio? | ✅ Passa sem procurar uma referência | Segue para o passo 2 |
+| 2 | Existe uma linha de `fare_attributes.txt` com o mesmo valor em `fare_id`? | ✅ Passa | ❌ Reprova: referência inexistente |
+
+Os espaços não são removidos. A comparação distingue maiúsculas de minúsculas. Uma coluna ausente também é tratada como vazia. O preenchimento é verificado separadamente. Os exemplos pressupõem que a regra é executada e que a configuração da regra permite reportar problemas.
+
+## Como se relacionam
+
+O campo `fare_id` de `fare_rules.txt` deve corresponder a `fare_id` em `fare_attributes.txt`.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `A` (existe em `fare_attributes.txt`) | ✅ Passa | Referência encontrada |
+| `missing` (não existe em `fare_attributes.txt`) | ❌ Reprova | Referência inexistente |
+| `a` (só existe `A` em `fare_attributes.txt`) | ❌ Reprova | Maiúsculas e minúsculas diferentes |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Referência inexistente | O valor não existe no campo `fare_id` de `fare_attributes.txt` | Corrigir `fare_id` em `fare_rules.txt` para um valor existente em `fare_id` de `fare_attributes.txt`. Se a definição estiver em falta, acrescentá-la no ficheiro de referência. |
