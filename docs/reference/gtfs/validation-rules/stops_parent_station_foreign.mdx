@@ -1,0 +1,47 @@
+---
+title: "Repetição do local superior"
+description: "Verifica parent_station em stops.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stops_parent_station_foreign` |
+| Ficheiro | `stops.txt` |
+| Campo | `parent_station` |
+| Tipo | Referência |
+| Severidade | Condicional (obrigatório para location_type 2, 3 ou 4; proibido para 1) |
+
+**Descrição do campo:** identifica o local superior na hierarquia de estações, plataformas e áreas de embarque.
+
+Mais informação em [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+A implementação conta valores repetidos de parent_station, sem procurar o identificador em stop_id. Além disso, atribui a ocorrência ao valor do campo, o que normalmente a suprime na execução configurada.
+
+A regra avalia cada linha do `stops.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O valor aparece em mais de uma linha? | Tenta registar uma ocorrência com o valor como identificador da regra | ✅ Passa |
+| 2 | A ocorrência é aceite com esse identificador substituído? | Resultado conforme a severidade desse identificador | ✅ Passa sem ocorrência apresentada |
+
+A comparação conserva espaços e maiúsculas. Esta regra não garante referências válidas nem uma deteção fiável de repetições. Os exemplos correspondem à execução configurada observada nos testes.
+
+O resultado segue a configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `station` (uma linha, sem estação referenciada) | ✅ Passa | Referência não verificada |
+| `station`, `station` (duas linhas) | ✅ Passa | Ocorrência suprimida pelo identificador incorreto |
+| `station`, `STATION` (duas linhas) | ✅ Passa | Textos diferentes |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Local superior repetido | A implementação conta repetições e usa um identificador de ocorrência incorreto | Rever `parent_station` em `stops.txt` e pedir correção da regra; não alterar relações legítimas apenas para evitar repetições. |

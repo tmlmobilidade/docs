@@ -1,0 +1,51 @@
+---
+title: "Ficheiro de locais em falta"
+description: "Verifica a presença de stops.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stops_file_missing` |
+| Ficheiros | `stops.txt`, `locations.geojson` |
+| Campo | Se aplica em todo o ficheiro |
+| Tipo | Ficheiro |
+| Severidade | Condicional (obrigatório quando locations.geojson está ausente) |
+
+## Como funciona
+
+A regra assinala a ausência de stops.txt quando a configuração o pede ou quando falta também locations.geojson. Não verifica o conteúdo nem a existência de linhas.
+
+A regra avalia a presença dos ficheiros no conjunto de dados, seguindo os passos abaixo por ordem.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | stops.txt está presente nos dados carregados? | ✅ Passa | Segue para o passo 2 |
+| 2 | A configuração recomenda ou assinala a ausência como informação? | ✅ Passa com aviso ou informação | Segue para o passo 3 |
+| 3 | A configuração exige stops.txt? | ❌ Reprova: ficheiro em falta | Segue para o passo 4 |
+| 4 | locations.geojson também está ausente? | Sem configuração: ❌ Reprova; com configuração: segue a severidade definida | ✅ Passa |
+
+A presença é verificada nas tabelas carregadas. Uma tabela vazia conta como presente. A ausência é reportada uma única vez, mesmo quando várias condições se aplicam. O resultado segue a configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória.
+
+## Como se relacionam
+
+A ausência de `locations.geojson` ativa a condição de presença de `stops.txt`.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| stops.txt presente | ✅ Passa | Ficheiro disponível |
+| Ambos ausentes, sem configuração | ❌ Reprova | Falta a alternativa de locais |
+| stops.txt ausente (recomendado) | ✅ Passa com aviso | Ausência comunicada |
+| stops.txt ausente (informativo) | ✅ Passa com informação | Ausência comunicada |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Ficheiro obrigatório em falta | A configuração exige o ficheiro | Incluir `stops.txt` no conjunto de dados. |
+| Ficheiro recomendado em falta | A configuração recomenda o ficheiro | Preparar `stops.txt` para a futura exigência. |
+| Ausência informativa | A configuração comunica a ausência | Conferir se a ausência de `stops.txt` é intencional. |
+| Locais em falta | Faltam stops.txt e locations.geojson | Incluir `stops.txt` ou `locations.geojson`, conforme os locais servidos. |

@@ -1,0 +1,48 @@
+---
+title: "Longitude"
+description: "Verifica stop_lon em stops.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stops_stop_lon_valid` |
+| Ficheiro | `stops.txt` |
+| Campo | `stop_lon` |
+| Tipo | Longitude |
+| Severidade | Condicional (obrigatório para location_type 0, 1 ou 2) |
+
+**Descrição do campo:** longitude do local de embarque. 
+
+Mais informação em [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+O número tem de estar dentro dos limites da coordenada. A regra não confirma que o ponto corresponde ao local real.
+
+A regra avalia cada linha do `stops.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O texto pode ser lido como número? | Segue para o passo 2 | Interrompe a verificação e comunica um problema técnico |
+| 2 | O número está entre `-180` e `180`, incluindo os limites? | ✅ Passa | ❌ Reprova: coordenada inválida |
+
+Os espaços não são removidos. Vazio e texto ilegível produzem um problema técnico no executor. `NaN` e infinito são rejeitados pelos limites.
+
+O resultado segue a configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `-9.14` | ✅ Passa | Coordenada dentro dos limites |
+| `180.01` | ❌ Reprova | Acima do limite |
+| `NaN` | ❌ Reprova | Não representa uma coordenada |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Coordenada inválida | O número está fora dos limites | Corrigir `stop_lon` em `stops.txt` para a coordenada real entre `-180` e `180`. |
+| Valor não legível | O campo não pode ser lido como número | Escrever `stop_lon` em `stops.txt` com ponto decimal e sem espaços. |

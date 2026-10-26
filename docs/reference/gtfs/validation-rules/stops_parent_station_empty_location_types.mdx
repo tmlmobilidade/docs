@@ -1,0 +1,53 @@
+---
+title: "Local superior obrigatório"
+description: "Verifica parent_station, location_type em stops.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stops_parent_station_empty_location_types` |
+| Ficheiro | `stops.txt` |
+| Campos | `parent_station`, `location_type` |
+| Tipo | Referência, Enumeração |
+| Severidade | Condicional (obrigatório para location_type 2, 3 ou 4; proibido para 1), Opcional |
+
+**Descrição dos campos:**
+
+- `parent_station`: identifica o local superior na hierarquia de estações, plataformas e áreas de embarque.
+- `location_type`: classifica o local: `0` paragem ou plataforma, `1` estação, `2` entrada ou saída, `3` nó genérico e `4` área de embarque.
+
+Mais informação em [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+Os tipos `2`, `3` e `4` têm de indicar um local superior. A regra não verifica se esse local existe ou se tem o tipo adequado.
+
+A regra avalia cada linha do `stops.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O tipo é exatamente 2, 3 ou 4 e parent_station está vazio? | ❌ Reprova: local superior em falta | ✅ Passa |
+
+Os espaços não são removidos. Um espaço em parent_station conta como preenchimento. Outros tipos, incluindo vazio, passam nesta verificação.
+
+O resultado segue a configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória.
+
+## Como se relacionam
+
+O valor de `location_type` determina quando `parent_station` tem de estar preenchido.
+
+## Exemplos
+
+| parent_station | location_type | Resultado | Porquê |
+|---|---|---|---|
+| `P1` | `2` | ✅ Passa | Local superior preenchido |
+| Vazio | `2` | ❌ Reprova | Entrada sem local superior |
+| Vazio | `4` | ❌ Reprova | Área de embarque sem local superior |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Local superior em falta | O tipo exige um local superior | Preencher `parent_station` em `stops.txt` com o identificador do local superior adequado a `location_type`. |

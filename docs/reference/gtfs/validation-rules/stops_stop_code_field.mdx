@@ -1,0 +1,50 @@
+---
+title: "Preenchimento — código público"
+description: "Verifica stop_code em stops.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stops_stop_code_field` |
+| Ficheiro | `stops.txt` |
+| Campo | `stop_code` |
+| Tipo | Texto |
+| Severidade | Opcional |
+
+**Descrição do campo:** código apresentado aos passageiros para identificar o local.
+
+Mais informação em [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+A regra verifica se o campo tem texto quando a configuração assinala a sua ausência. Não verifica o formato nem aplica automaticamente condições associadas ao tipo de local.
+
+A regra avalia cada linha do `stops.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Segue para o passo 2 | ✅ Passa |
+| 2 | A configuração ignora a regra? | ✅ Passa | Obrigatório: ❌ Reprova; recomendado: ✅ Passa com aviso; informativo: ✅ Passa com informação |
+
+Os espaços não são removidos; só espaços contam como preenchimento. Uma coluna ausente conta como vazia. Valores preenchidos não são rejeitados pela configuração de campo proibido.
+
+O resultado segue a configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `A1` | ✅ Passa | Campo preenchido |
+| Vazio (obrigatório) | ❌ Reprova | Campo exigido em falta |
+| Vazio (recomendado) | ✅ Passa com aviso | Ausência comunicada |
+| Vazio (informativo) | ✅ Passa com informação | Ausência comunicada |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo obrigatório em falta | A configuração exige o campo | Preencher `stop_code` em `stops.txt` com o valor correspondente ao local. |
+| Campo recomendado em falta | A configuração recomenda o campo | Preencher `stop_code` em `stops.txt` com o valor correspondente ao local. |
+| Campo informativo em falta | A configuração assinala a ausência | Preencher `stop_code` em `stops.txt` com o valor correspondente ao local. |

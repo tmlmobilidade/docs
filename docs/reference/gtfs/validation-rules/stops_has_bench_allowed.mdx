@@ -1,0 +1,48 @@
+---
+title: "Valores permitidos — banco"
+description: "Verifica has_bench em stops.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stops_has_bench_allowed` |
+| Ficheiro | `stops.txt` |
+| Campo | `has_bench` |
+| Tipo | Enumeração |
+| Severidade | Condicional (presença da extensão por confirmar; preenchimento definido pela configuração da regra) |
+
+**Descrição do campo:** indica a disponibilidade de banco na extensão local.
+
+Mais informação em [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+O texto tem de constar da lista permitida quando a configuração da regra define essa lista. A regra não valida o formato nem confirma o conteúdo no terreno.
+
+A regra avalia cada linha do `stops.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | Existe uma lista de valores permitidos? | Segue para o passo 2 | ✅ Passa |
+| 2 | A lista aceita qualquer valor? | ✅ Passa | Segue para o passo 3 |
+| 3 | O texto consta da lista? | ✅ Passa | ❌ Reprova: valor não permitido |
+
+A comparação conserva espaços e maiúsculas. Uma lista definida mas vazia rejeita todos os valores. O vazio também é comparado; sem lista, passa.
+
+O resultado segue a configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `1` (lista contém este valor) | ✅ Passa | Valor permitido |
+| `outro` (lista não contém este valor) | ❌ Reprova | Fora da lista |
+| `1` (lista vazia) | ❌ Reprova | Nenhum valor permitido |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor não permitido | O texto não consta da lista | Corrigir `has_bench` em `stops.txt` para um valor permitido ou pedir revisão da configuração da regra. |

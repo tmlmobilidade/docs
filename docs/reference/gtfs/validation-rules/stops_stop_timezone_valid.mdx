@@ -1,0 +1,46 @@
+---
+title: "Fuso horário do local"
+description: "Verifica stop_timezone em stops.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stops_stop_timezone_valid` |
+| Ficheiro | `stops.txt` |
+| Campo | `stop_timezone` |
+| Tipo | Fuso horário |
+| Severidade | Opcional |
+
+**Descrição do campo:** fuso horário do local; a referência prevê herança do local superior ou do operador quando aplicável.
+
+Mais informação em [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+O valor tem de ser reconhecido como fuso horário pelo ambiente de execução. A regra não verifica a localização nem aplica a herança do operador ou do local superior.
+
+A regra avalia cada linha do `stops.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O valor é reconhecido como fuso horário? | ✅ Passa | ❌ Reprova: fuso desconhecido |
+
+Os espaços não são removidos. O vazio é aceite como tempo universal coordenado. A disponibilidade de nomes depende dos dados de fusos do ambiente.
+
+O resultado segue a configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `Europe/Lisbon` | ✅ Passa | Fuso reconhecido |
+| `Not/A_Timezone` | ❌ Reprova | Fuso desconhecido |
+| ` Europe/Lisbon ` | ❌ Reprova | Espaços conservados |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Fuso desconhecido | O nome não é reconhecido | Indicar um fuso reconhecido, como `Europe/Lisbon`, em `stop_timezone` de `stops.txt`, sem espaços. |

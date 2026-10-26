@@ -1,0 +1,52 @@
+---
+title: "Página do local"
+description: "Verifica stop_url em stops.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stops_stop_url_valid` |
+| Ficheiro | `stops.txt` |
+| Campo | `stop_url` |
+| Tipo | URL |
+| Severidade | Opcional |
+
+**Descrição do campo:** endereço de uma página sobre o local.
+
+Mais informação em [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+O endereço tem de usar `http` ou `https` e indicar um servidor. A regra não confirma que a página existe nem compara páginas de operadores ou rotas.
+
+A regra avalia cada linha do `stops.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O valor fica vazio após remover espaços exteriores? | ❌ Reprova: endereço inválido | Segue para o passo 2 |
+| 2 | Existem espaços interiores ou símbolos proibidos? | ❌ Reprova: endereço inválido | Segue para o passo 3 |
+| 3 | Cada sinal % é seguido de dois algarismos hexadecimais? | Segue para o passo 4 | ❌ Reprova: endereço inválido |
+| 4 | O texto pode ser interpretado como endereço? | Segue para o passo 5 | ❌ Reprova: endereço inválido |
+| 5 | O protocolo é http ou https? | Segue para o passo 6 | ❌ Reprova: endereço inválido |
+| 6 | Existe um servidor no endereço? | ✅ Passa | ❌ Reprova: endereço inválido |
+
+Os espaços exteriores são removidos. Sem `%`, a verificação das sequências percentuais passa.
+
+O resultado segue a configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `https://example.org` | ✅ Passa | Endereço completo |
+| `example.org` | ❌ Reprova | Falta o protocolo |
+| `https://` | ❌ Reprova | Falta o servidor |
+| `https://example.org/%ZZ` | ❌ Reprova | Sequência percentual inválida |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Endereço inválido | O endereço não cumpre o formato aceite | Corrigir `stop_url` em `stops.txt` para um endereço completo com `http://` ou `https://` e servidor. |

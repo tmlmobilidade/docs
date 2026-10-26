@@ -1,0 +1,53 @@
+---
+title: "Descrição diferente do nome"
+description: "Verifica stop_desc, stop_name em stops.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stops_stop_desc_different_stop_name` |
+| Ficheiro | `stops.txt` |
+| Campos | `stop_desc`, `stop_name` |
+| Tipo | Texto |
+| Severidade | Opcional, Condicional (obrigatório para location_type 0, 1 ou 2) |
+
+**Descrição dos campos:**
+
+- `stop_desc`: descrição útil do local, diferente do seu nome.
+- `stop_name`: nome do local apresentado aos passageiros.
+
+Mais informação em [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+A descrição tem de ser diferente do nome. A regra não avalia a utilidade da descrição nem a semelhança de significado.
+
+A regra avalia cada linha do `stops.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | Os textos são exatamente iguais? | ❌ Reprova: descrição igual ao nome | ✅ Passa |
+
+Espaços e maiúsculas contam. Dois campos vazios também são iguais.
+
+O resultado segue a configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória.
+
+## Como se relacionam
+
+A regra compara diretamente `stop_desc` com `stop_name` da mesma linha.
+
+## Exemplos
+
+| stop_desc | stop_name | Resultado | Porquê |
+|---|---|---|---|
+| `Junto à escola` | `Centro` | ✅ Passa | Textos distintos |
+| `Centro` | `Centro` | ❌ Reprova | Textos iguais |
+| Vazio | Vazio | ❌ Reprova | Vazios iguais |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Descrição igual ao nome | A descrição repete o nome | Corrigir `stop_desc` em `stops.txt` para acrescentar informação útil diferente de `stop_name`. |

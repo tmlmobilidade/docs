@@ -1,0 +1,46 @@
+---
+title: "Condição — tipo de local"
+description: "Verifica location_type em stops.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stops_stop_access_differente_location_type_zero` |
+| Ficheiro | `stops.txt` |
+| Campo | `location_type` |
+| Tipo | Enumeração |
+| Severidade | Opcional |
+
+**Descrição do campo:** classifica o local: `0` paragem ou plataforma, `1` estação, `2` entrada ou saída, `3` nó genérico e `4` área de embarque.
+
+Mais informação em [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+A implementação exige que o tipo da linha seja `0`. Não lê stop_access, pelo que um campo de acesso vazio não evita a ocorrência.
+
+A regra avalia cada linha do `stops.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O tipo é exatamente 0? | ✅ Passa | ❌ Reprova: condição não cumprida |
+
+A comparação é literal e não remove espaços. O nome da regra não descreve todos os limites desta implementação.
+
+O resultado segue a configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `0` | ✅ Passa | Tipo paragem |
+| `1` | ❌ Reprova | Tipo diferente de zero |
+| `00` | ❌ Reprova | Texto diferente de zero |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Condição não cumprida | O valor não cumpre a condição implementada | Rever `location_type` em `stops.txt`; se o tipo estiver correto, pedir revisão da aplicação desta regra. |

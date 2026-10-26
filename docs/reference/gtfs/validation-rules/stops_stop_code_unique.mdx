@@ -1,0 +1,46 @@
+---
+title: "Código público único"
+description: "Verifica stop_code em stops.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stops_stop_code_unique` |
+| Ficheiro | `stops.txt` |
+| Campo | `stop_code` |
+| Tipo | Texto |
+| Severidade | Opcional |
+
+**Descrição do campo:** código apresentado aos passageiros para identificar o local.
+
+Mais informação em [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+Cada valor tem de aparecer numa única linha do ficheiro. A regra não verifica o preenchimento nem a unicidade noutros ficheiros.
+
+A regra avalia cada linha do `stops.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O mesmo valor aparece em mais de uma linha? | ❌ Reprova: valor repetido | ✅ Passa |
+
+Espaços e maiúsculas contam. Textos vazios repetidos são assinalados; valores internos ausentes não são tratados como textos vazios nesta contagem.
+
+O resultado segue a configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `A`, `B` (duas linhas) | ✅ Passa | Valores distintos |
+| `A`, `A` (duas linhas) | ❌ Reprova | Valor repetido |
+| Vazio, vazio (duas linhas) | ❌ Reprova | Texto vazio repetido |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor repetido | Duas linhas usam o mesmo valor | Eliminar a duplicação ou corrigir `stop_code` em `stops.txt`, atualizando as referências quando necessário. |

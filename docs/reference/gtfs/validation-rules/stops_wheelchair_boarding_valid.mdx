@@ -1,0 +1,46 @@
+---
+title: "Acesso em cadeira de rodas"
+description: "Verifica wheelchair_boarding em stops.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `stops_wheelchair_boarding_valid` |
+| Ficheiro | `stops.txt` |
+| Campo | `wheelchair_boarding` |
+| Tipo | Enumeração |
+| Severidade | Opcional |
+
+**Descrição do campo:** indica as condições de acesso em cadeira de rodas. A interpretação depende do tipo de local e da hierarquia.
+
+Mais informação em [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+O texto tem de coincidir com um dos valores aceites: `0`, `1`, `2`. A regra não confirma se o valor descreve corretamente o local.
+
+A regra avalia cada linha do `stops.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O texto coincide com um dos valores aceites? | ✅ Passa | ❌ Reprova: valor inválido |
+
+Não há normalização numérica nem remoção de espaços. O vazio é rejeitado. Esta verificação não consulta a lista de opções da configuração.
+
+O resultado segue a configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `1` | ✅ Passa | Valor aceite |
+| `3` | ❌ Reprova | Valor não aceite |
+| `01` | ❌ Reprova | Texto diferente de `1` |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor inválido | O texto não coincide com um valor aceite | Corrigir `wheelchair_boarding` em `stops.txt` para o valor adequado entre `0`, `1`, `2`. |
