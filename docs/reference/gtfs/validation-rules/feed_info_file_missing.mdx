@@ -1,0 +1,52 @@
+---
+title: "Presença da informação do conjunto de dados"
+description: "Verifica a disponibilidade de feed_info.txt e a sua necessidade quando existem traduções."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `feed_info_file_missing` |
+| Ficheiros | `feed_info.txt`, `translations.txt` |
+| Campo | Se aplica em todo o ficheiro |
+| Tipo | Ficheiro |
+| Severidade | Condicional (obrigatório quando existem traduções; recomendado nos restantes casos) |
+
+## Como funciona
+
+A regra assinala a ausência de `feed_info.txt` de acordo com a configuração da regra. Quando há linhas em `translations.txt`, também verifica se `feed_info.txt` tem pelo menos uma linha, sem validar o conteúdo.
+
+A regra avalia a presença dos ficheiros e o número de linhas, seguindo os passos abaixo por ordem.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração recomenda `feed_info.txt` e o ficheiro está ausente? | ❌ Reporta o problema: ficheiro recomendado em falta | Segue para o passo 2 |
+| 2 | A configuração assinala a ausência como informação e o ficheiro está ausente? | ❌ Reporta o problema: ficheiro em falta | Segue para o passo 3 |
+| 3 | A configuração exige `feed_info.txt` e o ficheiro está ausente? | ❌ Reporta o problema: ficheiro obrigatório em falta | Segue para o passo 4 |
+| 4 | É possível confirmar pelo menos uma linha em `translations.txt`? | Segue para o passo 5 | Termina sem reportar um problema adicional |
+| 5 | É possível confirmar pelo menos uma linha em `feed_info.txt`? | ✅ Passa | Assinala a falta de informação para as traduções, quando a configuração permite reportar o problema |
+
+Cada ausência é reportada uma única vez. Sem configuração fornecida, a existência de traduções exige informação do conjunto de dados. Com configuração, aplica-se a definição desta regra.
+
+## Como se relacionam
+
+As linhas de `translations.txt` ativam a verificação da existência de informação do conjunto de dados. Um ficheiro de traduções sem linhas não ativa essa verificação.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `feed_info.txt` com uma linha | ✅ Passa | Informação disponível |
+| Ficheiro ausente (configuração exige) | ❌ Problema | Falta o ficheiro exigido |
+| Ficheiro ausente e traduções com linhas (sem configuração) | ❌ Problema | Traduções sem informação do conjunto de dados |
+| `feed_info.txt` sem linhas e traduções com linhas (sem configuração) | ❌ Problema | Ficheiro de informação vazio |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Ficheiro recomendado em falta | A configuração da regra recomenda o ficheiro | Incluir `feed_info.txt` no conjunto de dados GTFS. |
+| Ficheiro em falta | A configuração da regra assinala a ausência como informação | Incluir `feed_info.txt` no conjunto de dados GTFS. |
+| Ficheiro obrigatório em falta | A configuração da regra exige o ficheiro | Incluir `feed_info.txt` no conjunto de dados GTFS. |
+| Informação em falta quando existem traduções | Existem linhas em `translations.txt`, mas falta informação do conjunto de dados | Incluir `feed_info.txt` com uma linha de informação e confirmar que foi importado, mantendo as traduções de `translations.txt`. |

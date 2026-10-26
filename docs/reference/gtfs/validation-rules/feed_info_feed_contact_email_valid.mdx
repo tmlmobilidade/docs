@@ -1,0 +1,44 @@
+---
+title: "Correio eletrónico de contacto técnico"
+description: "Verifica o formato de feed_contact_email em feed_info.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `feed_info_feed_contact_email_valid` |
+| Ficheiro | `feed_info.txt` |
+| Campo | `feed_contact_email` |
+| Tipo | E-mail |
+| Severidade | Opcional |
+
+**Descrição do campo:** endereço de e-mail para questões sobre o conjunto de dados e a sua publicação. Destina-se a contactos técnicos; o apoio aos passageiros é indicado em `agency.txt`. Recomenda-se indicar este contacto ou `feed_contact_url`.
+
+Mais informação em [feed_info.txt](/reference/gtfs/schedule/feed_info).
+
+## Como funciona
+
+O valor tem de ser reconhecido como um endereço de e-mail. A regra não confirma que a caixa de correio existe e não consulta uma lista de endereços permitidos.
+
+A regra avalia cada linha do `feed_info.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O texto é reconhecido como um endereço de e-mail? | ✅ Passa | ❌ Reporta o problema: formato inválido |
+
+Os espaços no início e no fim são ignorados. Um valor vazio não é aceite quando esta regra é executada. Também é aceite um nome de apresentação junto do endereço, como `Apoio <apoio@operador.pt>`. Os exemplos pressupõem que a configuração da regra permite reportar problemas e que as condições para a sua execução estão cumpridas.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `apoio@operador.pt` | ✅ Passa | Endereço reconhecido |
+| `apoio-operador.pt` | ❌ Problema | Falta a `@` |
+| `apoio@` | ❌ Problema | Falta o domínio |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Formato inválido | O valor não cumpre o formato aceite pela regra | Escrever um endereço completo, por exemplo `apoio@operador.pt` no campo `feed_contact_email` de `feed_info.txt`. |
