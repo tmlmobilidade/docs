@@ -1,0 +1,55 @@
+---
+title: "Máximo de dois valores de shape_id por linha"
+description: "A regra limita a dois os valores distintos de `shape_id` por linha."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `trips_shape_id_max_two_per_route` |
+| Ficheiro | `trips.txt` |
+| Campos | `route_id`, `shape_id` |
+| Tipo | Identificador de referência |
+| Severidade | Obrigatório, Condicional (obrigatório com embarque ou desembarque contínuo) |
+
+**Descrição dos campos:**
+
+- `route_id`: identifica a linha a que a viagem pertence.
+- `shape_id`: identifica o traçado geográfico do veículo. É obrigatório quando existe embarque ou desembarque contínuo em `routes.txt` ou `stop_times.txt`.
+
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
+
+## Como funciona
+
+A regra limita a dois os valores distintos de `shape_id` por linha. Conta todos os sentidos em conjunto.
+
+A regra avalia cada grupo de viagens com o mesmo `route_id`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra ignora esta verificação ou marca-a como proibida? | ✅ Passa | Continua |
+| 2 | A linha está vazia? | ✅ Passa | Reúne as viagens da linha |
+| 3 | Existem mais de dois valores distintos não vazios? | Assinala excesso de valores | ✅ Passa |
+
+Os espaços não são removidos. As comparações de texto distinguem maiúsculas e minúsculas. Valores vazios não entram na contagem. Esta regra não verifica a consistência dentro de cada sentido.
+
+O resultado depende da configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória. As condições de execução e as dependências configuradas têm de estar cumpridas.
+
+## Como se relacionam
+
+`route_id` reúne as viagens nas quais se contam os valores de `shape_id`.
+
+## Exemplos
+
+| route_id | shape_id | Resultado | Porquê |
+|---|---|---|---|
+| `R1` | `S1` | ✅ Passa | Um valor |
+| `R1`, `R1` | `S1`, `S2` | ✅ Passa | Dois valores |
+| `R1`, `R1`, `R1` | `S1`, `S2`, `S3` | ❌ Reprova | Três valores |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Mais de dois valores | A linha reúne mais de dois valores distintos | Rever `shape_id` e `route_id` em `trips.txt` para manter até dois valores de `shape_id` por linha. |

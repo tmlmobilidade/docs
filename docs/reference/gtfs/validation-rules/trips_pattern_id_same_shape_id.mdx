@@ -1,0 +1,55 @@
+---
+title: "Igualdade entre padrão e traçado"
+description: "A regra compara os identificadores do padrão e do traçado."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `trips_pattern_id_same_shape_id` |
+| Ficheiro | `trips.txt` |
+| Campos | `pattern_id`, `shape_id` |
+| Tipo | Identificador, Identificador de referência |
+| Severidade | Opcional (recomendado) |
+
+**Descrição dos campos:**
+
+- `pattern_id`: identifica o padrão a que a viagem pertence.
+- `shape_id`: identifica o traçado geográfico do veículo. É obrigatório quando existe embarque ou desembarque contínuo em `routes.txt` ou `stop_times.txt`.
+
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
+
+## Como funciona
+
+A regra compara os identificadores do padrão e do traçado. Não verifica se os identificadores existem noutros ficheiros.
+
+A regra avalia cada linha do `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | Algum campo está vazio? | ✅ Passa | Continua |
+| 2 | A configuração da regra ignora esta verificação ou marca-a como proibida? | ✅ Passa | Continua |
+| 3 | Os dois textos são iguais? | ✅ Passa | Assinala identificadores diferentes |
+
+Os espaços não são removidos. As comparações de texto distinguem maiúsculas e minúsculas. 
+
+O resultado depende da configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória. As condições de execução e as dependências configuradas têm de estar cumpridas.
+
+## Como se relacionam
+
+Esta regra exige o mesmo texto em `pattern_id` e `shape_id` quando ambos estão preenchidos.
+
+## Exemplos
+
+| pattern_id | shape_id | Resultado | Porquê |
+|---|---|---|---|
+| `R1_0` | `R1_0` | ✅ Passa | Identificadores iguais |
+| `R1_0_1` | `R1_0` | ❌ Reprova | Identificadores diferentes |
+| `R1_0` | `r1_0` | ❌ Reprova | Maiúsculas diferentes |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Identificadores diferentes | O padrão e o traçado têm nomes diferentes | Alinhar `pattern_id` e `shape_id` em `trips.txt`, mantendo corretas as referências ao traçado. |

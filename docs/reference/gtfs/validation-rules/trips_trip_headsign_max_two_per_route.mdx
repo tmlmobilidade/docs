@@ -1,0 +1,55 @@
+---
+title: "Máximo de dois valores de trip_headsign por linha"
+description: "A regra limita a dois os valores distintos de `trip_headsign` por linha."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `trips_trip_headsign_max_two_per_route` |
+| Ficheiro | `trips.txt` |
+| Campos | `route_id`, `trip_headsign` |
+| Tipo | Identificador de referência, Texto |
+| Severidade | Obrigatório, Opcional |
+
+**Descrição dos campos:**
+
+- `route_id`: identifica a linha a que a viagem pertence.
+- `trip_headsign`: texto apresentado na sinalética que identifica o destino da viagem. Pode ser substituído em paragens específicas por `stop_headsign` em `stop_times.txt`.
+
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
+
+## Como funciona
+
+A regra limita a dois os valores distintos de `trip_headsign` por linha. Conta todos os sentidos em conjunto.
+
+A regra avalia cada grupo de viagens com o mesmo `route_id`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra ignora esta verificação ou marca-a como proibida? | ✅ Passa | Continua |
+| 2 | A linha está vazia? | ✅ Passa | Reúne as viagens da linha |
+| 3 | Existem mais de dois valores distintos não vazios? | Assinala excesso de valores | ✅ Passa |
+
+Os espaços não são removidos. As comparações de texto distinguem maiúsculas e minúsculas. Valores vazios não entram na contagem. Esta regra não verifica a consistência dentro de cada sentido.
+
+O resultado depende da configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória. As condições de execução e as dependências configuradas têm de estar cumpridas.
+
+## Como se relacionam
+
+`route_id` reúne as viagens nas quais se contam os valores de `trip_headsign`.
+
+## Exemplos
+
+| route_id | trip_headsign | Resultado | Porquê |
+|---|---|---|---|
+| `R1` | `Terminal` | ✅ Passa | Um valor |
+| `R1`, `R1` | `Terminal`, `Centro` | ✅ Passa | Dois valores |
+| `R1`, `R1`, `R1` | `Terminal`, `Centro`, `Estação` | ❌ Reprova | Três valores |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Mais de dois valores | A linha reúne mais de dois valores distintos | Rever `trip_headsign` e `route_id` em `trips.txt` para manter até dois valores de `trip_headsign` por linha. |

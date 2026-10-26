@@ -1,0 +1,57 @@
+---
+title: "Consistência de shape_id por linha e sentido"
+description: "A regra exige um único `shape_id` por linha e sentido."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `trips_shape_id_route_direction_consistent` |
+| Ficheiro | `trips.txt` |
+| Campos | `route_id`, `direction_id`, `shape_id` |
+| Tipo | Identificador de referência, Valor enumerado, Identificador de referência |
+| Severidade | Obrigatório, Opcional, Condicional (obrigatório com embarque ou desembarque contínuo) |
+
+**Descrição dos campos:**
+
+- `route_id`: identifica a linha a que a viagem pertence.
+- `direction_id`: indica o sentido da viagem: `0` para um sentido e `1` para o oposto. Serve para distinguir sentidos nos horários.
+- `shape_id`: identifica o traçado geográfico do veículo. É obrigatório quando existe embarque ou desembarque contínuo em `routes.txt` ou `stop_times.txt`.
+
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
+
+## Como funciona
+
+A regra exige um único `shape_id` por linha e sentido. Sentidos opostos podem ter valores diferentes.
+
+A regra avalia cada grupo de viagens com o mesmo `route_id`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra ignora esta verificação ou marca-a como proibida? | ✅ Passa | Continua |
+| 2 | A linha está vazia? | ✅ Passa | Reúne as viagens da linha |
+| 3 | O valor está vazio ou o sentido não representa `0` ou `1`? | Ignora esta viagem | Inclui o valor no respetivo sentido |
+| 4 | Existe mais de um valor distinto no mesmo sentido? | Assinala valores inconsistentes | ✅ Passa |
+
+Os espaços não são removidos. As comparações de texto distinguem maiúsculas e minúsculas. O sentido é comparado como inteiro: `01` e `1` pertencem ao mesmo grupo.
+
+O resultado depende da configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória. As condições de execução e as dependências configuradas têm de estar cumpridas.
+
+## Como se relacionam
+
+Cada combinação de `route_id` e `direction_id` deve ter um único `shape_id` não vazio.
+
+## Exemplos
+
+| route_id | direction_id | shape_id | Resultado | Porquê |
+|---|---|---|---|---|
+| `R1`, `R1` | `0`, `0` | `S1`, `S1` | ✅ Passa | Mesmo valor |
+| `R1`, `R1` | `0`, `0` | `S1`, `S2` | ❌ Reprova | Valores diferentes no mesmo sentido |
+| `R1`, `R1` | `0`, `1` | `S1`, `S2` | ✅ Passa | Sentidos diferentes |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valores inconsistentes | A mesma linha e sentido têm valores diferentes | Alinhar `shape_id` nas viagens com o mesmo `route_id` e `direction_id` em `trips.txt`. |

@@ -1,0 +1,64 @@
+---
+title: "Proximidade das paragens ao traçado"
+description: "A regra assinala paragens a mais de 100 metros dos pontos usados para representar o traçado da viagem."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `trips_stop_coordinates` |
+| Ficheiros | `trips.txt`, `stop_times.txt`, `stops.txt`, `shapes.txt` |
+| Campos | `trip_id`, `shape_id`, `stop_id`, `stop_lat`, `stop_lon`, `shape_pt_lat`, `shape_pt_lon`, `shape_pt_sequence` |
+| Tipo | Identificador único, Identificador de referência, Identificador de referência, Latitude, Longitude, Latitude, Longitude, Número inteiro |
+| Severidade | Obrigatório, Condicional (obrigatório com embarque ou desembarque contínuo), Obrigatório, Condicional, Condicional, Obrigatório, Obrigatório, Obrigatório |
+
+**Descrição dos campos:**
+
+- `trip_id`: identifica uma viagem.
+- `shape_id`: identifica o traçado geográfico do veículo. É obrigatório quando existe embarque ou desembarque contínuo em `routes.txt` ou `stop_times.txt`.
+- `stop_id`: identifica a paragem servida pela viagem.
+- `stop_lat`: indica a latitude da paragem.
+- `stop_lon`: indica a longitude da paragem.
+- `shape_pt_lat`: indica a latitude de um ponto do traçado.
+- `shape_pt_lon`: indica a longitude de um ponto do traçado.
+- `shape_pt_sequence`: indica a ordem do ponto no traçado.
+
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips), [stop_times.txt](/reference/gtfs/schedule/stop_times), [stops.txt](/reference/gtfs/schedule/stops), [shapes.txt](/reference/gtfs/schedule/shapes).
+
+## Como funciona
+
+A regra assinala paragens a mais de 100 metros dos pontos usados para representar o traçado da viagem. Não confirma a existência de todos os registos nem valida integralmente as coordenadas.
+
+A regra avalia cada linha do `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra ignora esta verificação ou marca-a como proibida? | ✅ Passa | Continua |
+| 2 | Falta o identificador da viagem ou do traçado? | ✅ Passa | Reúne os identificadores de paragem não vazios da viagem |
+| 3 | Existe uma linha da paragem com latitude e longitude preenchidas? | Usa a primeira linha nessas condições | Ignora esta paragem |
+| 4 | As coordenadas da paragem podem ser lidas como números? | Continua | Ignora esta paragem |
+| 5 | O traçado tem pontos utilizáveis? | Ordena e acrescenta pontos intermédios | Não assinala distância |
+| 6 | A menor distância calculada é superior a 100 metros? | Assinala distância excessiva | Não assinala distância |
+
+A regra avalia cada identificador de paragem uma vez por viagem, mesmo que a paragem se repita. Usa o primeiro registo de `stops.txt` com ambas as coordenadas preenchidas; não tenta outro se essas coordenadas forem ilegíveis. Os pontos do traçado são ordenados por `shape_pt_sequence`; uma ordem ilegível é tratada como zero. Coordenadas ilegíveis dos pontos são descartadas. O traçado recebe pontos intermédios com espaçamento de referência de 50 metros. A distância é medida até estes pontos, não por projeção exata sobre cada segmento. Exatamente 100 metros passa. O limiar não depende das opções da regra. Cada mensagem identifica a linha da viagem em `trips.txt`.
+
+O resultado depende da configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória. As condições de execução e as dependências configuradas têm de estar cumpridas.
+
+## Como se relacionam
+
+`trip_id` procura as paragens em `stop_times.txt`. `stop_id` procura as coordenadas em `stops.txt`. `shape_id` procura os pontos ordenados do traçado em `shapes.txt`.
+
+## Exemplos
+
+| trip_id | shape_id | stop_id | stop_lat | stop_lon | shape_pt_lat | shape_pt_lon | shape_pt_sequence | Resultado | Porquê |
+|---|---|---|---|---|---|---|---|---|---|
+| `T1` | `S1` | `A` | `38.7` | `-9.1` | `38.7`, `38.71` | `-9.1`, `-9.1` | `1`, `2` | ✅ Passa | Paragem sobre o traçado |
+| `T1` | `S1` | `A` | `40` | `-9.1` | `38.7`, `38.71` | `-9.1`, `-9.1` | `1`, `2` | ❌ Reprova | Distância superior a 100 metros |
+| `T1` | `S1` | `A` | `inválido` | `-9.1` | `38.7`, `38.71` | `-9.1`, `-9.1` | `1`, `2` | ✅ Passa | Paragem ignorada por coordenada ilegível |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Distância excessiva | A paragem está afastada do traçado associado à viagem | Corrigir `stop_lat` e `stop_lon` em `stops.txt`, os pontos em `shapes.txt` ou a associação `shape_id` em `trips.txt`, conforme os dados reais. |

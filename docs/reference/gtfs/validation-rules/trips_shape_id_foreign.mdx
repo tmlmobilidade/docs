@@ -1,0 +1,51 @@
+---
+title: "Referência — traçado da viagem"
+description: "A regra confirma que o identificador existe em `shapes.txt`."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `trips_shape_id_foreign` |
+| Ficheiros | `trips.txt`, `shapes.txt` |
+| Campo | `shape_id` |
+| Tipo | Identificador de referência |
+| Severidade | Condicional (obrigatório com embarque ou desembarque contínuo) |
+
+**Descrição do campo:** identifica o traçado geográfico do veículo. É obrigatório quando existe embarque ou desembarque contínuo em `routes.txt` ou `stop_times.txt`.
+
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips), [shapes.txt](/reference/gtfs/schedule/shapes).
+
+## Como funciona
+
+A regra confirma que o identificador existe em `shapes.txt`. Não verifica os restantes dados do registo referido.
+
+A regra avalia cada linha do `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | ✅ Passa | Continua |
+| 2 | Existe um registo com o mesmo `shape_id` em `shapes.txt`? | ✅ Passa | Assinala referência inexistente |
+
+Os espaços não são removidos. As comparações de texto distinguem maiúsculas e minúsculas. 
+
+O resultado depende da configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória. As condições de execução e as dependências configuradas têm de estar cumpridas.
+
+## Como se relacionam
+
+`shape_id` em `trips.txt` corresponde ao mesmo campo em `shapes.txt`.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `R1_0` (existe) | ✅ Passa | Referência encontrada |
+| `DESCONHECIDO` (não existe) | ❌ Reprova | Referência inexistente |
+| ` R1_0` (só existe sem espaço) | ❌ Reprova | O espaço altera a referência |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Referência inexistente | O identificador não existe nos ficheiros de referência | Corrigir `shape_id` em `trips.txt` ou criar o registo correspondente em `shapes.txt`. |

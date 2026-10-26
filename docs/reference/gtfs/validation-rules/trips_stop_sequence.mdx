@@ -1,0 +1,66 @@
+---
+title: "Sequência de paragens da viagem"
+description: "A regra verifica a ordem, as distâncias e as repetições consecutivas das paragens da viagem."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `trips_stop_sequence` |
+| Ficheiros | `trips.txt`, `stop_times.txt` |
+| Campos | `trip_id`, `stop_id`, `stop_sequence`, `shape_dist_traveled` |
+| Tipo | Identificador único, Identificador de referência, Número inteiro, Número decimal |
+| Severidade | Obrigatório, Obrigatório, Obrigatório, Opcional |
+
+**Descrição dos campos:**
+
+- `trip_id`: identifica uma viagem.
+- `stop_id`: identifica a paragem servida pela viagem.
+- `stop_sequence`: indica a ordem da paragem na viagem.
+- `shape_dist_traveled`: indica a distância percorrida ao longo do traçado até à paragem.
+
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips), [stop_times.txt](/reference/gtfs/schedule/stop_times).
+
+## Como funciona
+
+A regra verifica a ordem, as distâncias e as repetições consecutivas das paragens da viagem. Não exige um número mínimo de paragens nem verifica horários.
+
+A regra avalia cada linha do `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra ignora esta verificação ou marca-a como proibida? | ✅ Passa | Continua |
+| 2 | O identificador da viagem está vazio? | ✅ Passa | Reúne as paragens da viagem |
+| 3 | Alguma ordem não representa um inteiro ou alguma distância preenchida não representa um número? | Assinala valor inválido e termina | Ordena as paragens pela ordem numérica |
+| 4 | Duas paragens consecutivas têm a mesma ordem? | Assinala ordem repetida e termina | Continua |
+| 5 | As duas distâncias são não negativas e a atual é menor que a anterior? | Assinala distância decrescente e termina | Continua |
+| 6 | Duas paragens consecutivas têm o mesmo identificador não vazio? | Assinala paragem repetida e termina | Continua até ao fim; guarda a sequência validada |
+
+A ordem física das linhas não determina a sequência: a regra ordena pelos números de `stop_sequence`. Aceita intervalos e inteiros negativos. Distâncias vazias ou negativas não entram na comparação entre duas paragens. Distâncias iguais são aceites. Os identificadores das paragens não são aparados. Se houver vários valores numéricos inválidos, só é comunicada uma dessas mensagens. Nos restantes casos, a regra termina no primeiro problema da sequência ordenada. Uma viagem sem paragens não é rejeitada por esta regra. A mensagem identifica a linha de `trips.txt`.
+
+O resultado depende da configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória. As condições de execução e as dependências configuradas têm de estar cumpridas.
+
+## Como se relacionam
+
+`trip_id` liga a viagem às linhas de `stop_times.txt`. Dentro da viagem, `stop_sequence` ordena os valores de `stop_id` e `shape_dist_traveled`.
+
+## Exemplos
+
+| trip_id | stop_id | stop_sequence | shape_dist_traveled | Resultado | Porquê |
+|---|---|---|---|---|---|
+| `T1` | `A`, `B` | `1`, `20` | `0`, `0` | ✅ Passa | Intervalo na ordem e distâncias iguais aceites |
+| `T1` | `A`, `B` | `x`, `2` | `0`, `1000` | ❌ Reprova | Ordem não numérica |
+| `T1` | `A`, `B` | `1`, `1` | `0`, `1000` | ❌ Reprova | Ordem repetida |
+| `T1` | `A`, `B` | `1`, `2` | `1000`, `0` | ❌ Reprova | Distância decrescente |
+| `T1` | `A`, `A` | `1`, `2` | `0`, `1000` | ❌ Reprova | Paragem consecutiva repetida |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Ordem inválida | Uma ordem não pode ser lida como inteiro | Corrigir `stop_sequence` em `stop_times.txt` para um número inteiro. |
+| Distância inválida | Uma distância preenchida não pode ser lida como número | Corrigir `shape_dist_traveled` em `stop_times.txt` para um número ou deixar vazio quando aplicável. |
+| Ordem repetida | Duas linhas da viagem têm a mesma ordem | Atribuir valores distintos de `stop_sequence` às paragens da viagem em `stop_times.txt`. |
+| Distância decrescente | A distância diminui entre paragens consecutivas | Corrigir `shape_dist_traveled` em `stop_times.txt` para não diminuir ao longo da viagem. |
+| Paragem consecutiva repetida | Duas paragens consecutivas têm o mesmo identificador | Corrigir `stop_id` ou remover a repetição indevida em `stop_times.txt`. |

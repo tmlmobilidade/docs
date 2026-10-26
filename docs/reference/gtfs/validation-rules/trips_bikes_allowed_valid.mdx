@@ -1,0 +1,48 @@
+---
+title: "Valores válidos — transporte de bicicletas"
+description: "A regra verifica os valores admitidos para este campo."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `trips_bikes_allowed_valid` |
+| Ficheiro | `trips.txt` |
+| Campo | `bikes_allowed` |
+| Tipo | Valor enumerado |
+| Severidade | Opcional |
+
+**Descrição do campo:** indica o transporte de bicicletas: `0` ou vazio significa informação indisponível, `1` permite pelo menos uma bicicleta e `2` não permite.
+
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
+
+## Como funciona
+
+A regra verifica os valores admitidos para este campo. Não consulta uma lista de opções da configuração da regra.
+
+A regra avalia cada linha do `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | ✅ Passa | Continua |
+| 2 | O texto corresponde exatamente a `0`, `1`, `2`? | ✅ Passa | Assinala valor inválido |
+
+Os espaços não são removidos. As comparações de texto distinguem maiúsculas e minúsculas. O vazio não é assinalado por esta regra.
+
+O resultado depende da configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória. As condições de execução e as dependências configuradas têm de estar cumpridas.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `0` | ✅ Passa | Valor admitido |
+| `1` | ✅ Passa | Valor admitido |
+| `3` | ❌ Reprova | Valor não admitido |
+| `01` | ❌ Reprova | Texto diferente de `1` |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor inválido | O texto não corresponde a um valor admitido | Escrever `0`, `1`, `2` em `bikes_allowed` de `trips.txt`. |

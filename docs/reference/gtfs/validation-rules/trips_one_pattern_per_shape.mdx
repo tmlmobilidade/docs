@@ -1,0 +1,56 @@
+---
+title: "Um padrão por traçado"
+description: "A regra verifica se cada `shape_id` corresponde a um único `pattern_id`."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `trips_one_pattern_per_shape` |
+| Ficheiro | `trips.txt` |
+| Campos | `shape_id`, `pattern_id` |
+| Tipo | Identificador de referência, Identificador |
+| Severidade | Condicional (obrigatório com embarque ou desembarque contínuo), Opcional |
+
+**Descrição dos campos:**
+
+- `shape_id`: identifica o traçado geográfico do veículo. É obrigatório quando existe embarque ou desembarque contínuo em `routes.txt` ou `stop_times.txt`.
+- `pattern_id`: identifica o padrão a que a viagem pertence.
+
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
+
+## Como funciona
+
+A regra verifica se cada `shape_id` corresponde a um único `pattern_id`. Não exige o preenchimento dos identificadores.
+
+A regra avalia cada grupo de viagens com o mesmo `shape_id`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra ignora esta verificação ou marca-a como proibida? | ✅ Passa | Continua |
+| 2 | O campo `shape_id` está vazio? | ✅ Passa | Reúne as viagens do grupo |
+| 3 | Foi já assinalado um conflito de vários traçados para algum dos padrões deste traçado? | ✅ Passa sem repetir o problema | Continua |
+| 4 | Existe mais de um `pattern_id` distinto não vazio? | Assinala associação múltipla | ✅ Passa |
+
+Os espaços não são removidos. As comparações de texto distinguem maiúsculas e minúsculas. Ignora identificadores de destino vazios. Um conflito já comunicado por `trips_one_shape_per_pattern` suprime esta mensagem. O segundo exemplo pressupõe que não existe esse conflito anterior.
+
+O resultado depende da configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória. As condições de execução e as dependências configuradas têm de estar cumpridas.
+
+## Como se relacionam
+
+Cada `shape_id` deve referir apenas um `pattern_id`.
+
+## Exemplos
+
+| shape_id | pattern_id | Resultado | Porquê |
+|---|---|---|---|
+| `G1`, `G1` | `A`, `A` | ✅ Passa | Uma associação |
+| `G1`, `G1` | `A`, `B` | ❌ Reprova | Duas associações |
+| `G1`, `G2` | `A`, `B` | ✅ Passa | Grupos diferentes |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Associação múltipla | O grupo reúne identificadores diferentes | Corrigir `pattern_id` ou `shape_id` em `trips.txt` para garantir a associação única. |

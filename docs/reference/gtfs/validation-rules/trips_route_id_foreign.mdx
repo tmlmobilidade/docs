@@ -1,0 +1,51 @@
+---
+title: "Referência — linha da viagem"
+description: "A regra confirma que o identificador existe em `routes.txt`."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `trips_route_id_foreign` |
+| Ficheiros | `trips.txt`, `routes.txt` |
+| Campo | `route_id` |
+| Tipo | Identificador de referência |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** identifica a linha a que a viagem pertence.
+
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips), [routes.txt](/reference/gtfs/schedule/routes).
+
+## Como funciona
+
+A regra confirma que o identificador existe em `routes.txt`. Não verifica os restantes dados do registo referido.
+
+A regra avalia cada linha do `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | ✅ Passa | Continua |
+| 2 | Existe um registo com o mesmo `route_id` em `routes.txt`? | ✅ Passa | Assinala referência inexistente |
+
+Os espaços não são removidos. As comparações de texto distinguem maiúsculas e minúsculas. 
+
+O resultado depende da configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória. As condições de execução e as dependências configuradas têm de estar cumpridas.
+
+## Como se relacionam
+
+`route_id` em `trips.txt` corresponde ao mesmo campo em `routes.txt`.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `R1` (existe) | ✅ Passa | Referência encontrada |
+| `DESCONHECIDO` (não existe) | ❌ Reprova | Referência inexistente |
+| ` R1` (só existe sem espaço) | ❌ Reprova | O espaço altera a referência |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Referência inexistente | O identificador não existe nos ficheiros de referência | Corrigir `route_id` em `trips.txt` ou criar o registo correspondente em `routes.txt`. |

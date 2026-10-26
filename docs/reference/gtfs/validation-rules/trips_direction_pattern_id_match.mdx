@@ -1,0 +1,63 @@
+---
+title: "Sentido indicado no padrão"
+description: "A regra compara o sentido da viagem com a parte central do identificador do padrão."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `trips_direction_pattern_id_match` |
+| Ficheiro | `trips.txt` |
+| Campos | `pattern_id`, `direction_id` |
+| Tipo | Identificador |
+| Severidade | Obrigatório |
+
+**Descrição dos campos:**
+
+- `pattern_id`: identifica o padrão a que a viagem pertence.
+- `direction_id`: indica o sentido da viagem: `0` para um sentido e `1` para o oposto. Serve para distinguir sentidos nos horários.
+
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
+
+## Como funciona
+
+A regra compara o sentido da viagem com a parte central do identificador do padrão. Não valida as restantes partes do identificador.
+
+A regra avalia cada linha do `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra ignora esta verificação ou marca-a como proibida? | ✅ Passa | Continua |
+| 2 | Algum campo está vazio? | Assinala campo em falta | Continua |
+| 3 | O sentido da viagem pode ser lido como inteiro? | Continua | ✅ Passa |
+| 4 | O padrão tem exatamente três partes separadas por `_`? | Continua | Assinala formato do padrão inválido |
+| 5 | A parte central representa o inteiro `0` ou `1`? | Continua | Assinala sentido do padrão inválido |
+| 6 | O sentido da viagem é igual ao sentido do padrão? | ✅ Passa | Assinala sentidos diferentes |
+
+A comparação dos sentidos é numérica: `01` equivale a `1`. Um `direction_id` não numérico não gera mensagem nesta regra.
+
+O resultado depende da configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória. As condições de execução e as dependências configuradas têm de estar cumpridas.
+
+## Como se relacionam
+
+A segunda parte de `pattern_id` representa o valor de `direction_id`.
+
+## Exemplos
+
+| pattern_id | direction_id | Resultado | Porquê |
+|---|---|---|---|
+| `R1_0_1` | `0` | ✅ Passa | Sentidos iguais |
+| `R1_0_1` | Vazio | ❌ Reprova | Campo em falta |
+| `R1` | `0` | ❌ Reprova | Faltam partes do padrão |
+| `R1_2_1` | `0` | ❌ Reprova | Sentido do padrão inválido |
+| `R1_0_1` | `1` | ❌ Reprova | Sentidos diferentes |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo em falta | Falta um dos dois campos | Preencher `pattern_id` e `direction_id` em `trips.txt`. |
+| Formato do padrão inválido | O padrão não tem três partes | Corrigir `pattern_id` em `trips.txt` para três partes separadas por `_`. |
+| Sentido do padrão inválido | A parte central não representa `0` ou `1` | Corrigir a parte central de `pattern_id` em `trips.txt`. |
+| Sentidos diferentes | O sentido da viagem difere do sentido no padrão | Alinhar `direction_id` com a parte central de `pattern_id` em `trips.txt`. |

@@ -1,0 +1,28 @@
+Documentação de trips — 26-10-2026
+
+37 páginas MDX, uma por identificador trips do catálogo. Não foram alterados ficheiros do repositório.
+
+Fontes: catálogo rule-ids.ts; validations/trips (checks, helpers, README, testes e orquestração); traduções portuguesas; validação genérica de presença de ficheiros; geometria de paragens e traçados.
+
+Severidade: obrigatório/error reprova; recomendado/warning passa com aviso; informativo/info passa com informação. Um aviso só passa a reprovação quando a configuração muda para obrigatório. Presence nas propriedades descreve a presença normativa do campo, não o resultado da execução.
+
+Metadados: vários checks não têm comentário com Presence/Type. Nesses casos foi usada a definição local em trips/README.md. pattern_id é uma extensão e foi descrito a partir das regras próprias. Recommended foi apresentado como Opcional (recomendado). Comentários específicos têm prioridade: route_id_pattern_consistent é Opcional e trip_headsign_pattern_consistent é Obrigatório. Nas verificações com vários campos, os metadados foram complementados com as definições dos campos efetivamente lidos.
+
+Divergências confirmadas no código:
+- trip_id_max_length conta bytes UTF-8, embora a mensagem refira carateres.
+- wheelchair_accessible_valid assinala vazio; bikes_allowed_valid e direction_id_valid ignoram vazio. Estes três checks não consultam opções configuradas.
+- max_two_per_route conta toda a linha, sem separar sentidos.
+- pattern_required_fields verifica preenchimento, não a consistência nem a sequência de paragens.
+- one_pattern_per_shape suprime conflitos já comunicados por one_shape_per_pattern.
+- stop_sequence ordena antes de verificar a ordem, aceita distâncias iguais e não exige duas paragens.
+- pattern_single_signature depende das assinaturas produzidas por stop_sequence; inclui paragem, distância e número de ordem.
+- stop_coordinates usa pontos intermédios do traçado e limiar fixo de 100 m; ausência de dados pode resultar em passagem sem comparação.
+- Algumas combinações de regras podem impor convenções diferentes: pattern_id_format e pattern_id_same_shape_id devem ser configuradas de forma coerente com shape_id_route_direction_match.
+
+Verificação executada: GOCACHE=/private/tmp/agency-doc-go-cache go test ./validations/trips/...
+Passaram: pacote trips, custom/tests, fields/tests e utils.
+Falhou: standard/tests, nos testes TestBikesAllowedValid, TestDirectionIdValid e TestWheelchairAccessibleValid. Há expectativas de opções/vazios que divergem dos checks atuais; wheelchair_accessible também tem um caso vazio esperado como válido. A documentação segue o código executado. Não foram corrigidos testes ou comportamento nesta tarefa.
+
+Foi verificada a igualdade entre os 37 IDs do catálogo, os nomes das páginas e as entradas MDX no ZIP, além da estrutura das secções, quantidade de exemplos e segurança básica de MDX. Não foi executado um renderizador MDX da aplicação.
+
+As chaves de tradução trips_file_missing.required/warning/generic não existem no pt.json atual, embora sejam pedidas pelo código genérico. A página descreve o comportamento sem reproduzir uma tradução inexistente.

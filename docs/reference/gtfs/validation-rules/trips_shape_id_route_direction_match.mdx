@@ -1,0 +1,56 @@
+---
+title: "Nome do traçado por linha e sentido"
+description: "A regra verifica o nome do traçado a partir da linha e do sentido."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `trips_shape_id_route_direction_match` |
+| Ficheiro | `trips.txt` |
+| Campos | `shape_id`, `route_id`, `direction_id` |
+| Tipo | Identificador de referência, Identificador de referência, Valor enumerado |
+| Severidade | Opcional (recomendado) |
+
+**Descrição dos campos:**
+
+- `shape_id`: identifica o traçado geográfico do veículo. É obrigatório quando existe embarque ou desembarque contínuo em `routes.txt` ou `stop_times.txt`.
+- `route_id`: identifica a linha a que a viagem pertence.
+- `direction_id`: indica o sentido da viagem: `0` para um sentido e `1` para o oposto. Serve para distinguir sentidos nos horários.
+
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
+
+## Como funciona
+
+A regra verifica o nome do traçado a partir da linha e do sentido. Não confirma a existência do traçado.
+
+A regra avalia cada linha do `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | Falta o traçado ou a linha, ou o sentido não representa o inteiro `0` ou `1`? | ✅ Passa | Continua |
+| 2 | A configuração da regra ignora esta verificação ou marca-a como proibida? | ✅ Passa | Continua |
+| 3 | O traçado é a linha seguida de `_` e do sentido normalizado? | ✅ Passa | Assinala nome do traçado diferente |
+
+Os espaços não são removidos. As comparações de texto distinguem maiúsculas e minúsculas. O sentido é convertido para inteiro: `01` produz o sufixo `_1`.
+
+O resultado depende da configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória. As condições de execução e as dependências configuradas têm de estar cumpridas.
+
+## Como se relacionam
+
+O valor esperado é `route_id`, seguido de `_` e de `direction_id` convertido para `0` ou `1`.
+
+## Exemplos
+
+| shape_id | route_id | direction_id | Resultado | Porquê |
+|---|---|---|---|---|
+| `R1_0` | `R1` | `0` | ✅ Passa | Nome esperado |
+| `outro` | `R1` | `0` | ❌ Reprova | Esperado `R1_0` |
+| `1001_0_1` | `1001_0` | `1` | ✅ Passa | Preserva o nome completo da linha |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Nome do traçado diferente | O identificador não combina a linha e o sentido | Corrigir `shape_id` em `trips.txt` e as referências em `shapes.txt` para o nome esperado. |

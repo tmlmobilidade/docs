@@ -1,0 +1,55 @@
+---
+title: "Consistência de sentido da viagem por padrão"
+description: "A regra exige um único valor de `direction_id` nas viagens do mesmo padrão."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `trips_direction_id_pattern_consistent` |
+| Ficheiro | `trips.txt` |
+| Campos | `pattern_id`, `direction_id` |
+| Tipo | Identificador, Valor enumerado |
+| Severidade | Opcional |
+
+**Descrição dos campos:**
+
+- `pattern_id`: identifica o padrão a que a viagem pertence.
+- `direction_id`: indica o sentido da viagem: `0` para um sentido e `1` para o oposto. Serve para distinguir sentidos nos horários.
+
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
+
+## Como funciona
+
+A regra exige um único valor de `direction_id` nas viagens do mesmo padrão. Não compara viagens de padrões diferentes.
+
+A regra avalia cada grupo de viagens com o mesmo `pattern_id`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra ignora esta verificação ou marca-a como proibida? | ✅ Passa | Continua |
+| 2 | O identificador do padrão está vazio? | ✅ Passa | Reúne as viagens do padrão |
+| 3 | Depois da seleção dos valores, existe mais de um valor distinto? | Assinala valores diferentes no padrão | ✅ Passa |
+
+Os espaços não são removidos. As comparações de texto distinguem maiúsculas e minúsculas. Ignora valores que não representam inteiros; compara os restantes como números, mesmo fora de `0` e `1`.
+
+O resultado depende da configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória. As condições de execução e as dependências configuradas têm de estar cumpridas.
+
+## Como se relacionam
+
+`pattern_id` reúne as viagens cujo `direction_id` é comparado.
+
+## Exemplos
+
+| pattern_id | direction_id | Resultado | Porquê |
+|---|---|---|---|
+| `P1`, `P1` | `0`, `0` | ✅ Passa | Valores iguais |
+| `P1`, `P1` | `0`, `1` | ❌ Reprova | Valores diferentes |
+| `P1`, `P2` | `0`, `1` | ✅ Passa | Padrões diferentes |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valores diferentes no padrão | As viagens do mesmo padrão têm valores distintos | Alinhar `direction_id` nas viagens do mesmo `pattern_id` em `trips.txt` ou corrigir a atribuição do padrão. |

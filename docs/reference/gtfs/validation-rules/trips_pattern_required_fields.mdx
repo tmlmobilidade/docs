@@ -1,0 +1,67 @@
+---
+title: "Campos necessários ao padrão"
+description: "A regra exige quatro campos preenchidos em cada viagem do padrão."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `trips_pattern_required_fields` |
+| Ficheiro | `trips.txt` |
+| Campos | `pattern_id`, `shape_id`, `route_id`, `direction_id`, `trip_headsign` |
+| Tipo | Identificador, Identificador de referência, Identificador de referência, Valor enumerado, Texto |
+| Severidade | Obrigatório |
+
+**Descrição dos campos:**
+
+- `pattern_id`: identifica o padrão a que a viagem pertence.
+- `shape_id`: identifica o traçado geográfico do veículo. É obrigatório quando existe embarque ou desembarque contínuo em `routes.txt` ou `stop_times.txt`.
+- `route_id`: identifica a linha a que a viagem pertence.
+- `direction_id`: indica o sentido da viagem: `0` para um sentido e `1` para o oposto. Serve para distinguir sentidos nos horários.
+- `trip_headsign`: texto apresentado na sinalética que identifica o destino da viagem. Pode ser substituído em paragens específicas por `stop_headsign` em `stop_times.txt`.
+
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
+
+## Como funciona
+
+A regra exige quatro campos preenchidos em cada viagem do padrão. Não verifica as referências, a consistência dos valores ou a sequência das paragens.
+
+A regra avalia cada grupo de viagens com o mesmo `pattern_id`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra ignora esta verificação ou marca-a como proibida? | ✅ Passa | Continua |
+| 2 | O padrão está vazio? | ✅ Passa | Percorre as viagens do padrão |
+| 3 | O campo `shape_id` está vazio? | Assinala `shape_id` em falta e termina | Continua |
+| 4 | O campo `route_id` está vazio? | Assinala `route_id` em falta e termina | Continua |
+| 5 | O campo `direction_id` está vazio? | Assinala `direction_id` em falta e termina | Continua |
+| 6 | O campo `trip_headsign` está vazio? | Assinala `trip_headsign` em falta e termina | Continua |
+| 7 | Todas as viagens têm os quatro campos? | ✅ Passa | Continua a verificar |
+
+Os espaços não são removidos. As comparações de texto distinguem maiúsculas e minúsculas. Apenas o primeiro campo em falta encontrado no grupo é comunicado. Texto só com espaços conta como preenchido.
+
+O resultado depende da configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória. As condições de execução e as dependências configuradas têm de estar cumpridas.
+
+## Como se relacionam
+
+Cada viagem do mesmo `pattern_id` tem de indicar traçado, linha, sentido e destino.
+
+## Exemplos
+
+| pattern_id | shape_id | route_id | direction_id | trip_headsign | Resultado | Porquê |
+|---|---|---|---|---|---|---|
+| `P1` | `S1` | `R1` | `0` | `Terminal` | ✅ Passa | Todos preenchidos |
+| `P1` | Vazio | `R1` | `0` | `Terminal` | ❌ Reprova | Falta `shape_id` |
+| `P1` | `S1` | Vazio | `0` | `Terminal` | ❌ Reprova | Falta `route_id` |
+| `P1` | `S1` | `R1` | Vazio | `Terminal` | ❌ Reprova | Falta `direction_id` |
+| `P1` | `S1` | `R1` | `0` | Vazio | ❌ Reprova | Falta `trip_headsign` |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| `shape_id` em falta | Uma viagem do padrão tem o campo vazio | Preencher `shape_id` nessa viagem em `trips.txt`. |
+| `route_id` em falta | Uma viagem do padrão tem o campo vazio | Preencher `route_id` nessa viagem em `trips.txt`. |
+| `direction_id` em falta | Uma viagem do padrão tem o campo vazio | Preencher `direction_id` nessa viagem em `trips.txt`. |
+| `trip_headsign` em falta | Uma viagem do padrão tem o campo vazio | Preencher `trip_headsign` nessa viagem em `trips.txt`. |

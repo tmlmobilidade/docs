@@ -1,0 +1,44 @@
+---
+title: "Presença do ficheiro de viagens"
+description: "Verifica se trips.txt está disponível para validação."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `trips_file_missing` |
+| Ficheiro | `trips.txt` |
+| Campo | Se aplica em todo o ficheiro |
+| Tipo | Ficheiro |
+| Severidade | Obrigatório |
+
+## Como funciona
+
+A regra verifica se o ficheiro de viagens está disponível nos dados importados. Não verifica o número de viagens nem o conteúdo das linhas.
+
+A regra avalia a disponibilidade de `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O ficheiro está disponível? | ✅ Passa | Continua |
+| 2 | A configuração ignora esta verificação? | ✅ Passa | Assinala a ausência conforme a severidade configurada |
+
+Quando não é fornecida qualquer configuração de regras, `trips.txt` pertence ao conjunto de ficheiros obrigatórios. Com configuração fornecida, a presença segue a regra configurada; omitir apenas este identificador não ativa a obrigação predefinida. O resultado depende da configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória. As condições de execução e as dependências configuradas têm de estar cumpridas.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| Ficheiro presente e importado | ✅ Passa | Ficheiro disponível |
+| Ficheiro ausente (obrigatório) | ❌ Reprova | Falta o ficheiro exigido |
+| Ficheiro ausente (recomendado) | ✅ Passa com aviso | Falta o ficheiro recomendado |
+| Ficheiro ausente (informativo) | ✅ Passa com informação | Ausência comunicada ao utilizador |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Ficheiro obrigatório em falta | O ficheiro não está disponível | Incluir `trips.txt` no conjunto de dados e voltar a importar. |
+| Ficheiro recomendado em falta | A configuração recomenda o ficheiro | Incluir `trips.txt` para cumprir a recomendação. |
+| Ausência informativa | A configuração apenas informa da ausência | Incluir `trips.txt` quando existirem viagens a disponibilizar. |

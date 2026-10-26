@@ -1,0 +1,46 @@
+---
+title: "Identificador único da viagem"
+description: "A regra procura identificadores repetidos em `trips.txt`."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `trips_trip_id_unique` |
+| Ficheiro | `trips.txt` |
+| Campo | `trip_id` |
+| Tipo | Identificador único |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** identifica uma viagem.
+
+Mais informação em [trips.txt](/reference/gtfs/schedule/trips).
+
+## Como funciona
+
+A regra procura identificadores repetidos em `trips.txt`. Não verifica o comprimento nem o preenchimento.
+
+A regra avalia cada linha do `trips.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O mesmo valor aparece em mais de uma linha? | Assinala identificador repetido | ✅ Passa |
+
+Os espaços não são removidos. As comparações de texto distinguem maiúsculas e minúsculas. 
+
+O resultado depende da configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória. As condições de execução e as dependências configuradas têm de estar cumpridas.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `T1` (uma linha) | ✅ Passa | Identificador único |
+| `T1` (duas linhas) | ❌ Reprova | Identificador repetido |
+| `T1` e `t1` | ✅ Passa | Textos diferentes |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Identificador repetido | Várias linhas usam o mesmo identificador | Atribuir um `trip_id` único a cada viagem em `trips.txt` e atualizar as referências em `stop_times.txt`. |
