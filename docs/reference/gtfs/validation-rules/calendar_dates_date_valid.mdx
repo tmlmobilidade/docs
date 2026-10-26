@@ -1,0 +1,49 @@
+---
+title: "Formato da data da exceção"
+description: "Verifica se date contém uma data válida no formato AAAAMMDD."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `calendar_dates_date_valid` |
+| Ficheiro | `calendar_dates.txt` |
+| Campo | `date` |
+| Tipo | Data |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** data em que ocorre a exceção de serviço.
+
+Mais informação em [calendar_dates.txt](/reference/gtfs/schedule/calendar_dates).
+
+## Como funciona
+
+O resultado depende da severidade definida na configuração da regra: obrigatório (`error`) reprova; recomendado (`warning`) passa com aviso; informativo (`info`) passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Nos casos sem severidade explícita abaixo, a indicação de reprovação pressupõe a configuração obrigatória.
+
+O valor tem de representar uma data existente, no formato `AAAAMMDD`. A regra não verifica se a data pertence ao período de serviço nem se a exceção está repetida.
+
+A regra avalia cada linha do `calendar_dates.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O valor tem exatamente oito carateres? | Segue para o passo 2 | ❌ Reprova: data inválida |
+| 2 | O ano, o mês e o dia formam uma data válida? | ✅ Passa | ❌ Reprova: data inválida |
+
+Os espaços não são removidos. A regra considera o número de dias de cada mês e os anos bissextos. Um valor vazio é rejeitado quando esta regra é executada. Os exemplos pressupõem que a configuração da regra permite reportar problemas e que as condições para a sua execução estão cumpridas.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `20240229` | ✅ Passa | Dia existente num ano bissexto |
+| `20260229` | ❌ Reprova | Dia inexistente nesse ano |
+| `2026-10-19` | ❌ Reprova | Separadores não aceites |
+| `20261301` | ❌ Reprova | Mês inexistente |
+| Vazio | ❌ Reprova | Falta uma data válida |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Data inválida | O valor tem um formato incorreto ou indica uma data inexistente | Corrigir `date` em `calendar_dates.txt` para uma data existente com oito algarismos, por exemplo `20261019`. |
