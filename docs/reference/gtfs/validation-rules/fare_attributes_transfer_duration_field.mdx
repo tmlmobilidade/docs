@@ -1,0 +1,47 @@
+---
+title: "Preenchimento — duração dos transbordos"
+description: "Verifica o preenchimento de transfer_duration em fare_attributes.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `fare_attributes_transfer_duration_field` |
+| Ficheiro | `fare_attributes.txt` |
+| Campo | `transfer_duration` |
+| Tipo | Número inteiro não negativo |
+| Severidade | Opcional |
+
+**Descrição do campo:** tempo, em segundos, até terminar a possibilidade de transbordo. Quando `transfers` é `0`, pode indicar a validade do título de transporte ou ficar vazio.
+
+Mais informação em [fare_attributes.txt](/reference/gtfs/schedule/fare_attributes).
+
+## Como funciona
+
+A regra verifica se o campo tem algum texto, quando a configuração da regra assinala a sua ausência. Não verifica o formato, a unicidade ou a coerência com outros campos.
+
+A regra avalia cada linha do `fare_attributes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Segue para o passo 2 | ✅ Passa |
+| 2 | A configuração da regra ignora esta verificação? | Termina sem reportar a ausência | Reporta o problema de campo em falta, de acordo com a configuração da regra |
+
+Uma coluna ausente é tratada como um campo vazio. Os espaços não são removidos: um valor só com espaços conta como preenchido. A configuração de campo proibido também assinala a ausência, com a mensagem informativa; não rejeita valores preenchidos.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `3600` | ✅ Passa | Campo preenchido |
+| Vazio (configuração exige o campo) | ❌ Problema | Campo obrigatório em falta |
+| Coluna ausente (configuração recomenda o campo) | ❌ Problema | Campo recomendado em falta |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo obrigatório em falta | A configuração da regra exige o campo | Preencher `transfer_duration` em `fare_attributes.txt` com o valor correspondente à tarifa. |
+| Campo recomendado em falta | A configuração da regra recomenda o campo | Preencher `transfer_duration` em `fare_attributes.txt` com o valor correspondente à tarifa. |
+| Campo informativo em falta | A configuração da regra assinala a ausência como informação ou está definida como campo proibido | Preencher `transfer_duration` em `fare_attributes.txt` com o valor correspondente à tarifa. |

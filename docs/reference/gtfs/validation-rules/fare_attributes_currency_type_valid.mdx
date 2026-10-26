@@ -1,6 +1,6 @@
 ---
-title: Moeda da tarifa
-description: Verifica se o código de moeda indicado em fare_attributes.txt é reconhecido.
+title: "Moeda da tarifa"
+description: "Verifica o valor de currency_type em fare_attributes.txt."
 ---
 
 ## Propriedades da regra
@@ -19,32 +19,27 @@ Mais informação em [fare_attributes.txt](/reference/gtfs/schedule/fare_attribu
 
 ## Como funciona
 
-Quando a regra passa, `currency_type` está presente quando exigido e corresponde a um código de moeda reconhecido. A verificação não distingue maiúsculas de minúsculas. A regra **não confirma se a moeda corresponde ao valor de `price` ou à área de operação**.
+O código tem de constar da lista interna de moedas reconhecidas. A regra não confirma se a moeda corresponde à tarifa nem consulta uma lista atualizada durante a validação.
 
 A regra avalia cada linha do `fare_attributes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
-| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
-| 3 | O código, convertido para maiúsculas, consta da lista de moedas reconhecidas? | ✅ Passa | ❌ Reporta o problema: moeda inválida |
+| 1 | O código, convertido para maiúsculas, consta da lista interna de moedas? | ✅ Passa | ❌ Reporta o problema: código de moeda inválido |
 
-Os espaços não são removidos. O código é convertido para maiúsculas apenas durante a verificação.
+Maiúsculas e minúsculas são equivalentes. Os espaços não são removidos. Um campo vazio é rejeitado quando esta regra é executada. Os exemplos pressupõem que a regra é executada e que a configuração da regra permite reportar problemas.
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
 | `EUR` | ✅ Passa | Código reconhecido |
-| `eur` | ✅ Passa | Maiúsculas não obrigatórias |
-| `XYZ` | ❌ Problema | Código desconhecido |
-| campo vazio | ❌ Problema | Falta um valor obrigatório |
-| `EUR` quando o campo é proibido | ❌ Problema | Campo preenchido indevidamente |
+| `INVALID` | ❌ Problema | Código fora da lista |
+| ` EUR ` | ❌ Problema | Espaços adicionais |
+| Vazio | ❌ Problema | Falta um código reconhecido |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Código de moeda inválido | O código está mal escrito ou não consta da lista reconhecida | Corrigir `currency_type` em `fare_attributes.txt` para um código de moeda reconhecido, por exemplo `EUR` |
-| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `currency_type` em `fare_attributes.txt` com a moeda da tarifa |
-| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `currency_type` em `fare_attributes.txt` |
+| Valor inválido | O valor não cumpre o formato ou os limites aceites | Indicar um código de moeda reconhecido, como `EUR`, sem espaços no campo `currency_type` de `fare_attributes.txt`. |

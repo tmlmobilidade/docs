@@ -1,0 +1,46 @@
+---
+title: "Duração dos transbordos"
+description: "Verifica o valor de transfer_duration em fare_attributes.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `fare_attributes_transfer_duration_valid` |
+| Ficheiro | `fare_attributes.txt` |
+| Campo | `transfer_duration` |
+| Tipo | Número inteiro não negativo |
+| Severidade | Opcional |
+
+**Descrição do campo:** tempo, em segundos, até terminar a possibilidade de transbordo. Quando `transfers` é `0`, pode indicar a validade do título de transporte ou ficar vazio.
+
+Mais informação em [fare_attributes.txt](/reference/gtfs/schedule/fare_attributes).
+
+## Como funciona
+
+O valor tem de representar um número inteiro igual ou superior a zero. A regra não compara a duração com o número de transbordos e rejeita o valor vazio quando é executada.
+
+A regra avalia cada linha do `fare_attributes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O texto pode ser interpretado como um número inteiro dentro dos limites aceites? | Segue para o passo 2 | ❌ Reporta o problema: valor inválido |
+| 2 | O número é igual ou superior a zero? | ✅ Passa | ❌ Reporta o problema: valor inválido |
+
+Os espaços não são removidos. Zeros à esquerda e sinal `+` são aceites, como em `01` e `+1`. Valores decimais, como `1.0`, não são aceites. Zero é aceite. A natureza opcional do campo não impede esta regra de rejeitar um valor vazio quando é executada. Os exemplos pressupõem que a regra é executada e que a configuração da regra permite reportar problemas.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `3600` | ✅ Passa | Uma hora em segundos |
+| `-1` | ❌ Problema | Duração negativa |
+| `1.5` | ❌ Problema | Número não inteiro |
+| `abc` | ❌ Problema | Texto não numérico |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor inválido | O valor não cumpre o formato ou os limites aceites | Indicar uma duração inteira em segundos, igual ou superior a zero, como `3600` no campo `transfer_duration` de `fare_attributes.txt`. |
