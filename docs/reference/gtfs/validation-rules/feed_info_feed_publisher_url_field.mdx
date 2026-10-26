@@ -1,0 +1,49 @@
+---
+title: "Preenchimento — página da entidade publicadora"
+description: "Verifica o preenchimento de feed_publisher_url em feed_info.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `feed_info_feed_publisher_url_field` |
+| Ficheiro | `feed_info.txt` |
+| Campo | `feed_publisher_url` |
+| Tipo | URL |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** endereço da página da entidade que publica o conjunto de dados. Pode coincidir com a página de um operador.
+
+Mais informação em [feed_info.txt](/reference/gtfs/schedule/feed_info).
+
+## Como funciona
+
+O resultado depende da severidade definida na configuração da regra: obrigatório (`error`) reprova; recomendado (`warning`) passa com aviso; informativo (`info`) passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Nos casos sem severidade explícita abaixo, a indicação de reprovação pressupõe a configuração obrigatória.
+
+A regra verifica se o campo tem algum texto, quando a configuração da regra assinala a sua ausência. Não verifica o formato ou a exatidão do conteúdo.
+
+A regra avalia cada linha do `feed_info.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Segue para o passo 2 | ✅ Passa |
+| 2 | A configuração da regra ignora esta verificação? | Termina sem reportar a ausência | Obrigatório: ❌ Reprova; recomendado: ✅ Passa com aviso; informativo: ✅ Passa com informação |
+
+Uma coluna ausente é tratada como um campo vazio. Os espaços não são removidos: um valor só com espaços conta como preenchido. A configuração de campo proibido assinala a ausência com a mensagem informativa, mas aceita valores preenchidos.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `https://example.org` | ✅ Passa | Campo preenchido |
+| Vazio (configuração exige o campo) | ❌ Reprova | Campo obrigatório em falta |
+| Coluna ausente (configuração recomenda o campo) | ✅ Passa com aviso  | Campo recomendado em falta |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo obrigatório em falta | A configuração da regra exige o campo | Preencher `feed_publisher_url` em `feed_info.txt` com a informação correspondente ao conjunto de dados. |
+| Campo recomendado em falta | A configuração da regra recomenda o campo | Preencher `feed_publisher_url` em `feed_info.txt` com a informação correspondente ao conjunto de dados. |
+| Campo informativo em falta | A configuração da regra assinala a ausência como informação ou está definida como campo proibido | Preencher `feed_publisher_url` em `feed_info.txt` com a informação correspondente ao conjunto de dados. |

@@ -1,0 +1,53 @@
+---
+title: "Ordem das datas do conjunto de dados"
+description: "Verifica se feed_start_date é estritamente anterior a feed_end_date."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `feed_info_start_end_dates_valid` |
+| Ficheiro | `feed_info.txt` |
+| Campos | `feed_start_date`, `feed_end_date` |
+| Tipo | Data |
+| Severidade | Opcional (recomendado) |
+
+**Descrição dos campos:**
+
+- `feed_start_date`: primeiro dia do período em que o conjunto de dados fornece horários completos e fiáveis. O período termina no fim de `feed_end_date`. As datas podem ficar vazias quando não estão disponíveis.
+- `feed_end_date`: último dia do período em que o conjunto de dados fornece horários completos e fiáveis, incluindo esse dia. Quando ambas são indicadas, esta data não deve anteceder `feed_start_date`.
+
+Mais informação em [feed_info.txt](/reference/gtfs/schedule/feed_info).
+
+## Como funciona
+
+O resultado depende da severidade definida na configuração da regra: obrigatório (`error`) reprova; recomendado (`warning`) passa com aviso; informativo (`info`) passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Nos casos sem severidade explícita abaixo, a indicação de reprovação pressupõe a configuração obrigatória.
+
+Com datas válidas no formato `AAAAMMDD`, a data inicial tem de ser anterior à data final. A regra rejeita datas iguais e não verifica o preenchimento ou o formato dos campos.
+
+A regra avalia cada linha do `feed_info.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O texto de `feed_start_date` é igual ou posterior ao texto de `feed_end_date`? | ❌ Reprova: início não anterior ao fim | ✅ Passa |
+
+A comparação usa os textos sem remover espaços. Para datas válidas no formato `AAAAMMDD`, esta ordem coincide com a ordem cronológica. Um início vazio com fim preenchido passa; dois campos vazios ou apenas o fim vazio originam um problema. Os exemplos pressupõem que a regra é executada e que a configuração da regra permite reportar problemas.
+
+## Como se relacionam
+
+Os dois campos delimitam o período de informação completa e fiável. Esta regra exige um início estritamente anterior ao fim, embora a descrição dos campos permita datas iguais.
+
+## Exemplos
+
+| `feed_start_date` | `feed_end_date` | Resultado | Porquê |
+|---|---|---|---|
+| `20260101` | `20261231` | ✅ Passa | Início anterior ao fim |
+| `20261231` | `20260101` | ❌ Reprova | Datas invertidas |
+| `20260101` | `20260101` | ❌ Reprova | Datas iguais |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Início não anterior ao fim | As datas estão invertidas, são iguais ou não estão preenchidas de forma coerente | Verificar `feed_start_date` e `feed_end_date` em `feed_info.txt`. Indicar um início anterior ao fim; se o período de um só dia for intencional, pedir a revisão da aplicação desta regra. |

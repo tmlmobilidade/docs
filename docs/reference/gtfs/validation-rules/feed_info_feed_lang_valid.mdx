@@ -1,0 +1,49 @@
+---
+title: "Idioma do conjunto de dados"
+description: "Verifica o formato de feed_lang em feed_info.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `feed_info_feed_lang_valid` |
+| Ficheiro | `feed_info.txt` |
+| Campo | `feed_lang` |
+| Tipo | Código de idioma |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** idioma predefinido dos textos do conjunto de dados. Ajuda as aplicações a escolher regras de maiúsculas e outras definições do idioma. O ficheiro `translations.txt` permite fornecer traduções. A descrição do campo prevê `mul` quando os textos originais usam vários idiomas.
+
+Mais informação em [feed_info.txt](/reference/gtfs/schedule/feed_info).
+
+## Como funciona
+
+O resultado depende da severidade definida na configuração da regra: obrigatório (`error`) reprova; recomendado (`warning`) passa com aviso; informativo (`info`) passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Nos casos sem severidade explícita abaixo, a indicação de reprovação pressupõe a configuração obrigatória.
+
+O resultado depende da severidade definida na configuração da regra: obrigatório (`error`) reprova; recomendado (`warning`) passa com aviso; informativo (`info`) passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Nos casos sem severidade explícita abaixo, a indicação de reprovação pressupõe a configuração obrigatória.
+
+O idioma tem de constar da lista interna de códigos ISO 639-1 de duas letras. A regra rejeita variantes regionais como `pt-PT` e o código `mul`. Não confirma o idioma dos restantes textos nem compara `default_lang` com `feed_lang`.
+
+A regra avalia cada linha do `feed_info.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O código, convertido para minúsculas, consta da lista interna de idiomas? | ✅ Passa | ❌ Reprova: código de idioma inválido |
+
+Maiúsculas e minúsculas são equivalentes. Os espaços não são removidos. Um valor vazio não é aceite quando esta regra é executada. Os exemplos pressupõem que a configuração da regra permite reportar problemas e que as condições para a sua execução estão cumpridas.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `pt` | ✅ Passa | Código reconhecido |
+| `pt-PT` | ❌ Reprova | Variante regional não aceite |
+| `invalid` | ❌ Reprova | Código desconhecido |
+| ` pt ` | ❌ Reprova | Espaços não removidos |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Formato inválido | O valor não cumpre o formato aceite pela regra | Indicar um código de duas letras reconhecido, como `pt`, sem espaços no campo `feed_lang` de `feed_info.txt`. |
