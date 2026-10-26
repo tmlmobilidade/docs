@@ -1,0 +1,49 @@
+---
+title: "Linha associada à tarifa"
+description: "Verifica se route_id de fare_rules.txt referencia route_id em routes.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `fare_rules_route_id_foreign` |
+| Ficheiros | `fare_rules.txt`, `routes.txt` |
+| Campo | `route_id` |
+| Tipo | Referência a `routes.route_id` |
+| Severidade | Opcional |
+
+**Descrição do campo:** identifica uma linha de transporte associada à categoria tarifária. Se várias linhas partilharem os mesmos atributos tarifários, criar uma linha em `fare_rules.txt` para cada uma.
+
+Mais informação em [fare_rules.txt](/reference/gtfs/schedule/fare_rules) e [routes.txt](/reference/gtfs/schedule/routes).
+
+## Como funciona
+
+Quando preenchido, o identificador tem de existir no campo `route_id` de `routes.txt`. A regra não verifica o preenchimento, a unicidade ou se a tarifa se aplica efetivamente à viagem.
+
+A regra avalia cada linha do `fare_rules.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo de `fare_rules.txt` está vazio? | ✅ Passa sem procurar uma referência | Segue para o passo 2 |
+| 2 | Existe uma linha de `routes.txt` com o mesmo valor em `route_id`? | ✅ Passa | ❌ Reporta o problema: referência inexistente |
+
+Os espaços não são removidos. A comparação distingue maiúsculas de minúsculas. Uma coluna ausente também é tratada como vazia. O preenchimento é verificado separadamente. Os exemplos pressupõem que a regra é executada e que a configuração da regra permite reportar problemas.
+
+## Como se relacionam
+
+O campo `route_id` de `fare_rules.txt` deve corresponder a `route_id` em `routes.txt`.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `A` (existe em `routes.txt`) | ✅ Passa | Referência encontrada |
+| `missing` (não existe em `routes.txt`) | ❌ Problema | Referência inexistente |
+| `a` (só existe `A` em `routes.txt`) | ❌ Problema | Maiúsculas e minúsculas diferentes |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Referência inexistente | O valor não existe no campo `route_id` de `routes.txt` | Corrigir `route_id` em `fare_rules.txt` para um valor existente em `route_id` de `routes.txt`. Se a definição estiver em falta, acrescentá-la no ficheiro de referência. |

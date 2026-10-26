@@ -1,0 +1,45 @@
+---
+title: "Presença das regras tarifárias"
+description: "Verifica a ausência de fare_rules.txt de acordo com a configuração da regra."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `fare_rules_file_missing` |
+| Ficheiro | `fare_rules.txt` |
+| Campo | Se aplica em todo o ficheiro |
+| Tipo | Ficheiro |
+| Severidade | Opcional |
+
+## Como funciona
+
+A regra assinala a ausência de `fare_rules.txt` quando a configuração da regra o determina. Não verifica o número de linhas, as colunas ou os valores do ficheiro.
+
+A regra avalia a presença de `fare_rules.txt` no conjunto de dados, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra recomenda o ficheiro e este está ausente? | ❌ Reporta o problema: ficheiro recomendado em falta | Segue para o passo 2 |
+| 2 | A configuração da regra assinala a ausência como informação e o ficheiro está ausente? | ❌ Reporta o problema: ficheiro em falta | Segue para o passo 3 |
+| 3 | A configuração da regra exige o ficheiro e este está ausente? | ❌ Reporta o problema: ficheiro obrigatório em falta | ✅ Passa sem reportar ausência |
+
+Sem configuração fornecida, esta regra não exige o ficheiro. Um ficheiro importado sem linhas conta como presente. A proibição de um ficheiro presente é reportada por outra regra.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| Ficheiro presente e importado | ✅ Passa | Ficheiro disponível |
+| Ficheiro ausente (obrigatório) | ❌ Problema | Falta o ficheiro exigido |
+| Ficheiro ausente (recomendado) | ❌ Problema | Falta o ficheiro recomendado |
+| Ficheiro ausente (informativo) | ❌ Problema | Ausência assinalada como informação |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Ficheiro recomendado em falta | A configuração da regra recomenda o ficheiro | Incluir `fare_rules.txt` no conjunto de dados GTFS e confirmar a sua importação. |
+| Ficheiro em falta | A configuração da regra assinala a ausência como informação | Incluir `fare_rules.txt` no conjunto de dados GTFS e confirmar a sua importação. |
+| Ficheiro obrigatório em falta | A configuração da regra exige o ficheiro | Incluir `fare_rules.txt` no conjunto de dados GTFS e confirmar a sua importação. |

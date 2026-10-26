@@ -1,0 +1,47 @@
+---
+title: "Preenchimento — zona de destino da tarifa"
+description: "Verifica o preenchimento de destination_id em fare_rules.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `fare_rules_destination_id_field` |
+| Ficheiro | `fare_rules.txt` |
+| Campo | `destination_id` |
+| Tipo | Referência a `stops.zone_id` |
+| Severidade | Opcional |
+
+**Descrição do campo:** identifica uma zona de destino. Se a categoria tarifária tiver várias zonas de destino, criar uma linha em `fare_rules.txt` para cada `destination_id`.
+
+Mais informação em [fare_rules.txt](/reference/gtfs/schedule/fare_rules).
+
+## Como funciona
+
+A regra verifica se o campo tem algum texto, quando a configuração da regra assinala a sua ausência. Não verifica se o identificador existe noutro ficheiro nem se a tarifa está correta.
+
+A regra avalia cada linha do `fare_rules.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Segue para o passo 2 | ✅ Passa |
+| 2 | A configuração da regra ignora esta verificação? | Termina sem reportar a ausência | Reporta o problema de campo obrigatório, recomendado ou informativo em falta |
+
+Uma coluna ausente é tratada como um campo vazio. Os espaços não são removidos: um valor só com espaços conta como preenchido. A configuração de campo proibido assinala a ausência com a mensagem informativa, mas não rejeita valores preenchidos.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `A` | ✅ Passa | Campo preenchido |
+| Vazio (configuração exige o campo) | ❌ Problema | Campo obrigatório em falta |
+| Coluna ausente (configuração recomenda o campo) | ❌ Problema | Campo recomendado em falta |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo obrigatório em falta | A configuração da regra exige o campo | Preencher `destination_id` em `fare_rules.txt` com o identificador correspondente à aplicação da tarifa. |
+| Campo recomendado em falta | A configuração da regra recomenda o campo | Preencher `destination_id` em `fare_rules.txt` com o identificador correspondente à aplicação da tarifa. |
+| Campo informativo em falta | A configuração da regra assinala a ausência como informação ou está definida como campo proibido | Preencher `destination_id` em `fare_rules.txt` com o identificador correspondente à aplicação da tarifa. |
