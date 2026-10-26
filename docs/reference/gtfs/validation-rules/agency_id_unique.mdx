@@ -1,6 +1,6 @@
 ---
-title: Identificador único do operador
-description: Verifica se o identificador do operador está preenchido, é único em agency.txt e, quando configurado, consta da lista de valores permitidos.
+title: "Identificador único do operador"
+description: "Verifica se cada agency_id aparece apenas uma vez em agency.txt."
 ---
 
 ## Propriedades da regra
@@ -13,41 +13,32 @@ description: Verifica se o identificador do operador está preenchido, é único
 | Tipo | Identificador único |
 | Severidade | Obrigatório |
 
-**Descrição do campo:** identifica uma marca de transporte, muitas vezes equivalente ao operador. Um conjunto GTFS pode incluir dados de vários operadores. Nalguns casos, um operador gere vários serviços distintos e a marca não coincide com o operador.
+**Descrição do campo:** identifica uma marca de transporte, frequentemente associada a um operador. Um operador pode explorar vários serviços com marcas distintas. O conjunto de dados pode incluir vários operadores.
 
 Mais informação em [agency.txt](/reference/gtfs/schedule/agency).
 
 ## Como funciona
 
-Quando a regra passa, o valor está presente quando exigido, não se repete em `agency.txt` e respeita a lista configurada. A regra **não verifica o formato do identificador nem as referências noutros ficheiros**.
+Cada identificador tem de aparecer numa única linha do ficheiro. A regra não verifica o preenchimento nem consulta uma lista de identificadores permitidos.
 
 A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O campo está vazio? | Verifica se a configuração da regra exige ou recomenda este campo. Se sim, reporta o problema. Se não, aceita | Segue para o passo 2 |
-| 2 | A configuração da regra define que este campo **não deve ser preenchido**? | ❌ Reporta o problema | Segue para o passo 3 |
-| 3 | O mesmo `agency_id` aparece em mais do que uma linha? | ❌ Reporta o problema de duplicação e segue para o passo 4 | Segue para o passo 4 |
-| 4 | A configuração da regra tem uma lista de identificadores permitidos? | Segue para o passo 5 | Termina sem outro problema |
-| 5 | O identificador está na lista? (ou a lista aceita qualquer valor) | Termina sem outro problema | ❌ Reporta o problema: identificador não permitido |
+| 1 | O mesmo identificador aparece em mais de uma linha? | ❌ Reporta o problema: identificador repetido | ✅ Passa |
 
-O valor é comparado tal como foi escrito. Os espaços e as maiúsculas não são normalizados.
+A comparação conserva espaços, maiúsculas e minúsculas. Dois valores vazios também contam como repetidos, se esta regra for executada. Os exemplos pressupõem que a configuração da regra permite reportar problemas e que as condições para a sua execução estão cumpridas.
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `operador-1` numa única linha | ✅ Passa | Identificador único |
-| campo vazio | ❌ Problema | Falta um valor obrigatório |
-| `operador-1` em duas linhas | ❌ Problema | Identificador duplicado |
-| `outro` (lista permitida = `operador-1`) | ❌ Problema | Fora da lista |
-| `operador-1` quando o campo é proibido | ❌ Problema | Campo preenchido indevidamente |
+| `001`, `002` (duas linhas) | ✅ Passa | Identificadores distintos |
+| `001`, `001` (duas linhas) | ❌ Problema | Identificador repetido |
+| Vazio, vazio (duas linhas) | ❌ Problema | Valor vazio repetido |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Identificador duplicado | Duas ou mais linhas usam o mesmo valor | Alterar `agency_id` em `agency.txt` para que cada operador tenha um identificador único |
-| Identificador não permitido | O valor não consta da lista configurada | Substituir `agency_id` em `agency.txt` por um valor permitido ou rever a lista na configuração da regra |
-| Campo em falta | A configuração da regra exige ou recomenda este campo | Preencher `agency_id` em `agency.txt` com o identificador do operador |
-| Campo preenchido quando não devia | A configuração da regra define que este campo não deve ter valor | Remover o valor de `agency_id` em `agency.txt` |
+| Identificador repetido | Várias linhas usam o mesmo identificador | Atribuir um `agency_id` distinto a cada operador em `agency.txt` ou eliminar linhas repetidas do mesmo operador. Atualizar as referências ao identificador alterado. |

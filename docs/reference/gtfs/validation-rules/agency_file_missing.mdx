@@ -1,6 +1,6 @@
 ---
-title: Presença do ficheiro de operadores
-description: Verifica se o ficheiro agency.txt está presente no conjunto GTFS quando a configuração da regra o exige ou recomenda.
+title: "Presença do ficheiro de operadores"
+description: "Verifica se agency.txt está disponível quando a configuração da regra assinala a sua ausência."
 ---
 
 ## Propriedades da regra
@@ -15,27 +15,31 @@ description: Verifica se o ficheiro agency.txt está presente no conjunto GTFS q
 
 ## Como funciona
 
-Quando a regra passa, o ficheiro `agency.txt` está presente ou a configuração da regra não exige a sua presença. A regra **não verifica o conteúdo nem as colunas do ficheiro**. Essas verificações pertencem a outras regras.
+A regra verifica se o ficheiro de operadores está disponível após a importação. Não verifica o número de linhas, as colunas ou os valores do ficheiro.
 
-A regra avalia a presença do ficheiro `agency.txt` no conjunto GTFS, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+A regra avalia a presença de `agency.txt` no conjunto de dados, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O ficheiro `agency.txt` está presente? | ✅ Passa | Segue para o passo 2 |
-| 2 | A configuração da regra exige o ficheiro? | ❌ Reporta o problema: ficheiro obrigatório em falta | Segue para o passo 3 |
-| 3 | A configuração da regra recomenda o ficheiro? | ❌ Reporta o problema: ficheiro recomendado em falta | ✅ Passa |
+| 1 | A configuração da regra recomenda o ficheiro e este está ausente? | ❌ Reporta o problema: ficheiro recomendado em falta | Segue para o passo 2 |
+| 2 | A configuração da regra assinala a ausência como informação e o ficheiro está ausente? | ❌ Reporta o problema: ficheiro em falta | Segue para o passo 3 |
+| 3 | O ficheiro é obrigatório e está ausente? | ❌ Reporta o problema: ficheiro obrigatório em falta | ✅ Passa sem reportar ausência |
+
+Sem configuração fornecida, o ficheiro é obrigatório. Com configuração, aplica-se a definição desta regra. Um ficheiro importado sem linhas não é considerado ausente. A proibição de um ficheiro presente é reportada por outra regra.
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `agency.txt` presente | ✅ Passa | O ficheiro existe |
-| `agency.txt` ausente e obrigatório | ❌ Problema | Falta um ficheiro obrigatório |
-| `agency.txt` ausente e recomendado | ❌ Problema | Falta um ficheiro recomendado |
+| Ficheiro presente e importado | ✅ Passa | Ficheiro disponível |
+| Ficheiro ausente (obrigatório) | ❌ Problema | Falta o ficheiro exigido |
+| Ficheiro ausente (recomendado) | ❌ Problema | Falta o ficheiro recomendado |
+| Ficheiro ausente (informativo) | ❌ Problema | Ausência assinalada como informação |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Ficheiro obrigatório em falta | O conjunto GTFS não inclui `agency.txt` e a configuração da regra exige-o | Adicionar o ficheiro `agency.txt` ao conjunto GTFS |
-| Ficheiro recomendado em falta | O conjunto GTFS não inclui `agency.txt` e a configuração da regra recomenda-o | Adicionar o ficheiro `agency.txt` ao conjunto GTFS ou rever a configuração da regra |
+| Ficheiro recomendado em falta | A configuração da regra recomenda o ficheiro | Incluir `agency.txt` no conjunto de dados GTFS. |
+| Ficheiro em falta | A configuração da regra assinala a ausência como informação | Incluir `agency.txt` no conjunto de dados GTFS. |
+| Ficheiro obrigatório em falta | O ficheiro exigido não está disponível | Incluir `agency.txt` no conjunto de dados GTFS e confirmar que foi importado. |

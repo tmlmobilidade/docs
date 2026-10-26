@@ -1,6 +1,6 @@
 ---
-title: Correspondência entre identificador e nome
-description: Verifica se cada identificador de operador está associado ao nome definido na configuração da regra.
+title: "Correspondência entre identificador e nome"
+description: "Verifica se o par agency_id e agency_name consta das correspondências definidas na configuração da regra."
 ---
 
 ## Propriedades da regra
@@ -15,42 +15,38 @@ description: Verifica se cada identificador de operador está associado ao nome 
 
 **Descrição dos campos:**
 
-- `agency_id`: identifica uma marca de transporte, muitas vezes equivalente ao operador.
-- `agency_name`: indica o nome completo do operador de transporte.
+- `agency_id`: identifica uma marca de transporte, frequentemente associada a um operador. Um operador pode explorar vários serviços com marcas distintas. O conjunto de dados pode incluir vários operadores.
+- `agency_name`: nome completo do operador de transporte.
 
 Mais informação em [agency.txt](/reference/gtfs/schedule/agency).
 
 ## Como funciona
 
-Quando a regra passa, o par `agency_id` e `agency_name` coincide com uma correspondência configurada, ou não existe uma lista de comparação. A regra **não verifica se os campos estão presentes nem se `agency_id` é único**. Outras regras fazem essas verificações.
+Quando existe uma lista de correspondências, o identificador e o nome têm de formar um par permitido. A regra não confirma a identidade legal do operador nem a unicidade do identificador.
 
 A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | Falta `agency_id` ou `agency_name`? | Termina sem reportar um problema nesta regra | Segue para o passo 2 |
-| 2 | A configuração da regra define esta verificação como ignorada ou proibida? | ✅ Passa | Segue para o passo 3 |
-| 3 | A configuração da regra tem uma lista de correspondências? | Segue para o passo 4 | ✅ Passa |
-| 4 | Existe uma correspondência exata entre o identificador e o nome? | ✅ Passa | ❌ Reporta o problema: correspondência inválida |
+| 1 | A configuração da regra define uma lista de correspondências? | Segue para o passo 2 | ✅ Passa |
+| 2 | Existe um par com este identificador e este nome? | ✅ Passa | ❌ Reporta o problema: correspondência inválida |
 
-A comparação é exata. Os espaços e as maiúsculas não são normalizados.
+A comparação é exata: espaços, maiúsculas e minúsculas contam. Uma lista definida mas vazia rejeita todos os pares. Sem lista, nenhum par é rejeitado. Os exemplos pressupõem que a configuração da regra permite reportar problemas e que as condições para a sua execução estão cumpridas.
 
 ## Como se relacionam
 
-Cada valor de `agency_id` fica associado a um valor esperado de `agency_name` na configuração da regra. A linha só passa quando os dois valores formam um dos pares configurados.
+`agency_id` identifica o operador e `agency_name` indica o seu nome. A configuração da regra pode aceitar vários nomes para o mesmo identificador. Nos exemplos, permite `AGENCY1` com `Metro Transit` e `AGENCY2` com `City Bus`.
 
 ## Exemplos
 
-Nos exemplos, a correspondência configurada é `AGENCY1` com `Metro Transit`.
-
 | `agency_id` | `agency_name` | Resultado | Porquê |
 |---|---|---|---|
-| `AGENCY1` | `Metro Transit` | ✅ Passa | Par configurado |
-| `AGENCY1` | `Wrong Name` | ❌ Problema | Nome diferente do esperado |
-| `AGENCY2` | `City Bus` | ❌ Problema | Identificador sem correspondência configurada |
+| `AGENCY1` | `Metro Transit` | ✅ Passa | Par permitido |
+| `AGENCY1` | `City Bus` | ❌ Problema | Nome associado a outro identificador |
+| `UNKNOWN` | `Metro Transit` | ❌ Problema | Identificador sem correspondência |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Correspondência inválida | O nome não é o esperado para o identificador, ou o identificador não consta da lista | Corrigir `agency_id` ou `agency_name` em `agency.txt`, ou rever a correspondência na configuração da regra |
+| Correspondência inválida | O par não consta da lista de correspondências | Corrigir `agency_id` e `agency_name` em `agency.txt` para um par permitido ou pedir a revisão das correspondências ao responsável pela configuração. |

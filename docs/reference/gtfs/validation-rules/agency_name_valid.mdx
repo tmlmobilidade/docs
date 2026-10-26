@@ -1,0 +1,46 @@
+---
+title: "Valores permitidos — nome do operador"
+description: "Verifica se agency_name consta da lista de valores permitidos pela configuração da regra."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `agency_name_valid` |
+| Ficheiro | `agency.txt` |
+| Campo | `agency_name` |
+| Tipo | Texto |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** nome completo do operador de transporte.
+
+Mais informação em [agency.txt](/reference/gtfs/schedule/agency).
+
+## Como funciona
+
+Quando existe uma lista de valores permitidos, o valor tem de constar dessa lista. A regra não confirma o preenchimento, o formato ou a existência real do operador.
+
+A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra define uma lista de valores permitidos? | Segue para o passo 2 | ✅ Passa |
+| 2 | A lista aceita qualquer valor? | ✅ Passa | Segue para o passo 3 |
+| 3 | O valor consta da lista? | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+
+A comparação é exata: espaços, maiúsculas e minúsculas contam. Uma lista definida mas vazia rejeita todos os valores. Sem lista, até um campo vazio passa. Os exemplos pressupõem que a configuração da regra permite reportar problemas e que as condições para a sua execução estão cumpridas.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `Operador Exemplo` (lista contém este valor) | ✅ Passa | Valor permitido |
+| `Outro` (lista não contém este valor) | ❌ Problema | Valor fora da lista |
+| `Operador Exemplo` (lista definida mas vazia) | ❌ Problema | Nenhum valor permitido |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor não permitido | O valor não consta da lista definida na configuração da regra | Corrigir `agency_name` em `agency.txt` para um valor permitido ou pedir a revisão da lista ao responsável pela configuração. |
