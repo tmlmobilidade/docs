@@ -1,0 +1,59 @@
+---
+title: "Espaçamento entre pontos"
+description: "Verifica shape_id, shape_pt_sequence, shape_pt_lat, shape_pt_lon em shapes.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `shapes_shape_point_spacing_valid` |
+| Ficheiro | `shapes.txt` |
+| Campos | `shape_id`, `shape_pt_sequence`, `shape_pt_lat`, `shape_pt_lon` |
+| Tipo | Identificador, Inteiro não negativo, Latitude, Longitude |
+| Severidade | Obrigatório |
+
+**Descrição dos campos:**
+
+- `shape_id`: identifica o traçado.
+- `shape_pt_sequence`: ordem pela qual os pontos se ligam para formar o traçado. Os valores devem aumentar, mas não precisam de ser consecutivos.
+- `shape_pt_lat`: latitude do ponto que integra o traçado.
+- `shape_pt_lon`: longitude do ponto que integra o traçado.
+
+Mais informação em [shapes.txt](/reference/gtfs/schedule/shapes).
+
+## Como funciona
+
+A regra assinala pontos consecutivos separados por mais do que o limite configurado. Não usa a distância acumulada nem confirma o percurso na rede viária.
+
+A regra avalia cada grupo de pontos com o mesmo `shape_id` em `shapes.txt`, seguindo os passos abaixo por ordem.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração desativa a regra? | ✅ Passa sem verificação | Segue para o passo 2 |
+| 2 | Existe sequência ausente, ilegível ou negativa? | Ignora o traçado | Segue para o passo 3 |
+| 3 | Existem sequências repetidas após ordenar? | Ignora o traçado | Segue para o passo 4 |
+| 4 | As duas coordenadas de cada ponto do par são válidas? | Segue para o passo 5 | Ignora o par, sem ligar os pontos dos lados |
+| 5 | A distância geométrica ultrapassa o limite? | ❌ Reprova: pontos demasiado afastados | ✅ Passa este par |
+
+A primeira opção da configuração define o limite em metros. O valor predefinido é `1000`; uma opção ausente, inválida, não finita ou não positiva repõe esse limite. A distância é medida sobre uma superfície esférica entre os pontos. Os espaços dos campos não são removidos. Os exemplos usam o limite predefinido.
+
+O resultado segue a configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Salvo indicação contrária, os exemplos de reprovação pressupõem a configuração obrigatória.
+
+## Como se relacionam
+
+O campo `shape_id` agrupa os pontos. O campo `shape_pt_sequence` define a ordem das comparações. As coordenadas definem os segmentos geométricos.
+
+## Exemplos
+
+| shape_id | shape_pt_sequence | shape_pt_lat | shape_pt_lon | Resultado | Porquê |
+|---|---|---|---|---|---|
+| `A` | `0, 10` | `0, 0` | `0, 0.001` | ✅ Passa | Cerca de 111 metros |
+| `A` | `0, 10` | `0, 0` | `0, 0.02` | ❌ Reprova | Cerca de 2224 metros |
+| `A` | `0, 10` | `0, 0` | `0, 0.02` (recomendado) | ✅ Passa com aviso | Distância acima do limite |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Pontos demasiado afastados | Faltam pontos intermédios ou existem coordenadas incorretas | Corrigir `shape_pt_lat`, `shape_pt_lon` e a ordem `shape_pt_sequence` em `shapes.txt`, ou acrescentar pontos do percurso real. |

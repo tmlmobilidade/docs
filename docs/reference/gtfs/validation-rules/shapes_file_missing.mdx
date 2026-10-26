@@ -1,6 +1,6 @@
 ---
-title: Presença do ficheiro de formas
-description: Verifica se shapes.txt está presente quando a configuração da regra o exige ou recomenda.
+title: "Ficheiro de traçados em falta"
+description: "Verifica a ausência de shapes.txt quando a configuração da regra a assinala."
 ---
 
 ## Propriedades da regra
@@ -15,27 +15,34 @@ description: Verifica se shapes.txt está presente quando a configuração da re
 
 ## Como funciona
 
-Quando a regra passa, `shapes.txt` está presente ou a sua ausência é permitida. A regra **não verifica o conteúdo nem as colunas do ficheiro**.
+O resultado depende da severidade definida na configuração da regra: obrigatório (`error`) reprova; recomendado (`warning`) passa com aviso; informativo (`info`) passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Nos casos sem severidade explícita abaixo, a indicação de reprovação pressupõe a configuração obrigatória.
 
-A regra avalia a presença do ficheiro `shapes.txt` no conjunto GTFS, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+A regra assinala a ausência do ficheiro quando a configuração da regra a exige, recomenda ou regista como informação. Não verifica se o ficheiro tem linhas nem se o conteúdo está correto.
+
+A regra avalia a presença de `shapes.txt` no conjunto de dados, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | `shapes.txt` está presente? | ✅ Passa | Segue para o passo 2 |
-| 2 | A configuração recomenda o ficheiro? | ❌ Reporta o problema: ficheiro recomendado em falta | Segue para o passo 3 |
-| 3 | A configuração exige o ficheiro? | ❌ Reporta o problema: ficheiro obrigatório em falta | ✅ Passa |
+| 1 | O ficheiro está disponível nos dados carregados? | ✅ Passa | Segue para o passo 2 |
+| 2 | A configuração da regra recomenda o ficheiro? | ✅ Passa com aviso | Segue para o passo 3 |
+| 3 | A configuração da regra assinala a ausência como informação? | ✅ Passa com informação | Segue para o passo 4 |
+| 4 | A configuração da regra exige o ficheiro? | ❌ Reprova: ficheiro obrigatório em falta | ✅ Passa |
+
+Sem configuração, este ficheiro não é obrigatório para esta verificação. Uma tabela carregada sem linhas conta como presente. A presença de um ficheiro proibido é tratada por outra regra.
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `shapes.txt` presente | ✅ Passa | O ficheiro existe |
-| ausente e obrigatório | ❌ Problema | Falta um ficheiro obrigatório |
-| ausente e recomendado | ❌ Problema | Falta um ficheiro recomendado |
+| Ficheiro presente | ✅ Passa | Disponível nos dados carregados |
+| Ficheiro ausente (configuração exige) | ❌ Reprova | Ficheiro obrigatório em falta |
+| Ficheiro ausente (configuração recomenda) | ✅ Passa com aviso  | Ficheiro recomendado em falta |
+| Ficheiro ausente (configuração informativa) | ✅ Passa com informação  | Ausência assinalada |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Ficheiro obrigatório em falta | A configuração exige `shapes.txt` | Adicionar `shapes.txt` ao conjunto GTFS ou rever a configuração da regra |
-| Ficheiro recomendado em falta | A configuração recomenda `shapes.txt` | Adicionar `shapes.txt` ao conjunto GTFS ou rever a configuração da regra |
+| Ficheiro obrigatório em falta | A configuração exige o ficheiro | Incluir `shapes.txt` no conjunto de dados ou pedir a revisão da configuração da regra. |
+| Ficheiro recomendado em falta | A configuração recomenda o ficheiro | Incluir `shapes.txt` no conjunto de dados ou pedir a revisão da configuração da regra. |
+| Ficheiro em falta | A configuração assinala a ausência como informação | Incluir `shapes.txt` no conjunto de dados ou pedir a revisão da configuração da regra. |

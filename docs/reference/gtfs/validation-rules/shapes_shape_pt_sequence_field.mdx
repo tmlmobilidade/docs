@@ -1,0 +1,50 @@
+---
+title: "Preenchimento — sequência do ponto"
+description: "Verifica shape_pt_sequence em shapes.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `shapes_shape_pt_sequence_field` |
+| Ficheiro | `shapes.txt` |
+| Campo | `shape_pt_sequence` |
+| Tipo | Inteiro não negativo |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** ordem pela qual os pontos se ligam para formar o traçado. Os valores devem aumentar, mas não precisam de ser consecutivos.
+
+Mais informação em [shapes.txt](/reference/gtfs/schedule/shapes).
+
+## Como funciona
+
+A regra verifica se o campo tem texto quando a configuração da regra assinala a sua ausência. Não valida o formato nem o conteúdo.
+
+A regra avalia cada linha do `shapes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Segue para o passo 2 | ✅ Passa |
+| 2 | A configuração da regra ignora a verificação? | ✅ Passa | Obrigatório: ❌ Reprova; recomendado: ✅ Passa com aviso; informativo: ✅ Passa com informação |
+
+Uma coluna ausente conta como vazia. Os espaços não são removidos; um valor só com espaços conta como preenchido. A configuração de campo proibido também assinala o vazio, mas não rejeita valores preenchidos.
+
+O resultado segue a configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Salvo indicação contrária, os exemplos de reprovação pressupõem a configuração obrigatória.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `10` | ✅ Passa | Campo preenchido |
+| Vazio (obrigatório) | ❌ Reprova | Campo exigido em falta |
+| Vazio (recomendado) | ✅ Passa com aviso | Campo recomendado em falta |
+| Vazio (informativo) | ✅ Passa com informação | Ausência comunicada |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo obrigatório em falta | A configuração exige o campo | Preencher `shape_pt_sequence` em `shapes.txt` com o valor correto para o ponto. |
+| Campo recomendado em falta | A configuração recomenda o campo | Preencher `shape_pt_sequence` em `shapes.txt` com o valor correto para o ponto. |
+| Campo informativo em falta | A configuração assinala a ausência como informação | Preencher `shape_pt_sequence` em `shapes.txt` com o valor correto para o ponto. |

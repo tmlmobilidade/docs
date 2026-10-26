@@ -1,0 +1,47 @@
+---
+title: "Valor da sequência"
+description: "Verifica shape_pt_sequence em shapes.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `shapes_shape_pt_sequence_non_negative` |
+| Ficheiro | `shapes.txt` |
+| Campo | `shape_pt_sequence` |
+| Tipo | Inteiro não negativo |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** ordem pela qual os pontos se ligam para formar o traçado. Os valores devem aumentar, mas não precisam de ser consecutivos.
+
+Mais informação em [shapes.txt](/reference/gtfs/schedule/shapes).
+
+## Como funciona
+
+O valor tem de representar um inteiro não negativo. A regra não verifica repetições nem a ordem dos pontos.
+
+A regra avalia cada linha do `shapes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O valor pode ser lido como inteiro não negativo? | ✅ Passa | ❌ Reprova: sequência inválida |
+
+Os espaços não são removidos. Zeros à esquerda e sinal positivo são aceites. O vazio e números demasiado grandes para serem lidos são rejeitados.
+
+O resultado segue a configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Salvo indicação contrária, os exemplos de reprovação pressupõem a configuração obrigatória.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `0` | ✅ Passa | Zero aceite |
+| `10` | ✅ Passa | Inteiro positivo |
+| `-1` | ❌ Reprova | Número negativo |
+| `1.5` | ❌ Reprova | Não é inteiro |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Sequência inválida | O valor não é um inteiro não negativo legível | Indicar um inteiro não negativo em `shape_pt_sequence` de `shapes.txt`, sem espaços nem casas decimais. |

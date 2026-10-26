@@ -1,0 +1,63 @@
+---
+title: "Distância acumulada por bloco"
+description: "Verifica shape_id, shape_pt_sequence, shape_pt_lat, shape_pt_lon, shape_dist_traveled em shapes.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `shapes_shape_dist_traveled_block_valid` |
+| Ficheiro | `shapes.txt` |
+| Campos | `shape_id`, `shape_pt_sequence`, `shape_pt_lat`, `shape_pt_lon`, `shape_dist_traveled` |
+| Tipo | Identificador, Inteiro não negativo, Latitude, Longitude, Número não negativo |
+| Severidade | Obrigatório, Obrigatório, Obrigatório, Obrigatório, Opcional |
+
+**Descrição dos campos:**
+
+- `shape_id`: identifica o traçado.
+- `shape_pt_sequence`: ordem pela qual os pontos se ligam para formar o traçado. Os valores devem aumentar, mas não precisam de ser consecutivos.
+- `shape_pt_lat`: latitude do ponto que integra o traçado.
+- `shape_pt_lon`: longitude do ponto que integra o traçado.
+- `shape_dist_traveled`: distância percorrida desde o primeiro ponto até ao ponto desta linha. As unidades devem coincidir com as usadas em `stop_times.txt`.
+
+Mais informação em [shapes.txt](/reference/gtfs/schedule/shapes).
+
+## Como funciona
+
+A regra compara o total geométrico de um bloco iniciado em distância zero com a distância acumulada no seu fim. Não avalia blocos incompletos nem blocos com um segmento acima da sua própria tolerância.
+
+A regra avalia cada grupo de pontos com o mesmo `shape_id` em `shapes.txt`, seguindo os passos abaixo por ordem.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O identificador do traçado está vazio? | Ignora o traçado | Segue para o passo 2 |
+| 2 | Sequências, coordenadas e distâncias preenchidas podem ser lidas como números? | Ordena por sequência e segue para o passo 3 | Interrompe a comparação; corrigir primeiro o formato |
+| 3 | Existe um ponto com distância zero e outro antes do próximo zero ou do fim? | Segue para o passo 4 nesse bloco | Ignora este início de bloco |
+| 4 | Falta a distância num dos pontos do bloco? | Ignora o bloco | Segue para o passo 5 |
+| 5 | O aumento convertido do segmento é inferior a `0.001` metros? | Ignora o segmento e continua o bloco | Segue para o passo 6 |
+| 6 | A diferença do segmento ultrapassa a tolerância do bloco? | Ignora o bloco | Soma a distância geométrica e continua |
+| 7 | Depois dos segmentos, o total geométrico é zero? | Ignora o bloco | Segue para o passo 8 |
+| 8 | A diferença entre o total geométrico e a distância final ultrapassa a tolerância? | ❌ Reprova: total incompatível | ✅ Passa este bloco |
+
+A primeira opção define a tolerância em metros: `200` por predefinição; zero é aceite. Uma opção inválida, negativa ou não finita repõe `200`. O máximo do traçado inferior a `800` indica quilómetros; caso contrário, metros. Esta regra não usa a opção explícita de unidade da regra por segmento. O limite de `200` também é usado na comparação interna dos segmentos, independentemente da configuração da outra regra. Esta regra não rejeita explicitamente coordenadas fora dos limites, sequências negativas ou repetidas e valores não finitos. As verificações desses campos devem ser executadas separadamente. Os espaços não são removidos. Os exemplos usam quatro pontos no equador e distâncias em quilómetros; valores apresentados arredondados.
+
+O resultado segue a configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Salvo indicação contrária, os exemplos de reprovação pressupõem a configuração obrigatória.
+
+## Como se relacionam
+
+O campo `shape_id` agrupa os pontos. O campo `shape_pt_sequence` define a ordem das comparações. As coordenadas definem os segmentos geométricos. O campo `shape_dist_traveled` fornece a distância acumulada em cada ponto.
+
+## Exemplos
+
+| shape_id | shape_pt_sequence | shape_pt_lat | shape_pt_lon | shape_dist_traveled | Resultado | Porquê |
+|---|---|---|---|---|---|---|
+| `A` | `0, 1, 2, 3` | `0, 0, 0, 0` | `0, .001, .002, .003` | `0, .1112, .2224, .3336` | ✅ Passa | Total próximo de 334 metros |
+| `A` | `0, 1, 2, 3` | `0, 0, 0, 0` | `0, .001, .002, .003` | `0, .2112, .4224, .6336` | ❌ Reprova | Desvio acumulado de 300 metros |
+| `A` | `0, 1, 2, 3` | `0, 0, 0, 0` | `0, .001, .002, .003` | `0, .1612, .3224, .4836` | ✅ Passa | Desvio acumulado de 150 metros |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Total incompatível | Pequenas diferenças por segmento acumulam-se acima da tolerância | Recalcular `shape_dist_traveled` em `shapes.txt` ao longo do bloco, conferindo as coordenadas, a ordem dos pontos e a unidade usada. |

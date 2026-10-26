@@ -1,0 +1,48 @@
+---
+title: "Longitude do ponto"
+description: "Verifica shape_pt_lon em shapes.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `shapes_shape_pt_lon_valid` |
+| Ficheiro | `shapes.txt` |
+| Campo | `shape_pt_lon` |
+| Tipo | Longitude |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** longitude do ponto que integra o traçado.
+
+Mais informação em [shapes.txt](/reference/gtfs/schedule/shapes).
+
+## Como funciona
+
+O valor tem de representar uma coordenada dentro dos limites admitidos. A regra não confirma que o ponto pertence ao percurso real.
+
+A regra avalia cada linha do `shapes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O valor pode ser lido como número? | Segue para o passo 2 | ❌ Reprova: coordenada inválida |
+| 2 | O número está entre `-180` e `180`, incluindo os limites? | ✅ Passa | ❌ Reprova: coordenada inválida |
+
+Os espaços não são removidos. O vazio, valores não numéricos, infinito e `NaN` são rejeitados. A notação científica é aceite.
+
+O resultado segue a configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Salvo indicação contrária, os exemplos de reprovação pressupõem a configuração obrigatória.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `-9.14` | ✅ Passa | Coordenada dentro dos limites |
+| `180.01` | ❌ Reprova | Acima do limite |
+| `bad` | ❌ Reprova | Texto não numérico |
+| `NaN` | ❌ Reprova | Não representa uma coordenada |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Coordenada inválida | O valor não representa uma coordenada dentro dos limites | Corrigir `shape_pt_lon` em `shapes.txt` para um número entre `-180` e `180`, com ponto decimal e sem espaços. |
