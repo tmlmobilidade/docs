@@ -1,0 +1,52 @@
+---
+title: "Formato e unicidade da matrícula"
+description: "A regra verifica o formato da matrícula ou do identificador marítimo e procura repetições exatas."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `vehicles_license_plate_valid` |
+| Ficheiro | `vehicles.txt` |
+| Campo | `license_plate` |
+| Tipo | Texto |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** matrícula do veículo. Para embarcações, pode ser usado o MMSI, um identificador marítimo de nove algarismos iniciado entre `2` e `7`.
+
+Mais informação em [vehicles.txt](/reference/gtfs/schedule/vehicles).
+
+## Como funciona
+
+A regra verifica o formato da matrícula ou do identificador marítimo e procura repetições exatas. Não consulta o tipo de veículo nem confirma o registo oficial.
+
+A regra avalia cada linha do `vehicles.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | ✅ Passa; o preenchimento é verificado separadamente | Continua |
+| 2 | O texto, sem espaços nas extremidades, tem nove algarismos e começa entre `2` e `7`? | Formato MMSI aceite; avança para a contagem | Normaliza o texto como matrícula |
+| 3 | Se não for MMSI, a matrícula normalizada corresponde a um formato aceite? | Avança para a contagem | Assinala formato inválido e termina |
+| 4 | O texto original aparece em mais de uma linha? | Assinala matrícula repetida | ✅ Passa |
+
+Para matrículas, a regra converte letras para maiúsculas e remove espaços nas extremidades. Remove também hífen, ponto, sublinhado, espaço e espaços inseparáveis comuns entre os carateres. Os formatos aceites são `AA00AA`, `00AA00`, `0000AA` e `AA0000`, com letras de `A` a `Z` e algarismos. Para MMSI, remove apenas espaços nas extremidades. A contagem de repetições usa o texto original: `AA1234` e `aa-12-34` não são considerados duplicados. A regra compara todo o ficheiro, sem separar operadores.
+
+O resultado depende da configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória e condições de execução cumpridas.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `AA1234` (uma linha) | ✅ Passa | Formato aceite |
+| `234567890` (uma linha) | ✅ Passa | MMSI aceite |
+| `123456789` | ❌ Reprova | MMSI não começa entre `2` e `7` |
+| `AA1234` (duas linhas) | ❌ Reprova | Texto original repetido |
+| `AA1234` e `aa-12-34` | ✅ Passa | Formatos aceites e textos distintos |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Formato inválido | O texto não corresponde a uma matrícula ou MMSI aceite | Corrigir `license_plate` em `vehicles.txt` para a matrícula ou MMSI do veículo num formato aceite. |
+| Matrícula repetida | Várias linhas têm exatamente o mesmo texto | Corrigir `license_plate` em `vehicles.txt` ou remover o registo duplicado do veículo. |

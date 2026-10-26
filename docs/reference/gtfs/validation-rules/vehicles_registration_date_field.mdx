@@ -1,0 +1,50 @@
+---
+title: "Preenchimento — data da primeira matrícula"
+description: "A regra assinala a ausência do campo conforme a configuração da regra."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `vehicles_registration_date_field` |
+| Ficheiro | `vehicles.txt` |
+| Campo | `registration_date` |
+| Tipo | Data |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** data em que o veículo foi matriculado pela primeira vez, em qualquer local. Permite determinar a idade do veículo e usa o formato `AAAAMMDD`.
+
+Mais informação em [vehicles.txt](/reference/gtfs/schedule/vehicles).
+
+## Como funciona
+
+A regra assinala a ausência do campo conforme a configuração da regra. Não verifica o formato nem o conteúdo do valor.
+
+A regra avalia cada linha do `vehicles.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Continua | ✅ Passa |
+| 2 | A configuração da regra ignora esta verificação? | ✅ Passa | Assinala a ausência com a severidade configurada |
+
+Os espaços não são removidos. A comparação do texto distingue maiúsculas e minúsculas. Uma coluna ausente conta como vazia. Texto só com espaços conta como preenchido. A configuração de campo proibido não rejeita valores preenchidos nesta regra.
+
+O resultado depende da configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória e condições de execução cumpridas.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `20240229` | ✅ Passa | Campo preenchido |
+| Vazio (obrigatório) | ❌ Reprova | Falta um campo exigido |
+| Vazio (recomendado) | ✅ Passa com aviso | Campo recomendado em falta |
+| Vazio (informativo) | ✅ Passa com informação | Ausência comunicada ao utilizador |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo obrigatório em falta | O campo está vazio | Preencher `registration_date` em `vehicles.txt` com o valor correspondente ao veículo. |
+| Campo recomendado em falta | O campo está vazio | Preencher `registration_date` em `vehicles.txt` com o valor correspondente ao veículo. |
+| Campo informativo em falta | O campo está vazio | Preencher `registration_date` em `vehicles.txt` com o valor correspondente ao veículo. |

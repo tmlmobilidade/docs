@@ -1,0 +1,44 @@
+---
+title: "Presença do ficheiro de veículos"
+description: "Verifica se vehicles.txt está disponível quando a configuração da regra assinala a sua ausência."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `vehicles_file_missing` |
+| Ficheiro | `vehicles.txt` |
+| Campo | Se aplica em todo o ficheiro |
+| Tipo | Ficheiro |
+| Severidade | Opcional |
+
+## Como funciona
+
+A regra verifica a disponibilidade do ficheiro de veículos nos dados importados. Não verifica o número de veículos nem o conteúdo das linhas.
+
+A regra avalia a disponibilidade de `vehicles.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O ficheiro está disponível? | ✅ Passa | Continua |
+| 2 | A configuração da regra exige, recomenda ou informa sobre a ausência do ficheiro? | Assinala a ausência com a severidade configurada | ✅ Passa |
+
+`vehicles.txt` não pertence ao conjunto mínimo de ficheiros exigidos quando não existe configuração de regras. O resultado depende da configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória e condições de execução cumpridas.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| Ficheiro presente e importado | ✅ Passa | Ficheiro disponível |
+| Ficheiro ausente (obrigatório) | ❌ Reprova | Falta o ficheiro exigido |
+| Ficheiro ausente (recomendado) | ✅ Passa com aviso | Falta o ficheiro recomendado |
+| Ficheiro ausente (informativo) | ✅ Passa com informação | Ausência comunicada ao utilizador |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Ficheiro obrigatório em falta | A configuração exige o ficheiro | Incluir `vehicles.txt` no conjunto de dados e voltar a importar. |
+| Ficheiro recomendado em falta | A configuração recomenda o ficheiro | Incluir `vehicles.txt` para cumprir a recomendação. |
+| Ausência informativa | A configuração informa sobre a ausência | Incluir `vehicles.txt` quando existirem dados de veículos a disponibilizar. |

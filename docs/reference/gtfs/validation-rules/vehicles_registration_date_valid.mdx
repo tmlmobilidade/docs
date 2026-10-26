@@ -1,0 +1,49 @@
+---
+title: "Data válida da primeira matrícula"
+description: "A regra verifica o formato e a existência da data no calendário."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `vehicles_registration_date_valid` |
+| Ficheiro | `vehicles.txt` |
+| Campo | `registration_date` |
+| Tipo | Data |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** data em que o veículo foi matriculado pela primeira vez, em qualquer local. Permite determinar a idade do veículo e usa o formato `AAAAMMDD`.
+
+Mais informação em [vehicles.txt](/reference/gtfs/schedule/vehicles).
+
+## Como funciona
+
+A regra verifica o formato e a existência da data no calendário. Não confirma a data real de matrícula nem rejeita datas futuras.
+
+A regra avalia cada linha do `vehicles.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | ✅ Passa; o preenchimento é verificado separadamente | Continua |
+| 2 | O texto tem oito posições? | Continua | Assinala data inválida |
+| 3 | O texto representa uma data válida no formato ano, mês e dia? | ✅ Passa | Assinala data inválida |
+
+Os espaços não são removidos. O formato esperado é `AAAAMMDD`, sem separadores. A regra considera os anos bissextos e não consulta opções configuradas.
+
+O resultado depende da configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória e condições de execução cumpridas.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `20240229` | ✅ Passa | Data válida num ano bissexto |
+| `20230229` | ❌ Reprova | Dia inexistente |
+| `20241301` | ❌ Reprova | Mês inexistente |
+| `2024-02-29` | ❌ Reprova | Formato com separadores |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Data inválida | Formato incorreto ou data inexistente | Corrigir `registration_date` em `vehicles.txt` para a data da primeira matrícula no formato `AAAAMMDD`. |

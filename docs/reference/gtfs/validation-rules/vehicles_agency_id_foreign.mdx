@@ -1,0 +1,51 @@
+---
+title: "Operador de referência do veículo"
+description: "A regra procura o identificador do operador em `agency.txt`."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `vehicles_agency_id_foreign` |
+| Ficheiros | `vehicles.txt`, `agency.txt` |
+| Campo | `agency_id` |
+| Tipo | Identificador de referência |
+| Severidade | Não documentada no código |
+
+**Descrição do campo:** identifica o operador associado ao veículo.
+
+Mais informação em [vehicles.txt](/reference/gtfs/schedule/vehicles), [agency.txt](/reference/gtfs/schedule/agency).
+
+## Como funciona
+
+A regra procura o identificador do operador em `agency.txt`. Não confirma os restantes dados do operador.
+
+A regra avalia cada linha do `vehicles.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | Existe um registo com o mesmo `agency_id` em `agency.txt`? | ✅ Passa | Assinala referência inexistente |
+
+Os espaços não são removidos. A comparação do texto distingue maiúsculas e minúsculas. O vazio também é procurado; não existe uma passagem automática para campos vazios. A ausência do ficheiro de referência impede encontrar um operador preenchido.
+
+O resultado depende da configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória e condições de execução cumpridas.
+
+## Como se relacionam
+
+`agency_id` em `vehicles.txt` deve corresponder ao mesmo campo em `agency.txt`.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `A1` (existe em `agency.txt`) | ✅ Passa | Operador encontrado |
+| `missing` (não existe) | ❌ Reprova | Operador não encontrado |
+| `a1` (só existe `A1`) | ❌ Reprova | Maiúsculas diferentes |
+| Vazio (não existe identificador vazio) | ❌ Reprova | Referência não encontrada |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Referência inexistente | O identificador não foi encontrado | Corrigir `agency_id` em `vehicles.txt` ou incluir o operador correspondente em `agency.txt`. |

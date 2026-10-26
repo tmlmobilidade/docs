@@ -1,0 +1,49 @@
+---
+title: "Capacidade de passageiros"
+description: "A regra verifica se a capacidade preenchida é um número inteiro não negativo."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `vehicles_total_capacity_valid` |
+| Ficheiro | `vehicles.txt` |
+| Campo | `total_capacity` |
+| Tipo | Número inteiro não negativo |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** capacidade total de passageiros. O valor `0` indica que o veículo não permite o embarque de passageiros.
+
+Mais informação em [vehicles.txt](/reference/gtfs/schedule/vehicles).
+
+## Como funciona
+
+A regra verifica se a capacidade preenchida é um número inteiro não negativo. Não confirma a capacidade real do veículo nem compara capacidades entre campos.
+
+A regra avalia cada linha do `vehicles.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | ✅ Passa; o preenchimento é verificado separadamente | Continua |
+| 2 | O texto pode ser lido como um número inteiro? | Continua | Assinala capacidade inválida |
+| 3 | O número é negativo? | Assinala capacidade inválida | ✅ Passa |
+
+Os espaços não são removidos. Zeros iniciais e o sinal `+` são aceites. Valores demasiado grandes para serem lidos como inteiros são rejeitados. A regra não consulta opções configuradas.
+
+O resultado depende da configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória e condições de execução cumpridas.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `0` | ✅ Passa | Capacidade nula aceite |
+| `-1` | ❌ Reprova | Número negativo |
+| `1.5` | ❌ Reprova | Número não inteiro |
+| `9999999999999999999999999` | ❌ Reprova | Número demasiado grande |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Capacidade inválida | O valor não é um inteiro não negativo legível | Corrigir `total_capacity` em `vehicles.txt` para um número inteiro igual ou superior a zero. |

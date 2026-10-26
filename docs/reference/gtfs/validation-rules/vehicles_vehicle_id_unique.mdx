@@ -1,0 +1,47 @@
+---
+title: "Identificador único do veículo"
+description: "A regra verifica se o identificador preenchido aparece numa única linha."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `vehicles_vehicle_id_unique` |
+| Ficheiro | `vehicles.txt` |
+| Campo | `vehicle_id` |
+| Tipo | Identificador único |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** identifica o veículo na frota do operador e permite acompanhá-lo na rede. Corresponde ao identificador interno usado nos dados em tempo real.
+
+Mais informação em [vehicles.txt](/reference/gtfs/schedule/vehicles).
+
+## Como funciona
+
+A regra verifica se o identificador preenchido aparece numa única linha. Compara todo o ficheiro, sem separar operadores.
+
+A regra avalia cada linha do `vehicles.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | ✅ Passa; o preenchimento é verificado separadamente | Continua |
+| 2 | O mesmo identificador aparece em mais de uma linha? | Assinala identificador repetido | ✅ Passa |
+
+Os espaços não são removidos. A comparação do texto distingue maiúsculas e minúsculas. O vazio não é contado por esta regra. Não verifica se o identificador corresponde ao veículo nos dados em tempo real.
+
+O resultado depende da configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória e condições de execução cumpridas.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `V1` (uma linha) | ✅ Passa | Identificador único |
+| `V1` (duas linhas) | ❌ Reprova | Identificador repetido |
+| `V1` e `v1` | ✅ Passa | Textos diferentes |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Identificador repetido | Várias linhas usam o mesmo valor | Atribuir um `vehicle_id` único a cada veículo em `vehicles.txt` e atualizar as referências correspondentes. |

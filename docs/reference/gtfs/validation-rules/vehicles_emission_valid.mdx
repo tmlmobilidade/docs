@@ -1,0 +1,51 @@
+---
+title: "Valores válidos — classe de emissões"
+description: "A regra verifica os valores admitidos e as opções definidas na configuração da regra."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `vehicles_emission_valid` |
+| Ficheiro | `vehicles.txt` |
+| Campo | `emission` |
+| Tipo | Valor enumerado |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** indica a classe de emissões do veículo: `Euro I`, `Euro II`, `Euro III`, `Euro IV`, `Euro V`, `Euro VI`, `Euro VII` ou `N/A` quando não se aplica.
+
+Mais informação em [vehicles.txt](/reference/gtfs/schedule/vehicles).
+
+## Como funciona
+
+A regra verifica os valores admitidos e as opções definidas na configuração da regra. Não confirma as características reais do veículo.
+
+A regra avalia cada linha do `vehicles.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | ✅ Passa; o preenchimento é verificado separadamente | Continua |
+| 2 | O valor pertence à lista admitida pela regra? | Continua | Assinala valor inválido |
+| 3 | A configuração da regra não define opções ou aceita qualquer opção? | ✅ Passa | Continua |
+| 4 | O valor pertence às opções configuradas? | ✅ Passa | Assinala valor não permitido |
+
+Valores admitidos: `Euro I`, `Euro II`, `Euro III`, `Euro IV`, `Euro V`, `Euro VI`, `Euro VII`, `N/A`. Os espaços não são removidos. A comparação do texto distingue maiúsculas e minúsculas. Uma lista de opções definida mas vazia rejeita todos os valores preenchidos. Aceitar qualquer opção não permite valores fora da lista admitida pela regra.
+
+O resultado depende da configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória e condições de execução cumpridas.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `Euro VI` (sem restrições adicionais) | ✅ Passa | Valor admitido |
+| `Euro VIII` | ❌ Reprova | Valor fora da lista admitida |
+| `Euro VI` (excluído das opções configuradas) | ❌ Reprova | Valor não permitido pela configuração |
+| `Euro VI` (lista configurada vazia) | ❌ Reprova | Nenhum valor permitido |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor inválido | O valor não pertence à lista admitida | Corrigir `emission` em `vehicles.txt` para um dos valores admitidos. |
+| Valor não permitido | A configuração da regra exclui este valor | Corrigir `emission` em `vehicles.txt` ou pedir ao responsável que reveja as opções da regra. |

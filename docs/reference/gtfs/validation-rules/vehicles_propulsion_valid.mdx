@@ -1,0 +1,52 @@
+---
+title: "Valores válidos — propulsão do veículo"
+description: "A regra verifica os valores admitidos e as opções definidas na configuração da regra."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `vehicles_propulsion_valid` |
+| Ficheiro | `vehicles.txt` |
+| Campo | `propulsion` |
+| Tipo | Valor enumerado |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** indica a propulsão: `0` não aplicável, `1` gasolina, `2` gasóleo, `3` GPL, `4` mistura, `5` eletricidade, `6` elétrico a bateria, `7` híbrido, `8` hidrogénio, `9` biocombustível, `10` biocombustível ou biodiesel, `101` gás natural, `102` gás natural comprimido, `103` gás natural liquefeito, `104` combustível de aviação, `105` combustível marítimo e `106` outro.
+
+Mais informação em [vehicles.txt](/reference/gtfs/schedule/vehicles).
+
+## Como funciona
+
+A regra verifica os valores admitidos e as opções definidas na configuração da regra. Não confirma as características reais do veículo.
+
+A regra avalia cada linha do `vehicles.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | ✅ Passa; o preenchimento é verificado separadamente | Continua |
+| 2 | O texto pode ser lido como inteiro? | Continua | Assinala valor inválido |
+| 3 | O valor pertence à lista admitida pela regra? | Continua | Assinala valor inválido |
+| 4 | A configuração da regra não define opções ou aceita qualquer opção? | ✅ Passa | Continua |
+| 5 | O valor pertence às opções configuradas? | ✅ Passa | Assinala valor não permitido |
+
+Valores admitidos: `0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `101`, `102`, `103`, `104`, `105`, `106`. A comparação é numérica: `01` e `+1` equivalem a `1`. As opções configuradas devem usar a forma normalizada, sem sinal `+` nem zeros iniciais. Os espaços não são removidos. Uma lista de opções definida mas vazia rejeita todos os valores preenchidos. Aceitar qualquer opção não permite valores fora da lista admitida pela regra.
+
+O resultado depende da configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória e condições de execução cumpridas.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `6` (sem restrições adicionais) | ✅ Passa | Valor admitido |
+| `11` | ❌ Reprova | Valor fora da lista admitida |
+| `6` (excluído das opções configuradas) | ❌ Reprova | Valor não permitido pela configuração |
+| `6` (lista configurada vazia) | ❌ Reprova | Nenhum valor permitido |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor inválido | O valor não pertence à lista admitida | Corrigir `propulsion` em `vehicles.txt` para um dos valores admitidos. |
+| Valor não permitido | A configuração da regra exclui este valor | Corrigir `propulsion` em `vehicles.txt` ou pedir ao responsável que reveja as opções da regra. |
