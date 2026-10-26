@@ -1,0 +1,49 @@
+---
+title: "Referência ao serviço do calendário"
+description: "Verifica se o service_id de calendar_dates.txt existe em calendar.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `calendar_dates_service_id_foreign` |
+| Ficheiros | `calendar_dates.txt`, `calendar.txt` |
+| Campo | `service_id` |
+| Tipo | Identificador ou referência a `calendar.service_id` |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** identifica um conjunto de datas com exceções de serviço para uma ou mais linhas de transporte. Quando os dois ficheiros de calendário são usados em conjunto, cada par `service_id` e `date` só deve aparecer uma vez. Se o identificador existir nos dois ficheiros, `calendar_dates.txt` altera o serviço definido em `calendar.txt`.
+
+Mais informação em [calendar_dates.txt](/reference/gtfs/schedule/calendar_dates) e [calendar.txt](/reference/gtfs/schedule/calendar).
+
+## Como funciona
+
+O identificador tem de existir em `calendar.txt` quando esta regra é executada. A regra não verifica a unicidade do identificador nem a compatibilidade da data com o período de serviço.
+
+A regra avalia cada linha do `calendar_dates.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | Existe uma linha de `calendar.txt` com o mesmo `service_id`? | ✅ Passa | ❌ Reporta o problema: serviço não encontrado |
+
+A comparação é exata: espaços, maiúsculas e minúsculas contam. A ausência de `calendar.txt` também origina um problema quando esta regra é executada. Os exemplos pressupõem que a configuração da regra permite reportar problemas e que as condições para a sua execução estão cumpridas.
+
+## Como se relacionam
+
+O campo `service_id` de `calendar_dates.txt` liga a exceção ao serviço com o mesmo identificador em `calendar.txt`. Se o conjunto de dados usar apenas `calendar_dates.txt`, o responsável pela configuração deve rever a aplicação desta regra.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `S1` (existe em `calendar.txt`) | ✅ Passa | Referência encontrada |
+| `S3` (só existem `S1` e `S2`) | ❌ Problema | Referência inexistente |
+| `s1` (só existe `S1`) | ❌ Problema | Maiúsculas e minúsculas diferentes |
+| `S1` (`calendar.txt` ausente) | ❌ Problema | Ficheiro de referência ausente |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Serviço não encontrado | O identificador não existe no calendário ou o ficheiro de referência está ausente | Corrigir `service_id` em `calendar_dates.txt` para um identificador existente em `calendar.txt`. Se o serviço estiver em falta, acrescentar a sua definição em `calendar.txt`. |
