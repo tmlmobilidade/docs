@@ -22,6 +22,8 @@ Mais informação em [agency.txt](/reference/gtfs/schedule/agency).
 
 ## Como funciona
 
+O resultado depende da severidade definida na configuração da regra: obrigatório (`error`) reprova; recomendado (`warning`) passa com aviso; informativo (`info`) passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Nos casos sem severidade explícita abaixo, a indicação de reprovação pressupõe a configuração obrigatória.
+
 Quando existe uma lista de correspondências, o identificador e o nome têm de formar um par permitido. A regra não confirma a identidade legal do operador nem a unicidade do identificador.
 
 A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
@@ -29,7 +31,7 @@ A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
 | 1 | A configuração da regra define uma lista de correspondências? | Segue para o passo 2 | ✅ Passa |
-| 2 | Existe um par com este identificador e este nome? | ✅ Passa | ❌ Reporta o problema: correspondência inválida |
+| 2 | Existe um par com este identificador e este nome? | ✅ Passa | ❌ Reprova: correspondência inválida |
 
 A comparação é exata: espaços, maiúsculas e minúsculas contam. Uma lista definida mas vazia rejeita todos os pares. Sem lista, nenhum par é rejeitado. Os exemplos pressupõem que a configuração da regra permite reportar problemas e que as condições para a sua execução estão cumpridas.
 
@@ -42,8 +44,8 @@ A comparação é exata: espaços, maiúsculas e minúsculas contam. Uma lista d
 | `agency_id` | `agency_name` | Resultado | Porquê |
 |---|---|---|---|
 | `AGENCY1` | `Metro Transit` | ✅ Passa | Par permitido |
-| `AGENCY1` | `City Bus` | ❌ Problema | Nome associado a outro identificador |
-| `UNKNOWN` | `Metro Transit` | ❌ Problema | Identificador sem correspondência |
+| `AGENCY1` | `City Bus` | ❌ Reprova | Nome associado a outro identificador |
+| `UNKNOWN` | `Metro Transit` | ❌ Reprova | Identificador sem correspondência |
 
 ## Como corrigir
 

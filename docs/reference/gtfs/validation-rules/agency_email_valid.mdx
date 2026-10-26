@@ -19,13 +19,15 @@ Mais informação em [agency.txt](/reference/gtfs/schedule/agency).
 
 ## Como funciona
 
+O resultado depende da severidade definida na configuração da regra: obrigatório (`error`) reprova; recomendado (`warning`) passa com aviso; informativo (`info`) passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Nos casos sem severidade explícita abaixo, a indicação de reprovação pressupõe a configuração obrigatória.
+
 O valor tem de ser reconhecido como um endereço de e-mail. A regra não confirma que a caixa de correio existe e não consulta uma lista de endereços permitidos.
 
 A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O texto é reconhecido como um endereço de e-mail? | ✅ Passa | ❌ Reporta o problema: formato inválido |
+| 1 | O texto é reconhecido como um endereço de e-mail? | ✅ Passa | ❌ Reprova: formato inválido |
 
 Os espaços no início e no fim são ignorados. Um valor vazio não é aceite quando esta regra é executada. Também é aceite um nome de apresentação junto do endereço, como `Apoio <apoio@operador.pt>`. Os exemplos pressupõem que a configuração da regra permite reportar problemas e que as condições para a sua execução estão cumpridas.
 
@@ -34,8 +36,8 @@ Os espaços no início e no fim são ignorados. Um valor vazio não é aceite qu
 | Valor | Resultado | Porquê |
 |---|---|---|
 | `apoio@operador.pt` | ✅ Passa | Endereço reconhecido |
-| `apoio-operador.pt` | ❌ Problema | Falta a `@` |
-| `apoio@` | ❌ Problema | Falta o domínio |
+| `apoio-operador.pt` | ❌ Reprova | Falta a `@` |
+| `apoio@` | ❌ Reprova | Falta o domínio |
 
 ## Como corrigir
 

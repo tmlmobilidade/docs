@@ -19,13 +19,15 @@ Mais informação em [agency.txt](/reference/gtfs/schedule/agency).
 
 ## Como funciona
 
+O resultado depende da severidade definida na configuração da regra: obrigatório (`error`) reprova; recomendado (`warning`) passa com aviso; informativo (`info`) passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Nos casos sem severidade explícita abaixo, a indicação de reprovação pressupõe a configuração obrigatória.
+
 O valor tem de ser reconhecido como um fuso horário pelo ambiente de execução. A regra não compara os fusos dos vários operadores e aceita um valor vazio como tempo universal coordenado.
 
 A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O valor é reconhecido como um fuso horário? | ✅ Passa | ❌ Reporta o problema: fuso horário inválido |
+| 1 | O valor é reconhecido como um fuso horário? | ✅ Passa | ❌ Reprova: fuso horário inválido |
 
 Os espaços não são removidos. A regra de preenchimento verifica separadamente a ausência do campo. A disponibilidade de alguns nomes depende dos dados de fusos horários do ambiente de execução. Os exemplos pressupõem que a configuração da regra permite reportar problemas e que as condições para a sua execução estão cumpridas.
 
@@ -35,7 +37,7 @@ Os espaços não são removidos. A regra de preenchimento verifica separadamente
 |---|---|---|
 | `Europe/Lisbon` | ✅ Passa | Fuso reconhecido |
 | Vazio | ✅ Passa | Interpretado como tempo universal coordenado |
-| `Not/A_Timezone` | ❌ Problema | Fuso desconhecido |
+| `Not/A_Timezone` | ❌ Reprova | Fuso desconhecido |
 
 ## Como corrigir
 

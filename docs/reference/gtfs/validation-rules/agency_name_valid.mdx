@@ -19,6 +19,8 @@ Mais informação em [agency.txt](/reference/gtfs/schedule/agency).
 
 ## Como funciona
 
+O resultado depende da severidade definida na configuração da regra: obrigatório (`error`) reprova; recomendado (`warning`) passa com aviso; informativo (`info`) passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Nos casos sem severidade explícita abaixo, a indicação de reprovação pressupõe a configuração obrigatória.
+
 Quando existe uma lista de valores permitidos, o valor tem de constar dessa lista. A regra não confirma o preenchimento, o formato ou a existência real do operador.
 
 A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
@@ -27,7 +29,7 @@ A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, 
 |---|---|---|---|
 | 1 | A configuração da regra define uma lista de valores permitidos? | Segue para o passo 2 | ✅ Passa |
 | 2 | A lista aceita qualquer valor? | ✅ Passa | Segue para o passo 3 |
-| 3 | O valor consta da lista? | ✅ Passa | ❌ Reporta o problema: valor não permitido |
+| 3 | O valor consta da lista? | ✅ Passa | ❌ Reprova: valor não permitido |
 
 A comparação é exata: espaços, maiúsculas e minúsculas contam. Uma lista definida mas vazia rejeita todos os valores. Sem lista, até um campo vazio passa. Os exemplos pressupõem que a configuração da regra permite reportar problemas e que as condições para a sua execução estão cumpridas.
 
@@ -36,8 +38,8 @@ A comparação é exata: espaços, maiúsculas e minúsculas contam. Uma lista d
 | Valor | Resultado | Porquê |
 |---|---|---|
 | `Operador Exemplo` (lista contém este valor) | ✅ Passa | Valor permitido |
-| `Outro` (lista não contém este valor) | ❌ Problema | Valor fora da lista |
-| `Operador Exemplo` (lista definida mas vazia) | ❌ Problema | Nenhum valor permitido |
+| `Outro` (lista não contém este valor) | ❌ Reprova | Valor fora da lista |
+| `Operador Exemplo` (lista definida mas vazia) | ❌ Reprova | Nenhum valor permitido |
 
 ## Como corrigir
 

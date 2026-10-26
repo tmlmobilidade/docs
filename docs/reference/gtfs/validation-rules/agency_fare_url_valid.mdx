@@ -19,18 +19,20 @@ Mais informação em [agency.txt](/reference/gtfs/schedule/agency).
 
 ## Como funciona
 
+O resultado depende da severidade definida na configuração da regra: obrigatório (`error`) reprova; recomendado (`warning`) passa com aviso; informativo (`info`) passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Nos casos sem severidade explícita abaixo, a indicação de reprovação pressupõe a configuração obrigatória.
+
 O endereço tem de usar `http` ou `https` e indicar um servidor. A regra não confirma que a página existe nem consulta uma lista de endereços permitidos.
 
 A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O valor está vazio depois de retirar os espaços exteriores? | ❌ Reporta o problema: formato inválido | Segue para o passo 2 |
-| 2 | O texto contém espaços interiores ou carateres proibidos num endereço? | ❌ Reporta o problema: formato inválido | Segue para o passo 3 |
-| 3 | Cada sinal `%` é seguido de dois algarismos hexadecimais? | Segue para o passo 4 | ❌ Reporta o problema: formato inválido |
-| 4 | O texto pode ser interpretado como um endereço? | Segue para o passo 5 | ❌ Reporta o problema: formato inválido |
-| 5 | O endereço começa por `http://` ou `https://`? | Segue para o passo 6 | ❌ Reporta o problema: formato inválido |
-| 6 | O endereço indica um servidor? | ✅ Passa | ❌ Reporta o problema: formato inválido |
+| 1 | O valor está vazio depois de retirar os espaços exteriores? | ❌ Reprova: formato inválido | Segue para o passo 2 |
+| 2 | O texto contém espaços interiores ou carateres proibidos num endereço? | ❌ Reprova: formato inválido | Segue para o passo 3 |
+| 3 | Cada sinal `%` é seguido de dois algarismos hexadecimais? | Segue para o passo 4 | ❌ Reprova: formato inválido |
+| 4 | O texto pode ser interpretado como um endereço? | Segue para o passo 5 | ❌ Reprova: formato inválido |
+| 5 | O endereço começa por `http://` ou `https://`? | Segue para o passo 6 | ❌ Reprova: formato inválido |
+| 6 | O endereço indica um servidor? | ✅ Passa | ❌ Reprova: formato inválido |
 
 Os espaços no início e no fim são ignorados. Sem `%`, o passo 3 passa. Os algarismos hexadecimais são `0` a `9`, `a` a `f` e `A` a `F`. Os exemplos pressupõem que a configuração da regra permite reportar problemas e que as condições para a sua execução estão cumpridas.
 
@@ -39,10 +41,10 @@ Os espaços no início e no fim são ignorados. Sem `%`, o passo 3 passa. Os alg
 | Valor | Resultado | Porquê |
 |---|---|---|
 | `https://example.com/fares` | ✅ Passa | Endereço completo |
-| `example.com` | ❌ Problema | Falta o protocolo |
-| `https://` | ❌ Problema | Falta o servidor |
-| `https://example.com/a b` | ❌ Problema | Espaço interior |
-| `https://example.com/%ZZ` | ❌ Problema | Sequência após `%` inválida |
+| `example.com` | ❌ Reprova | Falta o protocolo |
+| `https://` | ❌ Reprova | Falta o servidor |
+| `https://example.com/a b` | ❌ Reprova | Espaço interior |
+| `https://example.com/%ZZ` | ❌ Reprova | Sequência após `%` inválida |
 
 ## Como corrigir
 

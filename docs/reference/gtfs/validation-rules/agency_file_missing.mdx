@@ -15,15 +15,17 @@ description: "Verifica se agency.txt está disponível quando a configuração d
 
 ## Como funciona
 
+O resultado depende da severidade definida na configuração da regra: obrigatório (`error`) reprova; recomendado (`warning`) passa com aviso; informativo (`info`) passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Nos casos sem severidade explícita abaixo, a indicação de reprovação pressupõe a configuração obrigatória.
+
 A regra verifica se o ficheiro de operadores está disponível após a importação. Não verifica o número de linhas, as colunas ou os valores do ficheiro.
 
 A regra avalia a presença de `agency.txt` no conjunto de dados, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | A configuração da regra recomenda o ficheiro e este está ausente? | ❌ Reporta o problema: ficheiro recomendado em falta | Segue para o passo 2 |
-| 2 | A configuração da regra assinala a ausência como informação e o ficheiro está ausente? | ❌ Reporta o problema: ficheiro em falta | Segue para o passo 3 |
-| 3 | O ficheiro é obrigatório e está ausente? | ❌ Reporta o problema: ficheiro obrigatório em falta | ✅ Passa sem reportar ausência |
+| 1 | A configuração da regra recomenda o ficheiro e este está ausente? | ✅ Passa com aviso | Segue para o passo 2 |
+| 2 | A configuração da regra assinala a ausência como informação e o ficheiro está ausente? | ✅ Passa com informação | Segue para o passo 3 |
+| 3 | O ficheiro é obrigatório e está ausente? | ❌ Reprova: ficheiro obrigatório em falta | ✅ Passa sem reportar ausência |
 
 Sem configuração fornecida, o ficheiro é obrigatório. Com configuração, aplica-se a definição desta regra. Um ficheiro importado sem linhas não é considerado ausente. A proibição de um ficheiro presente é reportada por outra regra.
 
@@ -32,9 +34,9 @@ Sem configuração fornecida, o ficheiro é obrigatório. Com configuração, ap
 | Valor | Resultado | Porquê |
 |---|---|---|
 | Ficheiro presente e importado | ✅ Passa | Ficheiro disponível |
-| Ficheiro ausente (obrigatório) | ❌ Problema | Falta o ficheiro exigido |
-| Ficheiro ausente (recomendado) | ❌ Problema | Falta o ficheiro recomendado |
-| Ficheiro ausente (informativo) | ❌ Problema | Ausência assinalada como informação |
+| Ficheiro ausente (obrigatório) | ❌ Reprova | Falta o ficheiro exigido |
+| Ficheiro ausente (recomendado) | ✅ Passa com aviso  | Falta o ficheiro recomendado |
+| Ficheiro ausente (informativo) | ✅ Passa com informação  | Ausência assinalada como informação |
 
 ## Como corrigir
 

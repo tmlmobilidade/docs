@@ -19,15 +19,17 @@ Mais informação em [agency.txt](/reference/gtfs/schedule/agency).
 
 ## Como funciona
 
-O telefone tem de conter pelo menos sete algarismos e apenas caracteres aceites pela regra. A regra não confirma que o número existe ou pertence ao operador, nem exclui todo o texto descritivo.
+O resultado depende da severidade definida na configuração da regra: obrigatório (`error`) reprova; recomendado (`warning`) passa com aviso; informativo (`info`) passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Nos casos sem severidade explícita abaixo, a indicação de reprovação pressupõe a configuração obrigatória.
+
+O telefone tem de conter pelo menos sete algarismos e apenas carateres aceites pela regra. A regra não confirma que o número existe ou pertence ao operador, nem exclui todo o texto descritivo.
 
 A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O valor está vazio depois de retirar os espaços exteriores? | ❌ Reporta o problema: formato inválido | Segue para o passo 2 |
-| 2 | Todos os carateres são aceites pela regra? | Segue para o passo 3 | ❌ Reporta o problema: formato inválido |
-| 3 | O valor contém pelo menos sete algarismos? | ✅ Passa | ❌ Reporta o problema: formato inválido |
+| 1 | O valor está vazio depois de retirar os espaços exteriores? | ❌ Reprova: formato inválido | Segue para o passo 2 |
+| 2 | Todos os carateres são aceites pela regra? | Segue para o passo 3 | ❌ Reprova: formato inválido |
+| 3 | O valor contém pelo menos sete algarismos? | ✅ Passa | ❌ Reprova: formato inválido |
 
 Os espaços no início e no fim são ignorados. São aceites letras latinas sem acentos, algarismos, espaços, hífen, `+`, `$` e `:`. Os parênteses não são aceites pela implementação atual. As letras não contam para o mínimo de sete algarismos. Os exemplos pressupõem que a configuração da regra permite reportar problemas e que as condições para a sua execução estão cumpridas.
 
@@ -36,9 +38,9 @@ Os espaços no início e no fim são ignorados. São aceites letras latinas sem 
 | Valor | Resultado | Porquê |
 |---|---|---|
 | `+351210000000` | ✅ Passa | Número com nove algarismos nacionais |
-| `123456` | ❌ Problema | Menos de sete algarismos |
-| `210000000@` | ❌ Problema | Símbolo não aceite |
-| `(21)0000000` | ❌ Problema | Parênteses não aceites |
+| `123456` | ❌ Reprova | Menos de sete algarismos |
+| `210000000@` | ❌ Reprova | Símbolo não aceite |
+| `(21)0000000` | ❌ Reprova | Parênteses não aceites |
 
 ## Como corrigir
 
