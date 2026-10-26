@@ -1,0 +1,50 @@
+---
+title: "Intervalo entre veículos"
+description: "Verifica se headway_secs contém um inteiro positivo em frequencies.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `frequencies_headway_secs_valid` |
+| Ficheiro | `frequencies.txt` |
+| Campo | `headway_secs` |
+| Tipo | Inteiro positivo |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** intervalo entre veículos, em segundos.
+
+Mais informação em [frequencies.txt](/reference/gtfs/schedule/frequencies).
+
+## Como funciona
+
+O resultado depende da severidade definida na configuração da regra: obrigatório (`error`) reprova; recomendado (`warning`) passa com aviso; informativo (`info`) passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Nos casos sem severidade explícita abaixo, a indicação de reprovação pressupõe a configuração obrigatória.
+
+Um valor preenchido tem de representar um número inteiro maior que zero. A regra não compara o intervalo com a duração da viagem ou com as horas de início e fim.
+
+A regra avalia cada linha do `frequencies.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | ✅ Passa | Segue para o passo 2 |
+| 2 | O valor pode ser lido como um número inteiro? | Segue para o passo 3 | ❌ Reprova: intervalo inválido |
+| 3 | O número é maior que zero? | ✅ Passa | ❌ Reprova: intervalo inválido |
+
+Os espaços não são removidos. Zeros à esquerda e o sinal positivo são aceites. Números demasiado grandes para serem lidos também são rejeitados. O preenchimento é verificado separadamente.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `600` | ✅ Passa | Intervalo de dez minutos |
+| `0600` | ✅ Passa | Zeros à esquerda aceites |
+| `0` | ❌ Reprova | Não é positivo |
+| `-1` | ❌ Reprova | Número negativo |
+| `1.5` | ❌ Reprova | Não é inteiro |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Intervalo inválido | O valor não é um inteiro positivo legível | Indicar em `headway_secs` de `frequencies.txt` o intervalo em segundos, como `600`, sem espaços nem casas decimais. |

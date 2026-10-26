@@ -1,0 +1,48 @@
+---
+title: "Ficheiro de frequências em falta"
+description: "Verifica a ausência de frequencies.txt quando a configuração da regra a assinala."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `frequencies_file_missing` |
+| Ficheiro | `frequencies.txt` |
+| Campo | Se aplica em todo o ficheiro |
+| Tipo | Ficheiro |
+| Severidade | Opcional |
+
+## Como funciona
+
+O resultado depende da severidade definida na configuração da regra: obrigatório (`error`) reprova; recomendado (`warning`) passa com aviso; informativo (`info`) passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Nos casos sem severidade explícita abaixo, a indicação de reprovação pressupõe a configuração obrigatória.
+
+A regra assinala a ausência do ficheiro quando a configuração da regra a exige, recomenda ou regista como informação. Não verifica se o ficheiro tem linhas nem se o conteúdo está correto.
+
+A regra avalia a presença de `frequencies.txt` no conjunto de dados, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O ficheiro está disponível nos dados carregados? | ✅ Passa | Segue para o passo 2 |
+| 2 | A configuração da regra recomenda o ficheiro? | ✅ Passa com aviso | Segue para o passo 3 |
+| 3 | A configuração da regra assinala a ausência como informação? | ✅ Passa com informação | Segue para o passo 4 |
+| 4 | A configuração da regra exige o ficheiro? | ❌ Reprova: ficheiro obrigatório em falta | ✅ Passa |
+
+Sem configuração, este ficheiro não é obrigatório para esta verificação. Uma tabela carregada sem linhas conta como presente. A presença de um ficheiro proibido é tratada por outra regra.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| Ficheiro presente | ✅ Passa | Disponível nos dados carregados |
+| Ficheiro ausente (configuração exige) | ❌ Reprova | Ficheiro obrigatório em falta |
+| Ficheiro ausente (configuração recomenda) | ✅ Passa com aviso  | Ficheiro recomendado em falta |
+| Ficheiro ausente (configuração informativa) | ✅ Passa com informação  | Ausência assinalada |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Ficheiro obrigatório em falta | A configuração exige o ficheiro | Incluir `frequencies.txt` no conjunto de dados ou pedir a revisão da configuração da regra. |
+| Ficheiro recomendado em falta | A configuração recomenda o ficheiro | Incluir `frequencies.txt` no conjunto de dados ou pedir a revisão da configuração da regra. |
+| Ficheiro em falta | A configuração assinala a ausência como informação | Incluir `frequencies.txt` no conjunto de dados ou pedir a revisão da configuração da regra. |
