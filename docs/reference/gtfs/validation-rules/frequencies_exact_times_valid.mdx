@@ -1,0 +1,51 @@
+---
+title: "Regularidade exata do intervalo"
+description: "Verifica os valores de exact_times e a lista permitida em frequencies.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `frequencies_exact_times_valid` |
+| Ficheiro | `frequencies.txt` |
+| Campo | `exact_times` |
+| Tipo | Enumeração |
+| Severidade | Opcional |
+
+**Descrição do campo:** indica se o intervalo entre veículos é exatamente regular, sem variações. O valor `0` ou vazio corresponde a viagens por frequência; `1` corresponde a viagens com horários e intervalos exatos. Para `1`, a hora de fim deve ser posterior à última partida pretendida e anterior a essa partida acrescida do intervalo.
+
+Mais informação em [frequencies.txt](/reference/gtfs/schedule/frequencies).
+
+## Como funciona
+
+Um valor preenchido tem de representar `0` ou `1` e respeitar a lista permitida, quando definida. A regra não confirma a regularidade das partidas nem compara a hora de fim com a última partida.
+
+A regra avalia cada linha do `frequencies.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | ✅ Passa | Segue para o passo 2 |
+| 2 | O valor pode ser lido como um inteiro igual a `0` ou `1`? | Segue para o passo 3 | ❌ Problema: valor inválido |
+| 3 | A configuração da regra define uma lista de valores permitidos? | Segue para o passo 4 | ✅ Passa |
+| 4 | A lista aceita qualquer valor? | ✅ Passa | Segue para o passo 5 |
+| 5 | O número, escrito como `0` ou `1`, consta da lista? | ✅ Passa | ❌ Problema: valor não permitido |
+
+Os espaços não são removidos. A comparação com a lista usa o número normalizado: `01` e `+1` são comparados como `1`. Uma lista definida mas vazia rejeita qualquer valor preenchido. Um campo vazio passa mesmo com uma lista restritiva. A opção que aceita qualquer valor não permite números diferentes de `0` e `1`.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `1` (sem lista) | ✅ Passa | Valor reconhecido |
+| `01` (lista contém `1`) | ✅ Passa | Comparado como `1` |
+| `2` | ❌ Problema | Valor fora de `0` e `1` |
+| `1.5` | ❌ Problema | Não é inteiro |
+| `01` (lista contém apenas `0`) | ❌ Problema | Número normalizado fora da lista |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor inválido | O valor não representa `0` ou `1` | Indicar `0` ou `1` em `exact_times` de `frequencies.txt`, de acordo com o tipo de serviço. |
+| Valor não permitido | O número não consta da lista permitida | Corrigir `exact_times` em `frequencies.txt` para um valor permitido ou pedir a revisão da configuração da regra. |

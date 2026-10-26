@@ -1,0 +1,48 @@
+---
+title: "Preenchimento — hora de fim"
+description: "Verifica o preenchimento de end_time em frequencies.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `frequencies_end_time_field` |
+| Ficheiro | `frequencies.txt` |
+| Campo | `end_time` |
+| Tipo | Hora |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** hora a que o serviço muda para outro intervalo entre veículos ou termina, na primeira paragem da viagem.
+
+Mais informação em [frequencies.txt](/reference/gtfs/schedule/frequencies).
+
+## Como funciona
+
+A regra verifica se o campo tem algum texto, quando a configuração da regra assinala a sua ausência. Não verifica o formato, o conteúdo ou a existência da viagem.
+
+A regra avalia cada linha do `frequencies.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Segue para o passo 2 | ✅ Passa |
+| 2 | A configuração da regra ignora esta verificação? | ✅ Passa | Reporta o problema de campo obrigatório, recomendado ou informativo em falta |
+
+Uma coluna ausente é tratada como um campo vazio. Os espaços não são removidos: um valor só com espaços conta como preenchido. A configuração de campo proibido também assinala a ausência, com a mensagem informativa; não rejeita valores preenchidos.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `09:00:00` | ✅ Passa | Campo preenchido |
+| Vazio (configuração exige o campo) | ❌ Problema | Campo obrigatório em falta |
+| Vazio (configuração recomenda o campo) | ❌ Problema | Campo recomendado em falta |
+| Vazio (configuração informativa) | ❌ Problema | Ausência assinalada |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo obrigatório em falta | A configuração da regra exige o campo | Preencher `end_time` em `frequencies.txt` com o valor correspondente à viagem. |
+| Campo recomendado em falta | A configuração da regra recomenda o campo | Preencher `end_time` em `frequencies.txt` com o valor correspondente à viagem. |
+| Campo informativo em falta | A configuração da regra assinala a ausência como informação ou define o campo como proibido | Preencher `end_time` em `frequencies.txt` com o valor correspondente à viagem. |

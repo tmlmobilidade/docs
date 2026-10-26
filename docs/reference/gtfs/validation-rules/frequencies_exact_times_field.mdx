@@ -1,0 +1,48 @@
+---
+title: "Preenchimento — regularidade exata do intervalo"
+description: "Verifica o preenchimento de exact_times em frequencies.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `frequencies_exact_times_field` |
+| Ficheiro | `frequencies.txt` |
+| Campo | `exact_times` |
+| Tipo | Enumeração |
+| Severidade | Opcional |
+
+**Descrição do campo:** indica se o intervalo entre veículos é exatamente regular, sem variações. O valor `0` ou vazio corresponde a viagens por frequência; `1` corresponde a viagens com horários e intervalos exatos. Para `1`, a hora de fim deve ser posterior à última partida pretendida e anterior a essa partida acrescida do intervalo.
+
+Mais informação em [frequencies.txt](/reference/gtfs/schedule/frequencies).
+
+## Como funciona
+
+A regra verifica se o campo tem algum texto, quando a configuração da regra assinala a sua ausência. Não verifica o formato, o conteúdo ou a existência da viagem.
+
+A regra avalia cada linha do `frequencies.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Segue para o passo 2 | ✅ Passa |
+| 2 | A configuração da regra ignora esta verificação? | ✅ Passa | Reporta o problema de campo obrigatório, recomendado ou informativo em falta |
+
+Uma coluna ausente é tratada como um campo vazio. Os espaços não são removidos: um valor só com espaços conta como preenchido. A configuração de campo proibido também assinala a ausência, com a mensagem informativa; não rejeita valores preenchidos.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `1` | ✅ Passa | Campo preenchido |
+| Vazio (configuração exige o campo) | ❌ Problema | Campo obrigatório em falta |
+| Vazio (configuração recomenda o campo) | ❌ Problema | Campo recomendado em falta |
+| Vazio (configuração informativa) | ❌ Problema | Ausência assinalada |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo obrigatório em falta | A configuração da regra exige o campo | Preencher `exact_times` em `frequencies.txt` com o valor correspondente à viagem. |
+| Campo recomendado em falta | A configuração da regra recomenda o campo | Preencher `exact_times` em `frequencies.txt` com o valor correspondente à viagem. |
+| Campo informativo em falta | A configuração da regra assinala a ausência como informação ou define o campo como proibido | Preencher `exact_times` em `frequencies.txt` com o valor correspondente à viagem. |
