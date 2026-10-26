@@ -1,0 +1,46 @@
+---
+title: "Identificador único do serviço"
+description: "Verifica se cada service_id aparece apenas uma vez em calendar.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `calendar_service_id_unique` |
+| Ficheiro | `calendar.txt` |
+| Campo | `service_id` |
+| Tipo | Identificador único |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** identifica um conjunto de datas em que existe serviço para uma ou mais linhas de transporte.
+
+Mais informação em [calendar.txt](/reference/gtfs/schedule/calendar).
+
+## Como funciona
+
+O resultado depende da severidade definida na configuração da regra: obrigatório (`error`) reprova; recomendado (`warning`) passa com aviso; informativo (`info`) passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Nos casos sem severidade explícita abaixo, a indicação de reprovação pressupõe a configuração obrigatória.
+
+Cada identificador tem de aparecer numa única linha de `calendar.txt`. A regra não verifica o preenchimento nem compara identificadores com outros ficheiros.
+
+A regra avalia cada linha do `calendar.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O mesmo identificador aparece em mais de uma linha? | ❌ Reprova: identificador repetido | ✅ Passa |
+
+A comparação conserva espaços, maiúsculas e minúsculas. Dois valores vazios também contam como repetidos, quando esta regra é executada. Os exemplos pressupõem que a regra é executada e que a configuração da regra permite reportar problemas.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `S1`, `S2` (duas linhas) | ✅ Passa | Identificadores distintos |
+| `S1`, `S1` (duas linhas) | ❌ Reprova | Identificador repetido |
+| Vazio, vazio (duas linhas) | ❌ Reprova | Valor vazio repetido |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Identificador repetido | Várias linhas usam o mesmo identificador | Atribuir um `service_id` distinto a cada serviço em `calendar.txt` ou eliminar linhas repetidas. Atualizar as referências aos identificadores alterados. |

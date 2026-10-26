@@ -1,0 +1,53 @@
+---
+title: "Verificação anterior — data final"
+description: "Verifica a presença, a proibição de preenchimento e o formato da data na verificação anterior."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `calendar_end_date_valid_yyyymmdd` |
+| Ficheiro | `calendar.txt` |
+| Campo | `end_date` |
+| Tipo | Data |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** último dia de serviço do intervalo. Este dia está incluído no intervalo.
+
+Mais informação em [calendar.txt](/reference/gtfs/schedule/calendar).
+
+## Como funciona
+
+O resultado depende da severidade definida na configuração da regra: obrigatório (`error`) reprova; recomendado (`warning`) passa com aviso; informativo (`info`) passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Nos casos sem severidade explícita abaixo, a indicação de reprovação pressupõe a configuração obrigatória.
+
+Quando chamada, a verificação avalia o preenchimento e o formato de cada data selecionada. Não compara a ordem entre a data inicial e a data final.
+
+A regra avalia cada linha do `calendar.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo selecionado está vazio? | Segue para o passo 2 | Segue para o passo 3 |
+| 2 | A configuração da regra ignora a verificação ou proíbe o campo? | ✅ Passa sem reportar a ausência | Reporta o problema de data obrigatória ou recomendada em falta e termina |
+| 3 | A configuração da regra proíbe o preenchimento? | ❌ Reprova e termina | Segue para o passo 4 |
+| 4 | O valor representa uma data existente no formato `AAAAMMDD`? | ✅ Passa | ❌ Reprova: data inválida |
+
+Esta verificação pertence a uma versão anterior e não é executada pelo fluxo atual de validação. Os passos abaixo descrevem o comportamento ainda existente quando a verificação é chamada. Os espaços não são removidos. A configuração informativa usa a mensagem de campo recomendado.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `20261016` | ✅ Passa | Data válida |
+| Vazio (data exigida) | ❌ Reprova | Data obrigatória em falta |
+| `20260229` | ❌ Reprova | Dia inexistente |
+| `20261016` (preenchimento proibido) | ❌ Reprova | Valor proibido pela configuração |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo obrigatório em falta | A configuração da regra exige a data | Preencher `end_date` em `calendar.txt`. |
+| Campo recomendado em falta | A configuração da regra recomenda a data | Preencher `end_date` em `calendar.txt`. |
+| Campo preenchido quando proibido | A configuração da regra proíbe o preenchimento | Remover o valor de `end_date` em `calendar.txt`. |
+| Data inválida | O texto tem formato incorreto ou indica uma data inexistente | Corrigir `end_date` em `calendar.txt` para uma data existente no formato `AAAAMMDD`. |

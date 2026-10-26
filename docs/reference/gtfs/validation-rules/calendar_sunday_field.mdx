@@ -1,0 +1,50 @@
+---
+title: "Preenchimento — serviço — domingo"
+description: "Verifica o preenchimento de sunday em calendar.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `calendar_sunday_field` |
+| Ficheiro | `calendar.txt` |
+| Campo | `sunday` |
+| Tipo | Booleano |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** indica se existe serviço ao domingo.
+
+Mais informação em [calendar.txt](/reference/gtfs/schedule/calendar).
+
+## Como funciona
+
+O resultado depende da severidade definida na configuração da regra: obrigatório (`error`) reprova; recomendado (`warning`) passa com aviso; informativo (`info`) passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Nos casos sem severidade explícita abaixo, a indicação de reprovação pressupõe a configuração obrigatória.
+
+A regra verifica se o campo tem algum texto, quando a configuração da regra assinala a sua ausência. Não verifica o formato, a unicidade ou a coerência com outros campos.
+
+A regra avalia cada linha do `calendar.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Segue para o passo 2 | ✅ Passa |
+| 2 | A configuração da regra ignora esta verificação ou marca o campo como proibido? | ✅ Passa sem reportar a ausência | Obrigatório: ❌ Reprova; recomendado: ✅ Passa com aviso; informativo: ✅ Passa com informação |
+
+Uma coluna ausente é tratada como um campo vazio. Os espaços não são removidos: um valor só com espaços conta como preenchido. A indicação de campo proibido não rejeita valores preenchidos nesta regra.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `1` | ✅ Passa | Campo preenchido |
+| Vazio (configuração exige o campo) | ❌ Reprova | Campo obrigatório em falta |
+| Coluna ausente (configuração recomenda o campo) | ✅ Passa com aviso  | Campo recomendado em falta |
+| Vazio (configuração informativa) | ✅ Passa com informação  | Ausência assinalada como informação |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo obrigatório em falta | A configuração da regra exige o campo | Preencher `sunday` em `calendar.txt` com o valor correspondente ao serviço. |
+| Campo recomendado em falta | A configuração da regra recomenda o campo | Preencher `sunday` em `calendar.txt` com o valor correspondente ao serviço. |
+| Campo informativo em falta | A configuração da regra assinala a ausência como informação | Preencher `sunday` em `calendar.txt` com o valor correspondente ao serviço. |

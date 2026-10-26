@@ -1,0 +1,53 @@
+---
+title: "Verificação anterior do identificador do serviço"
+description: "Verifica o preenchimento e a unicidade de service_id na verificação anterior."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `calendar_service_id_unique_non_empty` |
+| Ficheiro | `calendar.txt` |
+| Campo | `service_id` |
+| Tipo | Identificador único |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** identifica um conjunto de datas em que existe serviço para uma ou mais linhas de transporte.
+
+Mais informação em [calendar.txt](/reference/gtfs/schedule/calendar).
+
+## Como funciona
+
+O resultado depende da severidade definida na configuração da regra: obrigatório (`error`) reprova; recomendado (`warning`) passa com aviso; informativo (`info`) passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Nos casos sem severidade explícita abaixo, a indicação de reprovação pressupõe a configuração obrigatória.
+
+Quando chamada, a regra verifica a presença do identificador, a proibição de preenchimento e os valores repetidos em `calendar.txt`. Não compara o identificador com outros ficheiros.
+
+A regra avalia cada linha do `calendar.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo está vazio? | Segue para o passo 2 | Segue para o passo 3 |
+| 2 | A configuração da regra ignora a verificação ou proíbe o campo? | ✅ Passa sem reportar a ausência | Reporta o problema de campo obrigatório ou recomendado em falta e termina |
+| 3 | A configuração da regra proíbe o preenchimento? | ❌ Reprova e termina | Segue para o passo 4 |
+| 4 | O identificador aparece em mais de uma linha de `calendar.txt`? | ❌ Reprova: identificador repetido | ✅ Passa |
+
+Esta verificação pertence a uma versão anterior e não é executada pelo fluxo atual de validação. Os passos abaixo descrevem o comportamento ainda existente quando a verificação é chamada. A comparação conserva espaços, maiúsculas e minúsculas.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `001` (uma ocorrência) | ✅ Passa | Identificador único |
+| Vazio (campo exigido) | ❌ Reprova | Identificador em falta |
+| `001` (duas ocorrências) | ❌ Reprova | Identificador repetido |
+| `001` (preenchimento proibido) | ❌ Reprova | Valor proibido pela configuração |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo obrigatório em falta | A configuração da regra exige o campo | Preencher `service_id` em `calendar.txt` com o identificador do serviço. |
+| Campo recomendado em falta | A configuração da regra recomenda o campo | Preencher `service_id` em `calendar.txt` com o identificador do serviço. |
+| Campo preenchido quando proibido | A configuração da regra proíbe o preenchimento | Remover o valor de `service_id` em `calendar.txt`. |
+| Identificador repetido | Várias linhas usam o mesmo identificador | Corrigir os valores repetidos de `service_id` em `calendar.txt` e atualizar as referências aos identificadores alterados. |

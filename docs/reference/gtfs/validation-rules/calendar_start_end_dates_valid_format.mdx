@@ -1,0 +1,56 @@
+---
+title: "Formato das datas do serviço"
+description: "Verifica se start_date e end_date contêm datas válidas no formato AAAAMMDD."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `calendar_start_end_dates_valid_format` |
+| Ficheiro | `calendar.txt` |
+| Campos | `start_date`, `end_date` |
+| Tipo | Data |
+| Severidade | Obrigatório |
+
+**Descrição dos campos:**
+
+- `start_date`: primeiro dia de serviço do intervalo.
+- `end_date`: último dia de serviço do intervalo. Este dia está incluído no intervalo.
+
+Mais informação em [calendar.txt](/reference/gtfs/schedule/calendar).
+
+## Como funciona
+
+O resultado depende da severidade definida na configuração da regra: obrigatório (`error`) reprova; recomendado (`warning`) passa com aviso; informativo (`info`) passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Nos casos sem severidade explícita abaixo, a indicação de reprovação pressupõe a configuração obrigatória.
+
+As duas datas têm de existir e respeitar o formato `AAAAMMDD`. A regra não verifica a ordem entre a data inicial e a data final.
+
+A regra avalia cada linha do `calendar.txt`, seguindo os passos abaixo por ordem. Verifica as duas datas, mesmo quando a primeira origina um problema.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra ignora esta verificação? | Termina sem reportar problemas | Segue para o passo 2 |
+| 2 | `start_date` representa uma data válida no formato `AAAAMMDD`? | Segue para o passo 3 | Reporta o problema e segue para o passo 3 |
+| 3 | `end_date` representa uma data válida no formato `AAAAMMDD`? | Termina; passa se não houver problemas anteriores | Reporta o problema e termina |
+
+Os espaços não são removidos. Cada data tem de ter oito algarismos e um ano, mês e dia válidos. A regra considera os anos bissextos. Os exemplos pressupõem que a regra é executada e que a configuração da regra permite reportar problemas.
+
+## Como se relacionam
+
+`start_date` indica o início do intervalo e `end_date` indica o fim. Cada campo é verificado separadamente; a mesma linha pode originar dois problemas.
+
+## Exemplos
+
+| `start_date` | `end_date` | Resultado | Porquê |
+|---|---|---|---|
+| `20260101` | `20261231` | ✅ Passa | Duas datas válidas |
+| `20260229` | `20261231` | ❌ Reprova | Data inicial inexistente |
+| `20260101` | `20261301` | ❌ Reprova | Mês final inexistente |
+| `2026-01-01` | `2026-12-31` | ❌ Reprova | Dois formatos inválidos |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Data inválida | Uma ou ambas as datas têm formato incorreto ou não existem | Corrigir `start_date` ou `end_date` em `calendar.txt` para uma data existente com oito algarismos, como `20260101`. |

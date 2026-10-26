@@ -1,0 +1,59 @@
+---
+title: "Leitura anterior dos dias da semana"
+description: "Verifica se os valores dos dias da semana podem ser interpretados como serviço disponível ou indisponível."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `calendar_values_parse` |
+| Ficheiro | `calendar.txt` |
+| Campos | `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday` |
+| Tipo | Booleano |
+| Severidade | Obrigatório |
+
+**Descrição dos campos:**
+
+- `monday`: indica se existe serviço à segunda-feira.
+- `tuesday`: indica se existe serviço à terça-feira.
+- `wednesday`: indica se existe serviço à quarta-feira.
+- `thursday`: indica se existe serviço à quinta-feira.
+- `friday`: indica se existe serviço à sexta-feira.
+- `saturday`: indica se existe serviço ao sábado.
+- `sunday`: indica se existe serviço ao domingo.
+
+Mais informação em [calendar.txt](/reference/gtfs/schedule/calendar).
+
+## Como funciona
+
+O resultado depende da severidade definida na configuração da regra: obrigatório (`error`) reprova; recomendado (`warning`) passa com aviso; informativo (`info`) passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Nos casos sem severidade explícita abaixo, a indicação de reprovação pressupõe a configuração obrigatória.
+
+Quando chamada, a verificação aceita valores que representem serviço disponível ou indisponível, incluindo algumas palavras. Não exige preenchimento nem limita os valores aos textos `0` e `1`.
+
+A regra avalia cada linha do `calendar.txt`. Aplica os passos abaixo a cada dia da semana e continua mesmo depois de encontrar um problema.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | O campo do dia da semana está vazio? | Aceita e passa ao dia seguinte | Segue para o passo 2 |
+| 2 | O valor é uma das representações aceites? | Aceita e passa ao dia seguinte | Reporta o problema e continua com o dia seguinte |
+
+Esta verificação pertence a uma versão anterior e não é executada pelo fluxo atual de validação. Os passos abaixo descrevem o comportamento ainda existente quando a verificação é chamada. São aceites `1`, `t`, `T`, `TRUE`, `true`, `True`, `0`, `f`, `F`, `FALSE`, `false` e `False`. Os espaços não são removidos. Uma coluna ausente é tratada como vazia.
+
+## Como se relacionam
+
+Cada campo representa um dia da semana do mesmo serviço. São avaliados pela ordem apresentada, de segunda-feira a domingo, sem comparar os valores entre si.
+
+## Exemplos
+
+| `monday` | `tuesday` | `wednesday` | `thursday` | `friday` | `saturday` | `sunday` | Resultado | Porquê |
+|---|---|---|---|---|---|---|---|---|
+| `1` | `1` | `1` | `1` | `1` | `0` | `0` | ✅ Passa | Valores reconhecidos |
+| `2` | `1` | `1` | `1` | `1` | `0` | `0` | ❌ Reprova | Segunda-feira com valor não reconhecido |
+| `1` | `1` | `1` | `3` | `1` | `0` | `0` | ❌ Reprova | Quinta-feira com valor não reconhecido |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor não reconhecido | Um dia da semana contém texto que não representa um valor aceite | Corrigir o campo indicado, entre `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday` e `sunday`, em `calendar.txt`. Usar `0` ou `1`. |
