@@ -1,6 +1,6 @@
 ---
-title: "Preenchimento — grupo de locais"
-description: "Verifica location_group_id em stop_times.txt."
+title: Proibição condicional do grupo de paragens
+description: Verifica se location_group_id está preenchido em simultâneo com stop_id ou location_id na mesma linha de stop_times.txt.
 ---
 
 ## Propriedades da regra
@@ -9,42 +9,51 @@ description: "Verifica location_group_id em stop_times.txt."
 |---|---|
 | Rule ID | `stop_times_location_group_id_forbidden` |
 | Ficheiro | `stop_times.txt` |
-| Campo | `location_group_id` |
-| Tipo | Referência |
-| Severidade | Condicional (proibido quando stop_id ou location_id estão definidos) |
+| Campos | `location_group_id`, `stop_id`, `location_id` |
+| Tipo | Identificadores de referência |
+| Severidade | Condicional (`location_group_id` é proibido quando `stop_id` ou `location_id` está preenchido) |
 
-**Descrição do campo:** identifica o grupo de locais onde pode ser solicitado embarque ou desembarque.
+**Descrição dos campos:**
+
+- `location_group_id`: identifica um grupo de paragens onde os passageiros podem solicitar entrada ou saída. O identificador refere-se a `location_groups.location_group_id`.
+- `stop_id`: identifica a paragem servida nesta linha da viagem.
+- `location_id`: identifica uma zona onde os passageiros podem solicitar entrada ou saída. O identificador refere-se a `id` em `locations.geojson`.
 
 Mais informação em [stop_times.txt](/reference/gtfs/schedule/stop_times).
 
 ## Como funciona
 
-A regra assinala a ausência de texto de acordo com a configuração da regra. Apesar do nome da regra, não proíbe valores preenchidos nem verifica conflitos com outros locais.
+Quando a regra está ativa, `location_group_id` só pode estar preenchido se `stop_id` e `location_id` estiverem vazios na mesma linha.
+A regra não exige que exista algum identificador preenchido nem confirma que os identificadores existem nos ficheiros de referência.
+Se `location_group_id` estiver vazio, esta regra não verifica conflitos entre os outros dois campos.
 
 A regra avalia cada linha do `stop_times.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O campo está vazio? | Segue para o passo 2 | ✅ Passa |
-| 2 | A configuração ignora a regra? | ✅ Passa | Obrigatório: ❌ Reprova; recomendado: ✅ Passa com aviso; informativo: ✅ Passa com informação |
+| 1 | O campo `location_group_id` está vazio ou não existe? | ✅ Passa | Segue para o passo 2 |
+| 2 | `stop_id` ou `location_id` está preenchido na mesma linha? | ❌ Reporta o problema | ✅ Passa |
 
-Os espaços não são removidos; só espaços contam como preenchimento. Uma coluna ausente conta como vazia. Valores preenchidos não são rejeitados pela configuração de campo proibido.
+Os espaços no início e no fim não são removidos. Um valor composto apenas por espaços conta como preenchido, tal como `0`.
+A configuração da regra determina a severidade do problema. Se a configuração da regra indicar que deve ser ignorada, não é reportado nenhum problema.
 
-O resultado depende da configuração da regra: obrigatório reprova; recomendado passa com aviso; informativo passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Os exemplos de reprovação pressupõem configuração obrigatória, salvo indicação contrária.
+## Como se relacionam
+
+`location_group_id`, `stop_id` e `location_id` representam formas diferentes de identificar o local de entrada ou saída.
+Quando `location_group_id` está preenchido, os outros dois campos têm de ficar vazios nessa linha de `stop_times.txt`.
+Os valores não precisam de ser iguais para existir um conflito. A regra não compara valores de linhas diferentes.
 
 ## Exemplos
 
-| Valor | Resultado | Porquê |
-|---|---|---|
-| `G1` | ✅ Passa | Campo preenchido |
-| Vazio (obrigatório) | ❌ Reprova | Campo exigido em falta |
-| Vazio (recomendado) | ✅ Passa com aviso | Ausência comunicada |
-| Vazio (informativo) | ✅ Passa com informação | Ausência comunicada |
+| `location_group_id` | `stop_id` | `location_id` | Resultado | Porquê |
+|---|---|---|---|---|
+| `L1` | Vazio | Vazio | ✅ Passa | Sem identificadores incompatíveis |
+| `L1` | `S1` | Vazio | ❌ Problema | Também existe `stop_id` |
+| `L1` | Vazio | `X` | ❌ Problema | Também existe `location_id` |
+| `L1` | `S1` | `X` | ❌ Problema | Os três campos estão preenchidos |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Campo obrigatório em falta | A configuração exige o campo | Preencher `location_group_id` em `stop_times.txt` com o valor correspondente ao serviço. |
-| Campo recomendado em falta | A configuração recomenda o campo | Preencher `location_group_id` em `stop_times.txt` com o valor correspondente ao serviço. |
-| Campo informativo em falta | A configuração assinala a ausência | Preencher `location_group_id` em `stop_times.txt` com o valor correspondente ao serviço. |
+| `location_group_id` preenchido quando é proibido | A mesma linha identifica simultaneamente locais de serviço incompatíveis | Remover `location_group_id` de `stop_times.txt` se o serviço usar `stop_id` ou `location_id`. Se o serviço usar `location_group_id`, limpar `stop_id` e `location_id` nessa linha. |
