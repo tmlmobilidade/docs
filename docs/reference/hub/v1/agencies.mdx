@@ -1,37 +1,61 @@
 ---
 title: Operadores
-description: Como identificar operadores de transporte e utilizar os seus dados operacionais.
+description: Identifica os operadores de uma organização e os seus serviços de dados abertos.
 ---
 
-O GO define um ID único para cada operador de transporte, que é utilizado em todas as outras estruturas de dados. Este endpoint devolve a informação pública de cada operador, assim como as funcionalidades que estão ativadas para cada um. Com esta informação é possível perceber quais são os operadores que estão incluídos na exportação combinada de GTFS ou que estão a utilizar o serviço de ETAs do GO.
+O GO define um ID único para cada operador de transporte, utilizado nas restantes estruturas de dados. O código `code` identifica o operador noutros sistemas, como o sistema de bilhética APEX.
 
-Os IDs de cada operador são acompanhados também com um código (agency\_code) que identifica cada operador noutros sistemas de informação, como por exemplo no sistema de bilhética APEX.
+## Estrutura de dados
 
-### Estrutura de dados
-
-No Hub, um operador é representado por um objeto JSON com as seguintes propriedades:
+O tipo `HubV1ApiAgency` contém as seguintes propriedades:
 
 | Propriedade                       |                                                        Tipo                                                       | Descrição                                                                                             |
-| --------------------------------- | :---------------------------------------------------------------------------------------------------------------: | ----------------------------------------------------------------------------------------------------- |
+| ---                                         | ---                         | ---                                                         |
 | `_id`                             |                                                       String                                                      | ID único do operador.                                                                                 |
-| `code`                            |                                                       String                                                      | Código do operador noutros sistemas de informação.                                                    |
-| `name`                            |                                                       String                                                      | Nome do operador.                                                                                     |
-| `website_url`                     |                                                       String                                                      | URL do website.                                                                                       |
-| `fare_url`                        |                                                       String                                                      | URL para informação de tarifas.                                                                       |
-| `email`                           |                                                       String                                                      | Email de contacto público.                                                                            |
-| `phone`                           |                                                       String                                                      | Contacto telefónico do operador.                                                                      |
-| `primary_language`                |             [LanguageTag](/reference/hub/typescript#tipos-comuns) (String)            | Idioma principal utilizado pelo operador.                                                             |
-| `timezone`                        | [TimezoneIdentified](/reference/hub/typescript#tipos-comuns) (String) | Fuso horário da operação.                                                                             |
-| `services`                        |                                                       Object                                                      | Serviços do GO Hub ativos para este operador.                                                         |
-| `services.eta_enabled`            |                                                      Boolean                                                      | Indica se estão a ser geradas estimativas de chegada em tempo real com base nas posições de veículos. |
-| `services.gtfs_enabled`           |                                                      Boolean                                                      | Indica se os planos deste operador estão a ser incluídos na exportação do GTFS global.                |
-| `services.positions_enabled`      |                                                      Boolean                                                      | Indica se estão a ser publicadas posições de veículos em tempo real para este operador.               |
-| `services.service_alerts_enabled` |                                                      Boolean                                                      | Indica se estão a ser publicados alertas de serviço para este operador.                               |
+| `code`                                      | String                      | Código do operador noutros sistemas, com até 20 caracteres. |
+| `primary_language`                          | LanguageTag (String)        | Idioma principal do operador.                               |
+| `timezone`                                  | TimezoneIdentified (String) | Fuso horário da operação.                                   |
+| `open_data`                                 | Object                      | Informação pública e serviços do operador.                  |
+| `open_data.details`                         | Object                      | Dados públicos de contacto.                                 |
+| `open_data.details.name`                    | String                      | Nome público do operador.                                   |
+| `open_data.details.website_url`             | String                      | URL do website.                                             |
+| `open_data.details.fare_url`                | String                      | URL de informação sobre tarifas.                            |
+| `open_data.details.email`                   | String                      | Email de contacto público.                                  |
+| `open_data.details.phone`                   | String                      | Contacto telefónico.                                        |
+| `open_data.services`                        | Object                      | Serviços de dados abertos do operador.                      |
+| `open_data.services.eta_enabled`            | Boolean                     | Geração de estimativas de chegada.                          |
+| `open_data.services.positions_enabled`      | Boolean                     | Publicação de posições de veículos.                         |
+| `open_data.services.service_alerts_enabled` | Boolean                     | Publicação de alertas de serviço.                           |
 
-### Endpoints disponíveis
+```typescript
+export const HubV1ApiAgencySchema = z.object({
+	_id: z.string(),
+	code: z.string().max(20),
+	open_data: z.object({
+	    details: z.object({
+		email: z.string().email(),
+		fare_url: z.string().url(),
+		name: z.string(),
+		phone: z.string(),
+		website_url: z.string().url(),
+	    }),
+	    services: z.object({
+		eta_enabled: z.boolean().default(false),
+		positions_enabled: z.boolean().default(false),
+		service_alerts_enabled: z.boolean().default(false),
+	    }),
+        }),
+	primary_language: LanguageTagSchema, // Exemplo: 'pt'
+	timezone: TimezoneIdentifiedSchema, // Exemplo: 'Europe/Lisbon'
+});
+```
 
-Base path: `https://go.tmlmobilidade.pt/hub/api`
+Os detalhes e os serviços estão dentro de `open_data`; `name`, contactos e `services` não são propriedades de topo. O tipo público atual não contém `gtfs_enabled`.
 
-| Path                                                              | Tipo             | Descrição                                            |
-| ----------------------------------------------------------------- | ---------------- | ---------------------------------------------------- |
-| [`/v1/agencies`](https://go.tmlmobilidade.pt/hub/api/v1/agencies) | `HubV1ApiAgency` | Todos os operadores de transporte disponíveis no GO. |
+## Endpoint disponível
+
+| Método | Path                           | Tipo de `data`     | Descrição                            |
+| ---    | ---                            | ---                | ---                                  |
+| GET    | [`/v1/:organizationId/agencies`](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/agencies) | `HubV1ApiAgency[]` | Operadores associados à organização. |
+
+*Nota: Obtém o&#x20;*`:organizationId`*&#x20;na [lista de organizações](/reference/hub/v1/organizations).&#x20;*

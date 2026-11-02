@@ -6,10 +6,10 @@ description: Acesso à informação normalizada da rede de transportes públicos
 O GTFS é uma forma standardizada de representar a informação da rede de transportes públicos. [Sabe mais aqui](/reference/gtfs).
 
 Um plano é a nomenclatura normalmente utilizada no setor dos transportes públicos para se referir
-a uma determinada versão do planemanto da rede. Ou seja, podemos referir-nos ao plano de um determinado mês ou ano,
+a uma determinada versão do planeamento da rede. Ou seja, podemos referir-nos ao plano de um determinado mês ou ano,
 que contém todos os horários, linhas, paragens, etc. para esse período. Este plano é normalmente um arquivo GTFS.
 
-No API dos planos é possível consultar todos os planos disponíveis, incluindo o histórico, e obter o ficheiro GTFS
+No API dos planos é possível consultar os planos publicados dos operadores de uma organização e obter o ficheiro GTFS
 correspondente. Cada plano tem um ID único, uma data de início e de fim, um operador associado e dois ficheiros GTFS
 — o original e o normalizado.
 
@@ -50,8 +50,8 @@ No Hub, um plano é representado por um objeto JSON com as seguintes propriedade
 | Propriedade                     |            Tipo            | Descrição                                                                                                                               |
 | ------------------------------- | :------------------------: | --------------------------------------------------------------------------------------------------------------------------------------- |
 | `_id`                           |           String           | ID único do plano.                                                                                                                      |
-| `active_from`                   |  OperationalDate (Integer) | Data de início do plano (inclusive).                                                                                                    |
-| `active_until`                  |  OperationalDate (Integer) | Data de fim do plano (inclusive).                                                                                                       |
+| `active_from`                   |  OperationalDateInt (Integer) | Data de início do plano (inclusive), no formato `AAAAMMDD`.                                                                                                    |
+| `active_until`                  |  OperationalDateInt (Integer) | Data de fim do plano (inclusive), no formato `AAAAMMDD`.                                                                                                       |
 | `agency_code`                   |           String           | Código do operador associado ao plano.                                                                                                  |
 | `agency_id`                     |           String           | ID único do operador associado ao plano.                                                                                                |
 | `agency_name`                   |           String           | Nome do operador associado ao plano.                                                                                                    |
@@ -64,12 +64,11 @@ No Hub, um plano é representado por um objeto JSON com as seguintes propriedade
 | `created_at`                    | UnixMilliseconds (Integer) | Data de publicação do plano.                                                                                                            |
 | `updated_at`                    | UnixMilliseconds (Integer) | Data da última atualização do plano.                                                                                                    |
 
-### Endpoints disponíveis
+## Endpoints disponíveis
 
-Base path: `https://go.tmlmobilidade.pt/hub/api`
+| Método | Path                             | Tipo de resposta           | Descrição                                                  |
+| ---    | ---                              | ---                        | ---                                                        |
+| GET    | [`/v1/:organizationId/plans`](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/plans)      | `HubV1ApiPlan[]` em `data` | Planos publicados dos operadores associados à organização. |
+| GET    | [`/v1/:organizationId/plans/gtfs`](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/plans/gtfs) | Download ZIP               | Último GTFS unificado da organização.                      |
 
-| Path                                                                        | Tipo           | Descrição                                                                                                                                                         |
-| --------------------------------------------------------------------------- | -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`/v1/plans`](https://go.tmlmobilidade.pt/hub/api/v1/plans)                 | `HubV1ApiPlan` | Todos os planos de operação publicados no GO.                                                                                                                     |
-| [`/v1/plans/gtfs`](https://go.tmlmobilidade.pt/hub/api/v1/plans/gtfs)       | File Download  | Ficheiro GTFS unificado de todos os planos de operação ativos, para todos os operadores de transporte. Nem todos os planos são incluídos nesta geração unificada. |
-| [`/v1/plans/gtfs/cm`](https://go.tmlmobilidade.pt/hub/api/v1/plans/gtfs/cm) | File Download  | Ficheiro GTFS unificado de todos os planos de operação ativos, para os operadores da Carris Metropolitana.                                                        |
+Obtém `:organizationId` na [lista de organizações](/reference/hub/v1/organizations). A lista devolve HTTP `200` no [formato comum do Hub](/reference/hub/responses), com cache pública de 5 minutos. Se não existirem planos publicados, `data` é `[]`.

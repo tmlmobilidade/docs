@@ -3,9 +3,9 @@ title: Rede de Transportes
 description: Explora como utilizar o API para construir aplicações de planeamento de viagens.
 ---
 
-Nestes endpoints são disponibilizados os dados de oferta de transporte, em JSON, para todos os operadores que estão incluídos na exportação do GTFS global.
+Nestes endpoints são disponibilizados os dados de oferta de transporte, em JSON, para os operadores associados à organização selecionada. Consulta a [lista de organizações](/reference/hub/v1/organizations) para obter `:organizationId`.
 
-O sistema que converte os dados para JSON tem por base o mesmo GTFS que é disponibilizado ao público, incluindo às aplicações de planeamento de viagens como o Transit, Citymapper, Moovit, Google Maps, Apple Maps, entre outros. É possível construir aplicações de planeamento sem ser necessário investimento em servidores ou código complexo para o processamento de ficheiros GTFS.
+O sistema que converte os dados para JSON tem por base os dados GTFS que são disponibilizados ao público, incluindo às aplicações de planeamento de viagens como o Transit, Citymapper, Moovit, Google Maps, Apple Maps, entre outros. É possível construir aplicações de planeamento sem ser necessário investimento em servidores ou código complexo para o processamento de ficheiros GTFS.
 
 Estes endpoints são utilizados nos suportes de informação da TML, como o site da Carris Metropolitana, a app navegante®, os painéis nas paragens (PIPs), MUPIs, etc. Fazemos questão de utilizar a mesma base para garantir que a informação é consistente e de qualidade independentemente de onde os passageiros a prefiram consultar.
 
@@ -15,7 +15,7 @@ A utilização da informação disponibilizada nestes endpoints é livre e não 
 
 As redes de transporte público no mundo estão organizadas, na sua maioria, na lógica de linhas, rotas e percursos. Uma linha pode ter inúmeras rotas (também chamadas de base e variantes) e uma rota pode ter, no máximo, dois percursos (o de ida e o de volta).
 
-A linha define a intenção do serviço, enquanto que cada percuso define o caminho exato que será percorrido pelo veículo, e a sequência de paragens que serão servidas em determinados horários.
+A linha define a intenção do serviço, enquanto que cada percurso define o caminho exato que será percorrido pelo veículo, e a sequência de paragens que serão servidas em determinados horários.
 
 Um exemplo é a linha Amarela do Metro de Lisboa. Esta linha tem duas rotas e cada rota tem dois sentidos:
 
@@ -37,7 +37,7 @@ Por este motivo, decidimos formalizar esta hierarquia no API para que fique tota
 
 ### Linhas
 
-No Hub, uma linha é representada por um objeto JSON com as seguintes propriedades:
+O tipo `HubV1ApiLine` representa uma linha. No Hub, uma linha é representada por um objeto JSON com as seguintes propriedades:
 
 | Propriedade          |        Tipo       | Descrição                                                                                                       |
 | -------------------- | :---------------: | --------------------------------------------------------------------------------------------------------------- |
@@ -63,7 +63,7 @@ No Hub, uma linha é representada por um objeto JSON com as seguintes propriedad
 
 ### Rotas
 
-No Hub, uma rota é descendente de uma linha e é representada por um objeto JSON com as seguintes propriedades:
+O tipo `HubV1ApiRoute` representa uma rota. No Hub, uma rota é descendente de uma linha e é representada por um objeto JSON com as seguintes propriedades:
 
 | Propriedade          |        Tipo       | Descrição                                                                                              |
 | -------------------- | :---------------: | ------------------------------------------------------------------------------------------------------ |
@@ -91,18 +91,18 @@ No Hub, uma rota é descendente de uma linha e é representada por um objeto JSO
 
 No Hub, um percurso (ou `pattern`) é descendente de uma rota e contém a informação relevante sobre o serviço de transporte disponibilizado.
 Para ser possível apresentar alterações antecipadas, e manter o serviço atual, o endpoint dos patterns retorna uma lista. Enquanto que o ID do percurso é único,
-podem existir várias versões do mesmo percurso, identificadas pela propriedade `version` e com uma determinada validade temporal.
+podem existir várias versões do mesmo percurso, identificadas pela propriedade `version_id` e com uma determinada validade temporal.
 
 #### Pattern Version
 
-Um percurso é representado por um objeto JSON com as seguintes propriedades:
+Um percurso (`HubV1ApiPattern`) é representado por um objeto JSON com as seguintes propriedades:
 
 | Propriedade          |                    Tipo                   | Descrição                                                                                                                                                                                                                                                                                         |
 | -------------------- | :---------------------------------------: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `_id`                |                   String                  | ID único do percurso.                                                                                                                                                                                                                                                                             |
 | `agency_id`          |                   String                  | ID único do operador ao qual o percurso pertence.                                                                                                                                                                                                                                                 |
 | `version_id`         |                   String                  | Hash do conteúdo do percurso que identifica a sua versão, válida num determinado período temporal.                                                                                                                                                                                                |
-| `valid_on`           | Array\<OperationalDate> (Array\<Integer>) | Datas de validade da versão do percurso.                                                                                                                                                                                                                                                          |
+| `valid_on`           | Array\<OperationalDateInt> (Array\<Integer>) | Datas de validade da versão do percurso, no formato `AAAAMMDD`.                                                                                                                                                                                                                                   |
 | `color`              |             HexColor (String)             | Cor do percurso, em formato hexadecimal, com o prefixo `#`.                                                                                                                                                                                                                                       |
 | `text_color`         |             HexColor (String)             | Cor do texto do percurso, em formato hexadecimal, com o prefixo `#`.                                                                                                                                                                                                                              |
 | `short_name`         |                   String                  | Identificador principal do percurso para os passageiros.                                                                                                                                                                                                                                          |
@@ -114,8 +114,8 @@ Um percurso é representado por um objeto JSON com as seguintes propriedades:
 | `shape_id`           |                   String                  | ID do caminho do percurso                                                                                                                                                                                                                                                                         |
 | `shape_extension`    |        NonNegativeInteger (Integer)       | Extensão do percurso, em metros.                                                                                                                                                                                                                                                                  |
 | `shape_polyline`     |          EncodedPolyline (String)         | [Google Encoded Polyline](https://developers.google.com/maps/documentation/utilities/polylineutility) do caminho do percurso. Podes utilizar o nosso pacote [`@tmlmobilidade/go-utils-geo`](https://www.npmjs.com/package/@tmlmobilidade/go-utils-geo) para descodificar o conteúdo para GeoJSON. |
-| `path`               |   Array\<HubV1ApiPatternWaypointSchema>   | Sequência de paragens servidas por esta versão do percurso.                                                                                                                                                                                                                                       |
-| `trips`              |     Array\<HubV1ApiPatternTripSchema>     | Horários de passagem em todas as paragens desta versão do percurso.                                                                                                                                                                                                                               |
+| `path`               | Array\<HubV1ApiPatternWaypoint>              | Sequência de paragens servidas por esta versão do percurso.                                                                                                                                                                                                                                       |
+| `trips`              | Array\<HubV1ApiPatternTrip>                  | Horários de passagem em todas as paragens desta versão do percurso.                                                                                                                                                                                                                               |
 | `district_ids`       |               Array\<String>              | IDs de todos os distritos por onde o percurso passa (códigos DICOFRE).                                                                                                                                                                                                                            |
 | `district_names`     |               Array\<String>              | Nomes dos distritos por onde o percurso passa (CAOP).                                                                                                                                                                                                                                             |
 | `municipality_ids`   |               Array\<String>              | IDs de todos os municípios por onde o percurso passa.                                                                                                                                                                                                                                             |
@@ -135,7 +135,7 @@ Um `waypoint` é representado por um objeto JSON com as seguintes propriedades:
 | Propriedade      |             Tipo             | Descrição                                        |
 | ---------------- | :--------------------------: | ------------------------------------------------ |
 | `stop_id`        |            String            | ID da paragem servida.                           |
-| `stop_sequence`  |            String            | Índice de sequência da paragem no percurso.      |
+| `stop_sequence`  | NonNegativeInteger (Integer) | Índice de sequência da paragem no percurso.      |
 | `allow_pickup`   |            Boolean           | Indica se são permitidas entradas nesta paragem. |
 | `allow_drop_off` |            Boolean           | Indica se são permitidas saídas nesta paragem.   |
 | `distance`       | NonNegativeInteger (Integer) | Distância acumulada desde o início do percurso.  |
@@ -152,10 +152,10 @@ Uma `trip` é representada por um objeto JSON com as seguintes propriedades:
 | Propriedade   |                    Tipo                   | Descrição                                                                                        |
 | ------------- | :---------------------------------------: | ------------------------------------------------------------------------------------------------ |
 | `version_id`  |                   String                  | Hash do conteúdo da viagem que identifica a sua versão, válida num determinado período temporal. |
-| `valid_on`    | Array\<OperationalDate> (Array\<Integer>) | Datas em que esta viagem se irá realizar.                                                        |
+| `valid_on`    | Array\<OperationalDateInt> (Array\<Integer>) | Datas em que esta viagem se irá realizar, no formato `AAAAMMDD`.                                 |
 | `trip_ids`    |               Array\<String>              | IDs originais do GTFS de viagens iguais (mesmos horários e mesmo percurso, mas dias diferentes). |
 | `service_ids` |               Array\<String>              | IDs originais dos calendários do GTFS associados aos `trip_ids` desta viagem.                    |
-| `schedule`    |          Array\<ScheduledArrival>         | Horários de passagem em todas as paragens desta viagem.                                          |
+| `schedule`    | Array\<HubV1ApiScheduledArrival>             | Horários de passagem em todas as paragens desta viagem.                                          |
 
 #### Schedule Arrival
 
@@ -164,16 +164,62 @@ Uma `arrival` é representado por um objeto JSON com as seguintes propriedades:
 | Propriedade        |  Tipo  | Descrição                                                   |
 | ------------------ | :----: | ----------------------------------------------------------- |
 | `stop_id`          | String | ID da paragem servida.                                      |
-| `stop_sequence`    | String | Índice de sequência da paragem no percurso.                 |
+| `stop_sequence`    | Integer | Índice de sequência da paragem no percurso.                 |
 | `arrival_time`     | String | Horário de chegada à paragem no formato operacional (24h+). |
 | `arrival_time_24h` | String | Horário de chegada à paragem, em formato 24h.               |
 
+## Paragens
+
+O tipo `HubV1ApiStop` representa uma paragem física. As paragens partilhadas entre operadores são combinadas pelo `_id`, reunindo as referências aos operadores, linhas, rotas, percursos, IDs antigos e bandeiras sem duplicados.
+
+| Propriedade        |  Tipo  | Descrição                                                   |
+| ---                 | ---                      | ---                                                                             |
+| `_id`               | String                   | ID único da paragem.                                                            |
+| `name`              | String                   | Nome da paragem.                                                                |
+| `short_name`        | String                   | Nome abreviado.                                                                 |
+| `tts_name`          | String                   | Nome adaptado para leitores de ecrã.                                            |
+| `latitude`          | Number                   | Latitude da paragem.                                                            |
+| `longitude`         | Number                   | Longitude da paragem.                                                           |
+| `agency_ids`        | Array\<String>           | IDs dos operadores que servem a paragem.                                        |
+| `line_ids`          | Array\<String>           | IDs das linhas.                                                                 |
+| `route_ids`         | Array\<String>           | IDs das rotas.                                                                  |
+| `pattern_ids`       | Array\<String>           | IDs dos percursos.                                                              |
+| `legacy_ids`        | Array\<String>           | Identificadores antigos.                                                        |
+| `flags`             | Array\<HubV1ApiStopFlag> | Identificadores da paragem por operador: `agency_id` e `stop_id`, ambos String. |
+| `district_id`       | String                   | ID do distrito.                                                                 |
+| `district_name`     | String                   | Nome do distrito.                                                               |
+| `municipality_id`   | String                   | ID do município.                                                                |
+| `municipality_name` | String                   | Nome do município.                                                              |
+| `parish_id`         | String                   | ID da freguesia.                                                                |
+| `parish_name`       | String                   | Nome da freguesia.                                                              |
+| `locality_id`       | String ou null           | ID da localidade.                                                               |
+| `locality_name`     | String ou null           | Nome da localidade.                                                             |
+| `lifecycle_status`  | String, opcional         | `draft`, `active`, `inactive`, `provisional`, `seasonal` ou `voided`.           |
+
+## Geometrias
+
+O endpoint de geometrias procura o `shape_id` nos percursos publicados da organização e devolve o seguinte objeto em `data`:
+
+| Propriedade        |  Tipo  | Descrição                                                   |
+| ---                | ---                          | ---                                                      |
+| `_id`              | String                       | ID da geometria (`shape_id` do percurso).                |
+| `agency_id`        | String                       | ID do operador.                                          |
+| `encoded_polyline` | EncodedPolyline (String)     | Geometria codificada, correspondente a `shape_polyline`. |
+| `extension`        | NonNegativeInteger (Integer) | Extensão em metros, correspondente a `shape_extension`.  |
+
 ## Endpoints disponíveis
 
-| Path                                                                                           | Descrição                                                                                                   |
-| ---------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| [`/v1/network/lines`](https://go.tmlmobilidade.pt/hub/api/v1/network/lines)                    | Todas as linhas de todos os operadores em operação num determinado momento.                                 |
-| [`/v1/network/patterns/:id`](https://go.tmlmobilidade.pt/hub/api/v1/network/patterns/1001_0_1) | Todas as linhas de todos os operadores em operação num determinado momento.                                 |
-| [`/v1/network/stops`](https://go.tmlmobilidade.pt/hub/api/v1//network/stops)                   | Todas as paragens de todos os operadores. Este endpoint pode devolver paragens de zonas que não são da AML. |
-| [`/v1/network/stops/:id`](https://go.tmlmobilidade.pt/hub/api/v1/network/stops/000)            | Detalhe de uma paragem específica, com informação adicional.                                                |
-| [`/v1/network/stops.csv`](https://go.tmlmobilidade.pt/hub/api/v1/network/stops.csv)            | Todas as paragens no formato `.csv` (semelhante ao ficheiro `stops.txt` do GTFS).                           |
+Todos os endpoints usam o método `GET`. Substitui `:organizationId` por um ID da [lista de organizações](/reference/hub/v1/organizations) e os restantes parâmetros pelos IDs dos recursos publicados. Codifica os IDs para utilização num segmento de URL.
+
+| Path                                              | Tipo de `data`      | Descrição                                                       |
+| ---                                               | ---                 | ---                                                             |
+| [`/v1/:organizationId/network/lines`              ](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/network/lines`             ) | `HubV1ApiLine[]`    | Linhas dos operadores da organização.                           |
+| [`/v1/:organizationId/network/lines/:lineId`      ](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/network/lines/IA2N9]Am`     ) | `HubV1ApiLine`      | Detalhe de uma linha.                                           |
+| [`/v1/:organizationId/network/routes`             ](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/network/routes`            ) | `HubV1ApiRoute[]`   | Rotas dos operadores da organização.                            |
+| [`/v1/:organizationId/network/routes/:routeId`    ](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/network/routes/[IA2N9]B_0`   ) | `HubV1ApiRoute`     | Detalhe de uma rota.                                            |
+| [`/v1/:organizationId/network/patterns/:patternId`](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/network/patterns/[IA2N9]B_0_1) | `HubV1ApiPattern[]` | Versões publicadas de um percurso, com validades em `valid_on`. |
+| [`/v1/:organizationId/network/stops`              ](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/network/stops`             ) | `HubV1ApiStop[]`    | Paragens da organização, combinadas entre operadores.           |
+| [`/v1/:organizationId/network/stops/:stopId`      ](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/network/stops/294889`     ) | `HubV1ApiStop`      | Detalhe de uma paragem.                                         |
+| [`/v1/:organizationId/network/shapes/:shapeId`    ](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/network/shapes/[KC7R0][IA2N9]B_0_1`   ) | Object              | Geometria de um percurso publicado.                             |
+
+As respostas de sucesso usam HTTP `200`, o [formato comum do Hub](/reference/hub/responses) e cache pública de uma hora. Uma lista sem dados publicados devolve `data: []`.

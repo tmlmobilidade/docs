@@ -1,13 +1,70 @@
 ---
 title: Veículos
-description: O que é um alerta, para que serve, como criar um alerta e que visibilidade tem após publicação.
+description: Consulta os metadados e as posições em tempo real dos veículos de uma organização.
 ---
 
-Informação em tempo real da rede de transportes, como posições de veículos e estimativas de chegada. O estimador de horários ainda está em fase experimental, pelo que deve ser utilizado com algum cuidado.
+O Hub disponibiliza os metadados de veículos e as posições publicadas pelos operadores de uma organização.
 
-| Path                                                                                                                    | Descrição                                                                                                                                                    |
-| ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [`/v1/vehicles/metadata`](https://go.tmlmobilidade.pt/hub/api/v1/vehicles/metadata)                   | Metadados da maior parte dos veículos em operação, como modelo, matrícula, lugares disponíveis, entre outros.                                                |
-| [`/v1/vehicles/positions`](https://go.tmlmobilidade.pt/hub/api/v1/vehicles/positions)                 | Todos os veículos de todos os operadores em operação num determinado momento, em JSON. Sugerimos uma atualização a cada 3 segundos para melhores resultados. |
-| [`/v1/vehicles/positions/gtfs`](https://go.tmlmobilidade.pt/hub/api/v1/vehicles/positions/gtfs)       | Todos os veículos de todos os operadores em operação num determinado momento, em JSON mas no formato standard GTFS-RT Vehicle Positions.                     |
-| [`/v1/vehicles/positions/gtfs.pb`](https://go.tmlmobilidade.pt/hub/api/v1/vehicles/positions/gtfs.pb) | Todos os veículos de todos os operadores em operação num determinado momento, em Protobuf e no formato standard GTFS-RT Vehicle Positions.                   |
+## Metadados
+
+O tipo `HubV1ApiVehicleMetadata` contém:
+
+| Propriedade         | Tipo                                 | Descrição                                                |
+| ---                 | ---                                  | ---                                                      |
+| `_id`               | String                               | ID único do registo.                                     |
+| `agency_id`         | String                               | ID do operador.                                          |
+| `vehicle_id`        | String                               | ID do veículo no operador.                               |
+| `license_plate`     | String                               | Matrícula.                                               |
+| `make`              | String                               | Marca.                                                   |
+| `model`             | String                               | Modelo.                                                  |
+| `available_seats`   | Integer ou null                      | Número de lugares disponíveis indicado nos metadados.    |
+| `contactless`       | Boolean                              | Disponibilidade de pagamento sem contacto.               |
+| `wheelchair`        | Boolean                              | Disponibilidade de acessibilidade para cadeira de rodas. |
+| `propulsion`        | String ou null                       | Tipo de propulsão, segundo `VehiclePropulsion`.          |
+| `registration_date` | OperationalDateInt (Integer) ou null | Data de matrícula no formato `AAAAMMDD`.                 |
+| `vehicle_type`      | String ou null                       | Tipo de veículo, segundo `VehicleType`.                  |
+
+## Posições
+
+O tipo `HubV1ApiVehiclePosition` contém:
+
+| Propriedade        | Tipo                         | Descrição                                                       |
+| ---                | ---                          | ---                                                             |
+| `_id`              | String                       | ID único da posição.                                            |
+| `agency_id`        | String                       | ID do operador.                                                 |
+| `vehicle_id`       | String                       | ID do veículo no operador.                                      |
+| `trip_id`          | String                       | ID da viagem.                                                   |
+| `latitude`         | Number                       | Latitude da posição.                                            |
+| `longitude`        | Number                       | Longitude da posição.                                           |
+| `created_at`       | UnixMilliseconds (Integer)   | Timestamp de criação da posição.                                |
+| `received_at`      | UnixMilliseconds (Integer)   | Timestamp de receção da posição.                                |
+| `calendar_date`    | String                       | Data de calendário, no formato `AAAA-MM-DD`.                    |
+| `operational_date` | OperationalDateInt (Integer) | Data operacional, no formato `AAAAMMDD`.                        |
+| `bearing`          | Number ou null               | Orientação em graus.                                            |
+| `bearing_method`   | String                       | `measured`, `inferred`, `kept_prev_value` ou `skipped`.         |
+| `current_status`   | String ou null               | Estado GTFS-RT: `INCOMING_AT`, `STOPPED_AT` ou `IN_TRANSIT_TO`. |
+| `direction_id`     | String ou null               | Sentido GTFS: `"0"` ou `"1"`.                                   |
+| `speed`            | Integer ou null              | Velocidade reportada, não negativa.                             |
+| `geohash`          | String ou null               | Geohash da posição.                                             |
+| `license_plate`    | String ou null               | Matrícula.                                                      |
+| `ride_id`          | String ou null               | ID da circulação.                                               |
+| `route_id`         | String ou null               | ID da rota.                                                     |
+| `route_short_name` | String ou null               | Nome curto da rota.                                             |
+| `pattern_id`       | String ou null               | ID do percurso.                                                 |
+| `shape_id`         | String ou null               | ID da geometria do percurso.                                    |
+| `stop_id`          | String ou null               | ID da paragem associada à posição.                              |
+
+## Endpoints disponíveis
+
+Base path: `https://go.tmlmobilidade.pt/hub/api`
+
+| Método | Path                                             | Tipo de resposta                           |
+| ---    | ---                                              | ---                                        |
+| GET    | `/v1/:organizationId/vehicles/metadata`          | `HubV1ApiVehicleMetadata[]` em `data`.     |
+| GET    | `/v1/:organizationId/vehicles/positions`         | `HubV1ApiVehiclePosition[]` em `data`.     |
+| GET    | `/v1/:organizationId/vehicles/positions/gtfs`    | Feed GTFS-RT VehiclePositions em `data`.   |
+| GET    | `/v1/:organizationId/vehicles/positions/gtfs.pb` | Feed GTFS-RT VehiclePositions em Protobuf. |
+
+Obtém `:organizationId` na [lista de organizações](/reference/hub/v1/organizations). As respostas de sucesso usam HTTP `200` e cache pública de 3 segundos. As respostas JSON usam o [formato comum do Hub](/reference/hub/responses); o Protobuf é devolvido diretamente com `Content-Type: application/octet-stream`.
+
+Sem dados publicados, as listas de metadados e posições devolvem `data: []`. Uma organização inexistente ou sem dados abertos devolve HTTP `404`. Os feeds GTFS-RT seguem as [regras de combinação por organização](/reference/hub/v1/organizations).

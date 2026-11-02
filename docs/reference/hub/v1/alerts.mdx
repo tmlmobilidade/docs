@@ -3,13 +3,13 @@ title: Alertas
 description: Descobre o que é um alerta de serviço de uma operação de transportes públicos.
 ---
 
-Um Alerta de Serviço são mensagens que os operadores de transporte disponibilizam ao público para informar de alterações programadas, desvios inesperados, cancelamentos, atrasos, etc. São fundamentais para garantir que os utilizadores de transporte se possam organizar com antecedência ou encontrar alternativas em caso de imprevistos pontuais.
+Os Alertas de Serviço são mensagens que os operadores de transporte disponibilizam ao público para informar de alterações programadas, desvios inesperados, cancelamentos, atrasos, etc. São fundamentais para garantir que os utilizadores de transporte se possam organizar com antecedência ou encontrar alternativas em caso de imprevistos pontuais.
 
 Os alertas referenciam objetos da rede de transporte, como paragens, linhas ou viagens, afetando-as com uma causa e um efeito. No GO Hub seguimos a especificação do GTFS-RT Service Alerts para tipificar um alerta. Adicionalmente, o GO Hub disponibiliza propriedades que podem ser úteis para tornar a informação mais intuitiva e legível.
 
 ### Estrutura de um alerta
 
-No Hub, um alerta é representado por um objeto JSON com as seguintes propriedades:
+O tipo `HubV1ApiAlert` representa cada alerta. No Hub, um alerta é representado por um objeto JSON com as seguintes propriedades:
 
 | Propriedade                |              Tipo              | Descrição                                                     |
 | -------------------------- | :----------------------------: | ------------------------------------------------------------- |
@@ -21,39 +21,28 @@ No Hub, um alerta é representado por um objeto JSON com as seguintes propriedad
 | `effect`                   |             String             | Efeito do alerta de acordo com a especificação do GTFS-RT.    |
 | `coordinates`              | \[Latitude, Longitude] \| null | Coordenadas do alerta.                                        |
 | `active_period_start_date` |   UnixMilliseconds (Integer)   | Data de início do período de atividade do alerta (inclusive). |
-| `active_period_end_date`   |   UnixMilliseconds (Integer)   | Data de fim do período de atividade do alerta (inclusive).    |
-| `image_url`                |             String             | URL da imagem do alerta.                                      |
-| `info_url`                 |             String             | URL da informação do alerta.                                  |
-| `municipality_ids`         |             String             | IDs dos municípios associados ao alerta.                      |
-| `reference_type`           |             String             | Tipo de referência do alerta.                                 |
-| `references`               |             String             | Referências do alerta.                                        |
+| `active_period_end_date`   | UnixMilliseconds (Integer) ou null | Data de fim do período de atividade do alerta (inclusive).            |
+| `image_url`                | String ou null                     | URL da imagem do alerta.                                              |
+| `info_url`                 | String ou null                     | URL da informação do alerta.                                          |
+| `municipality_ids`         | Array\<String>                     | IDs dos municípios associados ao alerta.                              |
+| `reference_type`           | String                             | Tipo de referência: `agency`, `lines`, `stops` ou `rides`.            |
+| `references`               | Array de Object                    | Referências com `parent_id` (String) e `child_ids` (Array de String). |
 
-```ts
-export const HubV1ApiAlertSchema = z.object({
-	_id: z.string(),
-	agency_id: z.string(),
-	title: z.string(),
-	description: z.string(),
-	cause: GtfsRtCauseSchema,
-	effect: GtfsRtEffectSchema,
-	coordinates: z.tuple([z.number(), z.number()]).nullable().default(null),
-	active_period_start_date: UnixMillisecondsSchema,
-	active_period_end_date: UnixMillisecondsSchema.nullable().default(null),
-	image_url: z.string().nullable().default(null),
-	info_url: z.union([z.string().url(), z.literal('')]).nullable().default(null),
-	municipality_ids: z.array(z.string()).default([]),
-	reference_type: AlertReferenceTypeSchema,
-	references: z.array(AlertReferenceSchema).default([]),
-});
-```
+`active_period_end_date: null` indica que não foi definida uma data de fim. `coordinates`, `image_url` e `info_url` também podem ser `null`; `info_url` pode ainda ser uma string vazia. `municipality_ids` e `references` podem ser listas vazias.
 
-### Endpoints disponíveis
+## Endpoints disponíveis
 
-Com estes endpoints consegues ir buscar informação de desvios, supressões, alterações de oferta, novos horários, etc. que os vários operadores de transporte publicam ao público. Em muitos casos, são estes endpoints que são disponibilizados às aplicações de planeamento, como Google Maps, Transit, CityMapper, etc.
+Base path: `https://go.tmlmobilidade.pt/hub/api`
 
-| Path                                                                          | Descrição                                                                                      |
-| ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| [`/v1/alerts`](https://go.tmlmobilidade.pt/hub/api/v1/alerts)                 | Todos os alertas de serviço publicados no GO, em JSON.                                         |
-| [`/v1/alerts.rss`](https://go.tmlmobilidade.pt/hub/api/v1/alerts.rss)         | Todos os alertas de serviço publicados no GO, no formato RSS.                                  |
-| [`/v1/alerts/gtfs`](https://go.tmlmobilidade.pt/hub/api/v1/alerts/gtfs)       | Todos os alertas de serviço publicados no GO, em JSON, mas no formato GTFS-RT Service Alerts.  |
-| [`/v1/alerts/gtfs.pb`](https://go.tmlmobilidade.pt/hub/api/v1/alerts/gtfs.pb) | Todos os alertas de serviço publicados no GO, em Protobuf e no formato GTFS-RT Service Alerts. |
+| Método | Path                                 | Tipo de resposta            | Descrição                                                    |
+| ---    | ---                                  | ---                         | ---                                                          |
+| GET    | `/v1/:organizationId/alerts`         | `HubV1ApiAlert[]` em `data` | Alertas publicados pelos operadores da organização, em JSON. |
+| GET    | `/v1/:organizationId/alerts.rss`     | RSS                         | Alertas combinados num canal da organização.                 |
+| GET    | `/v1/:organizationId/alerts/gtfs`    | Feed GTFS-RT em `data`      | Service Alerts em JSON.                                      |
+| GET    | `/v1/:organizationId/alerts/gtfs.pb` | Protobuf                    | Service Alerts em formato binário.                           |
+
+Obtém `:organizationId` na [lista de organizações](/reference/hub/v1/organizations). Uma organização inexistente ou sem dados abertos devolve HTTP `404`.
+
+As respostas de sucesso usam HTTP `200`. O JSON simplificado e o RSS têm cache pública de 30 segundos; os feeds GTFS-RT têm cache de 3 segundos. As respostas JSON usam o [formato comum do Hub](/reference/hub/responses). O RSS é devolvido diretamente com `Content-Type: application/rss+xml; charset=utf-8`, e o Protobuf com `Content-Type: application/octet-stream`.
+
+Sem alertas publicados, o JSON simplificado devolve `data: []`. Os feeds GTFS-RT seguem as [regras de combinação por organização](/reference/hub/v1/organizations).

@@ -1,0 +1,38 @@
+---
+title: Organizações
+description: Descobre as organizações com dados abertos e seleciona os operadores a consultar.
+---
+
+O Hub publica dados por organização. Uma organização agrupa operadores de transporte. Isto pode ser uma autoridade de transportes como é o caso da [**Transportes Metropolitanos de Lisboa**](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/agencies), uma marca comum a vários operadores como a [**Carris Metropolitana**](https://go.tmlmobilidade.pt/hub/api/v1/LA3SO/agencies), ou ainda uma região geográfica.&#x20;
+
+## Estrutura de dados
+
+No Hub, uma organização é representado por um objeto JSON com as seguintes propriedades:
+
+| Propriedade  | Tipo           | Descrição                                     |
+| ---          | ---            | ---                                           |
+| `_id`        | String         | ID a utilizar no parâmetro `:organizationId`. |
+| `agency_ids` | Array\<String> | IDs dos operadores incluídos na organização.  |
+| `long_name`  | String         | Nome completo da organização.                 |
+| `short_name` | String         | Nome abreviado da organização.                |
+
+```typescript
+export const HubV1ApiAgencySchema = z.object({
+	_id: z.string(),
+	agency_ids: z.array(string()),
+	long_name: z.string().min(1),
+	short_name: z.string().min(1).max(6),
+});
+```
+
+## Endpoint disponível
+
+| Método | Path                                                                        | Tipo de `data`           | Descrição                                               |
+| ---    | ---                                                                         | ---                      | ---                                                     |
+| GET    | [`/v1/organizations`](https://go.tmlmobilidade.pt/hub/api/v1/organizations) | `HubV1ApiOrganization[]` | Organizações com a publicação de dados abertos ativada. |
+
+## URLs por organização
+
+Os endpoints de operadores, planos, rede, alertas, veículos e estimativas de chegada usam o prefixo `/v1/:organizationId`. Substitui `:organizationId` pelo `_id` devolvido na lista de organizações
+
+Estes endpoints devolvem apenas dados dos operadores associados à organização. Uma organização inexistente ou sem publicação de dados abertos devolve HTTP `404` com `error: "Organization not found"`.
