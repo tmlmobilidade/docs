@@ -352,10 +352,10 @@ Todos os endpoints usam o método `GET`. Substitui `:organizationId` por um ID d
 | GET | [`/v1/:organizationId/network/stops`](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/network/stops) | `HubV1ApiStop[]` | Paragens da organização, combinadas entre operadores. |
 | GET | [`/v1/:organizationId/network/stops/:stopId`](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/network/stops/294889) | `HubV1ApiStop` | Detalhe de uma paragem. |
 | GET | [`/v1/:organizationId/network/lines`](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/network/lines) | `HubV1ApiLine[]` | Linhas dos operadores da organização. |
-| GET | [`/v1/:organizationId/network/lines/:lineId`](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/network/lines/IA2N9%5DAm) | `HubV1ApiLine` | Detalhe de uma linha. |
+| GET | [`/v1/:organizationId/network/lines/:lineId`](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/network/lines/[IA2N9]DAm) | `HubV1ApiLine` | Detalhe de uma linha. |
 | GET | [`/v1/:organizationId/network/routes`](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/network/routes) | `HubV1ApiRoute[]` | Rotas dos operadores da organização. |
-| GET | [`/v1/:organizationId/network/routes/:routeId`](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/network/routes/IA2N9B_0) | `HubV1ApiRoute` | Detalhe de uma rota. |
-| GET | [`/v1/:organizationId/network/patterns/:patternId`](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/network/patterns/IA2N9B_0_1) | `HubV1ApiPattern[]` | Versões publicadas de um percurso, com validades em `valid_on`. |
-| GET | [`/v1/:organizationId/network/shapes/:shapeId`](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/network/shapes/KC7R0IA2N9B_0_1) | Object | Geometria de um percurso publicado. |
+| GET | [`/v1/:organizationId/network/routes/:routeId`](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/network/routes/[IA2N9]B_0) | `HubV1ApiRoute` | Detalhe de uma rota. |
+| GET | [`/v1/:organizationId/network/patterns/:patternId`](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/network/patterns/[IA2N9]B_0_1) | `HubV1ApiPattern[]` | Versões publicadas de um percurso, com validades em `valid_on`. |
+| GET | [`/v1/:organizationId/network/shapes/:shapeId`](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/network/shapes/KC7R0[IA2N9]B_0_1) | Object | Geometria de um percurso publicado. |
 
 As respostas de sucesso usam HTTP `200`, o [formato comum do Hub](/reference/hub/responses) e cache pública de uma hora. Uma lista sem dados publicados devolve `data: []`.
