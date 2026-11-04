@@ -9,7 +9,9 @@
 		"eta",
 		"metrics",
 		"equipment",
-		"debug"
+		"debug",
+		"feedback",
+		"motis"
 	],
 	"title": "Hub API v1"
 }

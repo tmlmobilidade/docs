@@ -36,10 +36,10 @@ Base path: `https://go.tmlmobilidade.pt/hub/api`
 
 | Método | Path                                 | Tipo de resposta            | Descrição                                                    |
 | ---    | ---                                  | ---                         | ---                                                          |
-| GET    | `/v1/:organizationId/alerts`         | `HubV1ApiAlert[]` em `data` | Alertas publicados pelos operadores da organização, em JSON. |
-| GET    | `/v1/:organizationId/alerts.rss`     | RSS                         | Alertas combinados num canal da organização.                 |
-| GET    | `/v1/:organizationId/alerts/gtfs`    | Feed GTFS-RT em `data`      | Service Alerts em JSON.                                      |
-| GET    | `/v1/:organizationId/alerts/gtfs.pb` | Protobuf                    | Service Alerts em formato binário.                           |
+| GET    | [`/v1/:organizationId/alerts`](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/alerts)             | `HubV1ApiAlert[]` em `data` | Alertas publicados pelos operadores da organização, em JSON. |
+| GET    | [`/v1/:organizationId/alerts.rss`](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/alerts.rss)     | RSS                         | Alertas combinados num canal da organização.                 |
+| GET    | [`/v1/:organizationId/alerts/gtfs`](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/alerts/gtfs)   | Feed GTFS-RT em `data`      | Service Alerts em JSON.                                      |
+| GET    | [`/v1/:organizationId/alerts/gtfs.pb`](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/alerts/gtfs.pb) | Protobuf                | Service Alerts em formato binário.                           |
 
 Obtém `:organizationId` na [lista de organizações](/reference/hub/v1/organizations). Uma organização inexistente ou sem dados abertos devolve HTTP `404`.
 

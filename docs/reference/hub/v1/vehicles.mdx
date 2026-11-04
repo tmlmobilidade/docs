@@ -58,12 +58,12 @@ O tipo `HubV1ApiVehiclePosition` contém:
 
 Base path: `https://go.tmlmobilidade.pt/hub/api`
 
-| Método | Path                                             | Tipo de resposta                           |
-| ---    | ---                                              | ---                                        |
-| GET    | `/v1/:organizationId/vehicles/metadata`          | `HubV1ApiVehicleMetadata[]` em `data`.     |
-| GET    | `/v1/:organizationId/vehicles/positions`         | `HubV1ApiVehiclePosition[]` em `data`.     |
-| GET    | `/v1/:organizationId/vehicles/positions/gtfs`    | Feed GTFS-RT VehiclePositions em `data`.   |
-| GET    | `/v1/:organizationId/vehicles/positions/gtfs.pb` | Feed GTFS-RT VehiclePositions em Protobuf. |
+| Método | Path | Tipo de resposta |
+| --- | --- | --- |
+| GET | [`/v1/:organizationId/vehicles/metadata`](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/vehicles/metadata) | `HubV1ApiVehicleMetadata[]` em `data`. |
+| GET | [`/v1/:organizationId/vehicles/positions`](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/vehicles/positions) | `HubV1ApiVehiclePosition[]` em `data`. |
+| GET | [`/v1/:organizationId/vehicles/positions/gtfs`](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/vehicles/positions/gtfs) | Feed GTFS-RT VehiclePositions em `data`. |
+| GET | [`/v1/:organizationId/vehicles/positions/gtfs.pb`](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/vehicles/positions/gtfs.pb) | Feed GTFS-RT VehiclePositions em Protobuf. |
 
 Obtém `:organizationId` na [lista de organizações](/reference/hub/v1/organizations). As respostas de sucesso usam HTTP `200` e cache pública de 3 segundos. As respostas JSON usam o [formato comum do Hub](/reference/hub/responses); o Protobuf é devolvido diretamente com `Content-Type: application/octet-stream`.
 

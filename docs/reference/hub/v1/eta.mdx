@@ -23,11 +23,11 @@ O tipo `HubV1ApiTripStopEta` representa cada estimativa. No Hub, o ETA é repres
 
 | Método | Path                                      | Tipo de resposta                  | Descrição                                                         |
 | ---    | ---                                       | ---                               | ---                                                               |
-| GET    | [`/v1/:organizationId/eta`                 ](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/eta)| `HubV1ApiTripStopEta[]` em `data` | Estimativas disponíveis para a organização, em JSON simplificado. |
-| GET    | `/v1/:organizationId/eta/by-trip/:tripId`| `HubV1ApiTripStopEta[]` em `data` | Estimativas de uma viagem.                                        |
-| GET    | [`/v1/:organizationId/eta/by-stop/:stopId` ](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/eta/by-stop/370514)| `HubV1ApiTripStopEta[]` em `data` | Estimativas de uma paragem.                                       |
-| GET    | [`/v1/:organizationId/eta/gtfs`            ](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/eta/gtfs)| `HubV1ApiEtaGtfsFeed` em `data`   | Feed GTFS-RT TripUpdates em JSON.                                 |
-| GET    | [`/v1/:organizationId/eta/gtfs.pb`         ](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/eta/gtfs.pb)| Protobuf                          | Feed GTFS-RT TripUpdates binário.                                 |
+| GET    | [`/v1/:organizationId/eta`](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/eta)                       | `HubV1ApiTripStopEta[]` em `data` | Estimativas disponíveis para a organização, em JSON simplificado. |
+| GET    | [`/v1/:organizationId/eta/by-trip/:tripId`](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/eta/by-trip/IA2N9%5DB_0_1_20260101) | `HubV1ApiTripStopEta[]` em `data` | Estimativas de uma viagem. |
+| GET    | [`/v1/:organizationId/eta/by-stop/:stopId`](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/eta/by-stop/370514) | `HubV1ApiTripStopEta[]` em `data` | Estimativas de uma paragem. |
+| GET    | [`/v1/:organizationId/eta/gtfs`](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/eta/gtfs)             | `HubV1ApiEtaGtfsFeed` em `data`   | Feed GTFS-RT TripUpdates em JSON. |
+| GET    | [`/v1/:organizationId/eta/gtfs.pb`](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/eta/gtfs.pb)       | Protobuf                          | Feed GTFS-RT TripUpdates binário. |
 
 Obtém `:organizationId` na [lista de organizações](/reference/hub/v1/organizations). `:tripId` e `:stopId` identificam a viagem e a paragem, respetivamente. Os IDs devem ser codificados para utilização num segmento de URL.
 
