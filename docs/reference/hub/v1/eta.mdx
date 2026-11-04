@@ -11,14 +11,32 @@ O tipo `HubV1ApiTripStopEta` representa cada estimativa. No Hub, o ETA é repres
 
 | Propriedade          | Tipo                   | Descrição                                           |
 | ---------------------| ---------------------- | --------------------------------------------------- |
-| `eta_at`             | Integer                | Timestamp do ETA em milissegundos (Unix timestamp). |
+| `eta_at`             | UnixMilliseconds (Integer) | Timestamp do ETA em milissegundos. |
 | `eta_seconds`        | Integer                | Tempo de espera em segundos.                        |
 | `stop_id`            | String                 | ID da paragem.                                      |
 | `stop_name`          | String                 | Nome da paragem.                                    |
-| `stop_sequence`      | Integer                | Sequência da paragem.                               |
+| `stop_sequence`      | NonNegativeInteger (Integer) | Índice de sequência da paragem. |
 | `trip_id`             | String                 | ID da viagem.                                       |
 | `vehicle_id`          | String                 | ID do veículo.                                      |
 
+```typescript
+export const HubV1ApiTripStopEtaSchema = z.object({
+	eta_at: UnixMillisecondsSchema,
+	eta_seconds: z.number().int(),
+	stop_id: z.string(),
+	stop_name: z.string(),
+	stop_sequence: NonNegativeIntegerSchema,
+	trip_id: z.string(),
+	vehicle_id: z.string(),
+});
+```
+## Feed GTFS-RT
+
+`HubV1ApiEtaGtfsFeed` tem a estrutura `header` + `entity`: o cabeçalho contém `gtfs_realtime_version` (String), `feed_version` (String ou null), `incrementality` (`FULL_DATASET`) e `timestamp` (UnixSeconds). Cada entidade tem `id` e `trip_update` com os dados GTFS-RT da viagem. O endpoint `.pb` devolve a mesma estrutura em Protobuf.
+
+```typescript
+export const HubV1ApiEtaGtfsFeedSchema = GtfsRtFeedMessageSchema;
+```
 ## Endpoints disponíveis
 
 | Método | Path                                      | Tipo de resposta                  | Descrição                                                         |

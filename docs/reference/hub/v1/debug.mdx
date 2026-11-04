@@ -1,10 +1,29 @@
 ---
 title: Debug
-description: O que é um alerta, para que serve, como criar um alerta e que visibilidade tem após publicação.
+description: Consulta timestamps atuais e recentes do sistema.
 ---
 
 Endpoints para debugging do sistema. Uma vez que utilizamos estes endpoints nos suportes de informação ao público, como o [site](https://carrismetropolitana.pt) e [app da Carris Metropolitana](https://carrismetropolitana.pt/app) e [app navegante®](https://carrismetropolitana.pt/app-navegante), é importante garantir que o sistema está online e a funcionar.
 
 | Path                                                                  | Descrição                                                                                                       |
 | --------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| [`/v1/debug/time`](https://go.tmlmobilidade.pt/hub/api/v1/debug/time) | Timestamps internos dos sistema. Útil para despistar problemas de stale data causados por caching, por exemplo. |
+| [`/v1/debug/time`](https://go.tmlmobilidade.pt/hub/api/v1/debug/time) | Timestamps internos do sistema, úteis para identificar dados desatualizados por cache. |
+
+```typescript
+export const HubV1ApiDebugTimeSchema = z.object({
+	now: UnixMillisecondsSchema,
+	now_iso: z.string(),
+	now_minus_20_seconds: UnixMillisecondsSchema,
+	now_minus_5_minutes: UnixMillisecondsSchema,
+	now_minus_90_seconds: UnixMillisecondsSchema,
+});
+```
+A resposta é um objeto JSON direto, sem o envelope comum do Hub:
+
+| Propriedade | Tipo | Descrição |
+| --- | --- | --- |
+| `now` | UnixMilliseconds (Integer) | Instante atual em Europe/Lisbon. |
+| `now_iso` | String | Instante atual em formato ISO 8601. |
+| `now_minus_20_seconds` | UnixMilliseconds (Integer) | Instante 20 segundos antes de `now`. |
+| `now_minus_90_seconds` | UnixMilliseconds (Integer) | Instante 90 segundos antes de `now`. |
+| `now_minus_5_minutes` | UnixMilliseconds (Integer) | Instante 5 minutos antes de `now`. |

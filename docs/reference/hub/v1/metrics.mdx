@@ -1,7 +1,31 @@
 ---
 title: Métricas
-description: Estimativas de chegada (ETA) para todas as viagens/paragens em operação, em JSON simplificado.
+description: Dados de procura agregados por operador e data operacional.
 ---
 
-- Validações
-- SLAs
+## Estrutura de dados
+
+Cada elemento de `DemandByAgencyByOperationalDate[]` contém:
+
+| Propriedade | Tipo | Descrição |
+| --- | --- | --- |
+| `agency_id` | String | ID do operador. |
+| `operational_date` | OperationalDateInt (Integer) | Data operacional no formato `AAAAMMDD`. |
+| `qty` | Number | Quantidade de procura agregada. |
+| `updated_at` | UnixMilliseconds (Integer) | Instante da última atualização. |
+
+```typescript
+export const DemandByAgencyByOperationalDateSchema = z.object({
+	agency_id: z.string(),
+	operational_date: OperationalDateIntSchema,
+	qty: z.number(),
+	updated_at: UnixMillisecondsSchema,
+});
+```
+## Endpoint disponível
+
+| Método | Path | Tipo de `data` | Descrição |
+| --- | --- | --- | --- |
+| GET | [`/v1/metrics/demand-by-agency-by-operational-date`](https://go.tmlmobilidade.pt/hub/api/v1/metrics/demand-by-agency-by-operational-date) | `DemandByAgencyByOperationalDate[]` | Procura por operador e data operacional. |
+
+A resposta segue o [formato comum do Hub](/reference/hub/responses) e tem cache pública de 15 segundos. Sem dados em cache, o endpoint devolve HTTP `204` e `data: []`.

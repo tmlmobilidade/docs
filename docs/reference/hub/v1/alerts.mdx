@@ -17,18 +17,36 @@ O tipo `HubV1ApiAlert` representa cada alerta. No Hub, um alerta é representado
 | `agency_id`                |             String             | ID único do operador associado ao alerta.                     |
 | `title`                    |             String             | Título do alerta.                                             |
 | `description`              |             String             | Descrição do alerta.                                          |
-| `cause`                    |             String             | Causa do alerta de acordo com a especificação do GTFS-RT.     |
-| `effect`                   |             String             | Efeito do alerta de acordo com a especificação do GTFS-RT.    |
+| `cause`                    | GtfsRtCause (String)           | Causa do alerta, por exemplo `ACCIDENT`, `CONSTRUCTION`, `OTHER_CAUSE` ou `WEATHER`. |
+| `effect`                   | GtfsRtEffect (String)          | Efeito do alerta, por exemplo `DETOUR`, `NO_SERVICE`, `SIGNIFICANT_DELAYS` ou `STOP_MOVED`. |
 | `coordinates`              | \[Latitude, Longitude] \| null | Coordenadas do alerta.                                        |
 | `active_period_start_date` |   UnixMilliseconds (Integer)   | Data de início do período de atividade do alerta (inclusive). |
 | `active_period_end_date`   | UnixMilliseconds (Integer) ou null | Data de fim do período de atividade do alerta (inclusive).            |
 | `image_url`                | String ou null                     | URL da imagem do alerta.                                              |
-| `info_url`                 | String ou null                     | URL da informação do alerta.                                          |
+| `info_url`                 | URL (String), string vazia ou null | URL da informação do alerta. |
 | `municipality_ids`         | Array\<String>                     | IDs dos municípios associados ao alerta.                              |
-| `reference_type`           | String                             | Tipo de referência: `agency`, `lines`, `stops` ou `rides`.            |
-| `references`               | Array de Object                    | Referências com `parent_id` (String) e `child_ids` (Array de String). |
+| `reference_type`           | AlertReferenceType (String)        | `agency`, `lines`, `stops` ou `rides`.                               |
+| `references`               | Array\<AlertReference>              | Referências com `parent_id` (String) e `child_ids` (Array\<String>). |
 
-`active_period_end_date: null` indica que não foi definida uma data de fim. `coordinates`, `image_url` e `info_url` também podem ser `null`; `info_url` pode ainda ser uma string vazia. `municipality_ids` e `references` podem ser listas vazias.
+```typescript
+export const HubV1ApiAlertSchema = z.object({
+	_id: z.string(),
+	active_period_end_date: UnixMillisecondsSchema.nullable().default(null),
+	active_period_start_date: UnixMillisecondsSchema,
+	agency_id: z.string(),
+	cause: GtfsRtCauseSchema,
+	coordinates: z.tuple([z.number(), z.number()]).nullable().default(null),
+	description: z.string(),
+	effect: GtfsRtEffectSchema,
+	image_url: z.string().nullable().default(null),
+	info_url: z.union([z.string().url(), z.literal('')]).nullable().default(null),
+	municipality_ids: z.array(z.string()).default([]),
+	reference_type: AlertReferenceTypeSchema,
+	references: z.array(AlertReferenceSchema).default([]),
+	title: z.string(),
+});
+```
+`active_period_end_date: null` indica que não foi definida uma data de fim. `coordinates`, `image_url` e `info_url` também podem ser `null`; `info_url` pode ainda ser uma string vazia. `cause` e `effect` usam os valores definidos pelo GTFS-RT. `municipality_ids` e `references` podem ser listas vazias.
 
 ## Endpoints disponíveis
 
@@ -45,4 +63,4 @@ Obtém `:organizationId` na [lista de organizações](/reference/hub/v1/organiza
 
 As respostas de sucesso usam HTTP `200`. O JSON simplificado e o RSS têm cache pública de 30 segundos; os feeds GTFS-RT têm cache de 3 segundos. As respostas JSON usam o [formato comum do Hub](/reference/hub/responses). O RSS é devolvido diretamente com `Content-Type: application/rss+xml; charset=utf-8`, e o Protobuf com `Content-Type: application/octet-stream`.
 
-Sem alertas publicados, o JSON simplificado devolve `data: []`. Os feeds GTFS-RT seguem as [regras de combinação por organização](/reference/hub/v1/organizations).
+Os feeds GTFS-RT JSON usam `FeedMessage`: `header` contém `gtfs_realtime_version`, `feed_version` (String ou null, opcional), `incrementality` (`FULL_DATASET`) e `timestamp` (UnixSeconds); `entity` contém entidades com `id` e, conforme o feed, `alert`, `trip_update` ou `vehicle`. O endpoint `.pb` devolve a mesma estrutura em Protobuf. Sem alertas publicados, o JSON simplificado devolve `data: []`. Os feeds GTFS-RT seguem as [regras de combinação por organização](/reference/hub/v1/organizations).

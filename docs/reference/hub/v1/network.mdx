@@ -44,7 +44,7 @@ O tipo `HubV1ApiLine` representa uma linha. No Hub, uma linha é representada po
 | `_id`                |       String      | ID único da linha.                                                                                              |
 | `agency_id`          |       String      | ID único do operador ao qual a linha pertence.                                                                  |
 | `color`              | HexColor (String) | Cor da linha, em formato hexadecimal, com o prefixo `#`.                                                        |
-| `text_color`         |       String      | Cor do texto da linha, em formato hexadecimal, com o prefixo `#`.                                               |
+| `text_color`         | HexColor (String) | Cor do texto da linha, em formato hexadecimal, com o prefixo `#`.                                               |
 | `short_name`         |       String      | Identificador principal da linha para os passageiros.                                                           |
 | `long_name`          |       String      | Nome da linha, que normalmente é a origem-destino da rota base ou um resumo do serviço efetuado (ex: Circular). |
 | `tts_name`           |       String      | Nome da linha adaptado para leitores de ecrã.                                                                   |
@@ -61,6 +61,29 @@ O tipo `HubV1ApiLine` representa uma linha. No Hub, uma linha é representada po
 | `locality_names`     |   Array\<String>  | Nomes das localidades por onde todos os percursos desta linha passam.                                           |
 | `facilities`         |   Array\<String>  | Instalações de utilidade pública que esta linha serve (Escolas, Hospitais, etc.). *Em desenvolvimento.*         |
 
+```typescript
+export const HubV1ApiLineSchema = z.object({
+	_id: z.string(),
+	agency_id: z.string(),
+	color: HexColorSchema,
+	district_ids: z.array(z.string()).default([]),
+	district_names: z.array(z.string()).default([]),
+	facilities: z.array(z.string()).default([]),
+	locality_ids: z.array(z.string()).default([]),
+	locality_names: z.array(z.string()).default([]),
+	long_name: z.string(),
+	municipality_ids: z.array(z.string()).default([]),
+	municipality_names: z.array(z.string()).default([]),
+	parish_ids: z.array(z.string()).default([]),
+	parish_names: z.array(z.string()).default([]),
+	pattern_ids: z.array(z.string()).default([]),
+	route_ids: z.array(z.string()).default([]),
+	short_name: z.string(),
+	stop_ids: z.array(z.string()).default([]),
+	text_color: HexColorSchema,
+	tts_name: z.string(),
+});
+```
 ### Rotas
 
 O tipo `HubV1ApiRoute` representa uma rota. No Hub, uma rota é descendente de uma linha e é representada por um objeto JSON com as seguintes propriedades:
@@ -70,7 +93,7 @@ O tipo `HubV1ApiRoute` representa uma rota. No Hub, uma rota é descendente de u
 | `_id`                |       String      | ID único da rota.                                                                                      |
 | `agency_id`          |       String      | ID único do operador ao qual a rota pertence.                                                          |
 | `color`              | HexColor (String) | Cor da rota, em formato hexadecimal, com o prefixo `#`.                                                |
-| `text_color`         |       String      | Cor do texto da rota, em formato hexadecimal, com o prefixo `#`.                                       |
+| `text_color`         | HexColor (String) | Cor do texto da rota, em formato hexadecimal, com o prefixo `#`.                                       |
 | `short_name`         |       String      | Identificador principal da rota para os passageiros.                                                   |
 | `long_name`          |       String      | Nome da rota, que normalmente é a origem-destino ou um resumo do serviço efetuado (ex: Circular).      |
 | `tts_name`           |       String      | Nome da rota adaptado para leitores de ecrã.                                                           |
@@ -87,6 +110,29 @@ O tipo `HubV1ApiRoute` representa uma rota. No Hub, uma rota é descendente de u
 | `locality_names`     |   Array\<String>  | Nomes das localidades por onde todos os percursos desta rota passam.                                   |
 | `facilities`         |   Array\<String>  | Instalações de utilidade pública que esta rota serve (Escolas, Hospitais, etc.). *Em desenvolvimento.* |
 
+```typescript
+export const HubV1ApiRouteSchema = z.object({
+	_id: z.string(),
+	agency_id: z.string(),
+	color: HexColorSchema,
+	district_ids: z.array(z.string()).default([]),
+	district_names: z.array(z.string()).default([]),
+	facilities: z.array(z.string()).default([]),
+	line_id: z.string(),
+	locality_ids: z.array(z.string()).default([]),
+	locality_names: z.array(z.string()).default([]),
+	long_name: z.string(),
+	municipality_ids: z.array(z.string()).default([]),
+	municipality_names: z.array(z.string()).default([]),
+	parish_ids: z.array(z.string()).default([]),
+	parish_names: z.array(z.string()).default([]),
+	pattern_ids: z.array(z.string()).default([]),
+	short_name: z.string(),
+	stop_ids: z.array(z.string()).default([]),
+	text_color: HexColorSchema,
+	tts_name: z.string(),
+});
+```
 ### Percursos
 
 No Hub, um percurso (ou `pattern`) é descendente de uma rota e contém a informação relevante sobre o serviço de transporte disponibilizado.
@@ -126,6 +172,36 @@ Um percurso (`HubV1ApiPattern`) é representado por um objeto JSON com as seguin
 | `locality_names`     |               Array\<String>              | Nomes das localidades por onde o percurso passa.                                                                                                                                                                                                                                                  |
 | `facilities`         |               Array\<String>              | Instalações de utilidade pública que o percurso serve (Escolas, Hospitais, etc.). *Em desenvolvimento.*                                                                                                                                                                                           |
 
+```typescript
+export const HubV1ApiPatternSchema = z.object({
+	_id: z.string(),
+	agency_id: z.string(),
+	color: HexColorSchema,
+	direction_id: GtfsTripDirectionSchema,
+	district_ids: z.array(z.string()).default([]),
+	district_names: z.array(z.string()).default([]),
+	facilities: z.array(z.string()).default([]),
+	headsign: z.string(),
+	line_id: z.string(),
+	locality_ids: z.array(z.string()).default([]),
+	locality_names: z.array(z.string()).default([]),
+	municipality_ids: z.array(z.string()).default([]),
+	municipality_names: z.array(z.string()).default([]),
+	parish_ids: z.array(z.string()).default([]),
+	parish_names: z.array(z.string()).default([]),
+	path: z.array(HubV1ApiPatternWaypointSchema),
+	route_id: z.string(),
+	shape_extension: NonNegativeIntegerSchema,
+	shape_id: z.string(),
+	shape_polyline: EncodedPolylineSchema,
+	short_name: z.string(),
+	text_color: HexColorSchema,
+	trips: z.array(HubV1ApiPatternTripSchema),
+	tts_headsign: z.string(),
+	valid_on: z.array(OperationalDateIntSchema).default([]),
+	version_id: z.string(),
+});
+```
 #### Pattern Waypoint
 
 Um `waypoint` representa um ponto de recolha e/ou largada de passageiros no percurso.
@@ -141,6 +217,16 @@ Um `waypoint` é representado por um objeto JSON com as seguintes propriedades:
 | `distance`       | NonNegativeInteger (Integer) | Distância acumulada desde o início do percurso.  |
 | `distance_delta` | NonNegativeInteger (Integer) | Distância entre esta e a paragem anterior.       |
 
+```typescript
+export const HubV1ApiPatternWaypointSchema = z.object({
+	allow_drop_off: z.boolean(),
+	allow_pickup: z.boolean(),
+	distance: NonNegativeIntegerSchema,
+	distance_delta: NonNegativeIntegerSchema,
+	stop_id: z.string(),
+	stop_sequence: NonNegativeIntegerSchema,
+});
+```
 #### Pattern Trip
 
 O GTFS é bastante flexível para conseguir responder a inúmeras necessidades de diferentes operações de transporte público, com a consequência de provocar uma enorme duplicação de informação, especialmente no ficheiro `stop_times.txt`.
@@ -157,6 +243,15 @@ Uma `trip` é representada por um objeto JSON com as seguintes propriedades:
 | `service_ids` |               Array\<String>              | IDs originais dos calendários do GTFS associados aos `trip_ids` desta viagem.                    |
 | `schedule`    | Array\<HubV1ApiScheduledArrival>             | Horários de passagem em todas as paragens desta viagem.                                          |
 
+```typescript
+export const HubV1ApiPatternTripSchema = z.object({
+	schedule: z.array(HubV1ApiScheduledArrivalSchema),
+	service_ids: z.array(z.string()),
+	trip_ids: z.array(z.string()),
+	valid_on: z.array(OperationalDateIntSchema),
+	version_id: z.string(),
+});
+```
 #### Schedule Arrival
 
 Uma `arrival` é representado por um objeto JSON com as seguintes propriedades:
@@ -164,10 +259,18 @@ Uma `arrival` é representado por um objeto JSON com as seguintes propriedades:
 | Propriedade        |  Tipo  | Descrição                                                   |
 | ------------------ | :----: | ----------------------------------------------------------- |
 | `stop_id`          | String | ID da paragem servida.                                      |
-| `stop_sequence`    | Integer | Índice de sequência da paragem no percurso.                 |
+| `stop_sequence`    | NonNegativeInteger (Integer) | Índice de sequência da paragem no percurso.                 |
 | `arrival_time`     | String | Horário de chegada à paragem no formato operacional (24h+). |
 | `arrival_time_24h` | String | Horário de chegada à paragem, em formato 24h.               |
 
+```typescript
+export const HubV1ApiScheduledArrivalSchema = z.object({
+	arrival_time: z.string(),
+	arrival_time_24h: z.string(),
+	stop_id: z.string(),
+	stop_sequence: NonNegativeIntegerSchema,
+});
+```
 ## Paragens
 
 O tipo `HubV1ApiStop` representa uma paragem física. As paragens partilhadas entre operadores são combinadas pelo `_id`, reunindo as referências aos operadores, linhas, rotas, percursos, IDs antigos e bandeiras sem duplicados.
@@ -196,6 +299,31 @@ O tipo `HubV1ApiStop` representa uma paragem física. As paragens partilhadas en
 | `locality_name`     | String ou null           | Nome da localidade.                                                             |
 | `lifecycle_status`  | String, opcional         | `draft`, `active`, `inactive`, `provisional`, `seasonal` ou `voided`.           |
 
+```typescript
+export const HubV1ApiStopSchema = z.object({
+	_id: z.string(),
+	agency_ids: z.array(z.string()),
+	district_id: z.string(),
+	district_name: z.string(),
+	flags: z.array(z.object({ agency_id: z.string(), stop_id: z.string() })),
+	latitude: LatitudeSchema,
+	legacy_ids: z.array(z.string()),
+	lifecycle_status: LifecycleStatusSchema.optional(),
+	line_ids: z.array(z.string()),
+	locality_id: z.string().nullable(),
+	locality_name: z.string().nullable(),
+	longitude: LongitudeSchema,
+	municipality_id: z.string(),
+	municipality_name: z.string(),
+	name: z.string(),
+	parish_id: z.string(),
+	parish_name: z.string(),
+	pattern_ids: z.array(z.string()),
+	route_ids: z.array(z.string()),
+	short_name: z.string(),
+	tts_name: z.string(),
+});
+```
 ## Geometrias
 
 O endpoint de geometrias procura o `shape_id` nos percursos publicados da organização e devolve o seguinte objeto em `data`:
@@ -207,6 +335,14 @@ O endpoint de geometrias procura o `shape_id` nos percursos publicados da organi
 | `encoded_polyline` | EncodedPolyline (String)     | Geometria codificada, correspondente a `shape_polyline`. |
 | `extension`        | NonNegativeInteger (Integer) | Extensão em metros, correspondente a `shape_extension`.  |
 
+```typescript
+export const HubV1ApiShapeSchema = z.object({
+	_id: z.string(),
+	agency_id: z.string(),
+	encoded_polyline: EncodedPolylineSchema,
+	extension: NonNegativeIntegerSchema,
+});
+```
 ## Endpoints disponíveis
 
 Todos os endpoints usam o método `GET`. Substitui `:organizationId` por um ID da [lista de organizações](/reference/hub/v1/organizations) e os restantes parâmetros pelos IDs dos recursos publicados. Codifica os IDs para utilização num segmento de URL.

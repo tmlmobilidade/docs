@@ -17,12 +17,31 @@ O tipo `HubV1ApiVehicleMetadata` contém:
 | `license_plate`     | String                               | Matrícula.                                               |
 | `make`              | String                               | Marca.                                                   |
 | `model`             | String                               | Modelo.                                                  |
-| `available_seats`   | Integer ou null                      | Número de lugares disponíveis indicado nos metadados.    |
+| `available_seats`   | NonNegativeInteger (Integer) ou null | Número de lugares disponíveis indicado nos metadados.    |
 | `contactless`       | Boolean                              | Disponibilidade de pagamento sem contacto.               |
 | `wheelchair`        | Boolean                              | Disponibilidade de acessibilidade para cadeira de rodas. |
 | `propulsion`        | String ou null                       | Tipo de propulsão, segundo `VehiclePropulsion`.          |
 | `registration_date` | OperationalDateInt (Integer) ou null | Data de matrícula no formato `AAAAMMDD`.                 |
 | `vehicle_type`      | String ou null                       | Tipo de veículo, segundo `VehicleType`.                  |
+
+```typescript
+export const HubV1ApiVehicleMetadataSchema = z.object({
+	_id: z.string(),
+	agency_id: z.string(),
+	available_seats: NonNegativeIntegerSchema.nullable().default(null),
+	contactless: z.boolean().default(false),
+	license_plate: z.string(),
+	make: z.string(),
+	model: z.string(),
+	propulsion: VehiclePropulsionSchema.nullable().default(null),
+	registration_date: OperationalDateIntSchema.nullable().default(null),
+	vehicle_id: z.string(),
+	vehicle_type: VehicleTypeSchema.nullable().default(null),
+	wheelchair: z.boolean().default(false),
+});
+```
+
+Os valores permitidos para `propulsion` são `gasoline`, `diesel`, `lpg_auto`, `mixture`, `biodiesel`, `electricity`, `hybrid` e `natural_gas`. `vehicle_type` pode ser `tram`, `subway`, `rail`, `bus`, `ferry`, `cable_tram`, `cable car`, `funicular`, `trolleybus` ou `monorail`.
 
 ## Posições
 
@@ -40,11 +59,11 @@ O tipo `HubV1ApiVehiclePosition` contém:
 | `received_at`      | UnixMilliseconds (Integer)   | Timestamp de receção da posição.                                |
 | `calendar_date`    | String                       | Data de calendário, no formato `AAAA-MM-DD`.                    |
 | `operational_date` | OperationalDateInt (Integer) | Data operacional, no formato `AAAAMMDD`.                        |
-| `bearing`          | Number ou null               | Orientação em graus.                                            |
+| `bearing`          | Degrees (Number) ou null     | Orientação em graus.                                            |
 | `bearing_method`   | String                       | `measured`, `inferred`, `kept_prev_value` ou `skipped`.         |
-| `current_status`   | String ou null               | Estado GTFS-RT: `INCOMING_AT`, `STOPPED_AT` ou `IN_TRANSIT_TO`. |
-| `direction_id`     | String ou null               | Sentido GTFS: `"0"` ou `"1"`.                                   |
-| `speed`            | Integer ou null              | Velocidade reportada, não negativa.                             |
+| `current_status`   | GtfsRtVehicleStopStatus (String) ou null | Estado GTFS-RT: `INCOMING_AT`, `STOPPED_AT` ou `IN_TRANSIT_TO`. |
+| `direction_id`     | GtfsTripDirection (String) ou null | Sentido GTFS: `"0"` ou `"1"`.                              |
+| `speed`            | NonNegativeInteger (Integer) ou null | Velocidade reportada. |
 | `geohash`          | String ou null               | Geohash da posição.                                             |
 | `license_plate`    | String ou null               | Matrícula.                                                      |
 | `ride_id`          | String ou null               | ID da circulação.                                               |
@@ -53,6 +72,34 @@ O tipo `HubV1ApiVehiclePosition` contém:
 | `pattern_id`       | String ou null               | ID do percurso.                                                 |
 | `shape_id`         | String ou null               | ID da geometria do percurso.                                    |
 | `stop_id`          | String ou null               | ID da paragem associada à posição.                              |
+
+```typescript
+export const HubV1ApiVehiclePositionSchema = z.object({
+	_id: z.string(),
+	agency_id: z.string(),
+	bearing: DegreesSchema.nullable().default(null),
+	bearing_method: z.enum(['measured', 'inferred', 'kept_prev_value', 'skipped']).default('skipped'),
+	calendar_date: CalendarDateSchema,
+	created_at: UnixMillisecondsSchema,
+	current_status: GtfsRtVehicleStopStatusSchema.nullable().default(null),
+	direction_id: GtfsTripDirectionSchema.nullable().default(null),
+	geohash: z.string().nullable().default(null),
+	latitude: LatitudeSchema,
+	license_plate: z.string().nullable().default(null),
+	longitude: LongitudeSchema,
+	operational_date: OperationalDateIntSchema,
+	pattern_id: z.string().nullable().default(null),
+	received_at: UnixMillisecondsSchema,
+	ride_id: z.string().nullable().default(null),
+	route_id: z.string().nullable().default(null),
+	route_short_name: z.string().nullable().default(null),
+	shape_id: z.string().nullable().default(null),
+	speed: NonNegativeIntegerSchema.nullable().default(null),
+	stop_id: z.string().nullable().default(null),
+	trip_id: z.string(),
+	vehicle_id: z.string(),
+});
+```
 
 ## Endpoints disponíveis
 
@@ -64,6 +111,8 @@ Base path: `https://go.tmlmobilidade.pt/hub/api`
 | GET | [`/v1/:organizationId/vehicles/positions`](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/vehicles/positions) | `HubV1ApiVehiclePosition[]` em `data`. |
 | GET | [`/v1/:organizationId/vehicles/positions/gtfs`](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/vehicles/positions/gtfs) | Feed GTFS-RT VehiclePositions em `data`. |
 | GET | [`/v1/:organizationId/vehicles/positions/gtfs.pb`](https://go.tmlmobilidade.pt/hub/api/v1/0XJC9/vehicles/positions/gtfs.pb) | Feed GTFS-RT VehiclePositions em Protobuf. |
+
+Os feeds GTFS-RT JSON usam `FeedMessage`: `header` contém `gtfs_realtime_version`, `feed_version` (String ou null, opcional), `incrementality` (`FULL_DATASET`) e `timestamp` (UnixSeconds); `entity` contém entidades com `id` e `vehicle`. O endpoint `.pb` devolve a mesma estrutura em Protobuf.
 
 Obtém `:organizationId` na [lista de organizações](/reference/hub/v1/organizations). As respostas de sucesso usam HTTP `200` e cache pública de 3 segundos. As respostas JSON usam o [formato comum do Hub](/reference/hub/responses); o Protobuf é devolvido diretamente com `Content-Type: application/octet-stream`.
 
