@@ -1,0 +1,54 @@
+---
+title: "Referência: zona atravessada"
+description: "Verifica a referência de contains_id em fare_rules.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `fare_rules_contains_id_foreign` |
+| Ficheiros | `fare_rules.txt`, `stops.txt` |
+| Campos | `contains_id`, `zone_id` |
+| Tipo | Referência a `stops.zone_id`, Não documentado |
+| Severidade | Opcional, Não documentada |
+
+**Descrição dos campos:**
+
+- `contains_id`: identifica uma zona que o percurso deve atravessar para a tarifa se aplicar.
+- `zone_id`: identifica a zona tarifária da paragem.
+
+Mais informação em [fare_rules.txt](/reference/gtfs/schedule/fare_rules), [stops.txt](/reference/gtfs/schedule/stops).
+
+## Como funciona
+
+A regra confirma que cada identificador preenchido encontra uma referência em `stops.txt`. Não verifica o formato nem o preenchimento do identificador.
+
+A regra avalia cada linha do `fare_rules.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra está desativada? | A verificação não é executada | Segue para o passo 2 |
+| 2 | Os ficheiros necessários estão disponíveis? | Segue para o passo 3 | A verificação não é executada |
+| 3 | O campo está vazio? | Não reporta a ausência nesta regra | Segue para o passo 4 |
+| 4 | O identificador existe em `stops.txt`? | ✅ Passa | ❌ Reporta o problema: referência não encontrada |
+
+A comparação utiliza o texto original. Os espaços no início e no fim não são removidos.
+
+## Como se relacionam
+
+Cada `contains_id` preenchido de `fare_rules.txt` deve corresponder a `zone_id` em `stops.txt`.
+
+## Exemplos
+
+| `contains_id` | `zone_id` | Resultado | Porquê |
+|---|---|---|---|
+| `A1` | `A1` | ✅ Passa | Referência existente |
+| `B1` | `A1` | ❌ Problema | Referência inexistente |
+| ` A1 ` | `A1` | ❌ Problema | Texto diferente da referência |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Referência não encontrada | O identificador não consta do ficheiro de referência | Corrigir `contains_id` em `fare_rules.txt`, ou acrescentar o respetivo `zone_id` em `stops.txt`. |

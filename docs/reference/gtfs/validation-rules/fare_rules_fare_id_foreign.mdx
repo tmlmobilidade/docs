@@ -1,0 +1,54 @@
+---
+title: "Referência: tarifa da relação"
+description: "Verifica a referência de fare_id em fare_rules.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `fare_rules_fare_id_foreign` |
+| Ficheiros | `fare_rules.txt`, `fare_attributes.txt` |
+| Campos | `fare_id`, `fare_id` |
+| Tipo | Referência a `fare_attributes.fare_id`, Identificador único |
+| Severidade | Obrigatório |
+
+**Descrição dos campos:**
+
+- `fare_id`: identifica a classe de tarifa definida em `fare_attributes.txt`.
+- `fare_id`: identifica uma classe de tarifa.
+
+Mais informação em [fare_rules.txt](/reference/gtfs/schedule/fare_rules), [fare_attributes.txt](/reference/gtfs/schedule/fare_attributes).
+
+## Como funciona
+
+A regra confirma que cada identificador preenchido encontra uma referência em `fare_attributes.txt`. Não verifica o formato nem o preenchimento do identificador.
+
+A regra avalia cada linha do `fare_rules.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra está desativada? | A verificação não é executada | Segue para o passo 2 |
+| 2 | Os ficheiros necessários estão disponíveis? | Segue para o passo 3 | A verificação não é executada |
+| 3 | O campo está vazio? | Não reporta a ausência nesta regra | Segue para o passo 4 |
+| 4 | O identificador existe em `fare_attributes.txt`? | ✅ Passa | ❌ Reporta o problema: referência não encontrada |
+
+A comparação utiliza o texto original. Os espaços no início e no fim não são removidos.
+
+## Como se relacionam
+
+Cada `fare_id` preenchido de `fare_rules.txt` deve corresponder a `fare_id` em `fare_attributes.txt`.
+
+## Exemplos
+
+| `fare_id` em `fare_rules.txt` | `fare_id` em `fare_attributes.txt` | Resultado | Porquê |
+|---|---|---|---|
+| `A1` | `A1` | ✅ Passa | Referência existente |
+| `B1` | `A1` | ❌ Problema | Referência inexistente |
+| ` A1 ` | `A1` | ❌ Problema | Texto diferente da referência |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Referência não encontrada | O identificador não consta do ficheiro de referência | Corrigir `fare_id` em `fare_rules.txt`, ou acrescentar o respetivo `fare_id` em `fare_attributes.txt`. |

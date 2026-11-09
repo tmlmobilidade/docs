@@ -1,0 +1,54 @@
+---
+title: "Referência: linha da tarifa"
+description: "Verifica a referência de route_id em fare_rules.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `fare_rules_route_id_foreign` |
+| Ficheiros | `fare_rules.txt`, `routes.txt` |
+| Campos | `route_id`, `route_id` |
+| Tipo | Referência a `routes.route_id`, Não documentado |
+| Severidade | Opcional, Não documentada |
+
+**Descrição dos campos:**
+
+- `route_id`: identifica a linha a que a tarifa se aplica.
+- `route_id`: identifica a linha de transporte.
+
+Mais informação em [fare_rules.txt](/reference/gtfs/schedule/fare_rules), [routes.txt](/reference/gtfs/schedule/routes).
+
+## Como funciona
+
+A regra confirma que cada identificador preenchido encontra uma referência em `routes.txt`. Não verifica o formato nem o preenchimento do identificador.
+
+A regra avalia cada linha do `fare_rules.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra está desativada? | A verificação não é executada | Segue para o passo 2 |
+| 2 | Os ficheiros necessários estão disponíveis? | Segue para o passo 3 | A verificação não é executada |
+| 3 | O campo está vazio? | Não reporta a ausência nesta regra | Segue para o passo 4 |
+| 4 | O identificador existe em `routes.txt`? | ✅ Passa | ❌ Reporta o problema: referência não encontrada |
+
+A comparação utiliza o texto original. Os espaços no início e no fim não são removidos.
+
+## Como se relacionam
+
+Cada `route_id` preenchido de `fare_rules.txt` deve corresponder a `route_id` em `routes.txt`.
+
+## Exemplos
+
+| `route_id` em `fare_rules.txt` | `route_id` em `routes.txt` | Resultado | Porquê |
+|---|---|---|---|
+| `A1` | `A1` | ✅ Passa | Referência existente |
+| `B1` | `A1` | ❌ Problema | Referência inexistente |
+| ` A1 ` | `A1` | ❌ Problema | Texto diferente da referência |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Referência não encontrada | O identificador não consta do ficheiro de referência | Corrigir `route_id` em `fare_rules.txt`, ou acrescentar o respetivo `route_id` em `routes.txt`. |
