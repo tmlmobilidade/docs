@@ -1,0 +1,43 @@
+---
+title: "Disponibilidade de agency.txt"
+description: "Verifica a disponibilidade de agency.txt segundo a configuração da regra."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `agency_file_missing` |
+| Ficheiro | `agency.txt` |
+| Campo | Se aplica em todo o ficheiro |
+| Tipo | Não documentado |
+| Severidade | Não documentada |
+
+## Como funciona
+
+Verifica a disponibilidade de `agency.txt` segundo a configuração da regra. A regra não verifica o preenchimento dos campos ou o conteúdo de cada linha.
+
+A regra avalia o conjunto de dados importado, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra proíbe o ficheiro? | Segue para o passo 2 | Segue para o passo 3 |
+| 2 | O ficheiro está disponível nos dados importados? | ❌ Reporta o problema: ficheiro proibido | ✅ Passa |
+| 3 | O ficheiro está disponível nos dados importados? | ✅ Passa | ❌ Reporta o problema: ficheiro em falta |
+
+O ficheiro é considerado disponível quando existe nos dados importados, mesmo que não tenha linhas. A verificação de disponibilidade continua a condicionar as regras dependentes quando a mensagem está desativada.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `agency.txt` disponível | ✅ Passa | Ficheiro encontrado |
+| `agency.txt` ausente | ❌ Problema | Ficheiro em falta |
+| `agency.txt` disponível; configuração da regra proíbe o ficheiro | ❌ Problema | Ficheiro proibido |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Ficheiro proibido | A configuração da regra proíbe o ficheiro | Remover `agency.txt` do conjunto de dados ou rever a configuração da regra. |
+| Ficheiro em falta | O ficheiro não está disponível nos dados importados | Incluir `agency.txt` no conjunto de dados e voltar a importar. |

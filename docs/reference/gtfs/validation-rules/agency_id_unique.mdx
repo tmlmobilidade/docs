@@ -1,0 +1,46 @@
+---
+title: "Unicidade: identificador do operador"
+description: "Verifica se os valores preenchidos de agency_id são únicos em agency.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `agency_id_unique` |
+| Ficheiro | `agency.txt` |
+| Campo | `agency_id` |
+| Tipo | Identificador único |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** identifica o operador ou a marca de transporte a que os dados pertencem.
+
+Mais informação em [agency.txt](/reference/gtfs/schedule/agency).
+
+## Como funciona
+
+Cada valor preenchido de `agency_id` tem de aparecer uma única vez em `agency.txt`. A regra não verifica o formato nem o preenchimento do campo.
+
+A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra está desativada? | A verificação não é executada | Segue para o passo 2 |
+| 2 | O campo está vazio? | Não reporta a ausência nesta regra | Segue para o passo 3 |
+| 3 | O mesmo valor aparece em mais de uma linha? | ❌ Reporta o problema: valor repetido | ✅ Passa |
+
+A comparação utiliza o texto original. Os espaços e as diferenças entre maiúsculas e minúsculas não são removidos.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `A1` numa única linha | ✅ Passa | Valor único |
+| `A1` e `A12` em linhas diferentes | ✅ Passa | Valores distintos |
+| `A1` em duas linhas | ❌ Problema | Valor repetido |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor repetido | Várias linhas usam o mesmo identificador ou código | Atribuir um valor único a `agency_id` em `agency.txt`, mantendo as referências coerentes. |

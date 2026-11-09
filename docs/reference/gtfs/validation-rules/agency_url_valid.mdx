@@ -1,0 +1,46 @@
+---
+title: "Formato: página do operador"
+description: "Verifica o formato de agency_url em agency.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `agency_url_valid` |
+| Ficheiro | `agency.txt` |
+| Campo | `agency_url` |
+| Tipo | Endereço de página |
+| Severidade | Opcional |
+
+**Descrição do campo:** endereço da página do operador.
+
+Mais informação em [agency.txt](/reference/gtfs/schedule/agency).
+
+## Como funciona
+
+O valor preenchido de `agency_url` tem de cumprir o formato verificado por esta regra. A regra não visita a página nem confirma que esta existe.
+
+A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra está desativada? | A verificação não é executada | Segue para o passo 2 |
+| 2 | O campo está vazio? | Não reporta a ausência nesta regra | Segue para o passo 3 |
+| 3 | O endereço usa `http` ou `https`, tem um servidor e não contém texto ou codificações inválidas? | ✅ Passa | ❌ Reporta o problema: formato inválido |
+
+Os espaços no início e no fim são ignorados na verificação do formato.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `https://operador.pt/info` | ✅ Passa | Endereço aceite |
+| `operador.pt/info` | ❌ Problema | Falta o protocolo |
+| `https://operador.pt/a b` | ❌ Problema | Espaço no endereço |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Formato inválido | O valor não cumpre o formato verificado | Escrever um endereço completo com `http` ou `https` em `agency_url` em `agency.txt`. |

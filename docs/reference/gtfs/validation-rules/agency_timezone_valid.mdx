@@ -1,0 +1,46 @@
+---
+title: "Formato: fuso horário do operador"
+description: "Verifica o formato de agency_timezone em agency.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `agency_timezone_valid` |
+| Ficheiro | `agency.txt` |
+| Campo | `agency_timezone` |
+| Tipo | Fuso horário |
+| Severidade | Opcional |
+
+**Descrição do campo:** fuso horário do operador. Quando existem vários operadores no conjunto de dados, a descrição do campo prevê o mesmo fuso horário.
+
+Mais informação em [agency.txt](/reference/gtfs/schedule/agency).
+
+## Como funciona
+
+O valor preenchido de `agency_timezone` tem de cumprir o formato verificado por esta regra. A regra não compara fusos horários entre operadores ou paragens.
+
+A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra está desativada? | A verificação não é executada | Segue para o passo 2 |
+| 2 | O campo está vazio? | Não reporta a ausência nesta regra | Segue para o passo 3 |
+| 3 | O fuso horário é reconhecido, por exemplo `Europe/Lisbon`? | ✅ Passa | ❌ Reporta o problema: formato inválido |
+
+Os espaços no início e no fim não são removidos. Alguns valores aceites dependem dos fusos horários disponíveis no sistema.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `Europe/Lisbon` | ✅ Passa | Fuso reconhecido |
+| `Europe/Nowhere` | ❌ Problema | Fuso desconhecido |
+| ` Europe/Lisbon ` | ❌ Problema | Espaços não removidos |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Formato inválido | O valor não cumpre o formato verificado | Usar um fuso horário reconhecido em `agency_timezone` em `agency.txt`. |
