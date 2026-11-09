@@ -1,0 +1,47 @@
+---
+title: "Valor numérico: duração da validade"
+description: "Verifica o valor numérico de transfer_duration em fare_attributes.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `fare_attributes_transfer_duration_valid` |
+| Ficheiro | `fare_attributes.txt` |
+| Campo | `transfer_duration` |
+| Tipo | Número inteiro não negativo |
+| Severidade | Opcional |
+
+**Descrição do campo:** tempo, em segundos, até expirar o direito ao transbordo. Com `transfers` igual a `0`, pode indicar a validade do título.
+
+Mais informação em [fare_attributes.txt](/reference/gtfs/schedule/fare_attributes).
+
+## Como funciona
+
+O valor preenchido de `transfer_duration` tem de ser um número inteiro igual ou superior a zero. A regra não confirma a medição no terreno nem o preenchimento do campo.
+
+A regra avalia cada linha do `fare_attributes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra está desativada? | A verificação não é executada | Segue para o passo 2 |
+| 2 | O campo está vazio? | Não reporta a ausência nesta regra | Segue para o passo 3 |
+| 3 | O valor é um número inteiro? | Segue para o passo 4 | ❌ Reporta o problema: número inválido |
+| 4 | O número é igual ou superior a zero? | ✅ Passa | ❌ Reporta o problema: número fora do intervalo |
+
+Os espaços no início e no fim não são removidos.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `0` | ✅ Passa | Número aceite |
+| `abc` | ❌ Problema | Texto em vez de número |
+| `-1` | ❌ Problema | Fora do intervalo aceite |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Número inválido | O número não cumpre os limites da regra | Introduzir um número igual ou superior a zero em `transfer_duration` em `fare_attributes.txt`. |

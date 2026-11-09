@@ -1,0 +1,54 @@
+---
+title: "Referência: operador da tarifa"
+description: "Verifica a referência de agency_id em fare_attributes.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `fare_attributes_agency_id_foreign` |
+| Ficheiros | `fare_attributes.txt`, `agency.txt` |
+| Campos | `agency_id`, `agency_id` |
+| Tipo | Referência a `agency.agency_id`, Identificador único |
+| Severidade | Condicional (obrigatório quando existem vários operadores; recomendado nos restantes casos), Obrigatório |
+
+**Descrição dos campos:**
+
+- `agency_id`: identifica o operador a que a tarifa pertence. A descrição prevê o preenchimento quando existem vários operadores e recomenda-o nos restantes casos.
+- `agency_id`: identifica o operador ou a marca de transporte a que os dados pertencem.
+
+Mais informação em [fare_attributes.txt](/reference/gtfs/schedule/fare_attributes), [agency.txt](/reference/gtfs/schedule/agency).
+
+## Como funciona
+
+A regra confirma que cada identificador preenchido encontra uma referência em `agency.txt`. Não verifica o formato nem o preenchimento do identificador.
+
+A regra avalia cada linha do `fare_attributes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra está desativada? | A verificação não é executada | Segue para o passo 2 |
+| 2 | Os ficheiros necessários estão disponíveis? | Segue para o passo 3 | A verificação não é executada |
+| 3 | O campo está vazio? | Não reporta a ausência nesta regra | Segue para o passo 4 |
+| 4 | O identificador existe em `agency.txt`? | ✅ Passa | ❌ Reporta o problema: referência não encontrada |
+
+A comparação utiliza o texto original. Os espaços no início e no fim não são removidos.
+
+## Como se relacionam
+
+Cada `agency_id` preenchido de `fare_attributes.txt` deve corresponder a `agency_id` em `agency.txt`.
+
+## Exemplos
+
+| `agency_id` em `fare_attributes.txt` | `agency_id` em `agency.txt` | Resultado | Porquê |
+|---|---|---|---|
+| `A1` | `A1` | ✅ Passa | Referência existente |
+| `B1` | `A1` | ❌ Problema | Referência inexistente |
+| ` A1 ` | `A1` | ❌ Problema | Texto diferente da referência |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Referência não encontrada | O identificador não consta do ficheiro de referência | Corrigir `agency_id` em `fare_attributes.txt`, ou acrescentar o respetivo `agency_id` em `agency.txt`. |

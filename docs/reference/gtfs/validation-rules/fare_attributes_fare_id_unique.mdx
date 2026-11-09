@@ -1,0 +1,46 @@
+---
+title: "Unicidade: identificador da tarifa"
+description: "Verifica se os valores preenchidos de fare_id são únicos em fare_attributes.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `fare_attributes_fare_id_unique` |
+| Ficheiro | `fare_attributes.txt` |
+| Campo | `fare_id` |
+| Tipo | Identificador único |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** identifica uma classe de tarifa.
+
+Mais informação em [fare_attributes.txt](/reference/gtfs/schedule/fare_attributes).
+
+## Como funciona
+
+Cada valor preenchido de `fare_id` tem de aparecer uma única vez em `fare_attributes.txt`. A regra não verifica o formato nem o preenchimento do campo.
+
+A regra avalia cada linha do `fare_attributes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra está desativada? | A verificação não é executada | Segue para o passo 2 |
+| 2 | O campo está vazio? | Não reporta a ausência nesta regra | Segue para o passo 3 |
+| 3 | O mesmo valor aparece em mais de uma linha? | ❌ Reporta o problema: valor repetido | ✅ Passa |
+
+A comparação utiliza o texto original. Os espaços e as diferenças entre maiúsculas e minúsculas não são removidos.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `A1` numa única linha | ✅ Passa | Valor único |
+| `A1` e `A12` em linhas diferentes | ✅ Passa | Valores distintos |
+| `A1` em duas linhas | ❌ Problema | Valor repetido |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor repetido | Várias linhas usam o mesmo identificador ou código | Atribuir um valor único a `fare_id` em `fare_attributes.txt`, mantendo as referências coerentes. |

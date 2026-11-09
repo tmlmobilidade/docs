@@ -1,0 +1,47 @@
+---
+title: "Valores válidos: transbordos permitidos"
+description: "Verifica os valores aceites de transfers em fare_attributes.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `fare_attributes_transfers_valid` |
+| Ficheiro | `fare_attributes.txt` |
+| Campo | `transfers` |
+| Tipo | Valor de uma lista |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** número de transbordos permitidos. `0`, `1` e `2` limitam esse número; o campo vazio representa transbordos ilimitados.
+
+Mais informação em [fare_attributes.txt](/reference/gtfs/schedule/fare_attributes).
+
+## Como funciona
+
+O valor preenchido de `transfers` tem de pertencer ao conjunto aceite pela regra. A regra não verifica o preenchimento nem aplica listas adicionais da configuração da regra.
+
+A regra avalia cada linha do `fare_attributes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra está desativada? | A verificação não é executada | Segue para o passo 2 |
+| 2 | O campo está vazio? | Não reporta a ausência nesta regra | Segue para o passo 3 |
+| 3 | O valor representa um número inteiro? | Segue para o passo 4 | ❌ Reporta o problema: valor inválido |
+| 4 | O valor é um dos seguintes: `0`, `1`, `2`? | ✅ Passa | ❌ Reporta o problema: valor inválido |
+
+O valor é comparado como número inteiro. Por exemplo, `01` equivale a `1`.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `0` | ✅ Passa | Valor aceite |
+| `999` | ❌ Problema | Fora do conjunto aceite |
+| `abc` | ❌ Problema | Texto inválido |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor inválido | O valor não pertence ao conjunto aceite | Usar `0`, `1`, `2` em `transfers` em `fare_attributes.txt`. |

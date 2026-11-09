@@ -1,0 +1,46 @@
+---
+title: "Formato: moeda da tarifa"
+description: "Verifica o formato de currency_type em fare_attributes.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `fare_attributes_currency_type_valid` |
+| Ficheiro | `fare_attributes.txt` |
+| Campo | `currency_type` |
+| Tipo | Código de moeda |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** código da moeda utilizada para pagar a tarifa.
+
+Mais informação em [fare_attributes.txt](/reference/gtfs/schedule/fare_attributes).
+
+## Como funciona
+
+O valor preenchido de `currency_type` tem de cumprir o formato verificado por esta regra. A regra não verifica preços nem a moeda efetivamente utilizada no pagamento.
+
+A regra avalia cada linha do `fare_attributes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra está desativada? | A verificação não é executada | Segue para o passo 2 |
+| 2 | O campo está vazio? | Não reporta a ausência nesta regra | Segue para o passo 3 |
+| 3 | O código consta da lista de moedas reconhecidas? | ✅ Passa | ❌ Reporta o problema: formato inválido |
+
+A comparação não distingue maiúsculas de minúsculas. Os espaços no início e no fim não são removidos.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `EUR` | ✅ Passa | Moeda reconhecida |
+| `INVALID` | ❌ Problema | Código desconhecido |
+| ` EUR ` | ❌ Problema | Espaços no código |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Formato inválido | O valor não cumpre o formato verificado | Usar um código de moeda reconhecido em `currency_type` em `fare_attributes.txt`. |

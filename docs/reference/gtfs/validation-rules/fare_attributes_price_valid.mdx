@@ -1,0 +1,47 @@
+---
+title: "Valor numérico: preço da tarifa"
+description: "Verifica o valor numérico de price em fare_attributes.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `fare_attributes_price_valid` |
+| Ficheiro | `fare_attributes.txt` |
+| Campo | `price` |
+| Tipo | Número decimal não negativo |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** preço da tarifa, expresso na moeda indicada em `currency_type`.
+
+Mais informação em [fare_attributes.txt](/reference/gtfs/schedule/fare_attributes).
+
+## Como funciona
+
+O valor preenchido de `price` tem de ser um número decimal finito igual ou superior a zero. A regra não confirma a medição no terreno nem o preenchimento do campo.
+
+A regra avalia cada linha do `fare_attributes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra está desativada? | A verificação não é executada | Segue para o passo 2 |
+| 2 | O campo está vazio? | Não reporta a ausência nesta regra | Segue para o passo 3 |
+| 3 | O valor é um número decimal finito? | Segue para o passo 4 | ❌ Reporta o problema: número inválido |
+| 4 | O número é igual ou superior a zero? | ✅ Passa | ❌ Reporta o problema: número fora do intervalo |
+
+Os espaços no início e no fim não são removidos. Usar ponto como separador decimal.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `1.5` | ✅ Passa | Número aceite |
+| `abc` | ❌ Problema | Texto em vez de número |
+| `-1` | ❌ Problema | Fora do intervalo aceite |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Número inválido | O número não cumpre os limites da regra | Introduzir um número igual ou superior a zero em `price` em `fare_attributes.txt`. |
