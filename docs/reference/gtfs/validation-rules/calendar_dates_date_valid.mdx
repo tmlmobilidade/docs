@@ -1,0 +1,46 @@
+---
+title: "Formato: data da exceção"
+description: "Verifica o formato de date em calendar_dates.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `calendar_dates_date_valid` |
+| Ficheiro | `calendar_dates.txt` |
+| Campo | `date` |
+| Tipo | Data |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** data em que se aplica a exceção ao serviço.
+
+Mais informação em [calendar_dates.txt](/reference/gtfs/schedule/calendar_dates).
+
+## Como funciona
+
+O valor preenchido de `date` tem de cumprir o formato verificado por esta regra. A regra não compara a data com outras datas nem verifica a existência de serviço nesse dia.
+
+A regra avalia cada linha do `calendar_dates.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra está desativada? | A verificação não é executada | Segue para o passo 2 |
+| 2 | O campo está vazio? | Não reporta a ausência nesta regra | Segue para o passo 3 |
+| 3 | O texto tem oito carateres e representa uma data existente no formato `AAAAMMDD`? | ✅ Passa | ❌ Reporta o problema: formato inválido |
+
+Os espaços no início e no fim não são removidos.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `20240229` | ✅ Passa | Data existente em ano bissexto |
+| `20230229` | ❌ Problema | Dia inexistente |
+| `2024-02-29` | ❌ Problema | Formato diferente de `AAAAMMDD` |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Formato inválido | O valor não cumpre o formato verificado | Escrever uma data existente no formato `AAAAMMDD` em `date` em `calendar_dates.txt`. |

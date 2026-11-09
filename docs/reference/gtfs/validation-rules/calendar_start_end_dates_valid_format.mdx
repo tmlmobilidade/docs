@@ -1,0 +1,53 @@
+---
+title: "Formato das datas do serviço"
+description: "Verifica o formato e a existência das duas datas do serviço em calendar.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `calendar_start_end_dates_valid_format` |
+| Ficheiro | `calendar.txt` |
+| Campos | `start_date`, `end_date` |
+| Tipo | Data |
+| Severidade | Obrigatório |
+
+**Descrição dos campos:**
+
+- `start_date`: primeiro dia do intervalo de funcionamento do serviço.
+- `end_date`: último dia do intervalo de funcionamento do serviço, incluído nesse intervalo.
+
+Mais informação em [calendar.txt](/reference/gtfs/schedule/calendar).
+
+## Como funciona
+
+Verifica o formato e a existência das duas datas do serviço em `calendar.txt`. A regra não compara a ordem das datas e não exige o preenchimento.
+
+A regra avalia cada linha do `calendar.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra está desativada? | A verificação não é executada | Segue para o passo 2 |
+| 2 | A data inicial está preenchida e não representa uma data existente em `AAAAMMDD`? | ❌ Reporta o problema na data inicial e continua | Segue para o passo 3 |
+| 3 | A data final está preenchida e não representa uma data existente em `AAAAMMDD`? | ❌ Reporta o problema na data final | ✅ Passa se não houve problemas na data inicial |
+
+Os espaços no início e no fim não são removidos. A mesma linha pode originar um problema por cada data inválida.
+
+## Como se relacionam
+
+As duas datas delimitam o serviço, mas esta regra verifica cada uma separadamente.
+
+## Exemplos
+
+| `start_date` | `end_date` | Resultado | Porquê |
+|---|---|---|---|
+| `20240101` | `20240229` | ✅ Passa | Datas existentes |
+| `20230229` | `20240101` | ❌ Problema | Data inicial inexistente |
+| `20240101` | `2024-02-29` | ❌ Problema | Data final noutro formato |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Data inválida | Uma das datas não existe ou não usa oito algarismos | Corrigir `start_date` ou `end_date` em `calendar.txt` para uma data existente em `AAAAMMDD`. |

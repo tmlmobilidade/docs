@@ -1,0 +1,45 @@
+---
+title: "Disponibilidade de calendar_dates.txt"
+description: "Verifica a disponibilidade de calendar_dates.txt segundo a configuração da regra."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `calendar_dates_file_missing` |
+| Ficheiro | `calendar_dates.txt` |
+| Campo | Se aplica em todo o ficheiro |
+| Tipo | Não documentado |
+| Severidade | Não documentada |
+
+## Como funciona
+
+Verifica a disponibilidade de `calendar_dates.txt` segundo a configuração da regra. A regra não verifica o preenchimento dos campos ou o conteúdo de cada linha.
+
+A regra avalia o conjunto de dados importado, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra proíbe o ficheiro? | Segue para o passo 2 | Segue para o passo 3 |
+| 2 | O ficheiro está disponível nos dados importados? | ❌ Reporta o problema: ficheiro proibido | ✅ Passa |
+| 3 | O ficheiro está disponível nos dados importados? | ✅ Passa | Segue para o passo 4 |
+| 4 | Também falta `calendar.txt`? | ❌ Reporta o problema: faltam os dois calendários | ❌ Reporta o problema: falta `calendar_dates.txt` |
+
+O ficheiro é considerado disponível quando existe nos dados importados, mesmo que não tenha linhas. A existência do outro calendário altera a mensagem, mas não faz passar a verificação deste ficheiro em falta. A verificação de disponibilidade continua a condicionar as regras dependentes quando a mensagem está desativada.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `calendar_dates.txt` disponível | ✅ Passa | Ficheiro encontrado |
+| `calendar_dates.txt` ausente | ❌ Problema | Ficheiro em falta |
+| `calendar_dates.txt` disponível; configuração da regra proíbe o ficheiro | ❌ Problema | Ficheiro proibido |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Ficheiro proibido | A configuração da regra proíbe o ficheiro | Remover `calendar_dates.txt` do conjunto de dados ou rever a configuração da regra. |
+| Ficheiro em falta | O ficheiro não está disponível nos dados importados | Incluir `calendar_dates.txt` no conjunto de dados e voltar a importar. |
+| Faltam os dois calendários | Não existe qualquer dos dois ficheiros de serviço | Incluir `calendar.txt` ou `calendar_dates.txt`; para esta verificação passar, disponibilizar também `calendar_dates.txt` ou rever a configuração da regra. |

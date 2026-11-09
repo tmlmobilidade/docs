@@ -1,0 +1,48 @@
+---
+title: "Preenchimento: data da exceção"
+description: "Verifica o preenchimento de date em calendar_dates.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `calendar_dates_date_field` |
+| Ficheiro | `calendar_dates.txt` |
+| Campo | `date` |
+| Tipo | Data |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** data em que se aplica a exceção ao serviço.
+
+Mais informação em [calendar_dates.txt](/reference/gtfs/schedule/calendar_dates).
+
+## Como funciona
+
+A regra assinala a ausência de `date` segundo a configuração da regra. Um valor preenchido passa nesta verificação; o formato e as referências são avaliados por outras regras.
+
+A regra avalia cada linha do `calendar_dates.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra está desativada? | A verificação não é executada | Segue para o passo 2 |
+| 2 | O campo está preenchido? | ✅ Passa | Segue para o passo 3 |
+| 3 | A configuração da regra proíbe o campo? | Não reporta a ausência | Segue para o passo 4 |
+| 4 | A configuração da regra exige o preenchimento? | ❌ Reporta o problema: campo obrigatório | ❌ Reporta o problema: campo recomendado |
+
+O campo só é considerado vazio quando não contém texto. Os espaços, por si só, contam como preenchimento.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `20260101` | ✅ Passa | Campo preenchido |
+| Vazio; configuração da regra exige o campo | ❌ Problema | Preenchimento obrigatório |
+| Vazio; configuração da regra recomenda o campo | ❌ Problema | Preenchimento recomendado |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Campo obrigatório em falta | A configuração da regra exige o preenchimento | Preencher `date` em `calendar_dates.txt`. |
+| Campo recomendado em falta | A configuração da regra recomenda o preenchimento | Preencher `date` em `calendar_dates.txt`. |

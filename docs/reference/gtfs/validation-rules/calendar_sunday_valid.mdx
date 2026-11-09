@@ -1,0 +1,46 @@
+---
+title: "Valores válidos: serviço ao domingo"
+description: "Verifica os valores aceites de sunday em calendar.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `calendar_sunday_valid` |
+| Ficheiro | `calendar.txt` |
+| Campo | `sunday` |
+| Tipo | Valor lógico |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** indica se existe serviço ao domingo.
+
+Mais informação em [calendar.txt](/reference/gtfs/schedule/calendar).
+
+## Como funciona
+
+O valor preenchido de `sunday` tem de pertencer ao conjunto aceite pela regra. A regra não verifica o preenchimento nem aplica listas adicionais da configuração da regra.
+
+A regra avalia cada linha do `calendar.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra está desativada? | A verificação não é executada | Segue para o passo 2 |
+| 2 | O campo está vazio? | Não reporta a ausência nesta regra | Segue para o passo 3 |
+| 3 | O valor é um dos seguintes: `0`, `1`? | ✅ Passa | ❌ Reporta o problema: valor inválido |
+
+A comparação utiliza o texto original. Os espaços e as diferenças entre maiúsculas e minúsculas não são ignorados.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `0` | ✅ Passa | Valor aceite |
+| `999` | ❌ Problema | Fora do conjunto aceite |
+| `abc` | ❌ Problema | Texto diferente dos valores aceites |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor inválido | O valor não pertence ao conjunto aceite | Usar `0`, `1` em `sunday` em `calendar.txt`. |

@@ -1,0 +1,46 @@
+---
+title: "Unicidade: identificador do serviço"
+description: "Verifica se os valores preenchidos de service_id são únicos em calendar.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `calendar_service_id_unique` |
+| Ficheiro | `calendar.txt` |
+| Campo | `service_id` |
+| Tipo | Identificador único |
+| Severidade | Obrigatório |
+
+**Descrição do campo:** identifica o conjunto de datas em que existe serviço para uma ou mais linhas.
+
+Mais informação em [calendar.txt](/reference/gtfs/schedule/calendar).
+
+## Como funciona
+
+Cada valor preenchido de `service_id` tem de aparecer uma única vez em `calendar.txt`. A regra não verifica o formato nem o preenchimento do campo.
+
+A regra avalia cada linha do `calendar.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra está desativada? | A verificação não é executada | Segue para o passo 2 |
+| 2 | O campo está vazio? | Não reporta a ausência nesta regra | Segue para o passo 3 |
+| 3 | O mesmo valor aparece em mais de uma linha? | ❌ Reporta o problema: valor repetido | ✅ Passa |
+
+A comparação utiliza o texto original. Os espaços e as diferenças entre maiúsculas e minúsculas não são removidos.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `A1` numa única linha | ✅ Passa | Valor único |
+| `A1` e `A12` em linhas diferentes | ✅ Passa | Valores distintos |
+| `A1` em duas linhas | ❌ Problema | Valor repetido |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor repetido | Várias linhas usam o mesmo identificador ou código | Atribuir um valor único a `service_id` em `calendar.txt`, mantendo as referências coerentes. |
