@@ -1,6 +1,6 @@
 ---
-title: "Ficheiro de frequências em falta"
-description: "Verifica a ausência de frequencies.txt quando a configuração da regra a assinala."
+title: "Disponibilidade de frequencies.txt"
+description: "Verifica a disponibilidade de frequencies.txt segundo a configuração da regra."
 ---
 
 ## Propriedades da regra
@@ -10,39 +10,34 @@ description: "Verifica a ausência de frequencies.txt quando a configuração da
 | Rule ID | `frequencies_file_missing` |
 | Ficheiro | `frequencies.txt` |
 | Campo | Se aplica em todo o ficheiro |
-| Tipo | Ficheiro |
-| Severidade | Opcional |
+| Tipo | Não documentado |
+| Severidade | Não documentada |
 
 ## Como funciona
 
-O resultado depende da severidade definida na configuração da regra: obrigatório (`error`) reprova; recomendado (`warning`) passa com aviso; informativo (`info`) passa com informação. O aviso antecipa uma futura exigência, mas só reprova quando a configuração passar a obrigatório. Nos casos sem severidade explícita abaixo, a indicação de reprovação pressupõe a configuração obrigatória.
+Verifica a disponibilidade de `frequencies.txt` segundo a configuração da regra. A regra não verifica o preenchimento dos campos ou o conteúdo de cada linha.
 
-A regra assinala a ausência do ficheiro quando a configuração da regra a exige, recomenda ou regista como informação. Não verifica se o ficheiro tem linhas nem se o conteúdo está correto.
-
-A regra avalia a presença de `frequencies.txt` no conjunto de dados, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+A regra avalia o conjunto de dados importado, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | O ficheiro está disponível nos dados carregados? | ✅ Passa | Segue para o passo 2 |
-| 2 | A configuração da regra recomenda o ficheiro? | ✅ Passa com aviso | Segue para o passo 3 |
-| 3 | A configuração da regra assinala a ausência como informação? | ✅ Passa com informação | Segue para o passo 4 |
-| 4 | A configuração da regra exige o ficheiro? | ❌ Reprova: ficheiro obrigatório em falta | ✅ Passa |
+| 1 | A configuração da regra proíbe o ficheiro? | Segue para o passo 2 | Segue para o passo 3 |
+| 2 | O ficheiro está disponível nos dados importados? | ❌ Reporta o problema: ficheiro proibido | ✅ Passa |
+| 3 | O ficheiro está disponível nos dados importados? | ✅ Passa | ❌ Reporta o problema: ficheiro em falta |
 
-Sem configuração, este ficheiro não é obrigatório para esta verificação. Uma tabela carregada sem linhas conta como presente. A presença de um ficheiro proibido é tratada por outra regra.
+O ficheiro é considerado disponível quando existe nos dados importados, mesmo que não tenha linhas. A verificação de disponibilidade continua a condicionar as regras dependentes quando a mensagem está desativada.
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| Ficheiro presente | ✅ Passa | Disponível nos dados carregados |
-| Ficheiro ausente (configuração exige) | ❌ Reprova | Ficheiro obrigatório em falta |
-| Ficheiro ausente (configuração recomenda) | ✅ Passa com aviso  | Ficheiro recomendado em falta |
-| Ficheiro ausente (configuração informativa) | ✅ Passa com informação  | Ausência assinalada |
+| `frequencies.txt` disponível | ✅ Passa | Ficheiro encontrado |
+| `frequencies.txt` ausente | ❌ Problema | Ficheiro em falta |
+| `frequencies.txt` disponível; configuração da regra proíbe o ficheiro | ❌ Problema | Ficheiro proibido |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Ficheiro obrigatório em falta | A configuração exige o ficheiro | Incluir `frequencies.txt` no conjunto de dados ou pedir a revisão da configuração da regra. |
-| Ficheiro recomendado em falta | A configuração recomenda o ficheiro | Incluir `frequencies.txt` no conjunto de dados ou pedir a revisão da configuração da regra. |
-| Ficheiro em falta | A configuração assinala a ausência como informação | Incluir `frequencies.txt` no conjunto de dados ou pedir a revisão da configuração da regra. |
+| Ficheiro proibido | A configuração da regra proíbe o ficheiro | Remover `frequencies.txt` do conjunto de dados ou rever a configuração da regra. |
+| Ficheiro em falta | O ficheiro não está disponível nos dados importados | Incluir `frequencies.txt` no conjunto de dados e voltar a importar. |
