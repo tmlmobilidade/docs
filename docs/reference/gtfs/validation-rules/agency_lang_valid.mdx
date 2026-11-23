@@ -1,6 +1,6 @@
 ---
-title: "Formato: idioma do operador"
-description: "Verifica o formato de agency_lang em agency.txt."
+title: "Código de idioma do operador"
+description: "Verifica se agency_lang de agency.txt pertence à lista de idiomas reconhecidos."
 ---
 
 ## Propriedades da regra
@@ -13,21 +13,21 @@ description: "Verifica o formato de agency_lang em agency.txt."
 | Tipo | Código de idioma |
 | Severidade | Opcional |
 
-**Descrição do campo:** idioma principal utilizado pelo operador, que ajuda a apresentar os dados segundo as convenções desse idioma.
+**Descrição do campo:** idioma principal do operador, que permite aplicar regras de apresentação específicas desse idioma.
 
 Mais informação em [agency.txt](/reference/gtfs/schedule/agency).
 
 ## Como funciona
 
-O valor preenchido de `agency_lang` tem de cumprir o formato verificado por esta regra. A regra não verifica se os textos estão escritos nesse idioma nem aplica uma lista adicional da configuração da regra.
+Um código preenchido tem de constar da lista de idiomas reconhecidos pelo validador. A regra não confirma o idioma dos textos nem aplica listas adicionais da configuração da regra.
 
 A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | A configuração da regra está desativada? | A verificação não é executada | Segue para o passo 2 |
+| 1 | A configuração da regra manda ignorar esta verificação? | A verificação não é executada | Segue para o passo 2 |
 | 2 | O campo está vazio? | Não reporta a ausência nesta regra | Segue para o passo 3 |
-| 3 | O código consta da lista de idiomas reconhecidos? | ✅ Passa | ❌ Reporta o problema: formato inválido |
+| 3 | O código consta da lista de idiomas reconhecidos? | ✅ Passa | ❌ Reporta o problema: código de idioma inválido |
 
 A comparação não distingue maiúsculas de minúsculas. Os espaços no início e no fim não são removidos.
 
@@ -36,11 +36,12 @@ A comparação não distingue maiúsculas de minúsculas. Os espaços no início
 | Valor | Resultado | Porquê |
 |---|---|---|
 | `pt` | ✅ Passa | Idioma reconhecido |
-| `not-a-language` | ❌ Problema | Código desconhecido |
+| `PT` | ✅ Passa | Maiúsculas aceites |
 | `pt-PT` | ❌ Problema | Código regional fora da lista |
+| `not-a-language` | ❌ Problema | Código desconhecido |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Formato inválido | O valor não cumpre o formato verificado | Usar um código de idioma reconhecido em `agency_lang` em `agency.txt`. |
+| Código de idioma inválido | O código não consta da lista de idiomas reconhecidos | Usar um código reconhecido em `agency_lang` de `agency.txt`, por exemplo `pt`. |

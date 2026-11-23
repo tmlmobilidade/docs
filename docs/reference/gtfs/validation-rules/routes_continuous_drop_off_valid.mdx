@@ -1,0 +1,59 @@
+---
+title: "Serviço contínuo e janelas de serviço"
+description: "Verifica os valores de continuous_drop_off e a sua compatibilidade com janelas de serviço."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor                                                                                                                                                                                                                                                                                                                 |
+| ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Rule ID     | `routes_continuous_drop_off_valid`                                                                                                                                                                                                                                                                                    |
+| Ficheiros   | `routes.txt`, `trips.txt`, `stop_times.txt`                                                                                                                                                                                                                                                                           |
+| Campos      | `continuous_drop_off`, `route_id`, `trip_id`, `start_pickup_drop_off_window`, `end_pickup_drop_off_window`                                                                                                                                                                                                            |
+| Tipo        | Não documentado, Não documentado, Referência a `trips.trip_id`, Hora, Hora                                                                                                                                                                                                                                            |
+| Severidade  | Não documentada, Não documentada, Obrigatório, Condicional (obrigatório com uma localização ou grupo de localizações, ou com o outro extremo da janela; proibido com horas fixas), Condicional (obrigatório com uma localização ou grupo de localizações, ou com o outro extremo da janela; proibido com horas fixas) |
+
+**Descrição dos campos:**
+
+- `continuous_drop_off`: indica as condições de desembarque ao longo do percurso, entre paragens.
+- `route_id`: identifica a linha de transporte.
+- `trip_id`: identifica a viagem de transporte.
+- `start_pickup_drop_off_window`: início do intervalo em que o embarque ou desembarque pode ocorrer. A descrição prevê condições de preenchimento e incompatibilidade com horas fixas.
+- `end_pickup_drop_off_window`: fim do intervalo em que o embarque ou desembarque pode ocorrer. A descrição prevê condições de preenchimento e incompatibilidade com horas fixas.
+
+Mais informação em [routes.txt](/reference/gtfs/schedule/routes), [trips.txt](/reference/gtfs/schedule/trips), [stop_times.txt](/reference/gtfs/schedule/stop_times).
+
+## Como funciona
+
+Verifica os valores de `continuous_drop_off` e a sua compatibilidade com janelas de serviço. A regra não verifica o formato ou a ordem das janelas.
+
+A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra está desativada? | A verificação não é executada | Segue para o passo 2 |
+| 2 | Os três ficheiros estão disponíveis? | Segue para o passo 3 | A verificação não é executada |
+| 3 | O campo está vazio? | Não reporta a ausência nesta regra | Segue para o passo 4 |
+| 4 | O valor representa um número inteiro de `0` a `3`? | Segue para o passo 5 | ❌ Reporta o problema: valor inválido |
+| 5 | Existe uma janela de serviço e o número é diferente de `1`? | ❌ Reporta o problema: serviço contínuo incompatível com janela | ✅ Passa |
+
+Os valores são comparados como números inteiros. Uma janela preenchida é suficiente, mesmo que o seu formato seja inválido.
+
+## Como se relacionam
+
+Em `routes.txt`, as janelas são procuradas nas passagens das viagens da linha.
+
+## Exemplos
+
+| `continuous_drop_off` | `route_id` | `trip_id` | `start_pickup_drop_off_window` | `end_pickup_drop_off_window` | Resultado | Porquê |
+|---|---|---|---|---|---|---|
+| `1` | `R1` | `T1` | `10:00:00` | Vazio | ✅ Passa | Sem serviço contínuo |
+| `4` | `R1` | `T1` | Vazio | Vazio | ❌ Problema | Fora do conjunto aceite |
+| `0` | `R1` | `T1` | `10:00:00` | Vazio | ❌ Problema | Serviço contínuo com janela |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor inválido | O valor não representa um inteiro entre zero e três | Usar `0`, `1`, `2` ou `3` em `continuous_drop_off` em `routes.txt`. |
+| Serviço contínuo incompatível com janela | Existe uma janela e o valor é diferente de um | Definir `1` ou deixar vazio em `continuous_drop_off` em `routes.txt`, ou rever as janelas em `stop_times.txt`. |

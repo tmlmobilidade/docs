@@ -1,0 +1,54 @@
+---
+title: "Referência: rede da linha"
+description: "Verifica a referência de network_id em routes.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `routes_network_id_foreign` |
+| Ficheiros | `routes.txt`, `route_networks.txt` |
+| Campos | `network_id`, `network_id` |
+| Tipo | Não documentado |
+| Severidade | Não documentada |
+
+**Descrição dos campos:**
+
+- `network_id`: identifica a rede associada à linha.
+- `network_id`: identifica a rede associada às linhas.
+
+Mais informação em [routes.txt](/reference/gtfs/schedule/routes), [route_networks.txt](/reference/gtfs/schedule/route_networks).
+
+## Como funciona
+
+A regra confirma que cada identificador preenchido encontra uma referência em `route_networks.txt`. Não verifica o formato nem o preenchimento do identificador.
+
+A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra está desativada? | A verificação não é executada | Segue para o passo 2 |
+| 2 | Os ficheiros necessários estão disponíveis? | Segue para o passo 3 | A verificação não é executada |
+| 3 | O campo está vazio? | Não reporta a ausência nesta regra | Segue para o passo 4 |
+| 4 | O identificador existe em `route_networks.txt`? | ✅ Passa | ❌ Reporta o problema: referência não encontrada |
+
+A comparação utiliza o texto original. Os espaços no início e no fim não são removidos.
+
+## Como se relacionam
+
+Cada `network_id` preenchido de `routes.txt` deve corresponder a `network_id` em `route_networks.txt`.
+
+## Exemplos
+
+| `network_id` em `routes.txt` | `network_id` em `route_networks.txt` | Resultado | Porquê |
+|---|---|---|---|
+| `A1` | `A1` | ✅ Passa | Referência existente |
+| `B1` | `A1` | ❌ Problema | Referência inexistente |
+| ` A1 ` | `A1` | ❌ Problema | Texto diferente da referência |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Referência não encontrada | O identificador não consta do ficheiro de referência | Corrigir `network_id` em `routes.txt`, ou acrescentar o respetivo `network_id` em `route_networks.txt`. |

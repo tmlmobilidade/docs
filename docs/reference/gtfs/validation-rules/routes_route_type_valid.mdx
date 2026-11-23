@@ -1,0 +1,46 @@
+---
+title: "Valores válidos: modo de transporte da linha"
+description: "Verifica os valores aceites de route_type em routes.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `routes_route_type_valid` |
+| Ficheiro | `routes.txt` |
+| Campo | `route_type` |
+| Tipo | Não documentado |
+| Severidade | Não documentada |
+
+**Descrição do campo:** indica o modo de transporte da linha.
+
+Mais informação em [routes.txt](/reference/gtfs/schedule/routes).
+
+## Como funciona
+
+O valor preenchido de `route_type` tem de pertencer ao conjunto aceite pela regra. A regra não verifica o preenchimento nem aplica listas adicionais da configuração da regra.
+
+A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra está desativada? | A verificação não é executada | Segue para o passo 2 |
+| 2 | O campo está vazio? | Não reporta a ausência nesta regra | Segue para o passo 3 |
+| 3 | O valor é um dos seguintes: `1`, `2`, `3`, `4`, `5`, `6`, `7`, `11`, `12`? | ✅ Passa | ❌ Reporta o problema: valor inválido |
+
+A comparação utiliza o texto original. Os espaços e as diferenças entre maiúsculas e minúsculas não são ignorados.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `1` | ✅ Passa | Valor aceite |
+| `999` | ❌ Problema | Fora do conjunto aceite |
+| `abc` | ❌ Problema | Texto diferente dos valores aceites |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor inválido | O valor não pertence ao conjunto aceite | Usar `1`, `2`, `3`, `4`, `5`, `6`, `7`, `11`, `12` em `route_type` em `routes.txt`. |

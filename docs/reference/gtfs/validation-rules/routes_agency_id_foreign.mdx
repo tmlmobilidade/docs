@@ -1,0 +1,54 @@
+---
+title: "Referência: operador da linha"
+description: "Verifica a referência de agency_id em routes.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `routes_agency_id_foreign` |
+| Ficheiros | `routes.txt`, `agency.txt` |
+| Campos | `agency_id`, `agency_id` |
+| Tipo | Não documentado, Identificador único |
+| Severidade | Não documentada, Obrigatório |
+
+**Descrição dos campos:**
+
+- `agency_id`: identifica o operador responsável pela linha.
+- `agency_id`: identifica o operador ou a marca de transporte a que os dados pertencem.
+
+Mais informação em [routes.txt](/reference/gtfs/schedule/routes), [agency.txt](/reference/gtfs/schedule/agency).
+
+## Como funciona
+
+A regra confirma que cada identificador preenchido encontra uma referência em `agency.txt`. Não verifica o formato nem o preenchimento do identificador.
+
+A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra está desativada? | A verificação não é executada | Segue para o passo 2 |
+| 2 | Os ficheiros necessários estão disponíveis? | Segue para o passo 3 | A verificação não é executada |
+| 3 | O campo está vazio? | Não reporta a ausência nesta regra | Segue para o passo 4 |
+| 4 | O identificador existe em `agency.txt`? | ✅ Passa | ❌ Reporta o problema: referência não encontrada |
+
+A comparação utiliza o texto original. Os espaços no início e no fim não são removidos.
+
+## Como se relacionam
+
+Cada `agency_id` preenchido de `routes.txt` deve corresponder a `agency_id` em `agency.txt`.
+
+## Exemplos
+
+| `agency_id` em `routes.txt` | `agency_id` em `agency.txt` | Resultado | Porquê |
+|---|---|---|---|
+| `A1` | `A1` | ✅ Passa | Referência existente |
+| `B1` | `A1` | ❌ Problema | Referência inexistente |
+| ` A1 ` | `A1` | ❌ Problema | Texto diferente da referência |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Referência não encontrada | O identificador não consta do ficheiro de referência | Corrigir `agency_id` em `routes.txt`, ou acrescentar o respetivo `agency_id` em `agency.txt`. |

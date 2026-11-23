@@ -1,6 +1,6 @@
 ---
-title: "Formato: telefone do operador"
-description: "Verifica o formato de agency_phone em agency.txt."
+title: "Formato do telefone do operador"
+description: "Verifica os carateres e o número de algarismos de agency_phone em agency.txt."
 ---
 
 ## Propriedades da regra
@@ -13,21 +13,23 @@ description: "Verifica o formato de agency_phone em agency.txt."
 | Tipo | Número de telefone |
 | Severidade | Opcional |
 
-**Descrição do campo:** número de telefone de contacto do operador, apresentado segundo as convenções da área onde presta serviço.
+**Descrição do campo:** telefone de apoio ao cliente, apresentado no formato habitual do operador. Pode incluir letras que façam parte do número marcável.
 
 Mais informação em [agency.txt](/reference/gtfs/schedule/agency).
 
 ## Como funciona
 
-O valor preenchido de `agency_phone` tem de cumprir o formato verificado por esta regra. A regra não confirma que o número existe ou recebe chamadas. A verificação permite algum texto e pontuação sem garantir que todo o conteúdo seja um número marcável.
+Um telefone preenchido tem de usar carateres aceites e conter pelo menos sete algarismos. A regra não confirma que o número existe ou recebe chamadas.
 
 A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | A configuração da regra está desativada? | A verificação não é executada | Segue para o passo 2 |
+| 1 | A configuração da regra manda ignorar esta verificação? | A verificação não é executada | Segue para o passo 2 |
 | 2 | O campo está vazio? | Não reporta a ausência nesta regra | Segue para o passo 3 |
-| 3 | O texto usa carateres aceites e contém pelo menos sete algarismos? | ✅ Passa | ❌ Reporta o problema: formato inválido |
+| 3 | O texto fica vazio depois de ignorar os espaços exteriores? | ❌ Reporta o problema: telefone inválido | Segue para o passo 4 |
+| 4 | Todos os carateres pertencem ao conjunto aceite? | Segue para o passo 5 | ❌ Reporta o problema: telefone inválido |
+| 5 | O texto contém pelo menos sete algarismos? | ✅ Passa | ❌ Reporta o problema: telefone inválido |
 
 Os espaços no início e no fim são ignorados. São aceites letras sem acentos, algarismos, espaços, hífen, sinal de adição, dois pontos e `$`.
 
@@ -38,9 +40,10 @@ Os espaços no início e no fim são ignorados. São aceites letras sem acentos,
 | `+351 212 345 678` | ✅ Passa | Pelo menos sete algarismos |
 | `123456` | ❌ Problema | Menos de sete algarismos |
 | `(212) 345 678` | ❌ Problema | Parênteses não aceites |
+| `212@345678` | ❌ Problema | Símbolo `@` não aceite |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Formato inválido | O valor não cumpre o formato verificado | Introduzir um número com pelo menos sete algarismos e carateres aceites em `agency_phone` em `agency.txt`. |
+| Telefone inválido | Faltam algarismos ou existem carateres não aceites | Corrigir `agency_phone` em `agency.txt`, usando pelo menos sete algarismos e apenas carateres aceites. |

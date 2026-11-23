@@ -1,5 +1,5 @@
 ---
-title: "Disponibilidade de agency.txt"
+title: "Disponibilidade do ficheiro do operador"
 description: "Verifica a disponibilidade de agency.txt segundo a configuração da regra."
 ---
 
@@ -10,22 +10,23 @@ description: "Verifica a disponibilidade de agency.txt segundo a configuração 
 | Rule ID | `agency_file_missing` |
 | Ficheiro | `agency.txt` |
 | Campo | Se aplica em todo o ficheiro |
-| Tipo | Não documentado |
-| Severidade | Não documentada |
+| Tipo | Ficheiro |
+| Severidade | Configurável |
 
 ## Como funciona
 
-Verifica a disponibilidade de `agency.txt` segundo a configuração da regra. A regra não verifica o preenchimento dos campos ou o conteúdo de cada linha.
+A regra verifica se `agency.txt` está disponível nos dados importados. Se a configuração da regra proibir o ficheiro, a sua presença origina um problema. A regra não valida o conteúdo das linhas.
 
-A regra avalia o conjunto de dados importado, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+A regra avalia a presença de `agency.txt` nos dados importados, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
 | 1 | A configuração da regra proíbe o ficheiro? | Segue para o passo 2 | Segue para o passo 3 |
 | 2 | O ficheiro está disponível nos dados importados? | ❌ Reporta o problema: ficheiro proibido | ✅ Passa |
-| 3 | O ficheiro está disponível nos dados importados? | ✅ Passa | ❌ Reporta o problema: ficheiro em falta |
+| 3 | O ficheiro está disponível nos dados importados? | ✅ Passa | Segue para o passo 4 |
+| 4 | A configuração da regra manda ignorar a mensagem? | Não apresenta a mensagem, mas impede as regras dependentes de avançar | ❌ Reporta o problema: ficheiro em falta |
 
-O ficheiro é considerado disponível quando existe nos dados importados, mesmo que não tenha linhas. A verificação de disponibilidade continua a condicionar as regras dependentes quando a mensagem está desativada.
+Um ficheiro disponível mas vazio passa nesta verificação, salvo se estiver proibido. Ignorar a mensagem não permite avançar nas regras dependentes quando o ficheiro falta.
 
 ## Exemplos
 
@@ -33,7 +34,7 @@ O ficheiro é considerado disponível quando existe nos dados importados, mesmo 
 |---|---|---|
 | `agency.txt` disponível | ✅ Passa | Ficheiro encontrado |
 | `agency.txt` ausente | ❌ Problema | Ficheiro em falta |
-| `agency.txt` disponível; configuração da regra proíbe o ficheiro | ❌ Problema | Ficheiro proibido |
+| `agency.txt` disponível; a configuração da regra proíbe o ficheiro | ❌ Problema | Ficheiro proibido |
 
 ## Como corrigir
 

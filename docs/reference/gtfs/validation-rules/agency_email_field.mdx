@@ -1,8 +1,8 @@
 ---
-title: "Preenchimento: correio eletrónico do operador"
-description: "Verifica o preenchimento de agency_email em agency.txt."
+title: "Preenchimento do correio eletrónico do operador"
+description: "Verifica o preenchimento de agency_email em agency.txt conforme a configuração da regra."
 ---
-s
+
 ## Propriedades da regra
 
 | Propriedade | Valor |
@@ -13,33 +13,33 @@ s
 | Tipo | Correio eletrónico |
 | Severidade | Opcional |
 
-**Descrição do campo:** endereço de correio eletrónico acompanhado pelo apoio ao cliente, através do qual os passageiros podem contactar o operador.
+**Descrição do campo:** endereço de correio eletrónico monitorizado pelo serviço de apoio ao cliente do operador, para contactos diretos dos passageiros.
 
 Mais informação em [agency.txt](/reference/gtfs/schedule/agency).
 
 ## Como funciona
 
-A regra assinala a ausência de `agency_email` segundo a configuração da regra. Um valor preenchido passa nesta verificação; o formato e as referências são avaliados por outras regras.
+Um valor preenchido passa nesta verificação. Se estiver vazio, a configuração da regra determina a mensagem. A regra não verifica o formato nem rejeita valores preenchidos.
 
 A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | A configuração da regra está desativada? | A verificação não é executada | Segue para o passo 2 |
-| 2 | O campo está preenchido? | ✅ Passa | Segue para o passo 3 |
-| 3 | A configuração da regra proíbe o campo? | Não reporta a ausência | Segue para o passo 4 |
-| 4 | A configuração da regra exige o preenchimento? | ❌ Reporta o problema: campo obrigatório | Reporta a ausência como recomendação ou informação, segundo a configuração da regra |
+| 1 | O campo está vazio? | Segue para o passo 2 | ✅ Passa |
+| 2 | A configuração da regra manda ignorar a verificação ou proíbe este campo? | Não reporta a ausência | Segue para o passo 3 |
+| 3 | A configuração da regra exige o campo? | ❌ Reporta o problema: campo obrigatório em falta | Segue para o passo 4 |
+| 4 | A configuração da regra recomenda o campo? | ❌ Reporta o problema: campo recomendado em falta | ❌ Reporta o problema: campo informativo em falta |
 
-O campo só é considerado vazio quando não contém texto. Os espaços, por si só, contam como preenchimento.
+Os espaços não são removidos. Um valor composto apenas por espaços conta como preenchimento.
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
 | `apoio@operador.pt` | ✅ Passa | Campo preenchido |
-| Vazio; configuração da regra exige o campo | ❌ Problema | Preenchimento obrigatório |
-| Vazio; configuração da regra recomenda o campo | ❌ Problema | Preenchimento recomendado |
-| Vazio; configuração da regra é informativa | ❌ Problema | Ausência comunicada como informação |
+| Vazio; a configuração da regra exige o campo | ❌ Problema | Preenchimento obrigatório |
+| Vazio; a configuração da regra recomenda o campo | ❌ Problema | Preenchimento recomendado |
+| Vazio; a configuração da regra comunica a ausência | ❌ Problema | Ausência comunicada como informação |
 
 ## Como corrigir
 

@@ -1,0 +1,55 @@
+---
+title: "Página específica da linha"
+description: "Verifica se a página da linha difere da página do respetivo operador."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `routes_route_url_different_from_agency_url` |
+| Ficheiros | `routes.txt`, `agency.txt` |
+| Campos | `route_url`, `agency_id`, `agency_url` |
+| Tipo | Não documentado, Não documentado, Endereço de página |
+| Severidade | Não documentada, Não documentada, Opcional |
+
+**Descrição dos campos:**
+
+- `route_url`: endereço da página específica da linha.
+- `agency_id`: identifica o operador responsável pela linha.
+- `agency_url`: endereço da página do operador.
+
+Mais informação em [routes.txt](/reference/gtfs/schedule/routes), [agency.txt](/reference/gtfs/schedule/agency).
+
+## Como funciona
+
+Verifica se a página da linha difere da página do respetivo operador. A regra não visita as páginas nem valida o formato dos endereços.
+
+A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra está desativada? | A verificação não é executada | Segue para o passo 2 |
+| 2 | Os dois ficheiros estão disponíveis? | Segue para o passo 3 | A verificação não é executada |
+| 3 | A página da linha está vazia? | Não compara endereços nesta linha | Segue para o passo 4 |
+| 4 | Existe em `agency.txt` o mesmo `agency_id` com um `agency_url` exatamente igual? | ❌ Reporta o problema: página igual à do operador | ✅ Passa |
+
+A comparação utiliza o texto original. Endereços equivalentes com textos diferentes podem passar.
+
+## Como se relacionam
+
+O `agency_id` da linha seleciona o operador. A página da linha é comparada apenas com a página desse operador.
+
+## Exemplos
+
+| `route_url` | `agency_id` | `agency_url` | Resultado | Porquê |
+|---|---|---|---|---|
+| `https://operador.pt/1001` | `A1` | `https://operador.pt` | ✅ Passa | Páginas diferentes |
+| `https://operador.pt` | `A1` | `https://operador.pt` | ❌ Problema | Mesma página |
+| `https://operador.pt/info` | `A1` | `https://operador.pt/info` | ❌ Problema | Mesmo texto do endereço |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Página igual à do operador | A página da linha repete a página do operador | Alterar `route_url` em `routes.txt` para uma página específica da linha e confirmar `agency_id` e `agency_url` em `agency.txt`. |

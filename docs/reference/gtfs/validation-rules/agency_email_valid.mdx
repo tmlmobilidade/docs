@@ -1,6 +1,6 @@
 ---
-title: "Formato: correio eletrónico do operador"
-description: "Verifica o formato de agency_email em agency.txt."
+title: "Formato do correio eletrónico"
+description: "Verifica o formato do endereço de correio eletrónico em agency_email de agency.txt."
 ---
 
 ## Propriedades da regra
@@ -13,29 +13,30 @@ description: "Verifica o formato de agency_email em agency.txt."
 | Tipo | Correio eletrónico |
 | Severidade | Opcional |
 
-**Descrição do campo:** endereço de correio eletrónico acompanhado pelo apoio ao cliente, através do qual os passageiros podem contactar o operador.
+**Descrição do campo:** endereço de correio eletrónico monitorizado pelo serviço de apoio ao cliente do operador, para contactos diretos dos passageiros.
 
 Mais informação em [agency.txt](/reference/gtfs/schedule/agency).
 
 ## Como funciona
 
-O valor preenchido de `agency_email` tem de cumprir o formato verificado por esta regra. A regra não confirma a existência da caixa de correio nem aplica uma lista de endereços permitidos.
+Um endereço preenchido tem de ter um formato de correio eletrónico aceite. A regra não confirma a existência da caixa de correio nem aplica listas de endereços permitidos.
 
 A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | A configuração da regra está desativada? | A verificação não é executada | Segue para o passo 2 |
+| 1 | A configuração da regra manda ignorar esta verificação? | A verificação não é executada | Segue para o passo 2 |
 | 2 | O campo está vazio? | Não reporta a ausência nesta regra | Segue para o passo 3 |
-| 3 | O texto é aceite como endereço de correio eletrónico? | ✅ Passa | ❌ Reporta o problema: formato inválido |
+| 3 | O texto fica vazio depois de ignorar os espaços exteriores? | ❌ Reporta o problema: formato inválido | Segue para o passo 4 |
+| 4 | O texto é aceite como endereço de correio eletrónico? | ✅ Passa | ❌ Reporta o problema: formato inválido |
 
-Os espaços no início e no fim são ignorados na verificação do formato. Um nome acompanhado de um endereço também pode ser aceite.
+Os espaços no início e no fim são ignorados na verificação do formato. Também pode ser aceite um nome acompanhado do endereço, como `Operador <apoio@operador.pt>`.
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `apoio@operador.pt` | ✅ Passa | Endereço aceite |
+| `apoio@operador.pt` | ✅ Passa | Endereço bem escrito |
 | `apoio-operador.pt` | ❌ Problema | Falta a `@` |
 | `apoio@` | ❌ Problema | Falta o domínio |
 
@@ -43,4 +44,4 @@ Os espaços no início e no fim são ignorados na verificação do formato. Um n
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Formato inválido | O valor não cumpre o formato verificado | Escrever um endereço completo em `agency_email` em `agency.txt`. |
+| Formato inválido | O texto não corresponde a um endereço aceite | Escrever um endereço completo em `agency_email` de `agency.txt`, por exemplo `apoio@operador.pt`. |

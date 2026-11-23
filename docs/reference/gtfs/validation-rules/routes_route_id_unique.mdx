@@ -1,0 +1,46 @@
+---
+title: "Unicidade: identificador da linha"
+description: "Verifica se os valores preenchidos de route_id são únicos em routes.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `routes_route_id_unique` |
+| Ficheiro | `routes.txt` |
+| Campo | `route_id` |
+| Tipo | Não documentado |
+| Severidade | Não documentada |
+
+**Descrição do campo:** identifica a linha de transporte.
+
+Mais informação em [routes.txt](/reference/gtfs/schedule/routes).
+
+## Como funciona
+
+Cada valor preenchido de `route_id` tem de aparecer uma única vez em `routes.txt`. A regra não verifica o formato nem o preenchimento do campo.
+
+A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra está desativada? | A verificação não é executada | Segue para o passo 2 |
+| 2 | O campo está vazio? | Não reporta a ausência nesta regra | Segue para o passo 3 |
+| 3 | O mesmo valor aparece em mais de uma linha? | ❌ Reporta o problema: valor repetido | ✅ Passa |
+
+A comparação utiliza o texto original. Os espaços e as diferenças entre maiúsculas e minúsculas não são removidos.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `A1` numa única linha | ✅ Passa | Valor único |
+| `A1` e `A12` em linhas diferentes | ✅ Passa | Valores distintos |
+| `A1` em duas linhas | ❌ Problema | Valor repetido |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor repetido | Várias linhas usam o mesmo identificador ou código | Atribuir um valor único a `route_id` em `routes.txt`, mantendo as referências coerentes. |

@@ -1,0 +1,45 @@
+---
+title: "Valores válidos: tipo de percurso da linha"
+description: "Verifica os valores aceites de path_type em routes.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `routes_path_type_valid` |
+| Ficheiro | `routes.txt` |
+| Campo | `path_type` |
+| Tipo | Não documentado |
+| Severidade | Não documentada |
+
+**Descrição do campo:** classifica o percurso da linha segundo os valores aceites pela regra.
+
+Mais informação em [routes.txt](/reference/gtfs/schedule/routes).
+
+## Como funciona
+
+O campo `path_type` tem de conter um dos valores aceites pela regra. Um campo vazio também origina um problema. A regra não aplica listas adicionais da configuração da regra.
+
+A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra está desativada? | A verificação não é executada | Segue para o passo 2 |
+| 2 | O valor é um dos seguintes: `1`, `2`, `3`? | ✅ Passa | ❌ Reporta o problema: valor inválido |
+
+A comparação utiliza o texto original. Os espaços e as diferenças entre maiúsculas e minúsculas não são ignorados.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `1` | ✅ Passa | Valor aceite |
+| `999` | ❌ Problema | Fora do conjunto aceite |
+| `abc` | ❌ Problema | Texto diferente dos valores aceites |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Valor inválido | O valor não pertence ao conjunto aceite | Usar `1`, `2`, `3` em `path_type` em `routes.txt`. |

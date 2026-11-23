@@ -1,0 +1,41 @@
+---
+title: "Horários das paragens em PDF"
+description: "Como gerar e descarregar os horários das paragens da Carris Metropolitana no GO."
+---
+
+O GO permite exportar em PDF os horários das paragens da Carris Metropolitana a partir dos planos dos operadores. Pode gerar os horários de todas as paragens abrangidas pelos planos ou escolher as que pretende exportar.
+
+## Configurar a exportação
+
+1. Em **Operação → Planos**, abra o menu junto à pesquisa e selecione **Exportar PDFs**.
+2. Em **Selecionar operadores**, escolha um ou mais operadores e selecione um plano para cada um. Estão disponíveis para seleção os planos com um ficheiro GTFS de Operação normalizado.
+3. Em **Conteúdo a exportar**, defina quais as paragens a incluir.
+   - **Todos** inclui todas as paragens com serviço nos planos selecionados. O GO escolhe automaticamente o modelo de cada paragem.
+   - **Paragens** permite limitar a exportação através dos códigos de paragem. Em **Filtro de paragens**, escolha **Apenas selecionadas** para incluir os códigos indicados ou **Todas exceto selecionadas** para os excluir. Pode introduzir vários códigos separados por vírgulas ou espaços.
+4. Se escolheu **Paragens**, defina o **Modelo do PDF**. Use **Automático** para deixar o GO escolher o modelo por paragem ou selecione **Modelo A**, **Modelo B**, **Modelo C** ou **Modelo F** para aplicar o mesmo modelo a todos os PDFs do pedido.
+5. Selecione **Gerar PDFs** para iniciar a exportação.
+
+## Como são gerados os horários
+
+O GO lê no GTFS as viagens, as horas de passagem nas paragens e as datas de circulação dentro do período de vigência de cada plano. Quando seleciona vários operadores, o GO combina os dados dos respetivos planos num só pedido.
+
+As datas de circulação são agrupadas em **Dias Úteis**, **Sábados** e **Domingos e Feriados**, de acordo com os feriados registados para cada operador. Por exemplo, se uma segunda-feira for feriado para o operador, as viagens previstas para esse dia entram no grupo **Domingos e Feriados**.
+
+O GO identifica os sentidos servidos em cada paragem a exportar e usa o mesmo modelo para todos os sentidos dessa paragem. A geração dos PDFs decorre em segundo plano e pode acompanhar o estado do pedido em **Exportações**.
+
+## Como o GO escolhe o modelo
+
+No modo **Automático**, o GO conta os percursos distintos que servem cada paragem, considerando todos os sentidos. Se houver um único percurso, o modelo depende do número de paragens da viagem com mais paragens entre as que aí passam.
+
+| Percursos que servem a paragem | Modelo do PDF |
+| --- | --- |
+| Um percurso, com até 123 paragens na viagem com mais paragens | Modelo A |
+| Um percurso, com mais de 123 paragens na viagem com mais paragens | Modelo B |
+| Dois a seis percursos | Modelo C |
+| Sete ou mais percursos | Modelo F |
+
+## Descarregar os PDFs
+
+1. Abra **Exportações** na barra lateral do GO e procure o pedido **PDFs (v1)**.
+2. Quando o estado estiver **Concluído**, selecione **Download**.
+3. Extraia o ZIP descarregado e, em seguida, o ZIP que está no seu interior para aceder aos horários em PDF.

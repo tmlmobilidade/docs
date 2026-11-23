@@ -1,5 +1,5 @@
 ---
-title: "Valores permitidos: nome do operador"
+title: "Valores permitidos para o nome do operador"
 description: "Verifica os valores permitidos de agency_name em agency.txt."
 ---
 
@@ -13,36 +13,36 @@ description: "Verifica os valores permitidos de agency_name em agency.txt."
 | Tipo | Texto |
 | Severidade | Obrigatório |
 
-**Descrição do campo:** nome completo do operador de transporte.
+**Descrição do campo:** nome público completo do operador de transporte.
 
 Mais informação em [agency.txt](/reference/gtfs/schedule/agency).
 
 ## Como funciona
 
-O texto preenchido de `agency_name` tem de constar da lista definida na configuração da regra, quando essa lista existe. A regra não verifica o formato nem a existência de referências.
+Um valor preenchido tem de constar da lista definida na configuração da regra, quando essa lista existe. A regra não verifica o formato nem exige o preenchimento.
 
 A regra avalia cada linha do `agency.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
 
 | # | Pergunta | Se sim | Se não |
 |---|---|---|---|
-| 1 | A configuração da regra está desativada? | A verificação não é executada | Segue para o passo 2 |
+| 1 | A configuração da regra manda ignorar esta verificação? | A verificação não é executada | Segue para o passo 2 |
 | 2 | O campo está vazio? | Não reporta a ausência nesta regra | Segue para o passo 3 |
-| 3 | A configuração da regra omite a lista de valores permitidos? | ✅ Passa | Segue para o passo 4 |
-| 4 | A lista aceita qualquer valor, através de `all_options`? | ✅ Passa | Segue para o passo 5 |
+| 3 | A configuração da regra define uma lista de valores permitidos? | Segue para o passo 4 | ✅ Passa |
+| 4 | A lista aceita qualquer valor? | ✅ Passa | Segue para o passo 5 |
 | 5 | O texto consta exatamente da lista? | ✅ Passa | ❌ Reporta o problema: valor não permitido |
 
-A comparação utiliza o texto original, incluindo espaços e maiúsculas. Uma lista vazia rejeita todos os valores preenchidos.
+A comparação utiliza o texto original, incluindo espaços e maiúsculas. Uma lista definida mas vazia rejeita todos os valores preenchidos.
 
 ## Exemplos
 
 | Valor | Resultado | Porquê |
 |---|---|---|
-| `Operador Exemplo`; lista: `Operador Exemplo` | ✅ Passa | Valor incluído |
-| `Operador Exemplo`; lista: `OUTRO` | ❌ Problema | Valor fora da lista |
+| `Operador Exemplo`; lista: `Operador Exemplo` | ✅ Passa | Valor incluído na lista |
+| `Outro Operador`; lista: `Operador Exemplo` | ❌ Problema | Valor fora da lista |
 | `Operador Exemplo`; lista vazia | ❌ Problema | Nenhum valor permitido |
 
 ## Como corrigir
 
 | Problema | Causa provável | O que fazer |
 |---|---|---|
-| Valor não permitido | O texto não consta da lista definida na configuração da regra | Usar um valor permitido em `agency_name` em `agency.txt`. |
+| Valor não permitido | O texto não consta da lista da configuração da regra | Usar em `agency_name` de `agency.txt` um valor permitido pela configuração da regra. |

@@ -1,0 +1,52 @@
+---
+title: "Compatibilidade dos ficheiros de rede"
+description: "Verifica se existem ficheiros de rede incompatíveis com network_id preenchido em routes.txt."
+---
+
+## Propriedades da regra
+
+| Propriedade | Valor |
+|---|---|
+| Rule ID | `file_validation_gtfs_feed_file_presence_and_integrity_rule` |
+| Ficheiros | `routes.txt`, `networks.txt`, `route_networks.txt` |
+| Campo | `network_id` |
+| Tipo | Não documentado |
+| Severidade | Não documentada |
+
+**Descrição do campo:** identifica a rede associada à linha.
+
+Mais informação em [routes.txt](/reference/gtfs/schedule/routes), [networks.txt](/reference/gtfs/schedule/networks), [route_networks.txt](/reference/gtfs/schedule/route_networks).
+
+## Como funciona
+
+Verifica se existem ficheiros de rede incompatíveis com `network_id` preenchido em `routes.txt`. A regra não confirma que o identificador da rede existe nem verifica a disponibilidade dos restantes ficheiros GTFS.
+
+A regra avalia cada linha do `routes.txt`, seguindo os passos abaixo por ordem, até um deles dar o resultado.
+
+| # | Pergunta | Se sim | Se não |
+|---|---|---|---|
+| 1 | A configuração da regra está desativada? | A verificação não é executada | Segue para o passo 2 |
+| 2 | A linha tem `network_id` preenchido? | Segue para o passo 3 | Passa à linha seguinte |
+| 3 | Existe `networks.txt` com pelo menos uma linha e ainda não foi reportado? | ❌ Reporta o problema: ficheiro de redes incompatível e continua | Segue para o passo 4 |
+| 4 | Existe `route_networks.txt` com pelo menos uma linha e ainda não foi reportado? | ❌ Reporta o problema: associações de rede incompatíveis | ✅ Passa se não houve outro problema |
+
+Cada ficheiro incompatível é reportado uma única vez. Os espaços contam como preenchimento de `network_id`.
+
+## Como se relacionam
+
+A presença de `network_id` numa linha ativa a procura dos dois ficheiros. Ficheiros existentes mas vazios não originam problemas.
+
+## Exemplos
+
+| Valor | Resultado | Porquê |
+|---|---|---|
+| `N1`; ficheiros de rede ausentes | ✅ Passa | Sem ficheiros incompatíveis |
+| `N1`; `networks.txt` com linhas | ❌ Problema | Ficheiro de redes incompatível |
+| `N1`; `route_networks.txt` com linhas | ❌ Problema | Associações de rede incompatíveis |
+
+## Como corrigir
+
+| Problema | Causa provável | O que fazer |
+|---|---|---|
+| Ficheiro de redes incompatível | Existem linhas em `networks.txt` e `network_id` preenchido nas linhas | Rever `network_id` em `routes.txt` ou remover o conteúdo incompatível de `networks.txt`. |
+| Associações de rede incompatíveis | Existem linhas em `route_networks.txt` e `network_id` preenchido nas linhas | Rever `network_id` em `routes.txt` ou remover o conteúdo incompatível de `route_networks.txt`. |
